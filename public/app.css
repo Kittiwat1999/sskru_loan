@@ -1,0 +1,9 @@
+.sidebar .bi{
+    font-size:1.5rem !important;
+  }
+
+  .line-section{
+    width: 100%;
+    height: 0.7px;
+    background-color: #adb5bd;
+  }
