@@ -1,4 +1,4 @@
-@extends('employee_layout')
+@extends('layout')
 @section('title')
 employee page
 @endsection

@@ -1,4 +1,4 @@
-@extends('admin_layout')
+@extends('layout')
 @section('title','manage account')
 @section('content')
     <section class="section dashboard">

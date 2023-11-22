@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
-@extends('admin_layout')
+@extends('layout')
 @section('title')
 รายการสัญญา
 @endsection

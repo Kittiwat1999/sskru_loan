@@ -1,4 +1,4 @@
-@extends('admin_layout')
+@extends('layout')
 @section('title')
 ขอแก้ใขข้อมูล
 @endsection

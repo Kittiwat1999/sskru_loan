@@ -1,4 +1,4 @@
-@extends('borrower_layout')
+@extends('layout')
 @section('title')
 index borrower
 @endsection

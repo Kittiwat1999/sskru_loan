@@ -1,4 +1,4 @@
-@extends('admin_layout')
+@extends('layout')
 @section('title')
 รายการขอกู้ยืมเกินหลักสูตร
 @endsection

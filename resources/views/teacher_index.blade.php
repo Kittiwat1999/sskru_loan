@@ -1,4 +1,4 @@
-@extends('teacher_layout')
+@extends('layout')
 @section('title')
     teacher home
 @endsection

@@ -9,7 +9,7 @@ class UsersController extends Controller
 {
     function getUsersData(){
         $users = DB::table('users')->get();
-        return view('admin_manage_account',compact('users'));
+        return view('/admin/manage_account',compact('users'));
     }
 
     function getUserById($id){
@@ -20,7 +20,7 @@ class UsersController extends Controller
     function deleteUser($id){
 
         DB::table('users')->where('id',$id)->delete();
-        return redirect('/admin_manage_account');
+        return redirect('/admin/manage_account');
     }
 
     function createUser(Request $request){
@@ -46,7 +46,7 @@ class UsersController extends Controller
         // dd($data);
         DB::table('users')->insert($data);
 
-        return redirect('/admin_manage_account');
+        return redirect('/admin/manage_account');
     }
 
     function editAccount(Request $request){
@@ -72,6 +72,6 @@ class UsersController extends Controller
         // dd($data);
 
         DB::table('users')->where('id',$request->id)->update($data);
-        return redirect('/admin_manage_account');
+        return redirect('/admin/manage_account');
     }
 }

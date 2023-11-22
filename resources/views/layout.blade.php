@@ -200,88 +200,154 @@
     </nav><!-- End Icons Navigation -->
 
     </header><!-- End Header -->
+    <?php
+        $privilage = "teacher";
+    ?>
     <aside id="sidebar" class="sidebar">
 
         <ul class="sidebar-nav" id="sidebar-nav">
 
-            <li class="nav-heading text-secondary">Pages</li>
-            
+        <li class="nav-heading text-secondary">Pages</li>
+        @if($privilage == "admin")
             <li class="nav-item">
-                <a id="admin_index" class="nav-link collapsed" href="{{route('admin_index')}}">
+                <a id="dashboard" class="nav-link collapsed" href="{{url('/admin/dashboard')}}">
                 <i class="bi bi-grid-1x2"></i>
-                <span>หน้าหลัก</span>
+                <span>สรุปข้อมูล</span>
                 </a>
-            </li><!-- End หน้าหลัก Page Nav -->
+            </li><!-- End สรุปข้อมูล Page Nav -->
 
             <li class="nav-item">
-                <a id="new_loan_submission" class="nav-link collapsed" href="{{route('new_loan_submission')}}">
-                <i class="bi bi-file-earmark-plus"></i>
-                <span>รายการยื่นกู้รายใหม่</span>
-                </a>
-            </li><!-- End รายการยื่นกู้รายใหม่ Page Nav -->
-            
-            <li class="nav-item">
-                <a id="loan_submission" class="nav-link collapsed" href="{{route('loan_submission')}}">
-                <i class="bi bi-file-earmark-person"></i>
-                <span>รายการยื่นกู้รายเก่า</span>
-                </a>
-            </li><!-- End รายการยื่นกู้รายเก่า Page Nav -->
-
-            <li class="nav-item">
-                <a id="contract" class="nav-link collapsed" href="{{route('contract')}}">
-                <i class="bi bi-file-break"></i>
-                <span>สัญญาผู้กู้รายใหม่</span>
-                </a>
-            </li><!-- End สัญญาผู้กู้รายใหม่ Page Nav -->
-
-            <li class="nav-item">
-                <a id="confirm_money_withdraw" class="nav-link collapsed" href="{{route('confirm_money_withdraw')}}">
-                <i class="bi bi-file-check"></i>
-                <span>แบบยืนยันการเบิกเงิน</span>
-                </a>
-            </li><!-- End แบบยืนยันการเบิกเงิน Page Nav -->
-
-            <li class="nav-item">
-                <a id="over_course" class="nav-link collapsed" href="{{route('over_course')}}">
-                <i class="bi bi-file-earmark-diff"></i>
-                <span>คำขอกู้เกินหลักสูตร</span>
-                </a>
-            </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
-
-            <li class="nav-item">
-                <a id="admin_return_document" class="nav-link collapsed" href="{{route('admin_return_document')}}">
+                <a id="return_document" class="nav-link collapsed" href="{{url('/admin/return_document')}}">
                 <i class="bi bi-clipboard-x"></i>
                 <span>คำร้องขอแก้ใขเอกสาร</span>
                 </a>
             </li><!-- End คำร้องขอแก้ใขเอกสาร Page Nav -->
 
             <li class="nav-item">
-                <a id="admin_edit_informaion_request" class="nav-link collapsed" href="{{route('admin_edit_informaion_request')}}">
+                <a id="edit_informaion_request" class="nav-link collapsed" href="{{url('/admin/edit_informaion_request')}}">
                 <i class="bi bi-pencil-square"></i>
                 <span>คำร้องขอแก้ใขข้อมูล</span>
                 </a>
             </li><!-- End คำร้องขอแก้ใขข้อมูล Page Nav -->
 
             <li class="nav-item">
-                <a id="admin_settime" class="nav-link collapsed" href="{{route('admin_settime')}}">
+                <a id="settime" class="nav-link collapsed" href="{{url('/admin/settime')}}">
                 <i class="bi bi-calendar-date"></i>
                 <span>กำหนดระยะเวลา</span>
                 </a>
             </li><!-- End กำหนดระยะเวลา Page Nav -->
 
             <li class="nav-item">
-                <a id="admin_manage_account" class="nav-link collapsed" href="{{route('admin_manage_account')}}">
+                <a id="manage_account" class="nav-link collapsed" href="{{url('/admin/manage_account')}}">
                 <i class="bi bi-person-square"></i>
                 <span>จัดการบัญชีผู้ใช้</span>
                 </a>
             </li><!-- จัดการบัญชีผู้ใช้ Page Nav -->
+        @endif
+
+        @if(($privilage == 'admin' || $privilage == "employee") || $privilage == 'faculty')
+            <li class="nav-item">
+                <a id="new_loan_submission" class="nav-link collapsed" href="{{url('new_loan_submission')}}">
+                <i class="bi bi-file-earmark-plus"></i>
+                <span>รายการยื่นกู้รายใหม่</span>
+                </a>
+            </li><!-- End รายการยื่นกู้รายใหม่ Page Nav -->
+        @endif
+
+        @if($privilage == 'admin' || $privilage == "employee")
+        
+        <li class="nav-item">
+            <a id="loan_submission" class="nav-link collapsed" href="{{url('loan_submission')}}">
+            <i class="bi bi-file-earmark-person"></i>
+            <span>รายการยื่นกู้รายเก่า</span>
+            </a>
+        </li><!-- End รายการยื่นกู้รายเก่า Page Nav -->
+
+        <li class="nav-item">
+            <a id="contract" class="nav-link collapsed" href="{{url('contract')}}">
+            <i class="bi bi-file-break"></i>
+            <span>สัญญาผู้กู้รายใหม่</span>
+            </a>
+        </li><!-- End สัญญาผู้กู้รายใหม่ Page Nav -->
+
+        <li class="nav-item">
+            <a id="confirm_money_withdraw" class="nav-link collapsed" href="{{url('confirm_money_withdraw')}}">
+            <i class="bi bi-file-check"></i>
+            <span>แบบยืนยันการเบิกเงิน</span>
+            </a>
+        </li><!-- End แบบยืนยันการเบิกเงิน Page Nav -->
+
+        <li class="nav-item">
+            <a id="over_course" class="nav-link collapsed" href="{{url('over_course')}}">
+            <i class="bi bi-file-earmark-diff"></i>
+            <span>คำขอกู้เกินหลักสูตร</span>
+            </a>
+        </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
+
+
+        <li class="nav-item">
+            <a id="search_document" class="nav-link collapsed" href="{{url('search_document')}}">
+            <i class="bi bi-search"></i>
+            <span>ค้นหาเอกสาร</span>
+            </a>
+        </li><!-- End ค้นหาเอกสาร Page Nav -->
+        @elseif($privilage == "borrower")
+            <li class="nav-item">
+                <a id="index" class="nav-link collapsed" href="{{url('/borrower/index')}}">
+                <i class="bi bi-card-list"></i>
+                <span>เอกสารที่ส่งแล้ว</span>
+                </a>
+            </li><!-- End เอกสารที่ส่งแล้ว Page Nav -->
 
             <li class="nav-item">
-                <a id="search_document" class="nav-link collapsed" href="{{route('search_document')}}">
-                <i class="bi bi-search"></i>
-                <span>ค้นหาเอกสาร</span>
+                <a id="loan_request" class="nav-link collapsed" href="{{url('/borrower/loan_request')}}">
+                <i class="bi bi-file-earmark-plus"></i>
+                <span>ยื่นกู้รายใหม่</span>
                 </a>
-            </li><!-- End ค้นหาเอกสาร Page Nav -->
+            </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-register.html">
+                <i class="bi bi-file-break"></i>
+                <span>ส่งสัญญาและแบบยืนยัน</span>
+                </a>
+            </li><!-- End ส่งสัญญาและแบบยืนยัน Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-faq.html">
+                <i class="bi bi-file-arrow-up"></i>
+                <span>ยื่นกู้รายเก่าเลื่อนชั้นปี</span>
+                </a>
+            </li><!-- End ยื่นกู้รายเก่าเลื่อนชั้นปี Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-login.html">
+                <i class="bi bi-file-check"></i>
+                <span>ส่งแบบยืนยัน</span>
+                </a>
+            </li><!-- End Login Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-error-404.html">
+                <i class="bi bi-file-earmark-diff"></i>
+                <span>ยื่นกู้เกินหลักสูตร</span>
+                </a>
+            </li><!-- End Error 404 Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-blank.html">
+                <i class="bi bi-pencil-square"></i>
+                <span>ขอแก้ใขข้อมูล</span>
+                </a>
+            </li><!-- End Blank Page Nav -->
+        @elseif($privilage == "teacher")
+            <li class="nav-item">
+                <a id="teacher_index" class="nav-link collapsed" href="{{route('teacher_index')}}">
+                <i class="bi bi-grid-1x2"></i>
+                <span>รายการคำขอกู้</span>
+                </a>
+            </li><!-- End รายการคำขอกู้ Page Nav -->
+        @endif
 
         </ul>
 
@@ -328,8 +394,12 @@
         }
         var path = window.location.pathname;            //get path name
         path = path.split('/');             //split path with '/'
-        console.log(path[1]);           //log path with out '/' {'/' is index 0, path name is index 1 when we use split('/') method}
-        activeSidebar(path[1])          // call active sidebar function
+        console.log(path);         //log path with 
+        if(path[1] == undefined){
+            activeSidebar(path[2]);          // call active sidebar function
+        }else{
+            activeSidebar(path[1]);          // call active sidebar function
+        }   
     </script>
 </body>
 </html>

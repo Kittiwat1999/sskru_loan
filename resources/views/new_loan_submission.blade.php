@@ -1,9 +1,9 @@
-@extends('admin_layout')
+@extends('layout')
 @section('title')
 รายการยื่นกู้รายใหม่
 @endsection
 @section('content')
-    
+    {{$privilage}}
     <section class="section dashboard">
         <div class="card">
             <div class="card-body pt-3">
