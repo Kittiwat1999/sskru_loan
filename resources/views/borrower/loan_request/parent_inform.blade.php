@@ -279,7 +279,7 @@
                         </div>
                     </div>
                 </div><!-- End reset Modal-->
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary" onclick="nextPgae('representative-tab')">บันทึกข้อมูล</button>
             </div>
         </form>
     </div>
@@ -516,7 +516,7 @@
                         </div>
                     </div>
                 </div><!-- End reset Modal-->
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary" onclick="nextPgae('representative-tab')">บันทึกข้อมูล</button>
             </div>
         </form>
     </div>
