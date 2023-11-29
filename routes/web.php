@@ -187,5 +187,9 @@ Route::get('/borrower/send_contract',function () {
     return view('/borrower/send_contract');
 });
 
+Route::get('/borrower/status_report',function () {
+    return view('/borrower/status_report');
+});
+
 
 
