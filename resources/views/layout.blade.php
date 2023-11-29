@@ -201,14 +201,14 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";
+        $privilage = "admin";
     ?>
     <aside id="sidebar" class="sidebar">
 
         <ul class="sidebar-nav" id="sidebar-nav">
 
-        <li class="nav-heading text-secondary">Pages</li>
-        @if($privilage == "admin")
+            @if($privilage == "admin")
+            <li class="nav-heading text-secondary">Dashboard</li>
             <li class="nav-item">
                 <a id="dashboard" class="nav-link collapsed" href="{{url('/admin/dashboard')}}">
                 <i class="bi bi-grid-1x2"></i>
@@ -216,36 +216,38 @@
                 </a>
             </li><!-- End สรุปข้อมูล Page Nav -->
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a id="return_document" class="nav-link collapsed" href="{{url('/admin/return_document')}}">
                 <i class="bi bi-clipboard-x"></i>
                 <span>คำร้องขอแก้ใขเอกสาร</span>
                 </a>
-            </li><!-- End คำร้องขอแก้ใขเอกสาร Page Nav -->
-
-            <li class="nav-item">
-                <a id="edit_informaion_request" class="nav-link collapsed" href="{{url('/admin/edit_informaion_request')}}">
-                <i class="bi bi-pencil-square"></i>
-                <span>คำร้องขอแก้ใขข้อมูล</span>
-                </a>
-            </li><!-- End คำร้องขอแก้ใขข้อมูล Page Nav -->
-
-            <li class="nav-item">
-                <a id="settime" class="nav-link collapsed" href="{{url('/admin/settime')}}">
-                <i class="bi bi-calendar-date"></i>
-                <span>กำหนดระยะเวลา</span>
-                </a>
-            </li><!-- End กำหนดระยะเวลา Page Nav -->
-
+            </li> -->
+            <!-- End คำร้องขอแก้ใขเอกสาร Page Nav -->
+            <li class="nav-heading text-secondary">admin menu</li>
             <li class="nav-item">
                 <a id="manage_account" class="nav-link collapsed" href="{{url('/admin/manage_account')}}">
                 <i class="bi bi-person-square"></i>
                 <span>จัดการบัญชีผู้ใช้</span>
                 </a>
             </li><!-- จัดการบัญชีผู้ใช้ Page Nav -->
+            
+            <li class="nav-item">
+                <a id="settime" class="nav-link collapsed" href="{{url('/admin/settime')}}">
+                    <i class="bi bi-calendar-date"></i>
+                    <span>กำหนดระยะเวลา</span>
+                </a>
+            </li><!-- End กำหนดระยะเวลา Page Nav -->
+            
+            <li class="nav-item">
+                <a id="edit_informaion_request" class="nav-link collapsed" href="{{url('/admin/edit_informaion_request')}}">
+                <i class="bi bi-pencil-square"></i>
+                <span>คำร้องขอแก้ใขข้อมูล</span>
+                </a>
+            </li><!-- End คำร้องขอแก้ใขข้อมูล Page Nav -->
         @endif
 
         @if(($privilage == 'admin' || $privilage == "employee") || $privilage == 'faculty')
+            <li class="nav-heading text-secondary">ตรวจเอกสาร</li>
             <li class="nav-item">
                 <a id="new_loan_submission" class="nav-link collapsed" href="{{url('new_loan_submission')}}">
                 <i class="bi bi-file-earmark-plus"></i>
@@ -284,6 +286,7 @@
             </a>
         </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
 
+        <li class="nav-heading text-secondary">ค้นหาเอกสาร</li>
 
         <li class="nav-item">
             <a id="search_document" class="nav-link collapsed" href="{{url('search_document')}}">
@@ -292,13 +295,14 @@
             </a>
         </li><!-- End ค้นหาเอกสาร Page Nav -->
         @elseif($privilage == "borrower")
+            <li class="nav-heading text-secondary">รายการเอกสารที่ส่ง</li>
             <li class="nav-item">
                 <a id="index" class="nav-link collapsed" href="{{url('/borrower/index')}}">
                 <i class="bi bi-card-list"></i>
                 <span>เอกสารที่ส่งแล้ว</span>
                 </a>
             </li><!-- End เอกสารที่ส่งแล้ว Page Nav -->
-
+            <li class="nav-heading text-secondary">ยืนกู้</li>
             <li class="nav-item">
                 <a id="loan_request" class="nav-link collapsed" href="{{url('/borrower/loan_request')}}">
                 <i class="bi bi-file-earmark-plus"></i>
@@ -306,6 +310,21 @@
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
             
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-faq.html">
+                    <i class="bi bi-file-arrow-up"></i>
+                    <span>ยื่นกู้รายเก่าเลื่อนชั้นปี</span>
+                </a>
+            </li><!-- End ยื่นกู้รายเก่าเลื่อนชั้นปี Page Nav -->
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-error-404.html">
+                    <i class="bi bi-file-earmark-diff"></i>
+                    <span>ยื่นกู้เกินหลักสูตร</span>
+                </a>
+            </li><!-- End Error 404 Page Nav -->
+            <li class="nav-heading text-secondary">ส่งเอกสาร</li>
             <li class="nav-item">
                 <a id="send_contract" class="nav-link collapsed" href="pages-register.html">
                 <i class="bi bi-file-break"></i>
@@ -314,26 +333,12 @@
             </li><!-- End ส่งสัญญาและแบบยืนยัน Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-file-arrow-up"></i>
-                <span>ยื่นกู้รายเก่าเลื่อนชั้นปี</span>
-                </a>
-            </li><!-- End ยื่นกู้รายเก่าเลื่อนชั้นปี Page Nav -->
-
-            <li class="nav-item">
                 <a class="nav-link collapsed" href="pages-login.html">
                 <i class="bi bi-file-check"></i>
                 <span>ส่งแบบยืนยัน</span>
                 </a>
             </li><!-- End Login Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-error-404.html">
-                <i class="bi bi-file-earmark-diff"></i>
-                <span>ยื่นกู้เกินหลักสูตร</span>
-                </a>
-            </li><!-- End Error 404 Page Nav -->
-
+            <li class="nav-heading text-secondary">ขอแก้ใขข้อมูล</li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="pages-blank.html">
                 <i class="bi bi-pencil-square"></i>
@@ -341,6 +346,8 @@
                 </a>
             </li><!-- End Blank Page Nav -->
         @elseif($privilage == "teacher")
+            <li class="nav-heading text-secondary">Pages</li>
+
             <li class="nav-item">
                 <a id="teacher_index" class="nav-link collapsed" href="{{route('teacher_index')}}">
                 <i class="bi bi-grid-1x2"></i>
