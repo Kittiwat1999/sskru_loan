@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-    borrower document
+borrower document
 @endsection
 @section('content')
 <section class="section">

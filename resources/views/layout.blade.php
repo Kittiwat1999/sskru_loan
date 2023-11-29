@@ -307,7 +307,7 @@
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
             
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-register.html">
+                <a id="send_contract" class="nav-link collapsed" href="pages-register.html">
                 <i class="bi bi-file-break"></i>
                 <span>ส่งสัญญาและแบบยืนยัน</span>
                 </a>

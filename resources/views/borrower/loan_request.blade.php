@@ -205,6 +205,7 @@ index borrower
       function nextPgae(page){
         console.log(page);
         document.getElementById(page).click();
+        window.scrollTo(0, 0);
       }
     </script>
 @endsection

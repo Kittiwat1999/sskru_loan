@@ -175,14 +175,16 @@ Route::get('/loan_submission/to_edit/{id}',function ($id){
 });
 
 
-
-
 Route::get('/teacher_index',function () {
     return view('teacher_index');
 })->name('teacher_index');
 
 Route::get('/employee/index',function () {
     return view('employee_index');
+});
+
+Route::get('/borrower/send_contract',function () {
+    return view('/borrower/send_contract');
 });
 
 
