@@ -35,7 +35,7 @@ borrower loan over course
                                 </div>
                                 <div class="modal-body">
                                     <div align="center">
-                                        <img src="assets/img/สัญญาและแบบยืนยัน.png" alt="" width="700px">
+                                        <img src="{{asset('assets/img/สัญญาและแบบยืนยัน.png')}}" alt="" width="800px">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -316,13 +316,13 @@ borrower loan over course
                                             <div class="container bg-light">
                                                 <div align="center">
                                                     <br><br>
-                                                    เอกสารยื่นกู้เกินหลักสูตร &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    เอกสารยื่นกู้เกินหลักสูตร &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br>
-                                                    สำเนาบัตรประชาชนผู้กู้ &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    สำเนาบัตรประชาชนผู้กู้ &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br>
-                                                    สำเนาใบรายงานผลการเรียน &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    สำเนาใบรายงานผลการเรียน &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br>
-                                                    บันทึกกิจกรรม &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    บันทึกกิจกรรม &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br><br><br>
                                                 </div>
                                             </div>

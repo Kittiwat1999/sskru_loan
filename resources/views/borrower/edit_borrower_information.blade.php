@@ -47,7 +47,7 @@ edit borrower information
                                             <div class="container bg-light">
                                                 <div align="center">
                                                     <br><br>
-                                                    เอกสารแก้ไขข้อมูลผู้กู้ &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    เอกสารแก้ไขข้อมูลผู้กู้ &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br><br><br>
                                                 </div>
                                             </div>

@@ -35,7 +35,7 @@ borrower contract
                                 </div>
                                 <div class="modal-body">
                                     <div align="center">
-                                        <img src="assets/img/สัญญาและแบบยืนยัน.png" alt="" width="700px">
+                                        <img src="{{asset('assets/img/สัญญาและแบบยืนยัน.png')}}" alt="" width="800px">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -113,7 +113,7 @@ borrower contract
                     <h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ตัวอย่างเอกสาร</h6>
 
                     <div align="center">
-                        <img src="assets/img/Group 2661.png" alt="">
+                        <img src="{{asset('assets/img/Group 2661.png')}}" alt="">
                     </div>
                     <br><br><br>
                     <div align="center">
@@ -155,9 +155,9 @@ borrower contract
                                             <div class="container bg-light">
                                                 <div align="center">
                                                     <br><br>
-                                                    สัญญาพร้อมสำเนาบัตร &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    สัญญาพร้อมสำเนาบัตร &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br>
-                                                    แบบยืนยันการเบิกเงินกู้ยืม &nbsp; <img src="assets/img/pngwing.com.png" alt="" height="20px">
+                                                    แบบยืนยันการเบิกเงินกู้ยืม &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
                                                     <br><br><br><br>
                                                 </div>
                                             </div>
