@@ -59,8 +59,8 @@ Route::get('/borrower/index', function () {
     return view('/borrower/index');
 });
 
-Route::get('/borrower/loan_request', function () {
-    return view('/borrower/loan_request');
+Route::get('/borrower/new_loan_request', function () {
+    return view('/borrower/new_loan_request');
 });
 
 Route::get('/contract', function () {

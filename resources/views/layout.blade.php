@@ -304,7 +304,7 @@
             </li><!-- End เอกสารที่ส่งแล้ว Page Nav -->
             <li class="nav-heading text-secondary">ยืนกู้</li>
             <li class="nav-item">
-                <a id="loan_request" class="nav-link collapsed" href="{{url('/borrower/loan_request')}}">
+                <a id="new_loan_request" class="nav-link collapsed" href="{{url('/borrower/new_loan_request')}}">
                 <i class="bi bi-file-earmark-plus"></i>
                 <span>ยื่นกู้รายใหม่</span>
                 </a>
