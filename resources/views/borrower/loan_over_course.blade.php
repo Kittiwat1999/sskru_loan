@@ -1,6 +1,6 @@
 @extends('layout')
 @section('titile')
-loan over course
+borrower loan over course
 @endsection
 @section('content')
 <section class="section Editing">

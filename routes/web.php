@@ -195,5 +195,8 @@ Route::get('/borrower/send_confirmation_form',function () {
     return view('/borrower/send_confirmation_form');
 });
 
+Route::get('/borrower/loan_request',function () {
+    return view('/borrower/loan_request');
+});
 
 

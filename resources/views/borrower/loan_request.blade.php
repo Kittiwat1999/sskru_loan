@@ -1,211 +1,305 @@
 @extends('layout')
-@section('title')
-index borrower
+@section('titile')
+borrower loan request
 @endsection
 @section('content')
-    
-    <section class="section dashboard">
+<section class="section Editing">
+    <div class="card">
+        <div class="card-body pt-3">
+            <!-- Default Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="contr-tab" data-bs-toggle="tab" data-bs-target="#contr" type="button" role="tab" aria-controls="contr" aria-selected="true">รายงานสถานภาพ</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="confiem-money-tab" data-bs-toggle="tab" data-bs-target="#confiem-money" type="button" role="tab" aria-controls="confiem-money" aria-selected="false">บันทึกกิจกรรม</button>
+                </li>
+              </ul>
+              <div class="tab-content pt-2" id="myTabContent">
+                <div class="tab-pane fade show active" id="contr" role="tabpanel" aria-labelledby="contr-tab">
+                    <br>
 
-            <!-- start card toggle -->
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">กรอกข้อมูล</h5>
+                    <!-- Extra Large Modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#ExtralargeModal">
+                        ตัวอย่างเอกสาร
+                    </button>
 
-          <ul class="nav nav-tabs" id="borderedTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="borrower-information-tab" data-bs-toggle="tab" data-bs-target="#borrower-information" type="button" role="tab" aria-controls="borrower-information" aria-selected="true">ข้อมูลผู้กู้</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="parent-information-tab" data-bs-toggle="tab" data-bs-target="#parent-information" type="button" role="tab" aria-controls="parent-information" aria-selected="false">ข้อมูลผู้ปกครอง</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="representative-tab" data-bs-toggle="tab" data-bs-target="#representative" type="button" role="tab" aria-controls="representative" aria-selected="false">ผู้แทนโดยชอบธรรม</button>
-            </li>
-          </ul>
-          <!-- toggle content -->
-          <div class="tab-content" id="borderedTabContent">
-            <!-- borrower information toggle -->
-            <div class="tab-pane fade show active" id="borrower-information" role="tabpanel" aria-labelledby="borrower-information-tab">
-              @include('borrower/loan_request/borrower_inform')
-            </div>
-            <!-- end borrower information toggle -->
-            <!-- parent information toggle -->
-            <div class="tab-pane fade" id="parent-information" role="tabpanel" aria-labelledby="parent-information-tab">
-              @include('borrower/loan_request/parent_inform')
-            </div>
-            <!-- end parent information toggle -->
+                    <div class="modal fade" id="ExtralargeModal" tabindex="-1">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">ตัวอย่างเอกสาร</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div align="center">
+                                        <img src="assets/img/ยื่นกู้ต่อเนื่อง.png" alt="" width="700px">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">ปิด</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End Extra Large Modal-->
+                    <br><br><br>
 
-            <div class="tab-pane fade" id="representative" role="tabpanel" aria-labelledby="representative-tab">
-              
-              <form class="row">
-                @csrf
-                <div class="col-md-3 mt-2">
-                  <label for="grade" class="col-md-12 col-form-label text-secondary">เลือกผู้แทนโดยชอบธรรม</label>
-                  <select id="grade" name="grade" class="form-select" aria-label="Default select example">
-                      <option selected>เลือกผู้แทน</option>
-                      <option value="1">บิดา (นายไกรวุฒิ จตุรอาชานันท์)</option>
-                      <option value="2">มารดา (นางสณัญญา จตุรอาชานันท์)</option>
-                  </select>
+                    <div align="center">
+                        <br><br><br>
+
+                        <!-- Default List group -->
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+
+                                <div class="d-grid w-75">
+                                    <button class="btn btn-primary" type="button">ดาวน์โหลดเอกสาร</button>
+                                </div>
+                                <br><br>
+
+                                <div class="row-cols-auto">
+                                    <div class="col-md-6">
+                                        <label for="file" class="text-black">สำเนาบัตรประชาชนผู้กู้</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div>
+                                            <input name="file" type="file" class="form-control" id="file">
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row-cols-auto">
+                                        <div class="col-md-4">
+                                            <label for="file" class="text-black">สำเนาใบรายงานผลการเรียน</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div>
+                                                <input name="file" type="file" class="form-control" id="file">
+                                            </div>
+                                        </div>
+                                        <br>
+
+                                            <div class="row-cols-auto">
+                                                <div class="col-md-2">
+                                                    <label for="file" class="text-black">บันทึกกิจกรรม</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div>
+                                                        <input name="file" type="file" class="form-control"
+                                                            id="file">
+                                                    </div>
+                                                </div>
+                            </li>
+                        </ul><!-- End Default List group -->
+                        <br><br>
+                    </div>
+                    <div align="right">
+                        <button type="button" class="btn btn-primary" onclick="nextPgae('confiem-money-tab')">
+                            ถัดไป
+                        </button>
+                    </div>
                 </div>
+                <div class="tab-pane fade" id="confiem-money" role="tabpanel" aria-labelledby="confiem-money-tab">
+                    <br>
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th scope="col-2">ชื่อโครงการ</th>
+                                <th scope="col-2">สถานที่</th>
+                                <th scope="col-2">วัน/เดือน/ปี</th>
+                                <th scope="col-2">จำนวนชั่วโมง</th>
+                                <th scope="col-2">ลักษณะกิจกรรม</th>
+                                <th scope="col-2">แนบหลักฐาน</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="text-center">
+                            <tr>
+                                <td>ปรับภูมิทัศน์โรงเรียน</td>
+                                <td>โรงเรียนบ้านดู่</td>
+                                <td>11/11/2566</td>
+                                <td class="text-center">12</td>
+                                <td>ถางหญ้าที่รกมากๆ</td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ปรับภูมิทัศน์โรงเรียน</td>
+                                <td>โรงเรียนบ้านดู่</td>
+                                <td>11/11/2566</td>
+                                <td class="text-center">12</td>
+                                <td>ถางหญ้าที่รกมากๆ</td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ปรับภูมิทัศน์โรงเรียน</td>
+                                <td>โรงเรียนบ้านดู่</td>
+                                <td>11/11/2566</td>
+                                <td class="text-center">12</td>
+                                <td>ถางหญ้าที่รกมากๆ</td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ปรับภูมิทัศน์โรงเรียน</td>
+                                <td>โรงเรียนบ้านดู่</td>
+                                <td>11/11/2566</td>
+                                <td class="text-center">12</td>
+                                <td>ถางหญ้าที่รกมากๆ</td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ปรับภูมิทัศน์โรงเรียน</td>
+                                <td>โรงเรียนบ้านดู่</td>
+                                <td>11/11/2566</td>
+                                <td class="text-center">12</td>
+                                <td>ถางหญ้าที่รกมากๆ</td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
 
-                <div class="col-md-11 line-section mt-4 mb-4"></div>
-                <h6 class="text-primary mb-4">ข้อมูลที่อยู่ของผู้แทนโดยชอบธรรม</h6>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center">60</td>
+                                <td></td>
+                                <td class="text-center">
 
-                <div class="col-md-5 mt-3 mb-3">
-                  <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="prop1">
-                      <label class="form-check-label" for="prop1">
-                      ที่อยู่เดียวกันกับผู้กู้
-                      </label>
-                  </div>
+                                    <div>
+                                        <div>
+                                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                                data-bs-target="#verticalycentered">
+                                                เพิ่มข้อมูล<i class="bi bi-file-earmark-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal fade" id="verticalycentered" tabindex="-1">
+                                            <div class="modal-dialog modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">เพิ่มข้อมูลกิจกรรม</h5>
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form>
+
+                                                            <div class="row-cols-auto">
+
+                                                                <div class="col-md-2 text-start">
+                                                                    <label for="firstname"
+                                                                        class="text-secondary">ชื่อโครงการ</label>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div>
+                                                                        <input name="firstname" type="text"
+                                                                            class="form-control" id="firstname">
+                                                                    </div><br>
+                                                                </div>
+
+                                                                <div class="col-md-2 text-start">
+                                                                    <label for="lastname"
+                                                                        class="text-secondary">สถานที่</label>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div>
+                                                                        <input name="lastname" type="text"
+                                                                            class="form-control" id="lastname">
+                                                                    </div><br>
+                                                                </div>
+
+                                                                <div class="col-md-2 text-start">
+                                                                    <label for="username"
+                                                                        class="text-secondary">วัน/เดือน/ปี</label>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div>
+                                                                        <input name="username" type="date"
+                                                                            class="form-control" id="username">
+                                                                    </div><br>
+                                                                </div>
+
+                                                                <div class="col-md-2 text-start">
+                                                                    <label for="password"
+                                                                        class="text-secondary">จำนวนชั่วโมง</label>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <div>
+                                                                        <input name="password" type="number"
+                                                                            class="form-control" id="password">
+                                                                    </div>
+                                                                    <br>
+                                                                </div>
+
+                                                                <div class="row-cols-auto">
+                                                                    <div class="col-md-2 text-start">
+                                                                        <label for="password"
+                                                                            class="text-secondary">ลักษณะกิจกรรม</label>
+                                                                    </div>
+                                                                    <div class="col-md-10">
+                                                                        <div>
+                                                                            <input name="password" type="text"
+                                                                                class="form-control"
+                                                                                id="password">
+                                                                        </div>
+                                                                        <br>
+
+                                                                        <div class="col-md-2 text-start">
+                                                                            <label for="password"
+                                                                                class="text-secondary">แนบไฟล์</label>
+                                                                        </div>
+                                                                        <div class="col-md-10">
+                                                                            <div>
+                                                                                <input name="password"
+                                                                                    type="file"
+                                                                                    class="form-control"
+                                                                                    id="password">
+                                                                            </div>
+                                                                            <br>
+                                                                        </div>
+
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">ยกเลิก</button>
+                                                        <button type="submit"
+                                                            class="btn btn-primary">เพิ่มข้อมูล</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div align="right">
+                        <button type="button" class="btn btn-primary">
+                            ถัดไป
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-7"></div>
-                <div class="col-md-5">
-                    <label for="village" class="form-label text-secondary">หมู่บ้าน</label>
-                    <input type="text" class="form-control" id="village" name="village">
-                </div>
-
-                <div class="col-md-3">
-                    <label for="houseNo" class="form-label text-secondary">บ้านเลขที่</label>
-                    <input type="text" class="form-control" id="houseNo" name="houseNo">
-                </div>
-
-                <div class="col-md-3">
-                    <label for="villageNo" class="form-label text-secondary">หมู่ที่</label>
-                    <input type="text" class="form-control" id="villageNo" name="villageNo">
-                </div>
-
-                <div class="col-md-5">
-                    <label for="street" class="form-label text-secondary">ซอย</label>
-                    <input type="text" class="form-control" id="street" name="street">
-                </div>
-
-                <div class="col-md-5">
-                    <label for="road" class="form-label text-secondary">ถนน</label>
-                    <input type="text" class="form-control" id="road" name="road">
-                </div>
-
-                <div class="col-md-5">
-                    <label for="city" class="col-md-12 col-form-label text-secondary">จังหวัด</label>
-                    <select id="city" name="city" class="form-select" aria-label="Default select example">
-                        <option selected>เลือกจังหวัด</option>
-                        <option value="1">1</option>
-                    </select>
-                </div>
-
-                <div class="col-md-5">
-                <label for="district" class="col-md-12 col-form-label text-secondary">อำเภอ</label>
-                <select disabled id="district" name="district" class="form-select" aria-label="Default select example">
-                    <option selected>เลือกอำเภอ</option>
-                    <option value="1">1</option>
-                </select>
-                </div>
-
-                <div class="col-md-5">
-                <label for="subDistrict" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-                <select disabled id="subDistrict" name="subDistrict" class="form-select" aria-label="Default select example">
-                    <option selected>เลือกตำบล</option>
-                    <option value="1">1</option>
-                </select>
-                </div>
-
-                <div class="col-md-7"></div>
-
-
-                <div class="col-md-3 mt-3">
-                    <label for="postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control" id="postcode" name="postcode">
-                </div>
-
-                <div class="col-md-9"></div>
-
-                <div class="text-end">
-                  <!-- reset Modal-->
-                  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#parant-reset-modal">
-                      reset
-                  </button>
-                  <div class="modal fade" id="parant-reset-modal" tabindex="-1">
-                      <div class="modal-dialog">
-                          <div class="modal-content">
-                              <div class="modal-header">
-                              <h5 class="modal-title">ล้างข้อมูล</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                              <p class="text-center">
-                                  ท่านต้องการล้างขอมูลบนฟอร์มหรือไม่
-                              </p>
-                              </div>
-                              <div class="modal-footer">
-                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
-                                  <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">ล้างข้อมูล</button>
-                              </div>
-                          </div>
-                      </div>
-                  </div><!-- End reset Modal-->
-                  <button type="button" class="btn btn-primary" onclick="nextPgae('')">บันทึกข้อมูล</button>
-                </div>
-              </form>
-            </div>
-
-          </div>
-          <!-- end toggle content -->
-
+              </div><!-- End Default Tabs -->
         </div>
-        <!-- end card body -->
-
-      </div>
-      <!-- end card toggle -->
-
-    </section>
-
-    <script>
-      function ageCal(role){
-        var inputBirthday = document.getElementById(role+'_birthday');
-        // Get the input value
-        var birthDate = inputBirthday.value;
-
-        // Parse the selected date
-        var selectedDate = new Date(birthDate);
-
-        // Calculate the current date
-        var currentDate = new Date();
-
-        // Calculate the age
-        var age = currentDate.getFullYear() - selectedDate.getFullYear();
-
-        // Check if the birthday has already occurred this year
-        if (currentDate.getMonth() < selectedDate.getMonth() || (currentDate.getMonth() === selectedDate.getMonth() && currentDate.getDate() < selectedDate.getDate())) {
-            age--;
-        }
-        if(age<0){
-          document.getElementById(role+'_age').value = "สวัสดีผู้มาจากอนาคต";
-        }else{
-          document.getElementById(role+'_age').value = age;
-          if(age>=20){
-            document.getElementById('representative-tab').disabled = true;
-          }else{
-            document.getElementById('representative-tab').disabled = false;
-
-          }
-        }
-
-      }
-
-        var idCardNumber = document.getElementById('idCardNumber');
-        idCardNumber.onkeyup = () =>{
-          document.getElementById('formattedNumber').innerHTML = idCardNumber.value;
-          }
-        
-        var moreProps = document.getElementById('morePropCheck');
-        moreProps.onchange = () => {
-          const isdisabled = document.getElementById('moreProp').disabled;
-          document.getElementById('moreProp').disabled = !isdisabled;
-        }
-      function nextPgae(page){
+    </div>
+</section>
+<script>
+    function nextPgae(page){
         console.log(page);
         document.getElementById(page).click();
         window.scrollTo(0, 0);
       }
-    </script>
+</script>
 @endsection
