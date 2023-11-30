@@ -201,7 +201,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "admin";
+        $privilage = "borrower";
     ?>
     <aside id="sidebar" class="sidebar">
 
