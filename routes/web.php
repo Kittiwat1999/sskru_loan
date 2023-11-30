@@ -199,4 +199,8 @@ Route::get('/borrower/loan_request',function () {
     return view('/borrower/loan_request');
 });
 
+Route::get('/borrower/edit_borrower_information',function () {
+    return view('/borrower/edit_borrower_information');
+});
+
 
