@@ -32,7 +32,6 @@ edit borrower information
                                 <option value="3">Three</option>
                             </select>
                         </div>
-<<<<<<< HEAD
                         <div class="col-md-6"></div>
                         <div class="col-md-2">
                             <label for="borrower-type" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -214,20 +213,10 @@ edit borrower information
                             </div>
                     </div>                         
                     <div align="right">
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
                             ถัดไป
                         </button>
-                    </div>
-                </div>
-            </div>
-=======
-                            <!-- Large Modal -->
-                            <div align="right">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
-                                    ถัดไป
-                                </button>
-                            </div>
-
+                        <!-- Large Modal -->
                         <div class="modal fade" id="largeModal" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -253,7 +242,9 @@ edit borrower information
                             </div>
                         </div>
                         <!-- End Large Modal-->
->>>>>>> 620bc0d9b5bb908e90f9e2347b62aff63bd1978a
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
