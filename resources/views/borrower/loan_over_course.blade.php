@@ -119,6 +119,7 @@ borrower loan over course
                     <table class="table">
                         <thead>
                             <tr class="text-center">
+                                <th>#</th>
                                 <th scope="col-2">ชื่อโครงการ</th>
                                 <th scope="col-2">สถานที่</th>
                                 <th scope="col-2">วัน/เดือน/ปี</th>
@@ -128,60 +129,35 @@ borrower loan over course
                             </tr>
                         </thead>
                         <tbody id="table-body" class="text-center">
-                            <tr>
-                                <td>ปรับภูมิทัศน์โรงเรียน</td>
-                                <td>โรงเรียนบ้านดู่</td>
-                                <td>11/11/2566</td>
-                                <td class="text-center">12</td>
-                                <td>ถางหญ้าที่รกมากๆ</td>
-                                <td class="text-center">
-                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ปรับภูมิทัศน์โรงเรียน</td>
-                                <td>โรงเรียนบ้านดู่</td>
-                                <td>11/11/2566</td>
-                                <td class="text-center">12</td>
-                                <td>ถางหญ้าที่รกมากๆ</td>
-                                <td class="text-center">
-                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ปรับภูมิทัศน์โรงเรียน</td>
-                                <td>โรงเรียนบ้านดู่</td>
-                                <td>11/11/2566</td>
-                                <td class="text-center">12</td>
-                                <td>ถางหญ้าที่รกมากๆ</td>
-                                <td class="text-center">
-                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ปรับภูมิทัศน์โรงเรียน</td>
-                                <td>โรงเรียนบ้านดู่</td>
-                                <td>11/11/2566</td>
-                                <td class="text-center">12</td>
-                                <td>ถางหญ้าที่รกมากๆ</td>
-                                <td class="text-center">
-                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ปรับภูมิทัศน์โรงเรียน</td>
-                                <td>โรงเรียนบ้านดู่</td>
-                                <td>11/11/2566</td>
-                                <td class="text-center">12</td>
-                                <td>ถางหญ้าที่รกมากๆ</td>
-                                <td class="text-center">
-                                    <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
-                                </td>
-                            </tr>
+                            <?php
+                                $activity = array(
+                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
+             
+                                                );
+                                                $i = 1;
+                            ?>
+                            @foreach($activity as $activity_0)
+                                <tr>
+                                    <td>{{$i++}}</td>
+                                    <td>{{$activity_0['Project name']}}</td>
+                                    <td>{{$activity_0['location']}}</td>
+                                    <td>{{$activity_0['date']}}</td>
+                                    <td class="text-center">{{$activity_0['hours']}}</td>
+                                    <td>{{$activity_0['Activity details']}}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
 
                         <tfoot>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
