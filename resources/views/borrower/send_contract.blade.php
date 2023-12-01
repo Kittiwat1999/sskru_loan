@@ -35,7 +35,7 @@ borrower contract
                                 </div>
                                 <div class="modal-body">
                                     <div align="center">
-                                        <img src="assets/img/สัญญาและแบบยืนยัน.png" alt="" width="700px">
+                                        <img src="{{asset('assets/img/สัญญาและแบบยืนยัน.png')}}" alt="" width="800px">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -113,7 +113,7 @@ borrower contract
                     <h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ตัวอย่างเอกสาร</h6>
 
                     <div align="center">
-                        <img src="assets/img/Group 2661.png" alt="">
+                        <img src="{{asset('assets/img/Group 2661.png')}}" alt="">
                     </div>
                     <br><br><br>
                     <div align="center">
@@ -137,11 +137,43 @@ borrower contract
                         </ul><!-- End Default List group -->
                         <br><br>
                     </div>
-                    <div align="right">
-                        <button type="button" class="btn btn-primary">
-                            ถัดไป
-                        </button>
-                    </div>
+                            <!-- Large Modal -->
+                            <div align="right">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+                                    ถัดไป
+                                </button>
+                            </div>
+
+                        <div class="modal fade" id="largeModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title">ยืนยันการส่งเอกสาร</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                            <div class="container bg-light">
+                                                <div align="center">
+                                                    <br><br>
+                                                    สัญญาพร้อมสำเนาบัตร &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
+                                                    <br><br>
+                                                    แบบยืนยันการเบิกเงินกู้ยืม &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
+                                                    <br><br><br><br>
+                                                </div>
+                                            </div>
+                                            <br>
+                        
+                        
+                        
+                                        </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                <button type="button" class="btn btn-primary">ยืนยัน</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <!-- End Large Modal-->
                 </div>
               </div><!-- End Default Tabs -->
         </div>

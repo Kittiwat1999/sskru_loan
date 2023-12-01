@@ -32,6 +32,7 @@ edit borrower information
                                 <option value="3">Three</option>
                             </select>
                         </div>
+<<<<<<< HEAD
                         <div class="col-md-6"></div>
                         <div class="col-md-2">
                             <label for="borrower-type" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -219,6 +220,40 @@ edit borrower information
                     </div>
                 </div>
             </div>
+=======
+                            <!-- Large Modal -->
+                            <div align="right">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+                                    ถัดไป
+                                </button>
+                            </div>
+
+                        <div class="modal fade" id="largeModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title">ยืนยันการส่งเอกสาร</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                            <div class="container bg-light">
+                                                <div align="center">
+                                                    <br><br>
+                                                    เอกสารแก้ไขข้อมูลผู้กู้ &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
+                                                    <br><br><br><br>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                <button type="button" class="btn btn-primary">ยืนยัน</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <!-- End Large Modal-->
+>>>>>>> 620bc0d9b5bb908e90f9e2347b62aff63bd1978a
         </div>
     </div>
 </section>
