@@ -131,11 +131,11 @@ borrower loan over course
                         <tbody id="table-body" class="text-center">
                             <?php
                                 $activity = array(
-                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
-                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
-                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
-                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
-                                                    array('Project name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project_name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity_details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project_name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity_details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project_name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity_details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project_name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity_details'=>'ถางหญ้าที่รกมากๆ'),
+                                                    array('Project_name'=>'ปรับภูมิทัศน์โรงเรียน','location'=>'โรงเรียนบ้านดู่','date'=>'11/11/2566','hours'=>'12','Activity_details'=>'ถางหญ้าที่รกมากๆ'),
              
                                                 );
                                                 $i = 1;
@@ -143,11 +143,11 @@ borrower loan over course
                             @foreach($activity as $activity_0)
                                 <tr>
                                     <td>{{$i++}}</td>
-                                    <td>{{$activity_0['Project name']}}</td>
+                                    <td>{{$activity_0['Project_name']}}</td>
                                     <td>{{$activity_0['location']}}</td>
                                     <td>{{$activity_0['date']}}</td>
                                     <td class="text-center">{{$activity_0['hours']}}</td>
-                                    <td>{{$activity_0['Activity details']}}</td>
+                                    <td>{{$activity_0['Activity_details']}}</td>
                                     <td class="text-center">
                                         <button class="btn btn-danger"><i class="bi bi-filetype-pdf"></i></button>
                                     </td>
