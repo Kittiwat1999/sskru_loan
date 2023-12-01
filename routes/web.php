@@ -55,13 +55,7 @@ Route::post('/createUser',[UsersController::class,'createUser']);
 Route::post('/editAccount',[UsersController::class,'editAccount']);
 
 
-Route::get('/borrower/index', function () {
-    return view('/borrower/index');
-});
 
-Route::get('/borrower/new_loan_request', function () {
-    return view('/borrower/new_loan_request');
-});
 
 Route::get('/contract', function () {
     return view('contract');
@@ -179,9 +173,16 @@ Route::get('/teacher_index',function () {
     return view('teacher_index');
 })->name('teacher_index');
 
-Route::get('/employee/index',function () {
-    return view('employee_index');
+
+Route::get('/borrower/index', function () {
+    return view('/borrower/index');
 });
+
+Route::get('/borrower/new_loan_request', function () {
+    $page = "document";  //"document","samary","information","success"
+    return view('/borrower/new_loan_request',compact('page'));
+});
+
 
 Route::get('/borrower/send_contract',function () {
     return view('/borrower/send_contract');
@@ -202,5 +203,10 @@ Route::get('/borrower/loan_request',function () {
 Route::get('/borrower/edit_borrower_information',function () {
     return view('/borrower/edit_borrower_information');
 });
+
+Route::get('/blank',function () {
+    return view('/blank');
+});
+
 
 
