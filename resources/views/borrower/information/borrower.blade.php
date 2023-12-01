@@ -116,40 +116,34 @@
         <input type="text" class="form-control" id="road" name="road">
     </div>
 
-    <div class="col-md-5">
-        <label for="city" class="col-md-12 col-form-label text-secondary">จังหวัด</label>
-        <select id="city" name="city" class="form-select" aria-label="Default select example">
-            <option selected>เลือกจังหวัด</option>
-            <option value="1">1</option>
-        </select>
-    </div>
-
-    <div class="col-md-5">
-    <label for="district" class="col-md-12 col-form-label text-secondary">อำเภอ</label>
-    <select disabled id="district" name="district" class="form-select" aria-label="Default select example">
-        <option selected>เลือกอำเภอ</option>
-        <option value="1">1</option>
-    </select>
-    </div>
-
-    <div class="col-md-5">
-    <label for="subDistrict" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-    <select disabled id="subDistrict" name="subDistrict" class="form-select" aria-label="Default select example">
-        <option selected>เลือกตำบล</option>
-        <option value="1">1</option>
-    </select>
-    </div>
-
-    <div class="col-md-3 mt-4">
+    <div class="col-md-3">
         <label for="postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-        <input type="text" class="form-control" id="postcode" name="postcode">
+        <input type="text" class="form-control" id="postcode" name="postcode" onblur="addressWithZipcode(this.value)">
+    </div>
+    <div class="col-md-9"></div>
+
+    <div class="col-md-5">
+        <label for="province" class="form-label text-secondary">จังหวัด</label>
+        <input type="text" class="form-control" id="province" name="province" readonly>
     </div>
 
+    <div class="col-md-5">
+        <label for="aumphure" class="form-label text-secondary">อำเภอ</label>
+        <input type="text" class="form-control" id="aumphure" name="aumphure" readonly>
+    </div>
+
+    <div class="col-md-5">
+    <label for="tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
+        <select id="tambon" name="tambon" class="form-select" aria-label="Default select example">
+            <option selected>เลือกตำบล</option>
+    </select>
+    </div>
+
+    <div class="col-md-7"></div>
     <div class="col-md-5">
         <label for="phoneNumber" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="phoneNumber" name="phoneNumber">
     </div>
-    <div class="col-md-7"></div>
     <div class="col-md-12"></div>
 
     <div class="col-md-5">
@@ -334,4 +328,88 @@
         <button type="button" class="btn btn-primary" onclick="nextPgae('parent-information-tab')">บันทึกข้อมูล</button>
     </div>
 </form><!-- End Multi Columns Form -->
+
+<script>
+    function addressWithZipcode(zip_code_input){
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // console.log(zip_code_input);
+            var tambons = [];
+            var aumphureId = '';
+            for(tambon of data){
+                if(zip_code_input == tambon.zip_code){
+                    // console.log(tambon.name_th)
+                    tambons.push(tambon.name_th.toString());
+                    if(aumphureId == '')aumphureId = tambon.amphure_id;
+                }
+            }
+            // console.log(tambons);
+            var selectElement = document.getElementById('tambon');
+            for(tb of tambons){
+                var newOption = document.createElement('option');
+
+                newOption.value = tb;
+                newOption.text = tb;
+
+                selectElement.add(newOption);
+            }
+            
+            getAumphure(aumphureId)
+            
+
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    }
+    function getAumphure(amphure_id){
+        // console.log(amphure_id);
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(aumphures => {
+                var province_id = '';
+                for(aumphure of aumphures){
+                    if(amphure_id == aumphure.id){
+                    document.getElementById('aumphure').value = aumphure.name_th;
+                    if(province_id == '')province_id = aumphure.province_id;
+                    }
+                }
+                getProvince(province_id);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    function getProvince(province_id){
+        // console.log(province_id);
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(provinces => {
+                for(province of provinces){
+                    if(province_id == province.id)document.getElementById('province').value = province.name_th;
+                }
+                
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+</script>
 
