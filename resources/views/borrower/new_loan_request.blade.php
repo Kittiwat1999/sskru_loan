@@ -27,8 +27,8 @@ index borrower
                             <small class="text-primary text-center text-progress-step fw-bold">กรอกข้อมูล</small>
                         </div>
                         <span
-                            class="bg-secondary w-25 rounded mt-auto mb-auto me-1 ms-1"
-                            style="height: 0.2rem"
+                            class="bg-secondary w-25 rounded mt-3 me-1 ms-1"
+                            style="height: 0.17rem"
                         >
                         </span>
                         <div class="d-flex flex-column">
@@ -42,36 +42,36 @@ index borrower
                                     aria-controls="company3"
                                     onclick="stepFunction(event)"
                                 >
-                                    <i class="bi bi-file-earmark-check"></i>
+                                  <i class="bi bi-file-earmark-arrow-down"></i>
+                                </button>
+                            </div>
+                            <small class="text-secondary text-center text-progress-step fw-bold">ดาวน์โหลด</small>
+                        </div>
+                        <span
+                            class="bg-secondary w-25 rounded mt-3 me-1 ms-1"
+                            style="height: 0.17rem"
+                        >
+                        </span>
+                        <div class="d-flex flex-column">
+                            <div class="text-center  mb-1">
+                                <button
+                                    class="btn bg-secondary text-white btn-sm rounded-pill"
+                                    style="width: 2rem; height: 2rem"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#company3"
+                                    aria-expanded="false"
+                                    aria-controls="company3"
+                                    onclick="stepFunction(event)"
+                                >
+                                <i class="bi bi-file-earmark-arrow-up"></i>
                                 </button>
                             </div>
                             <small class="text-secondary text-center text-progress-step fw-bold">ส่งเอกสาร</small>
                         </div>
-                        <span
-                            class="bg-secondary w-25 rounded mt-auto mb-auto me-1 ms-1"
-                            style="height: 0.2rem"
-                        >
-                        </span>
-                        <div class="d-flex flex-column">
-                            <div class="text-center  mb-1">
-                                <button
-                                    class="btn bg-secondary text-white btn-sm rounded-pill"
-                                    style="width: 2rem; height: 2rem"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#company3"
-                                    aria-expanded="false"
-                                    aria-controls="company3"
-                                    onclick="stepFunction(event)"
-                                >
-                                    <i class="bi bi-hourglass"></i>
-                                </button>
-                            </div>
-                            <small class="text-secondary text-center text-progress-step fw-bold">รออนุมัติ</small>
-                        </div>
                         
                         <span
-                            class="bg-secondary w-25 rounded mt-auto mb-auto me-1 ms-1"
-                            style="height: 0.2rem"
+                            class="bg-secondary w-25 rounded mt-3 me-1 ms-1"
+                            style="height: 0.17rem"
                         >
                         </span>
                         <div class="d-flex flex-column">
@@ -88,7 +88,7 @@ index borrower
                                     <i class="bi bi-check-circle"></i>
                                 </button>
                             </div>
-                            <small class="text-secondary text-center text-progress-step fw-bold">อนุมัติแล้ว</small>
+                            <small class="text-secondary text-center text-progress-step fw-bold">สถานะเอกสาร</small>
                         </div>
                     </div>
                 </div>
@@ -99,6 +99,8 @@ index borrower
       @include('borrower/new_loan_information')
     @elseif($page == "document")
       @include('borrower/new_loan_send_document')
+    @elseif($page == "download")
+      @include('borrower/new_loan_download_document')
     @elseif($page == "samary" || $page == "success")
       @include('borrower/new_loan_sammary')
     @endif

@@ -179,7 +179,7 @@ Route::get('/borrower/index', function () {
 });
 
 Route::get('/borrower/new_loan_request', function () {
-    $page = "document";  //"document","samary","information","success"
+    $page = "download";  //"document","samary","information","success","download"
     return view('/borrower/new_loan_request',compact('page'));
 });
 

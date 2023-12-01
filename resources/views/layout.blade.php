@@ -21,7 +21,8 @@
         padding: 0 16px;
         height: 40px;
         cursor: pointer;
-        background-color: white;
+        background-color: #dc3545;
+        color:#f8f9fa;
         border: 1px solid rgba(0, 0, 0, 0.16);
         box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
         margin-right: 16px;
@@ -30,12 +31,12 @@
 
         /* file upload button hover state */
         input[type="file"]::file-selector-button:hover {
-        background-color: #f3f4f6;
+        background-color: #dc3540;;
         }
 
         /* file upload button active state */
         input[type="file"]::file-selector-button:active {
-        background-color: #e5e7eb;
+        background-color: #dc3540;;
         }
     </style>
 
