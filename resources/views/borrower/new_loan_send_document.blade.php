@@ -28,6 +28,7 @@
             </ul>
             <div class="tab-content pt-2 mx-2" id="myTabContent">
                 <div class="tab-pane fade show active" id="yinyom-borrower" role="tabpanel" aria-labelledby="yinyom-borrower-tab">
+                    <!-- ฟอร์มส่งเอกสาร -->
                     <form class="row">
                         <div class="col-sm-12 my-3"></div>
                         <div class="col-md-2">
@@ -109,6 +110,7 @@
                             <button type="button" class="btn btn-primary" onclick="nextPgae('')">บันทึกข้อมูล</button>
                         </div>
                     </form>
+                    <!-- end ฟอร์มส่งเอกสาร -->
                 </div>
                 <div class="tab-pane fade" id="yinyom-parent" role="tabpanel" aria-labelledby="yinyom-parent-tab">
                     <form class="row">
@@ -533,7 +535,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </td>
                             </tr>
                         </tfoot>

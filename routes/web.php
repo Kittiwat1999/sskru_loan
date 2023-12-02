@@ -179,7 +179,8 @@ Route::get('/borrower/index', function () {
 });
 
 Route::get('/borrower/new_loan_request', function () {
-    $page = "download";  //"document","samary","information","success","download"
+    //เปลี่ยนค่าตรงนี้เพื่อไปยังหน้าต่างๆของการยื่นกู้
+    $page = "document";  //"document","samary","information","success","download"
     return view('/borrower/new_loan_request',compact('page'));
 });
 
