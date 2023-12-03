@@ -6,95 +6,120 @@ borrower confirmation form
 <section class="section Editing">
     <div class="card">
         <div class="card-body pt-3">
-                        <!-- Default Tabs -->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active text-black" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-                                    type="button" role="tab" aria-controls="home" aria-selected="true">ส่งแบบยืนยัน</button>
-                            </li>
-                        </ul>
-                        <div class="tab-content pt-2" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <br>
+            <!-- Default Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-                                        <form class="container">
-                                            <p>
-                                                <label class="text-secondary">จำนวนเงินค่าครองชีพที่เบิก</label>
-                                            <div class="col-4">
-                                                <input class="form-control" type="text" value="3,000">
-                                            </div>
-                                            </p>
-                                            <p>
-                                                <label class="text-secondary">จำนวนเงินค่าเทอมที่เบิก</label>
-                                            <div class="col-4">
-                                                <input class="form-control" type="text" value="45,000">
-                                            </div>
-                                            </p>
-                                        </form>
-                                        <br>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="id-card-tab" data-bs-toggle="tab" data-bs-target="#id-card" type="button" role="tab" aria-controls="id-card" aria-selected="true">แบบยืนยันการเบิกเงินกู้ยืม</button>
+                  </li>
 
-                                        <h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ตัวอย่างเอกสาร</h6>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sumary-tab" data-bs-toggle="tab" data-bs-target="#sumary" type="button" role="tab" aria-controls="sumary" aria-selected="false">ตรวจสอบการส่งเอกสาร</button>
+                </li>
 
-                                        <div align="center">
-                                            <img src="{{asset('assets/img/Group 2661.png')}}" alt="">
-                                        </div>
-                                        <br><br><br>
-                                        <div align="center">
+              </ul>
 
-                                            <!-- Default List group -->
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item">
+              <div class="tab-content pt-2" id="myTabContent">
 
-
-                                                    <div class="row-cols-auto">
-                                                        <div class="col-md-6">
-                                                            <label for="file" class="text-black">เอกสารแบบยืนยัน</label>
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <div>
-                                                                <input name="file" type="file" class="form-control" id="file">
-                                                            </div>
-                                                        </div>
-
-                                            </ul><!-- End Default List group -->
-                                            <br><br>
-                                        </div>
-                            </div>
-                            <!-- Large Modal -->
-                            <div align="right">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
-                                    ถัดไป
-                                </button>
-                            </div>
-
-                        <div class="modal fade" id="largeModal" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">ยืนยันการส่งเอกสาร</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                            <div class="container bg-light">
-                                                <div align="center">
-                                                    <br><br>
-                                                    แบบยืนยันการเบิกเงินกู้ยืม &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
-                                                    <br><br>
-                                                    บันทึกจำนวนเงินที่เบิก &nbsp; <img src="{{asset('assets/img/pngwing.com.png')}}" alt="" height="20px">
-                                                    <br><br><br><br>
-                                                </div>
-                                            </div>
-                                            <br>             
-                                        </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                <button type="button" class="btn btn-primary">ยืนยัน</button>
-                                </div>
-                            </div>
-                            </div>
+                <div class="tab-pane fade show active" id="id-card" role="tabpanel" aria-labelledby="id-card-tab">
+                    <!-- ฟอร์มส่งเอกสาร -->
+                    <form class="row">
+                        <div class="col-sm-12 my-3"></div>
+                        <div class="col-md-2">
+                            <label for="tuition-money" class="form-label text-secondary">จำนวนเงินค่าครองชีพที่เบิก</label>
                         </div>
-                        <!-- End Large Modal-->
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" value="3,000">
+                        </div>
+                        <div><br></div>
+                        <div class="col-md-2">
+                            <label for="cost-of-living" class="form-label text-secondary">จำนวนเงินค่าเทอมที่เบิก</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" value="45,000">
+                        </div>
+                        <div><br></div>
+                        <div class="col-md-2">
+                            <label for="downdoadbutton" class="form-label text-secondary">เอกสารที่ต้องส่ง</label>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="list-group list-borderless">
+                                <li class="list-group-item">
+                                    <i class="bi bi-dash"></i>
+                                    แบบยืนยันการเบิกเงินกู้ยืม
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-2 pt-2">
+                            <label for="exampdoc" class="form-label text-secondary">ตัวอย่างเอกสาร</label>
+                        </div>
+                        <div class="col-md-10 my-2 text-warning"></div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            <!-- Slides with controls -->
+                            <div id="borrower-document_1" class="carousel slide my-3 w-100 border" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active" id="yinyorm">
+                                        <img src="{{asset('assets/img/doc/ยืนยันการเบิกเงินกู้ยืม.png')}}" class="d-block w-100" alt="...">
+                                    </div>
+                                </div>
+                            </div><!-- End Slides with controls -->
+                        </div>
+                        
+                        <div class="col-md-12 m-2"></div>
+                        <div class="col-md-2 pt-2">
+                            <label for="examplefile" class="form-label text-secondary fw-bold">อัพโหลดไฟล์</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="file" placeholder="helo" name="examplefile" id="examplefile">
+                        </div>
+                        <div class="text-end my-3">
+                        <!-- reset Modal-->
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#basicModal">
+                                ล้างข้อมูล
+                            </button>
+                            <div class="modal fade" id="basicModal" tabindex="-1">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">ล้างข้อมูล</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-center">
+                                            ท่านต้องการล้างขอมูลบนฟอร์มหรือไม่
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
+                                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">ล้างข้อมูล</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div><!-- End reset Modal-->
+                            <button type="button" class="btn btn-primary" onclick="nextPgae('')">บันทึกข้อมูล</button>
+                        </div>
+                    </form>
+                    <!-- end ฟอร์มส่งเอกสาร -->
                 </div>
+
+                <div class="tab-pane fade" id="sumary" role="tabpanel" aria-labelledby="sumary-tab">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="text-dark fw-bold">รายการเอกสาร</p>
+                        </div>
+                        
+                        <div class="col-sm-12 my-1">
+                            <span>แบบยืนยันการเบิกเงินกู้ยืม</span>&emsp;
+                            <i class="bi bi-check-lg text-success"></i>
+                        </div>
+                       
+                        <div class="text-end my-1">
+                            <button type="button" class="btn btn-primary">ส่งเอกสาร</button>
+                        </div>
+                    </div>
+                </div>
+
               </div><!-- End Default Tabs -->
         </div>
     </div>
