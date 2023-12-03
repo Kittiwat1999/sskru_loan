@@ -21,9 +21,6 @@
                     <li class="nav-item" role="presentation">
                     <button class="nav-link" id="approve-tab" data-bs-toggle="tab" data-bs-target="#approve" type="button" role="tab" aria-controls="approve" aria-selected="true">อนุมัติแล้ว</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="no-approval-tab" data-bs-toggle="tab" data-bs-target="#no-approval" type="button" role="tab" aria-controls="no-approval" aria-selected="false">รอการอนุมัติจากคณะ/วิทยาลัย,อาจารย์ที่ปรึกษา</button>
-                    </li>
                 </ul>
                 <?php 
                 date_default_timezone_set("Asia/Bangkok");
@@ -77,8 +74,8 @@
                                   <th scope="col">รหัสนักศึกษา</th>
                                   <th scope="col"></th>
                                   <th scope="col">วันที่ส่งเอกสาร</th>
-                                  <th class="text-center" scope="col">ความเห็นคณะ</th>
-                                  <th scope="col">อาจารย์ที่ปรึกษา</th>
+                                  <!-- <th class="text-center" scope="col">ความเห็นคณะ</th>
+                                  <th scope="col">อาจารย์ที่ปรึกษา</th> -->
                                 </tr>
                               </thead>
                               <tbody >
@@ -96,8 +93,8 @@
                                   <td>
                                     {{$borrower['date_return']}}
                                   </td>
-                                  <td class="text-center"><span class="text-success fw-light">{{$borrower['faculty_check']}}</span></td>
-                                  <td><span class="text-secondary fw-light"> {{$borrower['professor']}}</span></td>
+                                  <!-- <td class="text-center"><span class="text-success fw-light">{{$borrower['faculty_check']}}</span></td>
+                                  <td><span class="text-secondary fw-light"> {{$borrower['professor']}}</span></td> -->
                                   <button id="doc-button{{$borrower['id']}}" type="button" class="d-none btn btn-primary" data-bs-toggle="modal" data-bs-target="#docModal">
                                     Vertically centered
                                   </button>
@@ -306,8 +303,8 @@
                                   <th scope="col"></th>
                                   <th scope="col">วันที่อนุมัติ</th>
                                   <th class="text-center" scope="col">ความเห็นคณะ</th>
-                                  <th scope="col">อาจารย์ที่ปรึกษา</th>
-                                  <th scope="col">ผู้ตรวจ</th>
+                                  <!-- <th scope="col">อาจารย์ที่ปรึกษา</th>
+                                  <th scope="col">ผู้ตรวจ</th> -->
                                 </tr>
                               </thead>
                               <tbody>
@@ -326,8 +323,8 @@
                                     {{$borrower['date_return']}}
                                   </td>
                                   <td class="text-center"><span class="text-success fw-light">{{$borrower['faculty_check']}}</span></td>
-                                  <td><span class="text-secondary fw-light"> {{$borrower['professor']}}</span></td>
-                                  <td><span class="text-secondary fw-light">{{$borrower['ckeker_name']}}</span></td>
+                                  <!-- <td><span class="text-secondary fw-light"> {{$borrower['professor']}}</span></td>
+                                  <td><span class="text-secondary fw-light">{{$borrower['ckeker_name']}}</span></td> -->
                                 </tr>
                                 @endforeach
                                   
@@ -339,95 +336,6 @@
                       </div>
                     </div>
                     <!-- อนุมัติแล้ว -->
-                    <!-- ยังไม่มีการอนุมัติ -->
-                    <div class="tab-pane fade pt-3" id="no-approval" role="tabpanel" aria-labelledby="no-approval-tab">
-                    <div class="row">
-                        <div class="col-md-4">
-                          <label for="borrower-type" class="col-form-label text-secondary">เลือกดูสถานะ</label>
-                          <select id="major" class="form-select" aria-label="Default select example">
-                              <option selected value="0">ทั้งหมด</option>
-                              <option value="1">อาจารย์ที่ปรึกษายังไม่อนุมัติ</option>
-                              <option value="2">คณะยังไม่อนุมัติ</option>
-                              <option value="3">ยังไม่มีการอนุมัติใดๆ</option>
-                          </select>
-                        </div>
-                        <div class="col-md-8"></div>
-                        <div class="col-md-4">
-                          <label for="borrower-type" class="col-form-label text-secondary">คณะ</label>
-                          <select id="faculty" class="form-select" aria-label="Default select example">
-                              <option selected>ทั้งหมด</option>
-                              <option value="1">คณะอะไร</option>
-                              <option value="2">หมูกรอบ</option>
-                          </select>
-                        </div>
-                        <div class="col-md-4">
-                          <label for="borrower-type" class="col-form-label text-secondary">คณะ</label>
-                          <select id="major" class="form-select" aria-label="Default select example">
-                              <option selected>ทั้งหมด</option>
-                              <option value="1">สาขาอะไร</option>
-                              <option value="2">สักอย่าง</option>
-                          </select>
-                        </div>
-                        <div class="col-md-2">
-                          <label for="grade" class="col-form-label text-secondary">ชั้นปี</label>
-                          <select id="grade" class="form-select" aria-label="Default select example">
-                              <option selected>ทั้งหมด</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                          </select>
-                        </div>
-                       
-                        <div class="col-md-12"><p class="text-secondary mt-3 mb-3">จำนวน {{ count($loan_request) }} ราย</p></div>
-                        <div class="col-md-12">
-                          <!-- Dark Table -->
-                          <?php 
-                            $loan_request = array(
-                              array('id'=>'6410014103','name'=>'กิตติวัฒน์ เทียนเพ็ชร','faculty'=>'คณะศิลปศาสตร์และวิทยาศาสตร์','major'=>'สาขาวิชาวิทยาการคอมพิวเตอร์','professor'=>'-','faculty_check'=>'อนุมัติ','ckeker_name'=>'ปกรณ์','grade'=>'3','date_return'=>date("Y-m-d H:i:s"),'comment'=>array('คำยินยอมผู้แทน'=>'ลายเซ็นไม่ตรงสำเนาบัตร','หนังสือรับรองรายได้'=>'เอกสารไม่ชัดเจน')),
-                              array('id'=>'6410014102','name'=>'กฤษณะ ภารสุวรรณ','faculty'=>'คณะมนุษยศาสตร์และสังคมศาสตร์','major'=>'สาขาวิชาภาษาญี่ปุ่น','professor'=>'มักกานากัล','faculty_check'=>'-','ckeker_name'=>'กรวี','grade'=>'3','date_return'=>date("Y-m-d H:i:s"),'comment'=>array('สำเนาบัตรผู้ปกครอง'=>'เอกสารไม่ชัดเจน','หนังสือรับรองรายได้'=>'เอกสารไม่ชัดเจน')),
-                              array('id'=>'6410014101','name'=>'กฤษดา เจริญวิเชียรฉาย','faculty'=>'คณะบริหารธุรกิจและการบัญชี','major'=>'สาขาวิชาการบริหารธุรกิจ','professor'=>'ซเนป','faculty_check'=>'-','ckeker_name'=>'มาโนช','grade'=>'3','date_return'=>date("Y-m-d H:i:s"),'comment'=>array('คำยินยอมผู้แทน'=>'ลายเซ็นไม่ตรงสำเนาบัตร','ใบรายงานผลการเรียน'=>'เอกสารไม่ชัดเจน')),
-                              array('id'=>'6410014106','name'=>'ภัทรนันท์ ประสานสุข','faculty'=>'วิทยาลัยกฎหมายและการปกครอง','major'=>'สาขาวิชารัฐประศาสนศาสตร์','professor'=>'-','faculty_check'=>'-','ckeker_name'=>'สถาพร','grade'=>'3','date_return'=>date("Y-m-d H:i:s"),'comment'=>array('คำยินยอมผู้แทน'=>'ลายเซ็นไม่ตรงสำเนาบัตร','หนังสือรับรองรายได้'=>'เอกสารไม่ชัดเจน','สำเนาบัตรผู้แทน'=>'เอกสารไม่ชัดเจน')),
-                            )
-                          ?>
-                          <div class="table-responsive">
-                            <table class="table table-striped">
-                              <thead >
-                                <tr>
-                                  <th scope="col">#</th>
-                                  <th scope="col">รหัสนักศึกษา</th>
-                                  <th scope="col"></th>
-                                  <th scope="col">วันที่ส่งเอกสาร</th>
-                                  <th class="text-center" scope="col">ความเห็นคณะ</th>
-                                  <th scope="col">อาจารย์ที่ปรึกษา</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <?php $i = 1?>
-                                @foreach($loan_request as $borrower)
-                                <tr>
-                                  <td>{{ $i++ }}</td>
-                                  <td>{{$borrower['id']}}</td>
-                                  <td>
-                                    <span>{{$borrower['name']}}</span><br>
-                                    <span class="text-secondary fw-lighter">คณะ: {{$borrower['faculty']}}</span><br>
-                                    <span class="text-secondary fw-lighter">สาขา: {{$borrower['major']}}</span><br>
-                                    <span class="text-secondary fw-lighter">ชั้นปี: {{$borrower['grade']}}</span><br>
-                                  </td>
-                                  <td>{{$borrower['date_return']}}</td>
-                                  <td class="text-center"><span class="text-dark fw-light">{{$borrower['faculty_check']}}</span></td>
-                                  <td><span class="text-dark fw-light">{{$borrower['professor']}}</span></td>
-                                </tr>
-                                @endforeach
-                              </tbody>
-                            </table>
-                          </div>
-                          <!-- End Dark Table -->
-                        </div>
-                      </div>
-                    </div>
-                    <!-- ยังไม่มีการอนุมัติ -->
 
                 </div><!-- End loan_list Tabs -->
             </div>
@@ -1016,7 +924,7 @@
       }
 
       function showEditModal(borrowerId){
-        fetch(`/new_loan_submission/to_edit/${borrowerId}`)
+        fetch(`/faculty/new_loan_submission/to_edit/${borrowerId}`)
         .then(response => {
             // Check if the request was successful
             if (!response.ok) {

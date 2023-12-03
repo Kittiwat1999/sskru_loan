@@ -73,7 +73,8 @@
                                     <i class="bi bi-caret-right-fill"></i>
                                 </button>
                     
-                            </div><!-- End Slides with controls -->
+                            </div>
+                            <!-- End Slides with controls -->
                         </div>
                         
                         <div class="col-md-12 m-2"></div>

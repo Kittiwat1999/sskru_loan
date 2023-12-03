@@ -334,237 +334,230 @@
     <!-- doc Modal-->
     <div class="modal fade" id="docModal" tabindex="-1">
       <div class="modal-dialog modal-xl">
-        <div class="modal-content  bg-dark">
+        <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-light">เอกสารยื่นกู้</h5>
-          <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close"><I class="bi bi-x-lg"></I></button>
+          <h5 class="modal-title">เอกสารยื่นกู้</h5>
+          <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"><I class="bi bi-x-lg"></I></button>
         </div>
         <!-- modal content -->
         <div class="modal-body" id="doc-content">
-          <div class="mt-3 mb-3">
+          <!-- สำเนาบัตรผู้กู้ -->
+          <div class="card">
+            <div class="card-body">
+              <h5 class="fw-bold my-3">สำเนาบัตรผู้กู้</h5>
+              <div class="d-flex flex-row justify-content-center">
+                <iframe  src="{{asset('assets/pdf/ยินยอมให้เปิดเผยข้อมูล.pdf#zoom=100')}}" width="100%" height="1500" ></iframe>
+              </div>
+              <fieldset class="row mb-3 mt-3">
+                <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="borrower_confirm" id="borrower_confirm_radio" value="true" checked onchange="enableCheckbox('borrower_')">
+                    <label class="form-check-label" for="borrower_confirm_radio">
+                      เอกสารถูกต้อง
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="borrower_confirm" id="borrower_to_edit" value="false" onchange="enableCheckbox('borrower_')">
+                    <label class="form-check-label" for="borrower_to_edit">
+                      เอกสารไม่ถูกต้อง
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+              <div class="row mb-3 mt-2 text-dark text-start">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">
 
-            <!-- สำเนาบัตรผู้กู้ -->
-            <h5 class="fw-bold text-light">สำเนาบัตรผู้กู้</h5>
-            <div class="d-flex flex-row justify-content-center">
-              <iframe  src="{{asset('assets/pdf/ยินยอมให้เปิดเผยข้อมูล.pdf#zoom=100')}}" width="100%" height="1500" ></iframe>
-            </div>
-            <div class="card mt-3">
-              <div class="card-body">
-                <fieldset class="row mb-3 mt-3">
-                  <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
-                  <div class="col-sm-10">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="borrower_confirm" id="borrower_confirm_radio" value="true" checked onchange="enableCheckbox('borrower_')">
-                      <label class="form-check-label" for="borrower_confirm_radio">
-                        เอกสารถูกต้อง
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="borrower_confirm" id="borrower_to_edit" value="false" onchange="enableCheckbox('borrower_')">
-                      <label class="form-check-label" for="borrower_to_edit">
-                        เอกสารไม่ถูกต้อง
-                      </label>
-                    </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="borrower_comment_1" disabled>
+                    <label class="form-check-label" for="borrower_comment_1" name="borrower_comment_1">
+                      เอกสารไม่ชัดเจน
+                    </label>
                   </div>
-                </fieldset>
-                <div class="row mb-3 mt-2 text-dark text-start">
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-5">
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="borrower_comment_1" disabled>
-                      <label class="form-check-label" for="borrower_comment_1" name="borrower_comment_1">
-                        เอกสารไม่ชัดเจน
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="borrower_comment_2" disabled>
-                      <label class="form-check-label" for="borrower_comment_2" name="borrower_comment_2">
-                        บัตรประชาชนหมดอายุ
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="borrower_more_radio" disabled onchange="enableInputArea('borrower_')">
-                      <label class="form-check-label" for="borrower_more_radio" >
-                        อื่นๆ
-                      </label>
-                    </div>
-                    <div class="input-group">
-                      <label for="borrower_moreText"></label>
-                      <textarea class="form-control" name="borrower_moreText" id="borrower_moreText" cols="30" rows="4" disabled></textarea>
-                    </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="borrower_comment_2" disabled>
+                    <label class="form-check-label" for="borrower_comment_2" name="borrower_comment_2">
+                      บัตรประชาชนหมดอายุ
+                    </label>
                   </div>
-                  <div class="col-sm-5">
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="borrower_comment_3" disabled>
-                      <label class="form-check-label" for="borrower_comment_3" name="borrower_comment_3">
-                        ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="borrower_comment_4" disabled>
-                      <label class="form-check-label" for="borrower_comment_4" name="borrower_comment_4">
-                        สำเนาบัตรประชาชนไม่ถูกต้อง
-                      </label>
-                    </div>
-  
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="borrower_more_radio" disabled onchange="enableInputArea('borrower_')">
+                    <label class="form-check-label" for="borrower_more_radio" >
+                      อื่นๆ
+                    </label>
                   </div>
+                  <div class="input-group">
+                    <label for="borrower_moreText"></label>
+                    <textarea class="form-control" name="borrower_moreText" id="borrower_moreText" cols="30" rows="4" disabled></textarea>
+                  </div>
+                </div>
+                <div class="col-sm-5">
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="borrower_comment_3" disabled>
+                    <label class="form-check-label" for="borrower_comment_3" name="borrower_comment_3">
+                      ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="borrower_comment_4" disabled>
+                    <label class="form-check-label" for="borrower_comment_4" name="borrower_comment_4">
+                      สำเนาบัตรประชาชนไม่ถูกต้อง
+                    </label>
+                  </div>
+
                 </div>
               </div>
             </div>
           </div>
           <!-- end สำเนาบัตรผู้กู้ -->
           <!-- บันทึกกิจกรรมจิตอาสา -->
-          <div class="mb-3 mt-3">
-            <h5 class="fw-bold text-light">บันทึกกิจกรรมจิตอาสา</h5>
-            <div class="d-flex flex-row justify-content-center">
-              <iframe  src="{{asset('assets/pdf/กิจกรรม.pdf#zoom=100')}}" width="100%" height="1500" ></iframe>
-            </div>
-            <div class="card mt-3">
-              <div class="card-body">
-                <fieldset class="row mb-3 mt-3">
-                  <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
-                  <div class="col-sm-10">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="volunteer_activities_confirm" id="volunteer_activities_confirm_radio" value="true" checked onchange="enableCheckbox('volunteer_activities_')">
-                      <label class="form-check-label" for="volunteer_activities_confirm_radio">
-                        เอกสารถูกต้อง
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="volunteer_activities_confirm" id="volunteer_activities_to_edit" value="false" onchange="enableCheckbox('volunteer_activities_')">
-                      <label class="form-check-label" for="volunteer_activities_to_edit">
-                        เอกสารไม่ถูกต้อง
-                      </label>
-                    </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="fw-bold my-3">บันทึกกิจกรรมจิตอาสา</h5>
+              <div class="d-flex flex-row justify-content-center">
+                <iframe  src="{{asset('assets/pdf/กิจกรรม.pdf#zoom=100')}}" width="100%" height="1500" ></iframe>
+              </div>
+              <fieldset class="row mb-3 mt-3">
+                <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volunteer_activities_confirm" id="volunteer_activities_confirm_radio" value="true" checked onchange="enableCheckbox('volunteer_activities_')">
+                    <label class="form-check-label" for="volunteer_activities_confirm_radio">
+                      เอกสารถูกต้อง
+                    </label>
                   </div>
-                </fieldset>
-                <div class="row mb-3 mt-2 text-dark text-start">
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-5">
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_1" disabled>
-                      <label class="form-check-label" for="volunteer_activities_comment_1" name="volunteer_activities_comment_1">
-                        เอกสารไม่ชัดเจน
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_2" disabled>
-                      <label class="form-check-label" for="volunteer_activities_comment_2" name="volunteer_activities_comment_2">
-                        บัตรประชาชนหมดอายุ
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="volunteer_activities_more_radio" disabled onchange="enableInputArea('volunteer_activities_')">
-                      <label class="form-check-label" for="volunteer_activities_more_radio" >
-                        อื่นๆ
-                      </label>
-                    </div>
-                    <div class="input-group">
-                      <label for="volunteer_activities_moreText"></label>
-                      <textarea class="form-control" name="volunteer_activities_moreText" id="volunteer_activities_moreText" cols="30" rows="4" disabled></textarea>
-                    </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volunteer_activities_confirm" id="volunteer_activities_to_edit" value="false" onchange="enableCheckbox('volunteer_activities_')">
+                    <label class="form-check-label" for="volunteer_activities_to_edit">
+                      เอกสารไม่ถูกต้อง
+                    </label>
                   </div>
-                  <div class="col-sm-5">
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_3" disabled>
-                      <label class="form-check-label" for="volunteer_activities_comment_3" name="volunteer_activities_comment_3">
-                        ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_4" disabled>
-                      <label class="form-check-label" for="volunteer_activities_comment_4" name="volunteer_activities_comment_4">
-                        สำเนาบัตรประชาชนไม่ถูกต้อง
-                      </label>
-                    </div>
-  
+                </div>
+              </fieldset>
+              <div class="row mb-3 mt-2 text-dark text-start">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_1" disabled>
+                    <label class="form-check-label" for="volunteer_activities_comment_1" name="volunteer_activities_comment_1">
+                      เอกสารไม่ชัดเจน
+                    </label>
                   </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_2" disabled>
+                    <label class="form-check-label" for="volunteer_activities_comment_2" name="volunteer_activities_comment_2">
+                      บัตรประชาชนหมดอายุ
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="volunteer_activities_more_radio" disabled onchange="enableInputArea('volunteer_activities_')">
+                    <label class="form-check-label" for="volunteer_activities_more_radio" >
+                      อื่นๆ
+                    </label>
+                  </div>
+                  <div class="input-group">
+                    <label for="volunteer_activities_moreText"></label>
+                    <textarea class="form-control" name="volunteer_activities_moreText" id="volunteer_activities_moreText" cols="30" rows="4" disabled></textarea>
+                  </div>
+                </div>
+                <div class="col-sm-5">
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_3" disabled>
+                    <label class="form-check-label" for="volunteer_activities_comment_3" name="volunteer_activities_comment_3">
+                      ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="volunteer_activities_comment_4" disabled>
+                    <label class="form-check-label" for="volunteer_activities_comment_4" name="volunteer_activities_comment_4">
+                      สำเนาบัตรประชาชนไม่ถูกต้อง
+                    </label>
+                  </div>
+
                 </div>
               </div>
             </div>
           </div>
           <!-- end บันทึกกิจกรรมจิตอาสา -->
           <!-- ใบแสดงผลการเรียน -->
-          <div class="mb-3 mt-3">
-            <h5 class="fw-bold text-light">ใบแสดงผลการเรียน</h5>
-            <div class="d-flex flex-row justify-content-center">
-              <iframe  src="{{asset('assets/pdf/ใบเกรด.pdf#zoom=100')}}" width="100%" height="1500" ></iframe>
-            </div>
-            <div class="card mt-3">
-              <div class="card-body">
-                <fieldset class="row mb-3 mt-3">
-                  <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
-                  <div class="col-sm-10">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="gpa_confirm" id="gpa_confirm_radio" value="true" checked onchange="enableCheckbox('gpa_')">
-                      <label class="form-check-label" for="gpa_confirm_radio">
-                        เอกสารถูกต้อง
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="gpa_confirm" id="gpa_to_edit" value="false" onchange="enableCheckbox('gpa_')">
-                      <label class="form-check-label" for="gpa_to_edit">
-                        เอกสารไม่ถูกต้อง
-                      </label>
-                    </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="fw-bold my-3">ใบแสดงผลการเรียน</h5>
+              <div class="d-flex flex-row justify-content-center">
+                <iframe  src="{{asset('assets/pdf/ใบเกรด.pdf#zoom=100')}}" width="100%" height="1500" ></iframe>
+              </div>
+              <fieldset class="row mb-3 mt-3">
+                <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gpa_confirm" id="gpa_confirm_radio" value="true" checked onchange="enableCheckbox('gpa_')">
+                    <label class="form-check-label" for="gpa_confirm_radio">
+                      เอกสารถูกต้อง
+                    </label>
                   </div>
-                </fieldset>
-                <div class="row mb-3 mt-2 text-dark text-start">
-                  <div class="col-sm-2"></div>
-                  <div class="col-sm-5">
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="gpa_comment_1" disabled>
-                      <label class="form-check-label" for="gpa_comment_1" name="gpa_comment_1">
-                        เอกสารไม่ชัดเจน
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="gpa_comment_2" disabled>
-                      <label class="form-check-label" for="gpa_comment_2" name="gpa_comment_2">
-                        บัตรประชาชนหมดอายุ
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="gpa_more_radio" disabled onchange="enableInputArea('gpa_')">
-                      <label class="form-check-label" for="gpa_more_radio" >
-                        อื่นๆ
-                      </label>
-                    </div>
-                    <div class="input-group">
-                      <label for="gpa_moreText"></label>
-                      <textarea class="form-control" name="gpa_moreText" id="gpa_moreText" cols="30" rows="4" disabled></textarea>
-                    </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gpa_confirm" id="gpa_to_edit" value="false" onchange="enableCheckbox('gpa_')">
+                    <label class="form-check-label" for="gpa_to_edit">
+                      เอกสารไม่ถูกต้อง
+                    </label>
                   </div>
-                  <div class="col-sm-5">
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="gpa_comment_3" disabled>
-                      <label class="form-check-label" for="gpa_comment_3" name="gpa_comment_3">
-                        ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
-                      </label>
-                    </div>
-  
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="gpa_comment_4" disabled>
-                      <label class="form-check-label" for="gpa_comment_4" name="gpa_comment_4">
-                        สำเนาบัตรประชาชนไม่ถูกต้อง
-                      </label>
-                    </div>
-  
+                </div>
+              </fieldset>
+              <div class="row mb-3 mt-2 text-dark text-start">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gpa_comment_1" disabled>
+                    <label class="form-check-label" for="gpa_comment_1" name="gpa_comment_1">
+                      เอกสารไม่ชัดเจน
+                    </label>
                   </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gpa_comment_2" disabled>
+                    <label class="form-check-label" for="gpa_comment_2" name="gpa_comment_2">
+                      บัตรประชาชนหมดอายุ
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gpa_more_radio" disabled onchange="enableInputArea('gpa_')">
+                    <label class="form-check-label" for="gpa_more_radio" >
+                      อื่นๆ
+                    </label>
+                  </div>
+                  <div class="input-group">
+                    <label for="gpa_moreText"></label>
+                    <textarea class="form-control" name="gpa_moreText" id="gpa_moreText" cols="30" rows="4" disabled></textarea>
+                  </div>
+                </div>
+                <div class="col-sm-5">
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gpa_comment_3" disabled>
+                    <label class="form-check-label" for="gpa_comment_3" name="gpa_comment_3">
+                      ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gpa_comment_4" disabled>
+                    <label class="form-check-label" for="gpa_comment_4" name="gpa_comment_4">
+                      สำเนาบัตรประชาชนไม่ถูกต้อง
+                    </label>
+                  </div>
+
                 </div>
               </div>
             </div>
