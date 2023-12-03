@@ -8,9 +8,12 @@
         @yield('title')
     </title>
     <style>
+
         iframe {
-            max-width: 100%;
+            width: 100%;
+            height:80rem;
         }
+
         .text-progress-step{
             font-size: 11px;
         }
@@ -228,7 +231,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";
+        $privilage = "admin";
     ?>
     <aside id="sidebar" class="sidebar">
 

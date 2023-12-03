@@ -132,6 +132,13 @@ Route::get('/new_loan_submission', function () {
     return view('new_loan_submission',compact('privilage'));
 })->name('new_loan_submission');
 
+Route::get('/check_new_loan_sub/new_loan_submission', function () {
+    return view('check_new_loan_sub');
+});
+
+//check_new_loan_sub
+
+
 Route::get('/new_loan_submission/to_edit/{id}',function ($id){
     $loan_request = array(
         array('id'=>'6410014103','name'=>'กิตติวัฒน์ เทียนเพ็ชร','faculty'=>'คณะศิลปศาสตร์และวิทยาศาสตร์','major'=>'สาขาวิชาวิทยาการคอมพิวเตอร์','professor'=>'อลงกรณ์','faculty_check'=>'อนุมัติ','ckeker_name'=>'ปกรณ์','grade'=>'3','date_return'=>date("Y-m-d H:i:s"),'comment'=>array(['comname'=>'คำยินยอมผู้แทน','comdescript'=>'ลายเซ็นไม่ตรงสำเนาบัตร'],['comname'=>'หนังสือรับรองรายได้','comdescript'=>'เอกสารไม่ชัดเจน']),'tel'=>'0931037881','type'=>'ขาดแคลนคุณทรัพย์','age'=>'24'),
@@ -183,6 +190,7 @@ Route::get('/borrower/new_loan_request', function () {
     $page = "document";  //"document","samary","information","success","download"
     return view('/borrower/new_loan_request',compact('page'));
 });
+
 
 
 Route::get('/borrower/send_contract',function () {
