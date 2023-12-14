@@ -4,26 +4,66 @@ borrower contract
 @endsection
 @section('content')
 <section class="section Editing">
+    
+    <div class="card pt-3">
+        <div class="card-body">
+            <div class="row">
+            <div class="container-fluid align-items-center p-0 m-0">
+                <div class="d-flex justify-content-around p-0 m-0">
+                    <div class="d-flex flex-column">
+                            <div class="text-center mb-1">
+                                <button class="btn bg-primary text-white btn-sm rounded-pill" style="width: 2rem; height: 2rem" data-bs-toggle="collapse" data-bs-target="#company3" aria-expanded="false" aria-controls="company3" onclick="stepFunction(event)">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </div>
+                            <small class="text-primary text-center text-progress-step fw-bold">สัญญาและสำเนาบัตรประชาชน</small>
+                        </div>
+                        <span class="bg-secondary w-25 rounded mt-3 me-1 ms-1" style="height: 0.17rem">
+                        </span>
+                        <div class="d-flex flex-column">
+                            <div class="text-center  mb-1">
+                                <button class="btn bg-secondary text-white btn-sm rounded-pill" style="width: 2rem; height: 2rem" data-bs-toggle="collapse" data-bs-target="#company3" aria-expanded="false" aria-controls="company3" onclick="stepFunction(event)">
+                                  <i class="bi bi-file-earmark-arrow-down"></i>
+                                </button>
+                            </div>
+                            <small class="text-secondary text-center text-progress-step fw-bold">แบบยืนยันการเบิกเงินกู้ยืม</small>
+                        </div>
+                        <span class="bg-secondary w-25 rounded mt-3 me-1 ms-1" style="height: 0.17rem">
+                        </span>
+                        <div class="d-flex flex-column">
+                            <div class="text-center  mb-1">
+                                <button class="btn bg-secondary text-white btn-sm rounded-pill" style="width: 2rem; height: 2rem" data-bs-toggle="collapse" data-bs-target="#company3" aria-expanded="false" aria-controls="company3" onclick="stepFunction(event)">
+                                <i class="bi bi-file-earmark-arrow-up"></i>
+                                </button>
+                            </div>
+                            <small class="text-secondary text-center text-progress-step fw-bold">ส่งเอกสาร</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="card">
         <div class="card-body pt-3">
             <!-- Default Tabs -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
 
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="document-loan-tab" data-bs-toggle="tab" data-bs-target="#document-loan" type="button" role="tab" aria-controls="document-loan" aria-selected="true">สัญญาและสำเนาบัตรประชาชน</button>
+                    <button class="nav-link active" id="document-loan-tab" data-bs-toggle="tab" data-bs-target="#document-loan" type="button" role="tab" aria-controls="document-loan" aria-selected="true">สัญญาและสำเนาบัตรประชาชน</button>
                 </li>
 
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="id-card-tab" data-bs-toggle="tab" data-bs-target="#id-card" type="button" role="tab" aria-controls="id-card" aria-selected="false">แบบยืนยันการเบิกเงินกู้ยืม</button>
-                  </li>
-
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="sumary-tab" data-bs-toggle="tab" data-bs-target="#sumary" type="button" role="tab" aria-controls="sumary" aria-selected="false">ตรวจสอบการส่งเอกสาร</button>
                 </li>
 
-              </ul>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sumary-tab" data-bs-toggle="tab" data-bs-target="#sumary" type="button" role="tab" aria-controls="sumary" aria-selected="false">ส่งเอกสาร</button>
+                </li>
 
-              <div class="tab-content pt-2" id="myTabContent">
+            </ul>
+
+            <div class="tab-content pt-2" id="myTabContent">
 
                 <div class="tab-pane fade show active" id="document-loan" role="tabpanel" aria-labelledby="document-loan-tab">
                     <!-- ฟอร์มส่งเอกสาร -->
@@ -36,18 +76,20 @@ borrower contract
                             <ul class="list-group list-borderless">
                                 <li class="list-group-item">
                                     <i class="bi bi-dash"></i>
-                                    สัญญากู้ยืมเงิน
+                                    สัญญากู้ยืมเงินกองทุนเงินให้กู้ยืมเพื่อการศึกษา แบบทั่วไป
                                 </li>
                                 <li class="list-group-item">
                                     <i class="bi bi-dash"></i>
-                                    สำเนาบัตรประชาชนผู้กู้พร้อมเซ็นสำเนาถูกต้อง
+                                    สำเนาบัตรประชาชนผู้กู้พร้อมรับรองสำเนาถูกต้อง
                                 </li>
                                 <li class="list-group-item">
                                     <i class="bi bi-dash"></i>
-                                    สำเนาบัตรประชาชนผู้แทนโดยชอบธรรมพร้อมเซ็นสำเนาถูกต้อง
+                                    สำเนาบัตรประชาชนผู้แทนโดยชอบธรรมพร้อมรับรองสำเนาถูกต้อง
                                 </li>
                             </ul>
                         </div>
+                        <div class="col-md-2 pt-2"></div>
+                        <div class="col-md-10 my-2 text-danger">*เอกสารทั้งหมดต้องอยู่ในไฟล์เดียวกัน*</div>
                         <div class="col-md-2 pt-2">
                             <label for="exampdoc" class="form-label text-secondary">ตัวอย่างเอกสาร</label>
                         </div>
@@ -58,22 +100,22 @@ borrower contract
                             <div id="borrower-document" class="carousel slide my-3 w-100 border" data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active" id="over-course-1">
-                                        <img src="{{asset('assets/img/doc/สัญญา_1.png')}}" class="d-block w-100" alt="...">
+                                        <img src="{{asset('assets/img/doc/ตัวอย่างสัญญากู้ยืมเงิน_1.jpg')}}" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item" id="over-course-2">
-                                        <img src="{{asset('assets/img/doc/สัญญา_2.png')}}" class="d-block w-100" alt="...">
+                                        <img src="{{asset('assets/img/doc/ตัวอย่างสัญญากู้ยืมเงิน_2.jpg')}}" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item" id="over-course-3">
-                                        <img src="{{asset('assets/img/doc/สัญญา_3.png')}}" class="d-block w-100" alt="...">
+                                        <img src="{{asset('assets/img/doc/ตัวอย่างสัญญากู้ยืมเงิน_3.jpg')}}" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item" id="over-course-4">
-                                        <img src="{{asset('assets/img/doc/สัญญา_4.png')}}" class="d-block w-100" alt="...">
+                                        <img src="{{asset('assets/img/doc/ตัวอย่างสัญญากู้ยืมเงิน_4.jpg')}}" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item" id="over-course-5">
-                                        <img src="{{asset('assets/img/doc/สัญญา_5.png')}}" class="d-block w-100" alt="...">
+                                        <img src="{{asset('assets/img/doc/ตัวอย่างสัญญากู้ยืมเงิน_5.jpg')}}" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item" id="over-course-6">
-                                        <img src="{{asset('assets/img/doc/สัญญา_6.png')}}" class="d-block w-100" alt="...">
+                                        <img src="{{asset('assets/img/doc/ตัวอย่างสัญญากู้ยืมเงิน_6.jpg')}}" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item" id="yinyorm">
                                         <img src="{{asset('assets/img/exmImg/บัตรประชาชนผู้กู็.jpg')}}" class="d-block w-100" alt="...">
@@ -124,7 +166,7 @@ borrower contract
                                 </div>
                                 </div>
                             </div><!-- End reset Modal-->
-                            <button type="button" class="btn btn-primary" onclick="nextPgae('')">บันทึกข้อมูล</button>
+                            <button type="button" class="btn btn-primary" onclick="nextPgae('id-card-tab')">ถัดไป</button>
                         </div>
                     </form>
                     <!-- end ฟอร์มส่งเอกสาร -->
@@ -155,7 +197,7 @@ borrower contract
                             <ul class="list-group list-borderless">
                                 <li class="list-group-item">
                                     <i class="bi bi-dash"></i>
-                                    แบบยืนยันการเบิกเงินกู้ยืม
+                                    แบบยืนยันการเบิกเงินกู้ยืมกองทุนเงินให้กู้ยืมเพื่อการศึกษา
                                 </li>
                             </ul>
                         </div>
@@ -206,7 +248,7 @@ borrower contract
                                 </div>
                                 </div>
                             </div><!-- End reset Modal-->
-                            <button type="button" class="btn btn-primary" onclick="nextPgae('')">บันทึกข้อมูล</button>
+                            <button type="button" class="btn btn-primary" onclick="nextPgae('sumary-tab')">ถัดไป</button>
                         </div>
                     </form>
                     <!-- end ฟอร์มส่งเอกสาร -->
@@ -233,7 +275,7 @@ borrower contract
                     </div>
                 </div>
 
-              </div><!-- End Default Tabs -->
+            </div><!-- End Default Tabs -->
         </div>
     </div>
 </section>
