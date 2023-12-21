@@ -4,22 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\facades\DB;
+use App\Models\Users;
 
 class UsersController extends Controller
 {
     function getUsersData(){
-        $users = DB::table('users')->get();
+        $users = Users::get();
         return view('/admin/manage_account',compact('users'));
     }
 
     function getUserById($id){
-        $user = DB::table('users')->where('id',$id)->get();
+        $user = Users::where('id',$id)->get();
         return json_encode($user);
     }
 
     function deleteUser($id){
 
-        DB::table('users')->where('id',$id)->delete();
+        Users::where('id',$id)->delete();
         return redirect('/admin/manage_account');
     }
 
@@ -44,7 +45,7 @@ class UsersController extends Controller
             'updated_at'=>date('Y-m-d H:i:s')
         ];
         // dd($data);
-        DB::table('users')->insert($data);
+        Users::insert($data);
 
         return redirect('/admin/manage_account');
     }
@@ -71,7 +72,7 @@ class UsersController extends Controller
         ];
         // dd($data);
 
-        DB::table('users')->where('id',$request->id)->update($data);
+        Users::where('id',$request->id)->update($data);
         return redirect('/admin/manage_account');
     }
 }
