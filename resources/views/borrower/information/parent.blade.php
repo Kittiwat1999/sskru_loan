@@ -2,33 +2,38 @@
         <form action="" class="row g-3" id="form-parent">
             @csrf          
             <!-- dad information -->
-            <div class="col-md-12 my-4">
+            <div class="col-md-12 pt-4">
                 <h5 class="text-primary" >ข้อมูลผู้ปกครอง</h5>
                 <div class="col-md-11 line-section mt-2"></div>
             </div>
             <fieldset class="row mb-3 mt-4" id="Dthaiperson">
                 <div class="col-md-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Dthaiperson" id="Dthai" value="Dthai" checked>
+                        <input class="form-check-input" type="radio" name="Dthaiperson" id="Dthai" value="Dthai">
                         <label class="form-check-label" for="Dthai">
-                        ชาวไทย
+                        สัญชาติไทย
                         </label>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-1">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="Dthaiperson" id="DnonThai" value="DnonThai">
                         <label class="form-check-label" for="DnonThai">
-                        ชาวต่างชาติ
+                        อื่นๆ
                         </label>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <select id="national" name="national" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>เลือกประเทศ</option>
+                    </select>
                 </div>
             </fieldset>
             <fieldset class="row mb-3 mt-4" id="thaiperson">
                 <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
                 <div class="col-md-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="alive" id="Dalive" value="Dalive" checked>
+                        <input class="form-check-input" type="radio" name="alive" id="Dalive" value="Dalive">
                         <label class="form-check-label" for="Dalive">
                         ยังมีชีวิตอยู่
                         </label>
@@ -112,7 +117,7 @@
                 <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
                 <div class="col-md-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Mthisperson" id="Mthai" value="Mthai" checked>
+                        <input class="form-check-input" type="radio" name="Mthisperson" id="Mthai" value="Mthai">
                         <label class="form-check-label" for="Mthai">
                         ชาวไทย
                         </label>
@@ -131,7 +136,7 @@
                 <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
                 <div class="col-md-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Malive" id="Dalive" value="Dalive" checked>
+                        <input class="form-check-input" type="radio" name="Malive" id="Dalive" value="Dalive">
                         <label class="form-check-label" for="Dalive">
                         ยังมีชีวิตอยู่
                         </label>

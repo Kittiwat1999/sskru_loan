@@ -6,21 +6,21 @@
 
           <ul class="nav nav-tabs" id="borderedTab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="borrower-information-tab" data-bs-toggle="tab" data-bs-target="#borrower-information" type="button" role="tab" aria-controls="borrower-information" aria-selected="true">ข้อมูลผู้กู้</button>
+              <button class="nav-link " id="borrower-information-tab" data-bs-toggle="tab" data-bs-target="#borrower-information" type="button" role="tab" aria-controls="borrower-information" aria-selected="true">ข้อมูลผู้กู้</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="parent-information-tab" data-bs-toggle="tab" data-bs-target="#parent-information" type="button" role="tab" aria-controls="parent-information" aria-selected="false">ข้อมูลผู้ปกครอง</button>
+              <button class="nav-link active" id="parent-information-tab" data-bs-toggle="tab" data-bs-target="#parent-information" type="button" role="tab" aria-controls="parent-information" aria-selected="false">ข้อมูลผู้ปกครอง</button>
             </li>
           </ul>
           <!-- toggle content -->
           <div class="tab-content" id="borderedTabContent">
             <!-- borrower information toggle -->
-            <div class="tab-pane fade show active" id="borrower-information" role="tabpanel" aria-labelledby="borrower-information-tab">
+            <div class="tab-pane fade" id="borrower-information" role="tabpanel" aria-labelledby="borrower-information-tab">
               @include('borrower/information/borrower')
             </div>
             <!-- end borrower information toggle -->
             <!-- parent information toggle -->
-            <div class="tab-pane fade" id="parent-information" role="tabpanel" aria-labelledby="parent-information-tab">
+            <div class="tab-pane fade show active" id="parent-information" role="tabpanel" aria-labelledby="parent-information-tab">
               @include('borrower/information/parent')
             </div>
             <!-- end parent information toggle -->
