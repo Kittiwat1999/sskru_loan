@@ -304,7 +304,7 @@
     <div class="text-end">
     <!-- reset Modal-->
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#basicModal">
-            reset
+            ล้างข้อมูล
         </button>
         <div class="modal fade" id="basicModal" tabindex="-1">
             <div class="modal-dialog">
@@ -325,7 +325,7 @@
             </div>
             </div>
         </div><!-- End reset Modal-->
-        <button type="button" class="btn btn-primary" onclick="nextPgae('parent-information-tab')">บันทึกข้อมูล</button>
+        <button type="button" class="btn btn-primary" onclick="nextPgae('parent-information-tab')">ถัดไป</button>
     </div>
 </form><!-- End Multi Columns Form -->
 
