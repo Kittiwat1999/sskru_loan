@@ -203,9 +203,14 @@ Route::get('/borrower/index', function () {
     return view('/borrower/index');
 });
 
+Route::get('/borrower/information', function () {
+
+    return view('/borrower/information');
+});
+
 Route::get('/borrower/new_loan_request', function () {
     //เปลี่ยนค่าตรงนี้เพื่อไปยังหน้าต่างๆของการยื่นกู้
-    $page = "information";  //"document","samary","information","success","download"
+    $page = "download";  //"document","samary","success","download"
     return view('/borrower/new_loan_request',compact('page'));
 });
 

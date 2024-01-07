@@ -325,6 +325,15 @@
             </a>
         </li><!-- End ค้นหาเอกสาร Page Nav -->
         @elseif($privilage == "borrower")
+
+            <li class="nav-heading text-secondary">กรอกข้อมูลผู้กู้</li>
+            <li class="nav-item">
+                <a id="information" class="nav-link collapsed" href="{{url('/borrower/information')}}">
+                <i class="bi bi-pen"></i>
+                <span>กรอกข้อมูลผู้กู้</span>
+                </a>
+            </li><!-- End กรอกข้อมูลผู้กู้ Page Nav -->
+
             <li class="nav-heading text-secondary">รายการเอกสารที่ส่ง</li>
             <li class="nav-item">
                 <a id="index" class="nav-link collapsed" href="{{url('/borrower/index')}}">
