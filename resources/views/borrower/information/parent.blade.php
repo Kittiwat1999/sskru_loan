@@ -2,7 +2,7 @@
         <form action="" class="row g-3" id="form-parent">
             @csrf          
             <!-- dad information -->
-            <div class="col-md-12 my-4>
+            <div class="col-md-12 my-4">
                 <h5 class="text-primary" >ข้อมูลผู้ปกครอง</h5>
                 <div class="col-md-11 line-section mt-2"></div>
             </div>
