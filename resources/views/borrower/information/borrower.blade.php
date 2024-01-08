@@ -31,16 +31,16 @@
         <input type="email" class="form-control" id="lname" name="lname">
     </div>
     <div class="col-md-5">
-        <label for="borrower_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="borrower_birthday" name="borrower_birthday" onchange="ageCal('borrower')">
+        <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
+        <input type="date" class="form-control" id="birthday" name="birthday" onchange="ageCal('')">
     </div>
     <div class="col-md-3">
-        <label for="borrower_age" class="form-label text-secondary">อายุ</label>
-        <input disabled type="text" class="form-control" id="borrower_age" name="borrower_age">
+        <label for="age" class="form-label text-secondary">อายุ</label>
+        <input disabled type="text" class="form-control" id="age" name="age">
     </div>
     <div class="col-md-5">
-        <label for="idCardNumber" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="idCardNumber" name="idCardNumber" maxlength="13">
+        <label for="citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
+        <input type="text" class="form-control" id="citizen_id" name="citizen_id" maxlength="13">
     </div>
     <div class="col-md-7"></div>
     <div class="col-md-5">
@@ -49,8 +49,8 @@
     <div class="col-md-7"></div>
 
     <div class="col-md-5">
-        <label for="studentId" class="form-label text-secondary">รหัสนักศึกษา</label>
-        <input type="number" class="form-control" id="studentId" name="studentId">
+        <label for="student_id" class="form-label text-secondary">รหัสนักศึกษา</label>
+        <input type="number" class="form-control" id="student_id" name="student_id">
     </div>
     <div class="col-md-7"></div>
     <!-- <div class="cal-md-10"></div> -->
@@ -97,13 +97,13 @@
     </div>
 
     <div class="col-md-3">
-        <label for="houseNo" class="form-label text-secondary">บ้านเลขที่</label>
-        <input type="text" class="form-control" id="houseNo" name="houseNo">
+        <label for="house_no" class="form-label text-secondary">บ้านเลขที่</label>
+        <input type="text" class="form-control" id="house_no" name="house_no">
     </div>
 
     <div class="col-md-3">
-        <label for="villageNo" class="form-label text-secondary">หมู่ที่</label>
-        <input type="text" class="form-control" id="villageNo" name="villageNo">
+        <label for="village_no" class="form-label text-secondary">หมู่ที่</label>
+        <input type="text" class="form-control" id="village_no" name="village_no">
     </div>
 
     <div class="col-md-5">
@@ -141,8 +141,8 @@
 
     <div class="col-md-7"></div>
     <div class="col-md-5">
-        <label for="phoneNumber" class="form-label text-secondary">เบอร์โทรศัพท์</label>
-        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber">
+        <label for="phone_number" class="form-label text-secondary">เบอร์โทรศัพท์</label>
+        <input type="text" class="form-control" id="phone_number" name="phone_number">
     </div>
     <div class="col-md-12"></div>
 
