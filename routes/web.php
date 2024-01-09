@@ -240,5 +240,14 @@ Route::get('/blank',function () {
     return view('/blank');
 });
 
+Route::get('/register_student',function () {
+    return view('/register_student');
+});
 
+Route::get('/login_student',function () {
+    return view('/login_student');
+});
 
+Route::get('/login_teacher',function () {
+    return view('/login_teacher');
+});
