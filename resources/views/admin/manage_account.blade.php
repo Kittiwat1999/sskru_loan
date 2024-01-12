@@ -60,6 +60,15 @@
                                     </div>
                                     @enderror
                                     <div class="col-12">
+                                        <label for="email" class="col-form-label">email</label>
+                                        <input type="text" name="email" class="form-control" required>
+                                    </div>
+                                    @error('email')
+                                    <div class="my-2">
+                                        <span class="text-danger">{{$message}}</span>
+                                    </div>
+                                    @enderror
+                                    <div class="col-12">
                                         <label for="password" class="col-form-label">รหัสผ่าน</label>
                                         <input id="new-input-password" type="password" name="password" class="form-control" required>
                                     </div>
@@ -211,6 +220,10 @@
                 <div class="col-12">
                     <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
                     <input type="text" name="username" class="form-control" value="${user[0].username}" required>
+                </div>
+                <div class="col-12">
+                    <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
+                    <input type="text" name="username" class="form-control" value="${user[0].email}" required>
                 </div>
                 <div class="col-10">
                     <label for="password" class="col-form-label">รหัสผ่าน</label>

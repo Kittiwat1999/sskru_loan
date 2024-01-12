@@ -19,7 +19,11 @@
           <div class="tab-content" id="borderedTabContent">
             <!-- borrower information toggle -->
             <div class="tab-pane fade show active" id="borrower-information" role="tabpanel" aria-labelledby="borrower-information-tab">
-              @include('borrower/information/borrower')
+              @if(isset($borrower_information))
+                @include('borrower/information/borrower_have_data')
+              @else
+                @include('borrower/information/borrower')
+              @endif
             </div>
             <!-- end borrower information toggle -->
             <!-- parent information toggle -->

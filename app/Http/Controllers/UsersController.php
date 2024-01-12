@@ -31,7 +31,8 @@ class UsersController extends Controller
                 'lname'=>'required|max:50',
                 'username'=>'required|max:50',
                 'password'=>'required|max:50',
-                'privilage'=>'required|max:50'
+                'privilage'=>'required|max:50',
+                'email'=>'required|max:100'
             ]
         );
         $data = [
@@ -40,6 +41,7 @@ class UsersController extends Controller
             'username'=>$request->username,
             'password'=>$request->password,
             'privilage'=>$request->privilage,
+            'email'=>$request->email,
             'created_at'=>date('Y-m-d H:i:s'),
             'updated_at'=>date('Y-m-d H:i:s')
         ];
@@ -58,7 +60,8 @@ class UsersController extends Controller
                 'lname'=>'required|max:50',
                 'username'=>'required|max:50',
                 'password'=>'required|max:50',
-                'privilage'=>'required|max:50'
+                'privilage'=>'required|max:50',
+                'email'=>'required|max:100'
             ]
         );
         $data = [
@@ -66,6 +69,7 @@ class UsersController extends Controller
             'lname'=>$request->lname,
             'username'=>$request->username,
             'password'=>$request->password,
+            'email'=>$request->email,
             'privilage'=>$request->privilage,
             'updated_at'=>date('Y-m-d H:i:s')
         ];

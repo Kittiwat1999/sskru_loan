@@ -204,9 +204,7 @@ Route::get('/borrower/index', function () {
     return view('/borrower/index');
 });
 
-Route::get('/borrower/information', function () {
-    return view('/borrower/information');
-});
+Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 
 Route::post('/store_information',[BorrowerController::class,'storeBorrowerInformation']);
 
