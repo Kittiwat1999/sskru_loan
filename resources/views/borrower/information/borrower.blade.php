@@ -1,24 +1,25 @@
 <div class="m-3"></div>
 <!-- <h6 class="text-secondary">กรอกข้อมูลผู้กู้</h6> -->
 <!-- Multi Columns Form -->
-
-<form class="row g-3" id="form-borrower" action="#">
+<form class="row g-3" id="form-borrower" action="/store_information" method="POST">
+    @csrf
     <div class="col-md-5">
         <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
-        <select id="borrower-type" class="form-select" aria-label="Default select example">
+        <select id="borrower-type" name="borrower_appearance" class="form-select" aria-label="Default select example">
             <option selected>เลือกลักษณะผู้กู้</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            <option value="ขาดแคลนคุณทรัพย์">ขาดแคลนคุณทรัพย์</option>
+            <option value="สาขาที่ขาดแคลน">สาขาที่ขาดแคลน</option>
+            <option value="สาขาที่เป็นความต้องการหลัก">สาขาที่เป็นความต้องการหลัก</option>
+            <option value="เรียนดีสร้างความเป็นเลิศ">เรียนดีสร้างความเป็นเลิศ</option>
         </select>
     </div>
     <div class="col-md-6"></div>
     <div class="col-md-2">
-        <label for="borrower-type" class="col-form-label text-secondary">คำนำหน้า</label>
-        <select id="borrower-type" class="form-select" aria-label="Default select example">
+        <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
+        <select id="prefix" name="prefix" class="form-select" aria-label="Default select example">
             <option selected>เลือกคำนำหน้าชื่อ</option>
-            <option value="1">นาย</option>
-            <option value="2">นางสาว</option>
+            <option value="นาย">นาย</option>
+            <option value="นางสาว">นางสาว</option>
         </select>
     </div>
     <div class="col-md-10"></div>
@@ -58,14 +59,14 @@
         <label for="faculty" class="col-md-12 col-form-label text-secondary">คณะ</label>
         <select id="faculty" name="faculty" class="form-select" aria-label="Default select example">
             <option selected>เลือกคณะ</option>
-            <option value="1">1</option>
+            <option value="lasc">lasc</option>
         </select>
     </div>
     <div class="col-md-5">
         <label for="major" class="col-md-12 col-form-label text-secondary">สาขา</label>
-        <select disabled id="major" name="major" class="form-select" aria-label="Default select example">
+        <select id="major" name="major" class="form-select" aria-label="Default select example">
             <option selected>เลือกสาขา</option>
-            <option value="1">1</option>
+            <option value="software">software</option>
         </select>
     </div>
     <div class="col-md-3 mt-2">
@@ -138,8 +139,14 @@
             <option selected>เลือกตำบล</option>
     </select>
     </div>
-
     <div class="col-md-7"></div>
+
+    <div class="col-md-5">
+        <label for="email" class="form-label text-secondary">อีเมล</label>
+        <input type="text" class="form-control" id="email" name="email">
+    </div>
+    <div class="col-md-12"></div>
+
     <div class="col-md-5">
         <label for="phone_number" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="phone_number" name="phone_number">
@@ -155,7 +162,7 @@
         <div class="row">
             <div class="col-md-5">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="prop1">
+                    <input class="form-check-input" type="checkbox" id="prop1" name="props[]" value="มีรายได้ไม่เกิน 360,000 บาทต่อปี">
                     <label class="form-check-label" for="prop1">
                     มีรายได้ไม่เกิน 360,000 บาทต่อปี
                     </label>
@@ -164,7 +171,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop2">
+                <input class="form-check-input" type="checkbox" id="prop2" name="props[]" value="ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขมใดๆมาก่อน">
                 <label class="form-check-label" for="prop2">
                 ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขมใดๆมาก่อน
                 </label>
@@ -173,7 +180,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop3">
+                <input class="form-check-input" type="checkbox" id="prop3" name="props[]" value="จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว">
                 <label class="form-check-label" for="prop3">
                 จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว
                 </label>
@@ -182,7 +189,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop4">
+                <input class="form-check-input" type="checkbox" id="prop4"  name="props[]" value="ไม่เป็นผู้มีงานประจำ">
                 <label class="form-check-label" for="prop4">
                 ไม่เป็นผู้มีงานประจำ
                 </label>
@@ -191,7 +198,7 @@
             
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop5">
+                <input class="form-check-input" type="checkbox" id="prop5"  name="props[]" value="มีอายุไม่เกิน 30 ปีบริบูรณ์">
                 <label class="form-check-label" for="prop5">
                 มีอายุไม่เกิน 30 ปีบริบูรณ์
                 </label>
@@ -200,7 +207,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop6">
+                <input class="form-check-input" type="checkbox" id="prop6"  name="props[]" value="ไม่เป็นบุคคลล้มละลาย">
                 <label class="form-check-label" for="prop6">
                 ไม่เป็นบุคคลล้มละลาย
                 </label>
@@ -209,7 +216,7 @@
             
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="props7">
+                <input class="form-check-input" type="checkbox" id="props7"  name="props[]" value="ไม่เคยผิดหนี้ชำระกับกองทุน">
                 <label class="form-check-label" for="prop7">
                 ไม่เคยผิดหนี้ชำระกับกองทุน
                 </label>
@@ -218,7 +225,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop8">
+                <input class="form-check-input" type="checkbox" id="prop8"  name="props[]" value="ไม่เคยต้องโทษจำคุก">
                 <label class="form-check-label" for="prop8">
                 ไม่เคยต้องโทษจำคุก
                 </label>
@@ -237,7 +244,7 @@
         <div class="row">
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="m1">
+                <input class="form-check-input" type="checkbox" id="m1" name="necess[]" value="เพื่อให้ได้เรียนในสาขาที่ชอบ">
                 <label class="form-check-label" for="m1">
                 เพื่อให้ได้เรียนในสาขาที่ชอบ
                 </label>
@@ -246,7 +253,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="m2">
+                <input class="form-check-input" type="checkbox" id="m2" name="necess[]" value="ขาดแคลนคุณทรัพย์">
                 <label class="form-check-label" for="m2">
                 ขาดแคลนคุณทรัพย์
                 </label>
@@ -255,7 +262,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="m3">
+                <input class="form-check-input" type="checkbox" id="m3" name="necess[]" value="ลดภาระผู้ปกครอง">
                 <label class="form-check-label" for="m3">
                 ลดภาระผู้ปกครอง
                 </label>
@@ -264,7 +271,7 @@
 
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="m4">
+                <input class="form-check-input" type="checkbox" id="m4" name="necess[]" value="สาขาที่เป็นความต้องการหลัก">
                 <label class="form-check-label" for="m4">
                 สาขาที่เป็นความต้องการหลัก
                 </label>
@@ -273,7 +280,7 @@
             
             <div class="col-md-5">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="m5">
+                <input class="form-check-input" type="checkbox" id="m5" name="necess[]" value="สาขาที่ขาดแคลน">
                 <label class="form-check-label" for="m5">
                 สาขาที่ขาดแคลน
                 </label>
@@ -284,7 +291,7 @@
 
             <div class="col-md-1">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="morePropCheck">
+                    <input class="form-check-input" type="checkbox" id="morePropCheck" name="necess[]" value="อื่นๆ">
                     <label class="form-check-label" for="morePropCheck">
                     อื่นๆ
                     </label>
@@ -292,7 +299,7 @@
             </div>
 
             <div class="col-md-4">
-                <textarea class="form-control" style="height: 100px" id="moreProp" name="moreProp" disabled></textarea>
+                <textarea class="form-control" style="height: 100px" id="moreProp" name="moreProp" value="" disabled></textarea>
             </div>
             
         </div><!--end row-->
@@ -325,7 +332,9 @@
             </div>
             </div>
         </div><!-- End reset Modal-->
-        <button type="button" class="btn btn-primary" onclick="nextPgae('parent-information-tab')">ถัดไป</button>
+        <button class="btn btn-primary" type="submit" onclick="submitBorrowerInformation()">save</button>
+        {{--onclick="nextPgae('parent-information-tab')"  --}}
+        {{-- onclick="submitBorrowerInformation()" --}}
     </div>
 </form><!-- End Multi Columns Form -->
 

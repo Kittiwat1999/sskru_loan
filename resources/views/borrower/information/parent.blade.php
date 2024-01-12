@@ -75,7 +75,7 @@
             </div>
             <div class="col-md-5">
                 <label for="parent1_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-                <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" onchange="ageCal('parent1')">
+                <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" onchange="ageCal('parent1_')">
             </div>
             <div class="col-md-3">
                 <label for="parent1_age" class="form-label text-secondary">อายุ</label>
@@ -188,7 +188,7 @@
             </div>
             <div class="col-md-5">
                 <label for="parent2_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-                <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" onchange="ageCal('parent2')">
+                <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" onchange="ageCal('parent2_')">
             </div>
             <div class="col-md-3">
                 <label for="parent2_age" class="form-label text-secondary">อายุ</label>
@@ -399,85 +399,85 @@
         }
     }
 
-    function addressWithZipcode(zip_code_input){
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // console.log(zip_code_input);
-            var tambons = [];
-            var aumphureId = '';
-            for(tambon of data){
-                if(zip_code_input == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                    if(aumphureId == '')aumphureId = tambon.amphure_id;
-                }
-            }
-            // console.log(tambons);
-            var selectElement = document.getElementById('main_parent_tambon');
-            for(tb of tambons){
-                var newOption = document.createElement('option');
+    // function addressWithZipcode(zip_code_input){
+    //     fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new Error('Network response was not ok');
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(data => {
+    //         // console.log(zip_code_input);
+    //         var tambons = [];
+    //         var aumphureId = '';
+    //         for(tambon of data){
+    //             if(zip_code_input == tambon.zip_code){
+    //                 // console.log(tambon.name_th)
+    //                 tambons.push(tambon.name_th.toString());
+    //                 if(aumphureId == '')aumphureId = tambon.amphure_id;
+    //             }
+    //         }
+    //         // console.log(tambons);
+    //         var selectElement = document.getElementById('main_parent_tambon');
+    //         for(tb of tambons){
+    //             var newOption = document.createElement('option');
 
-                newOption.value = tb;
-                newOption.text = tb;
+    //             newOption.value = tb;
+    //             newOption.text = tb;
 
-                selectElement.add(newOption);
-            }
+    //             selectElement.add(newOption);
+    //         }
             
-            getAumphure(aumphureId)
+    //         getAumphure(aumphureId)
             
 
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-    }
-    function getAumphure(amphure_id){
-        // console.log(amphure_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(aumphures => {
-                var province_id = '';
-                for(aumphure of aumphures){
-                    if(amphure_id == aumphure.id){
-                    document.getElementById('main_parent_aumphure').value = aumphure.name_th;
-                    if(province_id == '')province_id = aumphure.province_id;
-                    }
-                }
-                getProvince(province_id);
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
+    //     })
+    //     .catch(error => {
+    //         console.error('Fetch error:', error);
+    //     });
+    // }
+    // function getAumphure(amphure_id){
+    //     // console.log(amphure_id);
+    //     fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 throw new Error('Network response was not ok');
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(aumphures => {
+    //             var province_id = '';
+    //             for(aumphure of aumphures){
+    //                 if(amphure_id == aumphure.id){
+    //                 document.getElementById('main_parent_aumphure').value = aumphure.name_th;
+    //                 if(province_id == '')province_id = aumphure.province_id;
+    //                 }
+    //             }
+    //             getProvince(province_id);
+    //         })
+    //         .catch(error => {
+    //             console.error('Fetch error:', error);
+    //         });
+    // }
 
-    function getProvince(province_id){
-        // console.log(province_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(provinces => {
-                for(province of provinces){
-                    if(province_id == province.id)document.getElementById('main_parent_province').value = province.name_th;
-                }
+    // function getProvince(province_id){
+    //     // console.log(province_id);
+    //     fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 throw new Error('Network response was not ok');
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(provinces => {
+    //             for(province of provinces){
+    //                 if(province_id == province.id)document.getElementById('main_parent_province').value = province.name_th;
+    //             }
                 
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
+    //         })
+    //         .catch(error => {
+    //             console.error('Fetch error:', error);
+    //         });
+    // }
 </script>

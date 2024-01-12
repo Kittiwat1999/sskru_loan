@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\BorrowerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -204,9 +205,10 @@ Route::get('/borrower/index', function () {
 });
 
 Route::get('/borrower/information', function () {
-
     return view('/borrower/information');
 });
+
+Route::post('/store_information',[BorrowerController::class,'storeBorrowerInformation']);
 
 Route::get('/borrower/new_loan_request', function () {
     //เปลี่ยนค่าตรงนี้เพื่อไปยังหน้าต่างๆของการยื่นกู้

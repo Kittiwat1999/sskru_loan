@@ -231,7 +231,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher
+        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 

@@ -16,20 +16,22 @@ return new class extends Migration
     {
         Schema::create('borrowers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Users::class);
+            $table->foreignIdFor(Users::class)->nullable();;
             $table->string('prefix');
             $table->dateTime('birthday');
             $table->string('citizen_id');
             $table->string('student_id');
             $table->string('faculty');
             $table->string('major');
+            $table->string('grade');
             $table->string('gpa');
-            $table->foreignIdFor(Address::class);
+            $table->foreignIdFor(Address::class)->nullable();;
             $table->string('borrower_appearance');
-            $table->string('borrower_properties');
-            $table->json('mariatal_status');
-            $table->foreignIdFor(Parents::class);
-            $table->string('phone');
+            $table->json('borrower_properties')->nullable();;
+            $table->json('borrower_necessity')->nullable();;
+            $table->json('mariatal_status')->nullable();;
+            $table->foreignIdFor(Parents::class)->nullable();;
+            $table->string('phone_number');
             $table->string('email');
             $table->timestamps();
         });

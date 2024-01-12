@@ -38,7 +38,8 @@
       <!-- end card toggle -->
       <script>
         function ageCal(role){
-        var inputBirthday = document.getElementById(role+'_birthday');
+        if(role == "")role = "";
+        var inputBirthday = document.getElementById(role+'birthday');
         // Get the input value
         var birthDate = inputBirthday.value;
 
@@ -56,23 +57,23 @@
             age--;
         }
         if(age<0){
-          document.getElementById(role+'_age').value = "สวัสดีผู้มาจากอนาคต";
+          document.getElementById(role+'age').value = "สวัสดีผู้มาจากอนาคต";
         }else{
-          document.getElementById(role+'_age').value = age;
-          if(age>=20){
-            document.getElementById('representative-tab').disabled = true;
+          document.getElementById(role+'age').value = age;
+          // if(age>=20){
+          //   document.getElementById('representative-tab').disabled = true;
 
-          }else{
-            document.getElementById('representative-tab').disabled = false;
-          }
+          // }else{
+          //   document.getElementById('representative-tab').disabled = false;
+          // }
         }
 
       }
 
-        var idCardNumber = document.getElementById('idCardNumber');
-        idCardNumber.onkeyup = () =>{
-          document.getElementById('formattedNumber').innerHTML = idCardNumber.value;
-          }
+        // var idCardNumber = document.getElementById('idCardNumber');
+        // idCardNumber.onkeyup = () =>{
+        //   document.getElementById('formattedNumber').innerHTML = idCardNumber.value;
+        //   }
         
         var moreProps = document.getElementById('morePropCheck');
         moreProps.onchange = () => {
@@ -83,6 +84,10 @@
         console.log(page);
         document.getElementById(page).click();
         window.scrollTo(0, 0);
+      }
+
+      function submitBorrowerInformation(){
+        document.querySelector('#form-borrower').submit();
       }
 
       function generateSelectProvince(elementId){
