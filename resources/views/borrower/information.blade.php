@@ -6,34 +6,7 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">กรอกข้อมูล</h5>
-
-          <ul class="nav nav-tabs" id="borderedTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="borrower-information-tab" data-bs-toggle="tab" data-bs-target="#borrower-information" type="button" role="tab" aria-controls="borrower-information" aria-selected="true">ข้อมูลผู้กู้</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link " id="parent-information-tab" data-bs-toggle="tab" data-bs-target="#parent-information" type="button" role="tab" aria-controls="parent-information" aria-selected="false">ข้อมูลผู้ปกครอง</button>
-            </li>
-          </ul>
-          <!-- toggle content -->
-          <div class="tab-content" id="borderedTabContent">
-            <!-- borrower information toggle -->
-            <div class="tab-pane fade show active" id="borrower-information" role="tabpanel" aria-labelledby="borrower-information-tab">
-              @if(isset($borrower_information))
-                @include('borrower/information/borrower_have_data')
-              @else
-                @include('borrower/information/borrower')
-              @endif
-            </div>
-            <!-- end borrower information toggle -->
-            <!-- parent information toggle -->
-            <div class="tab-pane fade " id="parent-information" role="tabpanel" aria-labelledby="parent-information-tab">
-              @include('borrower/information/parent')
-            </div>
-            <!-- end parent information toggle -->
-
-          </div>
-          <!-- end toggle content -->
+          @include('borrower/information/input_information')
 
         </div>
         <!-- end card body -->
@@ -90,12 +63,143 @@
         window.scrollTo(0, 0);
       }
 
-      function submitBorrowerInformation(){
-        document.querySelector('#form-borrower').submit();
+
+      function submitInformation(){
+        document.querySelector('#form-information').submit();
       }
 
       function generateSelectProvince(elementId){
         console.log(elementId);
       }
+
+      //who call address zipcode
+
+
+      function addressWithZipcode(zip_code_input, caller){
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // console.log(zip_code_input);
+            var tambons = [];
+            var aumphureId = '';
+            for(tambon of data){
+                if(zip_code_input == tambon.zip_code){
+                    // console.log(tambon.name_th)
+                    tambons.push(tambon.name_th.toString());
+                    if(aumphureId == '')aumphureId = tambon.amphure_id;
+                }
+            }
+            // console.log(tambons);
+            var selectElement = document.getElementById(`${caller}_tambon`);
+            for(tb of tambons){
+                var newOption = document.createElement('option');
+
+                newOption.value = tb;
+                newOption.text = tb;
+
+                selectElement.add(newOption);
+            }
+            
+            getAumphure(aumphureId,caller)
+            
+
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+      }
+      function getAumphure(amphure_id,caller){
+          // console.log(amphure_id);
+          fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(aumphures => {
+                  var province_id = '';
+                  for(aumphure of aumphures){
+                      if(amphure_id == aumphure.id){
+                      document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
+                      if(province_id == '')province_id = aumphure.province_id;
+                      }
+                  }
+                  getProvince(province_id,caller);
+              })
+              .catch(error => {
+                  console.error('Fetch error:', error);
+              });
+      }
+
+      function getProvince(province_id,caller){
+          // console.log(province_id);
+          fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(provinces => {
+                  for(province of provinces){
+                      if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
+                  }
+                  
+              })
+              .catch(error => {
+                  console.error('Fetch error:', error);
+              });
+      }
+
+      function enableInputCountry(parentNo,isthai){
+        console.log(parentNo)
+        if(isthai == `${parentNo}_not_thai`){
+            document.querySelector(`#${parentNo}_nationality`).disabled = false;
+        }else{
+            document.querySelector(`#${parentNo}_nationality`).disabled = true;
+        }
+
+      }
+
+      const MaritalStat = document.getElementById('maritalStatusId');
+      MaritalStat.onchange = () =>{
+          const otherMaritalStat = document.getElementById('other');
+          if(otherMaritalStat.checked){
+              document.getElementById('otherText').disabled = false;
+          }else{
+              document.getElementById('otherText').disabled = true;
+          }
+          
+          const devorce = document.getElementById('devorce');
+          if(devorce.checked){
+              document.getElementById('devorceFile').disabled = false;
+          }else{
+              document.getElementById('devorceFile').disabled = true;
+          }
+      }
+
+      const address_currently_with_borrower = document.getElementById('address_currently_with_borrower');
+      address_currently_with_borrower.addEventListener("change", function() {
+          if (address_currently_with_borrower.checked) {
+              console.log('checked')
+              const address_input = document.querySelectorAll('.fake-class');
+              address_input.forEach((e)=>{
+                  e.disabled = true;
+                  e.value = "";
+              });
+          } else {
+              const address_input = document.querySelectorAll('.fake-class');
+              address_input.forEach((e)=>{
+                  e.disabled = false;
+                  e.value = "";
+              });
+          }
+      });
       </script>
 @endsection

@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('borrowers', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->foreignIdFor(Users::class)->nullable();;
+            $table->string('user_id')->foreignIdFor(Users::class)->nullable();
             $table->string('prefix');
             $table->string('birthday');
             $table->string('citizen_id');
@@ -25,12 +25,12 @@ return new class extends Migration
             $table->string('major');
             $table->string('grade');
             $table->string('gpa');
-            $table->foreignIdFor(Address::class)->nullable();;
+            $table->foreignIdFor(Address::class)->nullable();
             $table->string('borrower_appearance');
-            $table->json('borrower_properties')->nullable();;
-            $table->json('borrower_necessity')->nullable();;
-            $table->json('mariatal_status')->nullable();;
-            $table->foreignIdFor(Parents::class)->nullable();;
+            $table->json('borrower_properties')->nullable();
+            $table->json('borrower_necessity')->nullable();
+            $table->json('mariatal_status')->nullable();
+            $table->foreignIdFor(Parents::class)->nullable();
             $table->string('phone_number');
             $table->timestamps();
         });

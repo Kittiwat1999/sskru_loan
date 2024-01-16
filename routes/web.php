@@ -204,9 +204,8 @@ Route::get('/borrower/index', function () {
     return view('/borrower/index');
 });
 
-Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 
-Route::post('/store_information',[BorrowerController::class,'storeBorrowerInformation']);
+Route::post('/store_information',[BorrowerController::class,'storeInformation']);
 
 Route::get('/borrower/new_loan_request', function () {
     //เปลี่ยนค่าตรงนี้เพื่อไปยังหน้าต่างๆของการยื่นกู้

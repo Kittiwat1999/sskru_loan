@@ -15,18 +15,18 @@ return new class extends Migration
     {
         Schema::create('parents', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Users::class);
+            $table->string('user_id')->foreignIdFor(Users::class);
             $table->string('borrower_relational');
             $table->string('nationality');
             $table->string('prefix');
             $table->string('fname');
             $table->string('lname');
-            $table->dateTime('birthday');
+            $table->string('birthday');
             $table->string('phone');
             $table->string('occupation');
             $table->string('income');
             $table->boolean('alive');
-            $table->foreignIdFor(Address::class);
+            $table->foreignIdFor(Address::class)->nullable();
             $table->timestamps();
         });
     }

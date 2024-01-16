@@ -126,12 +126,12 @@
 
     <div class="col-md-5">
         <label for="province" class="form-label text-secondary">จังหวัด</label>
-        <input type="text" class="form-control" id="province" name="province" readonly value="{{$address['province']}}">
+        <input type="text" class="form-control" id="province" name="province" value="{{$address['province']}}">
     </div>
 
     <div class="col-md-5">
         <label for="aumphure" class="form-label text-secondary">อำเภอ</label>
-        <input type="text" class="form-control" id="aumphure" name="aumphure" readonly value="{{$address['aumphure']}}">
+        <input type="text" class="form-control" id="aumphure" name="aumphure" value="{{$address['aumphure']}}">
     </div>
 
     <div class="col-md-5">
@@ -340,86 +340,6 @@
 </form><!-- End Multi Columns Form -->
 
 <script>
-    function addressWithZipcode(zip_code_input){
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // console.log(zip_code_input);
-            var tambons = [];
-            var aumphureId = '';
-            for(tambon of data){
-                if(zip_code_input == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                    if(aumphureId == '')aumphureId = tambon.amphure_id;
-                }
-            }
-            // console.log(tambons);
-            var selectElement = document.getElementById('tambon');
-            for(tb of tambons){
-                var newOption = document.createElement('option');
-
-                newOption.value = tb;
-                newOption.text = tb;
-
-                selectElement.add(newOption);
-            }
-            
-            getAumphure(aumphureId)
-            
-
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-    }
-    function getAumphure(amphure_id){
-        // console.log(amphure_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(aumphures => {
-                var province_id = '';
-                for(aumphure of aumphures){
-                    if(amphure_id == aumphure.id){
-                    document.getElementById('aumphure').value = aumphure.name_th;
-                    if(province_id == '')province_id = aumphure.province_id;
-                    }
-                }
-                getProvince(province_id);
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function getProvince(province_id){
-        // console.log(province_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(provinces => {
-                for(province of provinces){
-                    if(province_id == province.id)document.getElementById('province').value = province.name_th;
-                }
-                
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
+    
 </script>
 
