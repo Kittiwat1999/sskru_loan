@@ -32,6 +32,21 @@
                                 <div class="modal-body">
                                 <form class="row" action="/createUser" method="post">
                                     @csrf
+                                    <div class="col-md-5">
+                                        <label for="prefix" class="col-form-label">คำนำหน้า</label>
+                                        <select id="prefix" name="prefix" class="form-select" aria-label="Default select example">
+                                            <option selected>เลือกคำนำหน้าชื่อ</option>
+                                            <option value="นาย">นาย</option>
+                                            <option value="นาง">นาง</option>
+                                            <option value="นางสาว">นางสาว</option>
+                                        </select>
+                                    </div>
+
+                                    @error('prefix')
+                                    <div class="my-2">
+                                        <span class="text-danger">{{$message}}</span>
+                                    </div>
+                                    @enderror
                                     <div class="col-12">
                                         <label for="fname" class="col-form-label">ชื่อ</label>
                                         <input type="text" name="fname" class="form-control" required>
@@ -124,7 +139,7 @@
                             @foreach($users as $user)
                             <tr>
                                 <td>{{$i++}}</td>
-                                <td class="text-dark fw-light">{{$user->fname}}</td>
+                                <td class="text-dark fw-light">{{$user->prefix}} {{$user->fname}}</td>
                                 <td>{{$user->username}}</td>
                                 <td>{{$user->privilage}}</td>
                                 <td>{{$user->created_at}}</td>
@@ -209,6 +224,15 @@
             <form class="row" action="/editAccount" method="post">
                 @csrf
                 <input type="hidden" name="id" class="form-control" value="${user[0].id}" required>
+                <div class="col-md-5">
+                    <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
+                    <select id="prefix" name="prefix" class="form-select" aria-label="Default select example">
+                        <option >เลือกคำนำหน้าชื่อ</option>
+                        <option ${(user[0].prefix == 'นาย')? 'selected': ''} value="นาย">นาย</option>
+                        <option ${(user[0].prefix == 'นาง')? 'selected': ''} value="นาง">นาง</option>
+                        <option ${(user[0].prefix == 'นางสาว')? 'selected': ''} value="นางสาว">นางสาว</option>
+                    </select>
+                </div>
                 <div class="col-12">
                     <label for="fname" class="col-form-label">ชื่อ</label>
                     <input type="text" name="fname" class="form-control" value="${user[0].fname}" required>
@@ -222,7 +246,7 @@
                     <input type="text" name="username" class="form-control" value="${user[0].username}" required>
                 </div>
                 <div class="col-12">
-                    <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
+                    <label for="username" class="col-form-label">email</label>
                     <input type="text" name="username" class="form-control" value="${user[0].email}" required>
                 </div>
                 <div class="col-10">

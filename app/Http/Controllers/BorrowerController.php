@@ -15,10 +15,43 @@ use Carbon\Carbon;
 class BorrowerController extends Controller
 {
 
+    function getBorrowerInformation(){
+        $user_id = 2;
+        $get_borrower=Borrower::where('user_id',$user_id)->get();
+        $get_user = Users::where('id',$user_id)->get();
+        unset($get_user[0]['password']);
+        if (count($get_borrower) === 0){
+            $user_information = $get_user[0];
+            // dd($user_information);
+            return view('/borrower/information',compact('user_information'));
+        }else{
+            // dd($get_borrower[0]['address_id']);
+            $get_address = Address::where('id',$get_borrower[0]['address_id'])->get();
+
+            $borrower_information = $get_borrower[0];
+            $user_information = $get_user[0];
+            $address = $get_address[0];
+            $borrower_information['borrower_necessity'] = json_decode($borrower_information['borrower_necessity']);
+            $borrower_information['borrower_properties'] = json_decode($borrower_information['borrower_properties']);
+
+            // dd($borrower_information,$user_information,$address);
+            return view('/borrower/information',compact('borrower_information','user_information','address'));
+        }
+    }
+
     function storeInformation(Request $request){
         // dd($request);
-        $user_id = 1;
+        $user_id = 2;
         date_default_timezone_set("Asia/Bangkok");
+
+        $update_user=[
+            'prefix'=>$request->prefix,
+            'fname'=>$request->fname,
+            'lname'=>$request->lname,
+            'email'=>$request->email,
+        ];
+
+        Users::where('id',$user_id)->update($update_user);
         
         $address = [
             'village'=>$request->village ,
@@ -161,7 +194,6 @@ class BorrowerController extends Controller
 
         $borrower = [
             'user_id'=>$user_id,
-            'prefix'=>$request->prefix,
             'birthday'=>$request->birthday,
             'citizen_id'=>$request->citizen_id,
             'student_id'=>$request->student_id,

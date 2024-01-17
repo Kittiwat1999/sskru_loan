@@ -15,9 +15,10 @@
     <div class="col-md-2">
         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
         <select id="prefix" name="prefix" class="form-select" aria-label="Default select example">
-            <option selected>เลือกคำนำหน้าชื่อ</option>
-            <option value="นาย">นาย</option>
-            <option value="นางสาว">นางสาว</option>
+            <option>เลือกคำนำหน้าชื่อ</option>
+            <option {{($user_information['prefix'] == "นาย")? 'selected': ''}} value="นาย">นาย</option>
+            <option {{($user_information['prefix'] == "นาง")? 'selected': ''}} value="นาง">นาง</option>
+            <option {{($user_information['prefix'] == "นางสาว")? 'selected': ''}} value="นางสาว">นางสาว</option>
         </select>
     </div>
     <div class="col-md-10"></div>
@@ -141,7 +142,7 @@
 
     <div class="col-md-5">
         <label for="email" class="form-label text-secondary">อีเมล</label>
-        <input type="text" class="form-control" id="email" name="email" {{$user_information['email']}}>
+        <input type="text" class="form-control" id="email" name="email" value="{{$user_information['email']}}">
     </div>
     <div class="col-md-12"></div>
 

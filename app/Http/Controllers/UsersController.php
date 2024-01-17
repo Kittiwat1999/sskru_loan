@@ -27,6 +27,7 @@ class UsersController extends Controller
         date_default_timezone_set("Asia/Bangkok");
         $request->validate(
             [
+                'prefix'=>'required|max:50',
                 'fname'=>'required|max:50',
                 'lname'=>'required|max:50',
                 'username'=>'required|max:50',
@@ -36,6 +37,7 @@ class UsersController extends Controller
             ]
         );
         $data = [
+            'prefix'=>$request->prefix,
             'fname'=>$request->fname,
             'lname'=>$request->lname,
             'username'=>$request->username,
@@ -56,6 +58,7 @@ class UsersController extends Controller
         // dd($request);
         $request->validate(
             [
+                'prefix'=>'required|max:50',
                 'fname'=>'required|max:50',
                 'lname'=>'required|max:50',
                 'username'=>'required|max:50',
@@ -65,6 +68,7 @@ class UsersController extends Controller
             ]
         );
         $data = [
+            'prefix'=>$request->prefix,
             'fname'=>$request->fname,
             'lname'=>$request->lname,
             'username'=>$request->username,
