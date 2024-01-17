@@ -69,7 +69,7 @@
                   <form class="row g-3 needs-validation" novalidate>
 
                     <!-- <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
+                      <label for="yourUsername" class="col-form-label text-secondary">Username</label>
                       <div class="input-group has-validation"> -->
                     <!-- <span class="input-group-text" id="inputGroupPrepend">@</span> -->
                     <!-- <input type="text" name="username" class="form-control" id="yourUsername" required>
@@ -78,7 +78,7 @@
                     </div> -->
 
                     <div class="col-12">
-                      <label for="username" class="col-sm col-form-label">ชื่อผู้ใช้</label>
+                      <label for="username" class="col-sm col-col-form-label text-secondary">ชื่อผู้ใช้</label>
                       <select id="username" name="username" class="form-select" aria-label="Default select example">
                         <option selected>เลือกชื่อผู้ใช้</option>
                         <option value="1">อ.กิตติวัฒน์</option>
@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="col-12">
-                      <label for="password" class="form-label">รหัสผ่าน</label>
+                      <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                       <input type="password" name="password" class="form-control" id="password" required>
                       <div class="invalid-feedback">Please enter your password!</div>
                     </div>
@@ -102,7 +102,7 @@
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">จดจำฉัน</label>
+                        <label class="form-check-label text-secondary" for="rememberMe">จดจำฉัน</label>
                       </div>
                     </div>
                     <div class="col-12">
@@ -120,7 +120,7 @@
                             <form>
                               <div class="row">
                                 <div class="col-sm">
-                                  <label for="email" class="form-label text-secondary">อีเมล</label>
+                                  <label for="email" class="col-form-label text-secondary text-secondary">อีเมล</label>
                                 </div>
                                 <div>
                                   <div div class="col-sm-10">

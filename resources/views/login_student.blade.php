@@ -69,7 +69,7 @@
                   <form class="row g-3 needs-validation" novalidate>
 
                     <div class="col-12">
-                      <label for="username" class="form-label">ชื่อผู้ใช้</label>
+                      <label for="username" class="col-form-label text-secondary">ชื่อผู้ใช้</label>
                       <div class="input-group has-validation">
                         <input type="text" name="username" class="form-control" id="username" required>
                         <div class="invalid-feedback">กรุณากรอกชื่อผู้ใช้!</div>
@@ -77,7 +77,7 @@
                     </div>
 
                     <div class="col-12">
-                      <label for="password" class="form-label">รหัสผ่าน</label>
+                      <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                       <input type="password" name="password" class="form-control" id="password" required>
                       <div class="invalid-feedback">กรุณากรอกรหัสผ่าน!</div>
                     </div>
@@ -91,7 +91,7 @@
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">จดจำฉัน</label>
+                        <label class="form-check-label text-secondary" for="rememberMe">จดจำฉัน</label>
                       </div>
                     </div>
 
@@ -120,7 +120,7 @@
                             <form>
                               <div class="row">
                                 <div class="col-sm">
-                                  <label for="email" class="form-label text-secondary">อีเมล</label>
+                                  <label for="email" class="col-form-label text-secondary text-secondary">อีเมล</label>
                                 </div>
                                 <div>
                                   <div div class="col-sm-10">
