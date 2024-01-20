@@ -65,40 +65,36 @@
 
                   <form class="row g-3 needs-validation" novalidate>
 
-                    <div class="col-6">
-                        <label for="username" class="form-label">ชื่อผู้ใช้</label>
-                        <div class="input-group has-validation">
-                          <input type="text" name="username" class="form-control" id="username" required>
-                          <div class="invalid-feedback">กรุณากรอกชื่อผู้ใช้!</div>
-                        </div>
-                      </div>
+                    <div class="col-md-2">
+                      <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
+                      <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
+                          <option class="text-center" selected>-</option>
+                          <option class="text-center" value="นาย">นาย</option>
+                          <option class="text-center" value="นาง">นาง</option>
+                          <option class="text-center" value="นางสาว">นางสาว</option>
+                      </select>
+                  </div>
 
-                    <div class="col-6">
-                        <label for="email" class="form-label">อึเมล</label>
-                        <input type="email" name="email" class="form-control" id="email" required>
-                        <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
-                    </div>
-
-                    <div class="col-6">
-                        <label for="fname" class="form-label">ชื่อ</label>
+                    <div class="col-md-4">
+                        <label for="fname" class="col-form-label text-secondary">ชื่อ</label>
                         <input type="text" name="fname" class="form-control" id="fname" required>
                         <div class="invalid-feedback">กรุณากรอกชื่อ!</div>
                     </div>
 
-                    <div class="col-6">
-                        <label for="lname" class="form-label">นามสกุล</label>
+                    <div class="col-md-6">
+                        <label for="lname" class="col-form-label text-secondary">นามสกุล</label>
                         <input type="text" name="lname" class="form-control" id="lname" required>
                         <div class="invalid-feedback">กรุณากรอกนามสกุล!</div>
                     </div>
 
-                    <div class="col-6">
-                        <label for="birthdate" class="form-label">วันเกิด</label>
+                    <div class="col-md-6">
+                        <label for="birthdate" class="col-form-label text-secondary">วันเกิด</label>
                         <input type="date" name="birthdate" class="form-control" id="birthdate" required>
                         <div class="invalid-feedback">กรุณาเลือกวันเกิด!</div>
                     </div>
 
-                    <div class="col-6">
-                        <label for="faculty" class="form-label">คณะ</label>
+                    <div class="col-md-6">
+                        <label for="faculty" class="col-form-label text-secondary">คณะ</label>
                         <select id="faculty" name="faculty" class="form-select" aria-label="Default select example" required>
                             <option selected>เลือกคณะ</option>
                             <option value="คณะมนุษยศาสตร์และสังคมศาสตร์">คณะมนุษยศาสตร์และสังคมศาสตร์</option>
@@ -110,8 +106,8 @@
                         </select>
                     </div>
 
-                    <div class="col-6">
-                        <label for="major" class="form-label">สาขา</label>
+                    <div class="col-md-6">
+                        <label for="major" class="col-form-label text-secondary">สาขา</label>
                         <select id="major" name="major" class="form-select" aria-label="Default select example" required>
                             <option selected>เลือกสาขา</option>
                             <option>- คณะมนุษยศาสตร์และสังคมศาสตร์ -</option>
@@ -170,8 +166,8 @@
                         </select>
                     </div>
 
-                    <div class="col-6">
-                        <label for="grade" class="form-label">ชั้นปี</label>
+                    <div class="col-md-6">
+                        <label for="grade" class="col-form-label text-secondary">ชั้นปี</label>
                         <select id="grade" name="grade" class="form-select" aria-label="Default select example" required>
                             <option selected>เลือกชั้นปี</option>
                             <option value="1">1</option>
@@ -182,28 +178,44 @@
                         </select>
                     </div>
 
-                    <div class="col-6">
-                        <label for="password" class="form-label">รหัสผ่าน</label>
+                    <div class="col-md-6">
+                      <label for="username" class="col-form-label text-secondary">ชื่อผู้ใช้</label>
+                      <div class="input-group has-validation">
+                        <input type="text" name="username" class="form-control" id="username" required>
+                        <div class="invalid-feedback">กรุณากรอกชื่อผู้ใช้!</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="col-form-label text-secondary">อึเมล</label>
+                        <input type="email" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                         <input type="password" name="password" class="form-control" id="password" required>
                         <div class="invalid-feedback">กรุณากรอกรหัสผ่าน!</div>
                     </div>
 
-                    <div class="col-6 pb-3">
-                        <label for="confirm_password" class="form-label">ยืนยันรหัสผ่าน</label>
+                    <div class="col-md-6 pb-3">
+                        <label for="confirm_password" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
                         <input type="password" name="confirm_password" class="form-control" id="confirm_password" required>
                         <span id="passwordError" class="text-danger"></span>
                         <div class="invalid-feedback">กรุณายืนยันรหัสผ่าน!</div>
                     </div>
 
-                    <div class="col-8"></div>
-                    <div class="col-4">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
                       <button class="btn btn-primary w-100" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
                     </div>
+                    <div class="col-md-4"></div>
 
-                    <div class="col-8"></div>
-                    <div class="col-4 text-center">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 text-center">
                       <p class="small mb-0">มีบัญชีแล้ว? <a href="{{url('/login_student')}}">ล็อกอิน</a></p>
                     </div>
+                    <div class="col-md-4"></div>
                     
                   </form>
 
