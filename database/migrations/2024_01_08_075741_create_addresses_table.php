@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('village');
             $table->string('house_no');
             $table->string('village_no');
-            $table->string('street');
-            $table->string('road');
+            $table->string('street')->nullable();
+            $table->string('road')->nullable();
             $table->string('tambon');
             $table->string('aumphure');
             $table->string('province');

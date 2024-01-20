@@ -1,88 +1,128 @@
 <form action="/store_information" class="row g-3" id="form-information" method="POST" enctype="multipart/form-data">
     @csrf    
-
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li class="text-danger">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="col-md-5">
         <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
         <select id="borrower-type" name="borrower_appearance" class="form-select" aria-label="Default select example">
-            <option >เลือกลักษณะผู้กู้</option>
+            <option disabled selected>เลือกลักษณะผู้กู้</option>
             <option value="ขาดแคลนคุณทรัพย์">ขาดแคลนคุณทรัพย์</option>
             <option value="สาขาที่ขาดแคลน">สาขาที่ขาดแคลน</option>
             <option value="สาขาที่เป็นความต้องการหลัก">สาขาที่เป็นความต้องการหลัก</option>
             <option value="เรียนดีสร้างความเป็นเลิศ">เรียนดีสร้างความเป็นเลิศ</option>
         </select>
+        @error('borrower_appearance')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-6"></div>
     <div class="col-md-2">
         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
         <select id="prefix" name="prefix" class="form-select" aria-label="Default select example">
-            <option>เลือกคำนำหน้าชื่อ</option>
+            <option disabled selected>เลือกคำนำหน้าชื่อ</option>
             <option {{($user_information['prefix'] == "นาย")? 'selected': ''}} value="นาย">นาย</option>
             <option {{($user_information['prefix'] == "นาง")? 'selected': ''}} value="นาง">นาง</option>
             <option {{($user_information['prefix'] == "นางสาว")? 'selected': ''}} value="นางสาว">นางสาว</option>
         </select>
+        @error('prefix')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-10"></div>
     <div class="col-md-5">
         <label for="fname" class="form-label text-secondary">ชื่อ</label>
         <input type="text" class="form-control" id="fname" name="fname" value="{{$user_information['fname']}}">
+        @error('fname')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="lname" class="form-label text-secondary">นามสกุล</label>
         <input type="email" class="form-control" id="lname" name="lname" value="{{$user_information['lname']}}">
+        @error('lname')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
         <input type="date" class="form-control" id="birthday" name="birthday" onchange="ageCal('')">
+        @error('birthday')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3">
         <label for="age" class="form-label text-secondary">อายุ</label>
         <input disabled type="text" class="form-control" id="age" name="age">
+        @error('age')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="citizen_id" name="citizen_id" maxlength="13">
-    </div>
-    <div class="col-md-7"></div>
-    <div class="col-md-5">
-    <label id="formattedNumber" class="text-secondary text-secondary">x-xxxx-xxxxx-xx-x</label>
+        <input type="text" class="form-control" id="citizen_id" name="citizen_id">
+        @error('citizen_id')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-7"></div>
 
     <div class="col-md-5">
         <label for="student_id" class="form-label text-secondary">รหัสนักศึกษา</label>
-        <input type="number" class="form-control" id="student_id" name="student_id">
+        <input type="text" class="form-control" id="student_id" name="student_id">
+        @error('student_id')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-7"></div>
     <!-- <div class="cal-md-10"></div> -->
     <div class="col-md-5">
         <label for="faculty" class="col-md-12 col-form-label text-secondary">คณะ</label>
         <select id="faculty" name="faculty" class="form-select" aria-label="Default select example">
-            <option selected>เลือกคณะ</option>
+            <option disabled selected>เลือกคณะ</option>
             <option value="lasc">lasc</option>
         </select>
+        @error('faculty')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="major" class="col-md-12 col-form-label text-secondary">สาขา</label>
         <select id="major" name="major" class="form-select" aria-label="Default select example">
-            <option selected>เลือกสาขา</option>
+            <option disabled selected>เลือกสาขา</option>
             <option value="software">software</option>
         </select>
+        @error('major')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3 mt-2">
         <label for="grade" class="col-md-12 col-form-label text-secondary">ชั้นปี</label>
         <select id="grade" name="grade" class="form-select" aria-label="Default select example">
-            <option selected>เลือกชั้นปี</option>
+            <option disabled selected>เลือกชั้นปี</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
+        @error('grade')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-9"></div>
     <div class="col-md-3">
         <label for="gpa" class="form-label text-secondary">ผลการเรียน</label>
         <input type="text" class="form-control" id="gpa" name="gpa">
+        @error('gpa')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-12"></div>
@@ -94,67 +134,103 @@
     <div class="col-md-5">
         <label for="village" class="form-label text-secondary">หมู่บ้าน</label>
         <input type="text" class="form-control" id="village" name="village">
+        @error('village')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-3">
         <label for="house_no" class="form-label text-secondary">บ้านเลขที่</label>
         <input type="text" class="form-control" id="house_no" name="house_no">
+        @error('house_no')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-3">
         <label for="village_no" class="form-label text-secondary">หมู่ที่</label>
         <input type="text" class="form-control" id="village_no" name="village_no">
+        @error('village_no')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-5">
         <label for="street" class="form-label text-secondary">ซอย</label>
         <input type="text" class="form-control" id="street" name="street">
+        @error('street')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-5">
         <label for="road" class="form-label text-secondary">ถนน</label>
         <input type="text" class="form-control" id="road" name="road">
+        @error('road')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-3">
         <label for="postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
         <input type="text" class="form-control" id="postcode" name="postcode" onblur="addressWithZipcode(this.value,'borrower')">
+        @error('postcode')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-9"></div>
 
     <div class="col-md-5">
         <label for="province" class="form-label text-secondary">จังหวัด</label>
         <input type="text" class="form-control" id="borrower_province" name="province">
+        @error('province')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-5">
         <label for="aumphure" class="form-label text-secondary">อำเภอ</label>
         <input type="text" class="form-control" id="borrower_aumphure" name="aumphure">
+        @error('aumphure')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-5">
     <label for="tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
         <select id="borrower_tambon" name="tambon" class="form-select" aria-label="Default select example">
-            <option selected>เลือกตำบล</option>
-    </select>
+            <option disabled selected>เลือกตำบล</option>
+        </select>
+        @error('tambon')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-7"></div>
 
     <div class="col-md-5">
         <label for="email" class="form-label text-secondary">อีเมล</label>
         <input type="text" class="form-control" id="email" name="email" value="{{$user_information['email']}}">
+        @error('email')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-12"></div>
 
     <div class="col-md-5">
         <label for="phone_number" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="phone_number" name="phone_number">
+        @error('phone_number')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-12"></div>
 
     <div class="col-md-5">
         <label id="formattedNumber" class="text-secondary text-secondary">ขอรับรองว่าข้าพเจ้ามีคุณสมบัติถูกต้องตามหลักเกณฑ์ ดังนี้</label>
     </div>
+    @error('props')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
     <div class="col-md-7"></div>
     <!-- checkbox props -->
     <div class="col-md-12">
@@ -238,6 +314,9 @@
     <div class="col-md-12"></div>
     
     <label id="formattedNumber" class="text-secondary text-secondary">เหตุผลความจำเป็นของการขอกุ้ยืม</label>
+    @error('necess')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
     <!-- checkbox props -->
     <div class="col-md-12">
         <div class="row">
@@ -310,7 +389,11 @@
         <h5 class="text-primary" >ข้อมูลผู้ปกครอง</h5>
         <div class="col-md-11 line-section mt-2"></div>
     </div>
+
     <fieldset class="row mb-3 mt-4">
+        @error('parent1_is_thai')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
         <div class="col-md-3">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_is_thai" id="parent1_is_thai" value="ไทย" onchange="enableInputCountry('parent1',this.value)">
@@ -330,9 +413,16 @@
         <div class="col-md-4">
             <input type="text" class="form-control" name="parent1_nationnality" id="parent1_nationality" placeholder="กรอกสัญชาติ" disabled>
         </div>
+        @error('parent1_nationnality')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </fieldset>
+
     <fieldset class="row mb-3 mt-4" id="thaiperson">
         <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
+        @error('parent1_alive')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
         <div class="col-md-3">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_alive" id="parent1_is_alive" value="true">
@@ -349,11 +439,15 @@
                 </label>
             </div>
         </div>
+        
     </fieldset>
 
     <div class="col-md-2">
         <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
         <input type="text" class="form-control" id="parent1_relational" name="parent1_relational">
+        @error('parent1_relational')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-10"></div>
@@ -361,37 +455,58 @@
     <div class="col-md-2">
         <label for="parent1_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
         <select id="parent1_prefix" name="parent1_prefix" class="form-select" aria-label="Default select example">
-            <option selected>เลือกคำนำหน้าชื่อ</option>
+            <option disabled selected>เลือกคำนำหน้าชื่อ</option>
             <option value="นาย">นาย</option>
             <option value="นาง">นาง</option>
             <option value="นางสาว">นางสาว</option>
         </select>
+        @error('parent1_prefix')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-10"></div>
 
     <div class="col-md-5">
         <label for="parent1_fname" class="form-label text-secondary">ชื่อ</label>
         <input type="text" class="form-control" id="parent1_fname" name="parent1_fname">
+        @error('parent1_fname')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="parent1_lname" class="form-label text-secondary">นามสกุล</label>
         <input type="email" class="form-control" id="parent1_lname" name="parent1_lname">
+        @error('parent1_lname')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="parent1_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
         <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" onchange="ageCal('parent1_')">
+        @error('parent1_birthday')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3">
         <label for="parent1_age" class="form-label text-secondary">อายุ</label>
         <input disabled type="text" class="form-control" id="parent1_age" name="parent1_age">
+        @error('parent1_age')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
-        <label for="parent1_id_card_number" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="parent1_id_card_number" name="parent1_id_card_number" maxlength="13">
+        <label for="parent1_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
+        <input type="text" class="form-control" id="parent1_citizen_id" name="parent1_citizen_id">
+        @error('parent1_citizen_id')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3">
         <label for="parent1_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="parent1_phone" name="parent1_phone">
+        @error('parent1_phone')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label id="formattedNumber" class="text-secondary text-secondary">x-xxxx-xxxxx-xx-x</label>
@@ -399,11 +514,17 @@
     <div class="col-md-5"></div>
     <div class="col-md-5">
         <label for="parent1_occupation" class="form-label text-secondary">อาชีพ</label>
-        <input type="text" class="form-control" id="parent1_occupation" name="parent1_occupation" maxlength="13">
+        <input type="text" class="form-control" id="parent1_occupation" name="parent1_occupation">
+        @error('parent1_occupation')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="parent1_income" class="form-label text-secondary">รายได้ต่อปี</label>
-        <input type="text" class="form-control" id="parent1_income" name="parent1_income">
+        <input type="number" class="form-control" id="parent1_income" name="parent1_income">
+        @error('parent1_income')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-4 my-4">
         <div class="form-check">
@@ -412,6 +533,9 @@
             เป็นผู้แทนโดยชอบธรรม(เลือก 1 ในผู้ปกครอง)
             </label>
         </div>
+        @error('main_parent')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-8"></div>
     
@@ -424,6 +548,9 @@
         <div class="col-md-11 line-section mt-2"></div>
     </div>
     <fieldset class="row mb-3 mt-4">
+        @error('parent2_is_thai')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
         <div class="col-md-3">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent2_is_thai" id="parent2_is_thai" value="ไทย" onchange="enableInputCountry('parent2',this.value)">
@@ -443,6 +570,9 @@
         <div class="col-md-4">
             <input type="text" class="form-control" name="parent2_nationnality" id="parent2_nationality" placeholder="กรอกสัญชาติ" disabled>
         </div>
+        @error('parent2_nationnality')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </fieldset>
     <fieldset class="row mb-3 mt-4" id="thaiperson">
         <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
@@ -462,11 +592,17 @@
                 </label>
             </div>
         </div>
+        @error('parent2_alive')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </fieldset>
 
     <div class="col-md-2">
         <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
         <input type="text" class="form-control" id="parent2_relational" name="parent2_relational">
+        @error('parent2_relational')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
 
     <div class="col-md-10"></div>
@@ -474,37 +610,58 @@
     <div class="col-md-2">
         <label for="parent2_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
         <select id="parent2_prefix" name="parent2_prefix" class="form-select" aria-label="Default select example">
-            <option selected>เลือกคำนำหน้าชื่อ</option>
+            <option disabled selected>เลือกคำนำหน้าชื่อ</option>
             <option value="นาย">นาย</option>
             <option value="นาง">นาง</option>
             <option value="นางสาว">นางสาว</option>
         </select>
+        @error('parent2_prefix')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-10"></div>
 
     <div class="col-md-5">
         <label for="parent2_fname" class="form-label text-secondary">ชื่อ</label>
         <input type="text" class="form-control" id="parent2_fname" name="parent2_fname">
+        @error('parent2_fname')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="parent2_lname" class="form-label text-secondary">นามสกุล</label>
         <input type="email" class="form-control" id="parent2_lname" name="parent2_lname">
+        @error('parent2_lname')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="parent2_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
         <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" onchange="ageCal('parent2_')">
+        @error('parent2_birthday')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3">
         <label for="parent2_age" class="form-label text-secondary">อายุ</label>
         <input disabled type="text" class="form-control" id="parent2_age" name="parent2_age">
+        @error('parent2_age')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
-        <label for="parent2_id_card_number" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="parent2_id_card_number" name="parent2_id_card_number" maxlength="13">
+        <label for="parent2_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
+        <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" maxlength="13">
+        @error('parent2_citizen_id')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3">
         <label for="parent2_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="parent2_phone" name="parent2_phone">
+        @error('parent2_phone')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label id="formattedNumber" class="text-secondary text-secondary">x-xxxx-xxxxx-xx-x</label>
@@ -513,10 +670,16 @@
     <div class="col-md-5">
         <label for="parent2_occupation" class="form-label text-secondary">อาชีพ</label>
         <input type="text" class="form-control" id="parent2_occupation" name="parent2_occupation" maxlength="13">
+        @error('parent2_occupation')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="parent2_income" class="form-label text-secondary">รายได้ต่อปี</label>
-        <input type="text" class="form-control" id="parent2_income" name="parent2_income">
+        <input type="number" class="form-control" id="parent2_income" name="parent2_income">
+        @error('parent2_income')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-4 my-4">
         <div class="form-check">
@@ -525,6 +688,9 @@
             เป็นผู้แทนโดยชอบธรรม(เลือก 1 ในผู้ปกครอง)
             </label>
         </div>
+        @error('parent2_is_main_parent')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-8"></div>
     <!-- end mom information -->
@@ -533,7 +699,9 @@
     <fieldset class="row my-4" id="maritalStatusId">
         <h5 class="text-primary">สถานภาพสมรสของผู้ปกครอง</h5>
         <div class="col-md-11 line-section mt-2 mb-2"></div>
-
+        @error('marital_status')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
         <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
         <div class="col-md-12">
             <div class="form-check">
@@ -560,7 +728,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-5">
-                    <input disabled class="form-control" type="file" id="devorceFile" name="devorce_file">
+                    <input disabled class="form-control" type="file" id="devorceFile" name="devorce_file" accept=".jpg, .jpeg, .png">
                 </div>
             </div>
         </div>
@@ -573,9 +741,12 @@
             </div>
             <div class="col-md-4">
                 <input disabled type="text" class="form-control" id="otherText" name="other_text">
+                @error('other_text')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
         </div>
-
+        
     </fieldset>
     <!-- end maritalStatus -->
 
@@ -591,55 +762,85 @@
               ที่อยู่เดียวกันกับผู้กู้
               </label>
           </div>
+          @error('address_with_borrower')
+              <span class="text-danger">{{ $message }}</span>
+          @enderror
         </div>
         <div class="col-md-7"></div>
 
         <div class="col-md-5">
             <label for="main_parent_village" class="form-label text-secondary">หมู่บ้าน</label>
             <input type="text" class="form-control fake-class" id="main_parent_village" name="main_parent_village">
+            @error('main_parent_village')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-3">
             <label for="main_parent_house_no" class="form-label text-secondary">บ้านเลขที่</label>
             <input type="text" class="form-control fake-class" id="main_parent_house_no" name="main_parent_house_no">
+            @error('main_parent_house_no')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-3">
             <label for="main_parent_village_no" class="form-label text-secondary">หมู่ที่</label>
             <input type="text" class="form-control fake-class" id="main_parent_village_no" name="main_parent_village_no">
+            @error('main_parent_village_no')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-5">
             <label for="main_parent_street" class="form-label text-secondary">ซอย</label>
             <input type="text" class="form-control fake-class" id="main_parent_street" name="main_parent_street">
+            @error('main_parent_street')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-5">
             <label for="main_parent_road" class="form-label text-secondary">ถนน</label>
             <input type="text" class="form-control fake-class" id="main_parent_road" name="main_parent_road">
+            @error('main_parent_road')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-3">
             <label for="main_parent_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
             <input type="text" class="form-control fake-class" id="main_parent_postcode" name="main_parent_postcode" onblur="addressWithZipcode(this.value,'main_parent')">
+            @error('main_parent_postcode')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
         <div class="col-md-9"></div>
 
         <div class="col-md-5">
             <label for="main_parent_province" class="form-label text-secondary">จังหวัด</label>
             <input type="text" class="form-control fake-class" id="main_parent_province" name="main_parent_province">
+            @error('main_parent_province')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-5">
             <label for="main_parent_aumphure" class="form-label text-secondary">อำเภอ</label>
             <input type="text" class="form-control fake-class" id="main_parent_aumphure" name="main_parent_aumphure">
+            @error('main_parent_aumphure')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-5">
         <label for="main_parent_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
             <select id="main_parent_tambon" name="main_parent_tambon" class="form-select fake-class" aria-label="Default select example">
-                <option selected>เลือกตำบล</option>
-        </select>
+                <option disabled selected>เลือกตำบล</option>
+            </select>
+            @error('main_parent_tambon')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="col-md-7"></div>

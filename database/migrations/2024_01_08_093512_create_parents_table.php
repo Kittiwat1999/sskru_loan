@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('birthday');
+            $table->string('citizen_id');
             $table->string('phone');
             $table->string('occupation');
             $table->string('income');

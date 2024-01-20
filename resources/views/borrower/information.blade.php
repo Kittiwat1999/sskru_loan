@@ -81,10 +81,15 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+            // else if(response.length == 0){
+            //     console.log('no data');
+            // }
             return response.json();
         })
         .then(data => {
-            // console.log(zip_code_input);
+            if(data.length == 0){
+                console.log('no data');
+            }
             var tambons = [];
             var aumphureId = '';
             for(tambon of data){
@@ -161,8 +166,10 @@
         console.log(parentNo)
         if(isthai == `${parentNo}_not_thai`){
             document.querySelector(`#${parentNo}_nationality`).disabled = false;
+            document.querySelector(`#${parentNo}_nationality`).required = true;
         }else{
             document.querySelector(`#${parentNo}_nationality`).disabled = true;
+            document.querySelector(`#${parentNo}_nationality`).required = false;
         }
 
       }
@@ -201,5 +208,7 @@
               });
           }
       });
+
+
       </script>
 @endsection

@@ -8,6 +8,7 @@ use App\Models\Users;
 use App\Models\Address;
 use App\Models\Parents;
 use Carbon\Carbon;
+use App\Http\Requests\borrowerInformationValidationRequest;
 
 
 
@@ -15,7 +16,7 @@ use Carbon\Carbon;
 class BorrowerController extends Controller
 {
 
-    function getBorrowerInformation(){
+    public function getBorrowerInformation(){
         $user_id = 2;
         $get_borrower=Borrower::where('user_id',$user_id)->get();
         $get_user = Users::where('id',$user_id)->get();
@@ -39,18 +40,21 @@ class BorrowerController extends Controller
         }
     }
 
-    function storeInformation(Request $request){
+    // borrowerInformationValidationRequest
+    function storeInformation(borrowerInformationValidationRequest $request){
+        
         // dd($request);
         $user_id = 2;
         date_default_timezone_set("Asia/Bangkok");
-
+        
+        
         $update_user=[
             'prefix'=>$request->prefix,
             'fname'=>$request->fname,
             'lname'=>$request->lname,
             'email'=>$request->email,
         ];
-
+        
         Users::where('id',$user_id)->update($update_user);
         
         $address = [
@@ -68,10 +72,11 @@ class BorrowerController extends Controller
         ];
 
         Address::insert($address);
-
+        
         //get address id
         $get_address = Address::where('created_at',$address['created_at'])->where('postcode',$address['postcode'])->where('house_no',$address['house_no'])->where('village_no',$address['village_no'])->get();
         $borrower_address_id = $get_address['0']['id'];
+        
 
         //marital status
         if($request->marital_status == "อยู่ด้วยกัน"){
@@ -83,31 +88,29 @@ class BorrowerController extends Controller
         }else if($request->marital_status == "หย่า"){
             $currentYear = Carbon::now()->year;
             $thaiBuddhistYear = $currentYear + 543;
-            $uploadDirectory = 'uploads/'.$thaiBuddhistYear.'/'.$user_id;
+            $uploadDirectory = 'public/uploads/'.$thaiBuddhistYear.'/'.$user_id;
+            $displayDirectory = 'storage/uploads/'.$thaiBuddhistYear.'/'.$user_id;
 
-            // Check if the directory exists
-            if (!is_dir($uploadDirectory)) {
-                mkdir($uploadDirectory, 0755, true); // The third parameter creates parent directories if they don't exist
-
-                // Check if the directory was created successfully
-                if (!is_dir($uploadDirectory)) {
-                    die('Failed to create upload directory');
-                }
-            }
             $file = $request->file('devorce_file');
 
+            
             $new_file_name = $file->getClientOriginalName();
-            $new_file_name = time().$new_file_name;
-            if($file->move($uploadDirectory,$new_file_name)){
-                echo "file upload success";
-                // return view('dommono');
-            }else{
-                echo "file upload failed!";
+            $new_file_name = 'marital'.time().$new_file_name;
+
+            // check file type
+            $file_extenstion = $new_file_name;
+            $file_extenstion = explode('.', $file_extenstion);
+            if(($file_extenstion != 'png' || $file_extenstion != 'jpg') || ($file_extenstion != 'jpeg' || $file_extenstion != 'pdf')){
+                $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .jpg .png .pdf เท่านั้น'];
+                return $error;
             }
 
-            $marital_status = ['status'=>'หย่า','file_path'=>$uploadDirectory.'/'.$new_file_name];
+            $request->file('devorce_file')->storeAs($uploadDirectory,$new_file_name);
+
+            $marital_status = ['status'=>'หย่า','file_path'=>$displayDirectory.'/'.$new_file_name];
         }
 
+        
         //check address parent are living with borrower
         if(isset($request->address_with_borrower)){
             $parent_address_id = $borrower_address_id;
@@ -147,6 +150,7 @@ class BorrowerController extends Controller
             'fname'=>$request->parent1_fname,
             'lname'=>$request->parent1_lname,
             'birthday'=>$request->parent1_birthday,
+            'citizen_id'=>$request->parent1_citizen_id,
             'phone'=>$request->parent1_phone,
             'occupation'=>$request->parent1_occupation,
             'income'=>$request->parent1_income,
@@ -155,41 +159,57 @@ class BorrowerController extends Controller
             'updated_at'=>date('Y-m-d H:i:s')
         ];
 
-         //check nationality of parent 1
-         if($request->parent2_is_thai == "ไทย"){
-            $parent2_nationality = "ไทย";
-        }else{
-            $parent2_nationality = $request->parent2_nationnality;
-        }
 
-        $parent2 = [
-            'user_id'=>$user_id,
-            'borrower_relational'=>$request->parent2_relational,
-            'nationality'=>$parent2_nationality,
-            'prefix'=>$request->parent2_prefix,
-            'fname'=>$request->parent2_fname,
-            'lname'=>$request->parent2_lname,
-            'birthday'=>$request->parent2_birthday,
-            'phone'=>$request->parent2_phone,
-            'occupation'=>$request->parent2_occupation,
-            'income'=>$request->parent2_income,
-            'alive'=>filter_var($request->parent2_alive, FILTER_VALIDATE_BOOLEAN),
-            'created_at'=>date('Y-m-d H:i:s'),
-            'updated_at'=>date('Y-m-d H:i:s')
-        ];
+        //parent 2 have data
+        if($request->parent2_relational !== null && $request->parent2_citizen_id !== null)
+        {
+             //check nationality of parent 2
+            if($request->parent2_is_thai == "ไทย"){
+                $parent2_nationality = "ไทย";
+            }else{
+                $parent2_nationality = $request->parent2_nationnality;
+            }
+
+
+            $parent2 = [
+                'user_id'=>$user_id,
+                'borrower_relational'=>$request->parent2_relational,
+                'nationality'=>$parent2_nationality,
+                'prefix'=>$request->parent2_prefix,
+                'fname'=>$request->parent2_fname,
+                'lname'=>$request->parent2_lname,
+                'birthday'=>$request->parent2_birthday,
+                'citizen_id'=>$request->parent2_citizen_id,
+                'phone'=>$request->parent2_phone,
+                'occupation'=>$request->parent2_occupation,
+                'income'=>$request->parent2_income,
+                'alive'=>filter_var($request->parent2_alive, FILTER_VALIDATE_BOOLEAN),
+                'created_at'=>date('Y-m-d H:i:s'),
+                'updated_at'=>date('Y-m-d H:i:s')
+            ];
+
+            $parent2_have_data = true;
+        }else{
+            $parent2_have_data = false;
+        }    
+
+        // dd($parent2_have_data);
+        
 
         // add address to main parent 
         if($request->main_parent == "parent1"){
             $parent1['address_id'] = $parent_address_id;
+            $parent_citizen_id = $request->parent1_citizen_id;
         }else if($request->main_parent == "parent2"){
             $parent2['address_id'] = $parent_address_id;
+            $parent_citizen_id = $request->parent2_citizen_id;
         }
 
         // insert to database
         Parents::insert($parent1);
-        Parents::insert($parent2);
+        if($parent2_have_data)Parents::insert($parent2);
 
-        $get_main_parent = Parents::where('address_id',$parent_address_id)->get();
+        $get_main_parent = Parents::where('citizen_id',$parent_citizen_id)->get();
         $main_parent_id = $get_main_parent['0']['id'];
 
         $borrower = [
@@ -215,8 +235,10 @@ class BorrowerController extends Controller
         Borrower::insert($borrower);
         $get_borrower = Borrower::where('user_id',$user_id)->get();
         // $get_user = Users::where('id',$user_id)->get();
-        dd($get_borrower);
+        // dd($parent1,$parent2,$borrower);
 
         return redirect('/borrower/information');
     }
+
+    
 }
