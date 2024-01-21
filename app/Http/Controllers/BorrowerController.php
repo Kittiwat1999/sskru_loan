@@ -161,7 +161,7 @@ class BorrowerController extends Controller
 
 
         //parent 2 have data
-        if(filter_var($request->parent2_no_data, FILTER_VALIDATE_BOOLEAN))
+        if(!filter_var($request->parent2_no_data, FILTER_VALIDATE_BOOLEAN))
         {
              //check nationality of parent 2
             if($request->parent2_is_thai == "ไทย"){
