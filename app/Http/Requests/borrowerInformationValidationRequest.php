@@ -91,6 +91,8 @@ class borrowerInformationValidationRequest extends FormRequest
 
             "marital_status" => 'required|string',
             "other_text"=>'nullable|string|max:50',
+
+            "parent2_no_data" => 'nullable|string|max:10'
         ];
     }
 

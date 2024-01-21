@@ -5,7 +5,11 @@
       <!-- start card toggle -->
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">กรอกข้อมูล</h5>
+          {{-- <h5 class="card-title">กรอกข้อมูล</h5> --}}
+            <div class="col-md-12 my-4">
+                <h5 class="text-primary">ข้อมูลผู้กู้</h5>
+                <div class="col-md-11 line-section mt-2"></div>
+            </div>
           @include('borrower/information/input_information')
 
         </div>
@@ -65,7 +69,14 @@
 
 
       function submitInformation(){
-        document.querySelector('#form-information').submit();
+        document.querySelector('#form-information');
+        if (form.checkValidity()) {
+            // Submit the form if it's valid
+            form.submit();
+        } else {
+            // If the form is not valid, display error messages
+            form.reportValidity();
+            }
       }
 
       function generateSelectProvince(elementId){
@@ -179,15 +190,21 @@
           const otherMaritalStat = document.getElementById('other');
           if(otherMaritalStat.checked){
               document.getElementById('otherText').disabled = false;
+              document.getElementById('otherText').required = true;
           }else{
               document.getElementById('otherText').disabled = true;
+              document.getElementById('otherText').required = false;
+
           }
           
           const devorce = document.getElementById('devorce');
           if(devorce.checked){
               document.getElementById('devorceFile').disabled = false;
+              document.getElementById('devorceFile').required = true;
           }else{
               document.getElementById('devorceFile').disabled = true;
+              document.getElementById('devorceFile').required = false;
+
           }
       }
 
@@ -198,12 +215,14 @@
               const address_input = document.querySelectorAll('.fake-class');
               address_input.forEach((e)=>{
                   e.disabled = true;
+                  e.required = false;
                   e.value = "";
               });
           } else {
               const address_input = document.querySelectorAll('.fake-class');
               address_input.forEach((e)=>{
                   e.disabled = false;
+                  e.required = true;
                   e.value = "";
               });
           }
