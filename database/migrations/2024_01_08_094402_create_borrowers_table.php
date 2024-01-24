@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('borrower_appearance');
             $table->json('borrower_properties');
             $table->json('borrower_necessity');
-            $table->json('mariatal_status');
+            $table->json('marital_status');
             $table->foreignIdFor(Parents::class);
             $table->string('phone_number');
             $table->timestamps();
