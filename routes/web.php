@@ -253,3 +253,7 @@ Route::get('/login_student',function () {
 Route::get('/login_teacher',function () {
     return view('/login_teacher');
 });
+
+Route::get('/menu', function () {
+    return view('/menu');
+});
