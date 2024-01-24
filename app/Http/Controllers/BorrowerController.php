@@ -17,26 +17,65 @@ class BorrowerController extends Controller
 {
 
     public function getBorrowerInformation(){
-        $user_id = 2;
+
+        $user_id = 4;
         $get_borrower=Borrower::where('user_id',$user_id)->get();
         $get_user = Users::where('id',$user_id)->get();
+
         unset($get_user[0]['password']);
         if (count($get_borrower) === 0){
             $user_information = $get_user[0];
-            // dd($user_information);
             return view('/borrower/information',compact('user_information'));
-        }else{
-            // dd($get_borrower[0]['address_id']);
-            $get_address = Address::where('id',$get_borrower[0]['address_id'])->get();
 
+        }else{
+
+            // dd($get_borrower[0]['address_id']);
+            $get_borroweraddress = Address::where('id',$get_borrower[0]['address_id'])->get();
+            
             $borrower_information = $get_borrower[0];
             $user_information = $get_user[0];
-            $address = $get_address[0];
+            $address = $get_borroweraddress[0];
+
             $borrower_information['borrower_necessity'] = json_decode($borrower_information['borrower_necessity']);
             $borrower_information['borrower_properties'] = json_decode($borrower_information['borrower_properties']);
-
-            // dd($borrower_information,$user_information,$address);
-            return view('/borrower/information',compact('borrower_information','user_information','address'));
+            $borrower_information['marital_status'] = json_decode($borrower_information['marital_status']);
+            
+            $get_parent = Parents::where('user_id',$user_id)->orderby('id')->get();
+            if(count($get_parent) == 2){
+                $parent1 = $get_parent[0];
+                $parent2 = $get_parent[1];
+                
+                if($parent1['address_id'] == null){
+                    if($borrower_information['address_id'] == $parent2['address_id']){
+                        $parent_address = $address;
+                    }else{
+                        $get_parent_address = Address::where('id',$parent2['address_id'])->get();
+                        $parent_address = $get_parent_address[0];
+                    }
+                }else{
+                    if($borrower_information['address_id'] == $parent1['address_id']){
+                        $parent_address = $address;
+                    }else{
+                        $get_parent_address = Address::where('id',$parent1['address_id'])->get();
+                        $parent_address = $get_parent_address[0];
+                    }
+                }
+                
+    
+                // dd($borrower_information,$user_information,$address);
+                return view('/borrower/information',compact('borrower_information','user_information','address','parent1','parent2','parent_address'));
+            }else{
+                $parent1 = $get_parent[0];
+                if($borrower_information['address_id'] == $parent1['address_id']){
+                    $parent_address = $address;
+                }else{
+                    $get_parent_address = Address::where('id',$parent1['address_id'])->get();
+                    $parent_address = $get_parent_address[0];
+                }
+    
+                // dd($borrower_information,$user_information,$address);
+                return view('/borrower/information',compact('borrower_information','user_information','address','parent1','parent_address'));
+            }
         }
     }
 
@@ -44,7 +83,7 @@ class BorrowerController extends Controller
     function storeInformation(borrowerInformationValidationRequest $request){
         
         // dd($request);
-        $user_id = 2;
+        $user_id = 4;
         date_default_timezone_set("Asia/Bangkok");
         
         
@@ -56,27 +95,6 @@ class BorrowerController extends Controller
         ];
         
         Users::where('id',$user_id)->update($update_user);
-        
-        $address = [
-            'village'=>$request->village ,
-            'house_no'=>$request->house_no ,
-            'village_no'=>$request->village_no ,
-            'street'=>$request->street ,
-            'road'=>$request->road ,
-            'postcode'=>$request->postcode ,
-            'province'=>$request->province ,
-            'aumphure'=>$request->aumphure ,
-            'tambon'=>$request->tambon ,
-            'created_at'=>date('Y-m-d H:i:s'),
-            'updated_at'=>date('Y-m-d H:i:s')
-        ];
-
-        Address::insert($address);
-        
-        //get address id
-        $get_address = Address::where('created_at',$address['created_at'])->where('postcode',$address['postcode'])->where('house_no',$address['house_no'])->where('village_no',$address['village_no'])->get();
-        $borrower_address_id = $get_address['0']['id'];
-        
 
         //marital status
         if($request->marital_status == "อยู่ด้วยกัน"){
@@ -98,9 +116,11 @@ class BorrowerController extends Controller
             $new_file_name = 'marital'.time().$new_file_name;
 
             // check file type
-            $file_extenstion = $new_file_name;
-            $file_extenstion = explode('.', $file_extenstion);
-            if(($file_extenstion != 'png' || $file_extenstion != 'jpg') || ($file_extenstion != 'jpeg' || $file_extenstion != 'pdf')){
+            $get_fullfilename = $new_file_name;
+            $spit_filename = explode('.', $get_fullfilename);
+            $file_extenstion = last($spit_filename);
+
+            if(($file_extenstion != 'png' && $file_extenstion != 'jpg') && ($file_extenstion != 'jpeg' && $file_extenstion != 'pdf')){
                 $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .jpg .png .pdf เท่านั้น'];
                 return $error;
             }
@@ -109,6 +129,26 @@ class BorrowerController extends Controller
 
             $marital_status = ['status'=>'หย่า','file_path'=>$displayDirectory.'/'.$new_file_name];
         }
+        
+        $address = [
+            'village'=>$request->village ,
+            'house_no'=>$request->house_no ,
+            'village_no'=>$request->village_no ,
+            'street'=>$request->street ,
+            'road'=>$request->road ,
+            'postcode'=>$request->postcode ,
+            'province'=>$request->province ,
+            'aumphure'=>$request->aumphure ,
+            'tambon'=>$request->tambon ,
+            'created_at'=>date('Y-m-d H:i:s'),
+            'updated_at'=>date('Y-m-d H:i:s')
+        ];
+
+        Address::insert($address);
+        
+        //get address id
+        $get_address = Address::where('created_at',$address['created_at'])->where('postcode',$address['postcode'])->where('house_no',$address['house_no'])->where('village_no',$address['village_no'])->get();
+        $borrower_address_id = $get_address['0']['id'];
 
         
         //check address parent are living with borrower
@@ -200,16 +240,18 @@ class BorrowerController extends Controller
         if($request->main_parent == "parent1"){
             $parent1['address_id'] = $parent_address_id;
             $parent_citizen_id = $request->parent1_citizen_id;
+            $parent_create_at = $parent1['created_at'];
         }else if($request->main_parent == "parent2"){
             $parent2['address_id'] = $parent_address_id;
             $parent_citizen_id = $request->parent2_citizen_id;
+            $parent_create_at = $parent2['created_at'];
         }
 
         // insert to database
         Parents::insert($parent1);
         if($parent2_have_data)Parents::insert($parent2);
 
-        $get_main_parent = Parents::where('citizen_id',$parent_citizen_id)->get();
+        $get_main_parent = Parents::where('citizen_id',$parent_citizen_id)->where('created_at',$parent_create_at)->get();
         $main_parent_id = $get_main_parent['0']['id'];
 
         $borrower = [
@@ -227,7 +269,7 @@ class BorrowerController extends Controller
             'borrower_necessity'=>json_encode($request->necess),
             'borrower_properties'=>json_encode($request->props),
             'parents_id'=>$main_parent_id,
-            'mariatal_status'=>json_encode($marital_status),
+            'marital_status'=>json_encode($marital_status),
             'created_at'=>date('Y-m-d H:i:s'),
             'updated_at'=>date('Y-m-d H:i:s')
         ];
