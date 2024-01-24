@@ -257,3 +257,5 @@ Route::get('/login_teacher',function () {
 Route::get('/menu', function () {
     return view('/menu');
 });
+
+Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);

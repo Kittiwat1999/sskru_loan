@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Borrower extends Model
 {
     use HasFactory;
+
+    public function getBorrowerData(){
+        return $this->belongsTo('App\Models\Users');
+    }
 }

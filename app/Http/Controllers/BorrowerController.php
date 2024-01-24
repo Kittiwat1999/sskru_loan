@@ -16,24 +16,35 @@ use App\Http\Requests\borrowerInformationValidationRequest;
 class BorrowerController extends Controller
 {
 
+    public function testGetdata(){
+        // return Borrower::getBorrowerData();
+        $user_id = 2;
+
+        $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
+            $join->on('users.id', '=', 'borrowers.user_id')
+                 ->where('borrowers.user_id', '=', $user_id);
+        })
+        ->get()[0];
+        dd($borrower);
+
+    }
+
     public function getBorrowerInformation(){
 
         $user_id = 4;
-        $get_borrower=Borrower::where('user_id',$user_id)->get();
-        $get_user = Users::where('id',$user_id)->get();
+        $borrower_information=Borrower::where('user_id',$user_id)->get()[0];
+        $user_information = Users::where('id',$user_id)->get()[0];
 
-        unset($get_user[0]['password']);
-        if (count($get_borrower) === 0){
-            $user_information = $get_user[0];
+        unset($borrower_information['password']);
+        
+        if (count($borrower_information) === 0){
             return view('/borrower/information',compact('user_information'));
 
         }else{
 
             // dd($get_borrower[0]['address_id']);
-            $get_borroweraddress = Address::where('id',$get_borrower[0]['address_id'])->get();
+            $get_borroweraddress = Address::where('id',$borrower_information['address_id'])->get();
             
-            $borrower_information = $get_borrower[0];
-            $user_information = $get_user[0];
             $address = $get_borroweraddress[0];
 
             $borrower_information['borrower_necessity'] = json_decode($borrower_information['borrower_necessity']);
@@ -49,15 +60,13 @@ class BorrowerController extends Controller
                     if($borrower_information['address_id'] == $parent2['address_id']){
                         $parent_address = $address;
                     }else{
-                        $get_parent_address = Address::where('id',$parent2['address_id'])->get();
-                        $parent_address = $get_parent_address[0];
+                        $parent_address = Address::where('id',$parent2['address_id'])->get()[0];
                     }
                 }else{
                     if($borrower_information['address_id'] == $parent1['address_id']){
                         $parent_address = $address;
                     }else{
-                        $get_parent_address = Address::where('id',$parent1['address_id'])->get();
-                        $parent_address = $get_parent_address[0];
+                        $parent_address = Address::where('id',$parent1['address_id'])->get()[0];
                     }
                 }
                 
@@ -69,8 +78,7 @@ class BorrowerController extends Controller
                 if($borrower_information['address_id'] == $parent1['address_id']){
                     $parent_address = $address;
                 }else{
-                    $get_parent_address = Address::where('id',$parent1['address_id'])->get();
-                    $parent_address = $get_parent_address[0];
+                    $parent_address = Address::where('id',$parent1['address_id'])->get()[0];
                 }
     
                 // dd($borrower_information,$user_information,$address);
