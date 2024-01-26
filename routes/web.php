@@ -210,6 +210,9 @@ Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInform
 
 Route::post('/store_information',[BorrowerController::class,'storeInformation']);
 
+Route::post('/borrower/edit_data',[BorrowerController::class,'borrowerEditdata']);
+
+
 Route::get('/borrower/new_loan_request', function () {
     //เปลี่ยนค่าตรงนี้เพื่อไปยังหน้าต่างๆของการยื่นกู้
     $page = "download";  //"document","samary","success","download"

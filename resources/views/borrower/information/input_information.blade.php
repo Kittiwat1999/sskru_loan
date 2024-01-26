@@ -1,6 +1,6 @@
 <form action="{{url('/store_information')}}" class="row g-3" id="form-information" method="post" enctype="multipart/form-data">
     @csrf    
-    {{-- @if($errors->any())
+    @if($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -8,7 +8,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif --}}
+    @endif
     <div class="col-md-5">
         <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
         <select id="borrower-type" name="borrower_appearance" class="form-select" required>
@@ -27,9 +27,9 @@
         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
         <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
             <option disabled selected value="">เลือกคำนำหน้าชื่อ</option>
-            <option {{($user_information['prefix'] == "นาย")? 'selected': ''}} value="นาย">นาย</option>
-            <option {{($user_information['prefix'] == "นาง")? 'selected': ''}} value="นาง">นาง</option>
-            <option {{($user_information['prefix'] == "นางสาว")? 'selected': ''}} value="นางสาว">นางสาว</option>
+            <option {{($user['prefix'] == "นาย")? 'selected': ''}} value="นาย">นาย</option>
+            <option {{($user['prefix'] == "นาง")? 'selected': ''}} value="นาง">นาง</option>
+            <option {{($user['prefix'] == "นางสาว")? 'selected': ''}} value="นางสาว">นางสาว</option>
         </select>
         @error('prefix')
             <span class="text-danger">{{ $message }}</span>
@@ -38,28 +38,28 @@
     <div class="col-md-10"></div>
     <div class="col-md-5">
         <label for="fname" class="form-label text-secondary">ชื่อ</label>
-        <input type="text" class="form-control" id="fname" name="fname" required value="{{$user_information['fname']}}" >
+        <input type="text" class="form-control" id="fname" name="fname" required value="{{$user['fname']}}" >
         @error('fname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-5">
         <label for="lname" class="form-label text-secondary">นามสกุล</label>
-        <input type="text" class="form-control" id="lname" name="lname" required value="{{$user_information['lname']}}">
+        <input type="text" class="form-control" id="lname" name="lname" required value="{{$user['lname']}}">
         @error('lname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-5">
         <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="birthday" name="birthday" required onchange="ageCal('')">
+        <input type="date" class="form-control" id="borrower_birthday" name="birthday" required onchange="ageCal('borrower')">
         @error('birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-3">
         <label for="age" class="form-label text-secondary">อายุ</label>
-        <input type="text" class="form-control" id="age" required name="age">
+        <input type="text" class="form-control" id="borrower_age" required name="age">
         @error('age')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -173,7 +173,7 @@
 
     <div class="col-md-3">
         <label for="postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-        <input type="text" class="form-control" id="postcode" name="postcode" required onblur="addressWithZipcode(this.value,'borrower')">
+        <input type="text" class="form-control" id="borrower_postcode" name="postcode" required onblur="addressWithZipcode(this.value,'borrower')">
         @error('postcode')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -199,7 +199,7 @@
     <div class="col-md-5">
     <label for="tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
         <select id="borrower_tambon" name="tambon" class="form-select" required aria-label="Default select example">
-            <option disabled selected value="">เลือกตำบล</option>
+            
         </select>
         @error('tambon')
             <span class="text-danger">{{ $message }}</span>
@@ -209,7 +209,7 @@
 
     <div class="col-md-5">
         <label for="email" class="form-label text-secondary">อีเมล</label>
-        <input type="text" class="form-control" id="email" name="email" required value="{{$user_information['email']}}">
+        <input type="text" class="form-control" id="email" name="email" required value="{{$user['email']}}">
         @error('email')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -411,9 +411,9 @@
             </div>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" name="parent1_nationnality" id="parent1_nationality" placeholder="กรอกสัญชาติ" disabled>
+            <input type="text" class="form-control" name="parent1_nationality" id="parent1_nationality" placeholder="กรอกสัญชาติ" disabled>
         </div>
-        @error('parent1_nationnality')
+        @error('parent1_nationality')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </fieldset>
@@ -482,7 +482,7 @@
     </div>
     <div class="col-md-5">
         <label for="parent1_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" required onchange="ageCal('parent1_')">
+        <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" required onchange="ageCal('parent1')">
         @error('parent1_birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -533,7 +533,7 @@
     </div>
     <div class="col-md-5">
         <div class="form-check my-3">
-            <input class="form-check-input" type="checkbox" id="parent2_no_data" name="parent2_no_data" value="true">
+            <input class="form-check-input" type="checkbox" id="parent2_no_data" name="parent2_no_data" value="true" onclick="parenat2NoData()">
             <label class="form-check-label  " for="parent2_no_data">
             ไม่มีข้อมูล
             </label>
@@ -564,9 +564,9 @@
             </div>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" name="parent2_nationnality" id="parent2_nationality" placeholder="กรอกสัญชาติ" disabled>
+            <input type="text" class="form-control" name="parent2_nationality" id="parent2_nationality" placeholder="กรอกสัญชาติ" disabled>
         </div>
-        @error('parent2_nationnality')
+        @error('parent2_nationality')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </fieldset>
@@ -633,7 +633,7 @@
     </div>
     <div class="col-md-5">
         <label for="parent2_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required onchange="ageCal('parent2_')">
+        <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required onchange="ageCal('parent2')">
         @error('parent2_birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -708,8 +708,11 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-5">
-                    <input disabled class="form-control" type="file" id="devorceFile" name="devorce_file"  accept=".jpg, .jpeg, .png .pdf">
+                    <input disabled class="form-control" type="file" id="devorceFile" name="devorce_file"  accept=".jpg, .jpeg, .png, .pdf">
                 </div>
+                @error('devorce_file')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
         </div>
         <div class="col-md-12">
@@ -886,254 +889,7 @@
     {{-- end parent information --}}
 </form>
 <script>
-    //check if no data ckecked
-    const parent2_no_data = document.getElementById('parent2_no_data');
-    parent2_no_data.addEventListener("click", function(){
-        var parent2_element = document.querySelectorAll(`#parent2_is_thai, 
-                                                #parent2_not_thai, 
-                                                #parent2_nationality,
-                                                #parent2_is_alive,
-                                                #parent2_no_alive,
-                                                #parent2_relational,
-                                                #parent2_prefix,
-                                                #parent2_fname,
-                                                #parent2_lname,
-                                                #parent2_birthday,
-                                                #parent2_age,
-                                                #parent2_citizen_id,
-                                                #parent2_phone,
-                                                #parent2_occupation,
-                                                #parent2_income,
-                                                #parent2_is_main_parent
-                                                `);
-
-        // disable of required
-        if(this.checked){
-            parent2_element.forEach((e)=>{
-                e.disabled = true;
-                e.required = false;
-            });
-        }else{
-            parent2_element.forEach((e)=>{
-                e.disabled = false;
-                e.required = true;
-            });
-        }
-
-
-    });
-
-    function ageCal(role){
-        if(role == "")role = "";
-        var inputBirthday = document.getElementById(role+'birthday');
-        // Get the input value
-        var birthDate = inputBirthday.value;
-
-        // Parse the selected date
-        var selectedDate = new Date(birthDate);
-
-        // Calculate the current date
-        var currentDate = new Date();
-
-        // Calculate the age
-        var age = currentDate.getFullYear() - selectedDate.getFullYear();
-
-        // Check if the birthday has already occurred this year
-        if (currentDate.getMonth() < selectedDate.getMonth() || (currentDate.getMonth() === selectedDate.getMonth() && currentDate.getDate() < selectedDate.getDate())) {
-            age--;
-        }
-        if(age<0){
-        document.getElementById(role+'age').value = "สวัสดีผู้มาจากอนาคต";
-        }else{
-        document.getElementById(role+'age').value = age;
-        // if(age>=20){
-        //   document.getElementById('representative-tab').disabled = true;
-
-        // }else{
-        //   document.getElementById('representative-tab').disabled = false;
-        // }
-        }
-
-    }
-
-    // var idCardNumber = document.getElementById('idCardNumber');
-    // idCardNumber.onkeyup = () =>{
-    //   document.getElementById('formattedNumber').innerHTML = idCardNumber.value;
-    //   }
     
-    var moreProps = document.getElementById('morePropCheck');
-    moreProps.onchange = () => {
-        const isdisabled = document.getElementById('moreProp').disabled;
-        document.getElementById('moreProp').disabled = !isdisabled;
-    }
-
-    function generateSelectProvince(elementId){
-        console.log(elementId);
-    }
-
-    //who call address zipcode
-
-
-    function addressWithZipcode(zip_code_input, caller){
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            // else if(response.length == 0){
-            //     console.log('no data');
-            // }
-            return response.json();
-        })
-        .then(data => {
-            if(data.length == 0){
-                console.log('no data');
-            }
-            var tambons = [];
-            var aumphureId = '';
-            for(tambon of data){
-                if(zip_code_input == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                    if(aumphureId == '')aumphureId = tambon.amphure_id;
-                }
-            }
-            // console.log(tambons);
-            var selectElement = document.getElementById(`${caller}_tambon`);
-            for(tb of tambons){
-                var newOption = document.createElement('option');
-
-                newOption.value = tb;
-                newOption.text = tb;
-
-                selectElement.add(newOption);
-            }
-            
-            getAumphure(aumphureId,caller)
-            
-
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-    }
-    function getAumphure(amphure_id,caller){
-        // console.log(amphure_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(aumphures => {
-                var province_id = '';
-                for(aumphure of aumphures){
-                    if(amphure_id == aumphure.id){
-                    document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
-                    if(province_id == '')province_id = aumphure.province_id;
-                    }
-                }
-                getProvince(province_id,caller);
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function getProvince(province_id,caller){
-        // console.log(province_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(provinces => {
-                for(province of provinces){
-                    if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
-                }
-                
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function enableInputCountry(parentNo,isthai){
-        console.log(parentNo)
-        if(isthai == `${parentNo}_not_thai`){
-            document.querySelector(`#${parentNo}_nationality`).disabled = false;
-            document.querySelector(`#${parentNo}_nationality`).required = true;
-        }else{
-            document.querySelector(`#${parentNo}_nationality`).disabled = true;
-            document.querySelector(`#${parentNo}_nationality`).required = false;
-        }
-
-    }
-
-    const MaritalStat = document.getElementById('maritalStatusId');
-    MaritalStat.onchange = () =>{
-        const otherMaritalStat = document.getElementById('other');
-        if(otherMaritalStat.checked){
-            document.getElementById('otherText').disabled = false;
-            document.getElementById('otherText').required = true;
-        }else{
-            document.getElementById('otherText').disabled = true;
-            document.getElementById('otherText').required = false;
-
-        }
-        
-        const devorce = document.getElementById('devorce');
-        if(devorce.checked){
-            document.getElementById('devorceFile').disabled = false;
-            document.getElementById('devorceFile').required = true;
-        }else{
-            document.getElementById('devorceFile').disabled = true;
-            document.getElementById('devorceFile').required = false;
-
-        }
-    }
-
-    const address_currently_with_borrower = document.getElementById('address_currently_with_borrower');
-    address_currently_with_borrower.addEventListener("change", function() {
-        if (address_currently_with_borrower.checked) {
-            console.log('checked')
-            const address_input = document.querySelectorAll('.fake-class');
-            address_input.forEach((e)=>{
-                e.disabled = true;
-                e.required = false;
-                e.value = "";
-            });
-        } else {
-            const address_input = document.querySelectorAll('.fake-class');
-            address_input.forEach((e)=>{
-                e.disabled = false;
-                e.required = true;
-                e.value = "";
-            });
-        }
-    });
-
-
-    function mainparent_label(value,parent){
-        const label_element = document.getElementById(`label_${parent}_is_main_parent`);
-        const parent_prefix = document.getElementById(`${parent}_prefix`).value;
-        if(parent_prefix != undefined){
-            label_element.innerText = `${parent_prefix}${value}`;
-        }else{
-            label_element.innerText = `${value}`;
-        }
-    }
-
-    function disabledMainParentRadio(alive,parent){
-        if(alive){
-            document.getElementById(`${parent}_is_main_parent`).disabled = false;
-        }else{
-            document.getElementById(`${parent}_is_main_parent`).disabled = true;
-        }
-    }
 
     </script>
 

@@ -9,7 +9,25 @@ class Borrower extends Model
 {
     use HasFactory;
 
-    public function getBorrowerData(){
-        return $this->belongsTo('App\Models\Users');
+    protected $fillable = [
+        'user_id',
+        'birthday',
+        'citizen_id',
+        'student_id',
+        'faculty',
+        'major',
+        'grade',
+        'gpa',
+        'borrower_appearance',
+        'borrower_properties',
+        'borrower_necessity',
+        'marital_status',
+        'phone_number',
+        'address_id',
+        'parents_id',
+    ];
+
+    public function users(){
+        return $this->belongsTo(Users::class);
     }
 }

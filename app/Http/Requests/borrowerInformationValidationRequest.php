@@ -50,7 +50,7 @@ class borrowerInformationValidationRequest extends FormRequest
             "necess" => 'required',
 
             "parent1_is_thai" => 'required|string|max:50',
-            "parent1_nationnality" => 'nullable|string|max:50',
+            "parent1_nationality" => 'nullable|string|max:50',
             "parent1_alive" => 'required|string|max:10',
             "parent1_relational" => 'required|string|max:20',
             "parent1_prefix" => 'required|string|max:50',
