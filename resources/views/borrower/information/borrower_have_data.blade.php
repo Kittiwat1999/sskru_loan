@@ -1,6 +1,15 @@
 
 <!-- <h6 class="text-secondary">กรอกข้อมูลผู้กู้</h6> -->
 <!-- Multi Columns Form -->
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li class="text-danger">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
 <form class="row g-3" id="form-borrower" method="POST" enctype="multipart/form-data" action="{{url('/borrower/edit_data')}}">
     @csrf
