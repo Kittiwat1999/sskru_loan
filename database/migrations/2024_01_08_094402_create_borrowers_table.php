@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('borrowers', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->foreignIdFor(Users::class);
+            $table->integer('user_id')->foreignIdFor(Users::class);
             $table->string('birthday');
             $table->string('citizen_id');
             $table->string('student_id');

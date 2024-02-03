@@ -9,6 +9,7 @@ class Borrower extends Model
 {
     use HasFactory;
 
+    protected $table = 'borrowers';
     protected $fillable = [
         'user_id',
         'birthday',
@@ -30,4 +31,17 @@ class Borrower extends Model
     public function users(){
         return $this->belongsTo(Users::class);
     }
+
+    public function useful_activities(){
+        return $this->hasMany(UsefulActivities::class);
+    }
+
+    public function old_loanrequest(){
+        return $this->hasMany(OldLoanRequest::class);
+    }
+
+    public function files(){
+        return $this->hasMany(Files::class);
+    }
+
 }

@@ -18,7 +18,7 @@
             font-size: 11px;
         }
 
-
+        */
         input[type="file"]::file-selector-button {
         border-radius: 4px;
         padding: 0 16px;
@@ -38,7 +38,7 @@
 
         input[type="file"]::file-selector-button:active {
         background-color: #dc3540;;
-        } */
+        } 
     </style>
 
     <title>Dashboard - NiceAdmin Bootstrap Template</title>
@@ -433,14 +433,18 @@
     <script>
         const hostName = "http://127.0.0.1:8000";
 
-        function activeSidebar(activeElement){
-            console.log(activeElement)
-            document.getElementById(activeElement).className = 'nav-link '
+        function activeSidebar(paths){
+            path.forEach(paths => {
+                activeElemen = document.getElementById(paths);
+                if(activeElemen != null){
+                    activeElemen.className = 'nav-link '
+                }
+            });
         }
         var path = window.location.pathname; //get path name
         path = path.split('/');             //split path with '/'
-        console.log(path);         //log path with 
-        activeSidebar(path[path.length-1]);          // call active sidebar function
+        // console.log(path);         //log path with 
+        activeSidebar(path);          // call active sidebar function
            
     </script>
 </body>

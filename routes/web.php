@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BorrowerController;
+use App\Http\Controllers\OldLoanRequestController;
+use App\Models\OldLoanRequest;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,14 +49,15 @@ Route::get('/admin/settime',function (){
     return view('/admin/settime');
 });
 
-Route::get('/admin/manage_account',[UsersController::class,'getUsersData'])->name('admin_manage_account');
+Route::get('/admin/manage_account',[UsersController::class,'admin_getUsersData'])->name('admin_manage_account');
+Route::get('/admin/manage_account/{privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
 
-Route::get('/getUser/{id}',[UsersController::class,'getUserById']);
+Route::get('/admin/getUser/{id}',[UsersController::class,'admin_getUserById'])->name('admin.getUser');
 
-Route::get('/deleteUser/{id}',[UsersController::class,'deleteUser']);
+Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])->name('admin.deleteUser');
 
-Route::post('/createUser',[UsersController::class,'createUser']);
-Route::post('/editAccount',[UsersController::class,'editAccount']);
+Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
+Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
 
 
 
@@ -233,9 +237,25 @@ Route::get('/borrower/send_confirmation_form',function () {
     return view('/borrower/send_confirmation_form');
 });
 
-Route::get('/borrower/loan_request',function () {
-    return view('/borrower/loan_request');
-});
+Route::get('/borrower/loan_request',[OldLoanRequestController::class,'index'])->name('old.loanrequest');
+
+Route::get('/borrower/loan_request/upload/{doc_id}',[OldLoanRequestController::class,'upload_page']);
+
+Route::post('borrower/create_doc',[OldLoanRequestController::class,'create_doc'])->name('add.loan.request');
+
+Route::get('/borrower/getActivity/{id}',[OldLoanRequestController::class,'get_activity_by_id']);
+
+Route::post('/store_activities',[OldLoanRequestController::class,'store_activits'])->name('store.activities');
+
+Route::post('/borrower/edit_activity',[OldLoanRequestController::class,'edit_activity'])->name('edit.activity');
+
+Route::post('/borrower/delete_activity',[OldLoanRequestController::class,'delete_activity'])->name('delete.activity');
+
+Route::post('/borrower/store_citizencardfile',[OldLoanRequestController::class,'store_citizencardfile'])->name('store.citizencardfile');
+
+Route::post('/borrower/store_gpafile',[OldLoanRequestController::class,'store_gpafile'])->name('store.gpafile');
+
+Route::post('/borrower/loan_request/send_loanrequest_doc',[OldLoanRequestController::class,'send_loanrequest_doc'])->name('send.loanrequest.doc');
 
 Route::get('/borrower/edit_borrower_information',function () {
     return view('/borrower/edit_borrower_information');

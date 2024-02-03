@@ -17,7 +17,7 @@ class BorrowerController extends Controller
 
     public function testGetdata(){
         // return Borrower::getBorrowerData();
-        $user_id = 2;
+        $user_id = 1;
 
         // $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
         //     $join->on('users.id', '=', 'borrowers.user_id')
@@ -379,39 +379,6 @@ class BorrowerController extends Controller
     }
 
     function borrowerEditdata(borrowerInformationValidationRequest $request){
-        // dd($request);
-        //update users table
-
-
-        //marital status 
-            //delete file and upload new file
-                //get borrower->maital_status
-                //decode json
-                //delete file 
-                
-                //upload newfile
-        
-        //address
-            //update borrower address
-            //update main parent address
-                //address with borrower == true
-                    //main_paren_address , borrower_address == true : not update
-                    //main_paren_address , borrower_address == false:
-                        //get main parent address id and delete it
-                //address with borrower == false
-                    //insert new address and insert address id to main parent
-        
-        //parent
-            //update parent 1
-            
-
-            //parent 2
-                //have data parent 2 == false:
-                    //get parent with borrower id ->last() and delete it.
-                //have data parent 2 == true:
-                    //update parent 2
-
-        //update borrower
 
         $user_id = 1;
         date_default_timezone_set("Asia/Bangkok");
