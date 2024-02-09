@@ -241,9 +241,15 @@ Route::get('/borrower/loan_request',[OldLoanRequestController::class,'index'])->
 
 Route::get('/borrower/loan_request/upload/{doc_id}',[OldLoanRequestController::class,'upload_page']);
 
-Route::post('borrower/create_doc',[OldLoanRequestController::class,'create_doc'])->name('add.loan.request');
+Route::get('/borrower/loan_request/edit/{doc_id}',[OldLoanRequestController::class,'edit_page']);
+
+Route::post('borrower/create_oldloan_doc',[OldLoanRequestController::class,'create_doc'])->name('add.oldloan.request');
+
+Route::post('borrower/delete_oldloan_doc',[OldLoanRequestController::class,'delete_loanrequest_doc'])->name('delete.oldloan.request');
 
 Route::get('/borrower/getActivity/{id}',[OldLoanRequestController::class,'get_activity_by_id']);
+
+Route::get('/borrower/show_actv_file/{filePath}',[OldLoanRequestController::class,'show_actv_file']);
 
 Route::post('/store_activities',[OldLoanRequestController::class,'store_activits'])->name('store.activities');
 

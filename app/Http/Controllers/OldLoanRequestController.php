@@ -29,10 +29,10 @@ class OldLoanRequestController extends Controller
     }
 
     function create_doc(Request $request){
+        date_default_timezone_set("Asia/Bangkok");
         $user_id = 1;
         $borrower_id = 1;
 
-        
         $rules = [
             'term' => 'required|string|max:1',
             'year' => 'required|string|max:4',
@@ -49,7 +49,11 @@ class OldLoanRequestController extends Controller
         
         $validateData = $request->validate($rules,$messages);
         
-        $chechishavedata = OldLoanRequest::where('borrower_id',$borrower_id)->where('year',$validateData['year'])->where('term',$validateData['term'])->first();
+        $chechishavedata = OldLoanRequest::where('borrower_id',$borrower_id)
+                            ->where('year',$validateData['year'])
+                            ->where('term',$validateData['term'])
+                            ->first();
+                            
         if($chechishavedata != null){
             return redirect()->back()->withErrors(['error' => 'เอกสารนี้มีอยู่แล้ว']);
         }
@@ -66,29 +70,83 @@ class OldLoanRequestController extends Controller
             "updated_at" => date('Y-m-d H:i:s')
         ]);
     
-        return redirect('/borrower/loan_request');
+        return Redirect::back()->with('refresh', 'true')->with('success', 'เพิ่มเอกสาร'.$validateData['year'].'/'.$validateData['term'].' แล้ว!');
     }
 
     function upload_page($doc_id){
         $user_id = 1;
         $borrower_id = 1;
 
+        $borrower = Borrower::select('birthday')->where('id',$borrower_id)->first();
+
+        $currentDate = date("Y-m-d"); // Get the current date
+
+        $diff = date_diff(date_create($borrower->birthday), date_create($currentDate));
+
+        $borrower_age = $diff->y;
+
         $loanRequestDocument = OldLoanRequest::where('id',$doc_id)->first();
-        $activities = UsefulActivities::where('borrower_id',$borrower_id)->where('year',$loanRequestDocument->year)->get();
-        $citizencardfile = Files::where('id',$loanRequestDocument->citizen_card_file)->where('description','citizen_card_file')->first();
-        $gpafile = Files::where('id',$loanRequestDocument->gpa_file)->where('description','gpa_file')->first();
+        $activities = UsefulActivities::where('borrower_id',$borrower_id)
+                        ->where('year',$loanRequestDocument->year)
+                        ->get();
+                        
+        $citizencardfile = Files::where('id',$loanRequestDocument->citizen_card_file)
+                        ->where('description','citizen_card_file')
+                        ->first();
+
+        $gpafile = Files::where('id',$loanRequestDocument->gpa_file)
+                        ->where('description','gpa_file')
+                        ->first();
 
         if($loanRequestDocument != null){
-            return view('/borrower/loan_request/loan_request_doc',compact('loanRequestDocument','activities','citizencardfile','gpafile'));
+            return view('/borrower/loan_request/loan_request_doc',compact('loanRequestDocument','activities','citizencardfile','gpafile','borrower_age'));
         }else{
             return redirect()->back()->withErrors(['error' => 'ไม่มีเอกสารนี้']);
         }
     }
 
+    function edit_page($doc_id){
+        date_default_timezone_set("Asia/Bangkok");
+
+        $user_id = 1;
+        $borrower_id = 1;
+
+        $borrower = Borrower::select('birthday')->where('id',$borrower_id)->first();
+
+        $currentDate = date("Y-m-d"); // Get the current date
+
+        $diff = date_diff(date_create($borrower->birthday), date_create($currentDate));
+
+        $borrower_age = $diff->y;
+
+        $loanRequestDocument = OldLoanRequest::where('id',$doc_id)->first();
+        $loanRequestDocument->status = 'nonsend';
+        $loanRequestDocument->updated_at = date('Y-m-d H:i:s');
+        $loanRequestDocument->save();
+        $activities = UsefulActivities::where('borrower_id',$borrower_id)
+                        ->where('year',$loanRequestDocument->year)
+                        ->get();
+
+        $citizencardfile = Files::where('id',$loanRequestDocument->citizen_card_file)
+                        ->where('description','citizen_card_file')
+                        ->first();
+
+        $gpafile = Files::where('id',$loanRequestDocument->gpa_file)
+                        ->where('description','gpa_file')
+                        ->first();
+
+        if($loanRequestDocument != null){
+            return view('/borrower/loan_request/loan_request_doc',compact('loanRequestDocument','activities','citizencardfile','gpafile','borrower_age'));
+        }else{
+            return redirect()->back()->withErrors(['error' => 'ไม่มีเอกสารนี้']);
+        }
+    }
+
+
     public function store_activits(Request $request){
         date_default_timezone_set("Asia/Bangkok");
         $user_id = 1;
-
+        $borrower_id = 1;
         //validate
         $messages = [
             'project_name.required' => 'โปรดกรอกชื่อโครงการ',
@@ -127,28 +185,19 @@ class OldLoanRequestController extends Controller
         
         $request->validate($rules, $messages);
         //end validate
-
-        $borrower_id = Borrower::where('user_id',$user_id)->value('id');
-        // = borrowerid + - + this buddha year
-
-        $currentYear = Carbon::now()->year;
-        $thaiBuddhistYear = $currentYear + 543;
         
         $file = $request->file('file');
 
-        $uploadDirectory = 'public/uploads/'.$thaiBuddhistYear.'/'.$user_id;
-        $displayDirectory = 'storage/uploads/'.$thaiBuddhistYear.'/'.$user_id;
+        $uploadDirectory = 'public/uploads/'.$request->year.'/'.$borrower_id;
+        $displayDirectory = 'storage/uploads/'.$request->year.'/'.$borrower_id;
 
         $timestamp = now()->format('YmdHis');
 
-        $fileNameWithTimestamp = $timestamp . '_' . $file->getClientOriginalName();
+        $fileNameWithTimestamp = 'activity'.$timestamp . '_' . $file->getClientOriginalName();
         $storedPath = $file->storeAs($uploadDirectory, $fileNameWithTimestamp);
         $displayPath = $displayDirectory.'/'.$fileNameWithTimestamp;
 
-        //Storage::delete($filePath);
-
-        // dd($storedPath,$displayPath );
-
+        // dd($db_displayPath,$db_displayPath);
         $useful_activities = [
             "borrower_id" => $borrower_id,
             "year" => $request->year,
@@ -166,7 +215,7 @@ class OldLoanRequestController extends Controller
 
         UsefulActivities::create($useful_activities);
 
-        return Redirect::back()->with('refresh', 'true');
+        return Redirect::back()->with('refresh', 'true')->with('success', 'เพิ่มกิจกรรม '.$useful_activities['project_name'].' แล้ว!');
     }
 
     public function get_activity_by_id($id){
@@ -180,6 +229,7 @@ class OldLoanRequestController extends Controller
         // dd($request);
         date_default_timezone_set("Asia/Bangkok");
         $user_id = 1;
+        $borrower_id = 1;
         $useful_activity = UsefulActivities::find($request->activity_id);
 
         //validate
@@ -198,10 +248,6 @@ class OldLoanRequestController extends Controller
             'hour_count.string' => 'โปรดกรอกจำนวนชั่วโมงเป็นข้อความ',
             'description.required' => 'โปรดกรอกรายละเอียด',
             'description.string' => 'โปรดกรอกรายละเอียดเป็นข้อความ',
-            'file.required' => 'โปรดเลือกไฟล์ที่ต้องการอัปโหลด',
-            'file.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',
-            'file.mimes' => 'ไฟล์ต้องเป็นประเภท :values',
-            'file.max' => 'ไฟล์ต้องมีขนาดไม่เกิน :max กิโลไบต์',
             'year.required' => 'โปรดกรอกปีการศึกษา',
             'year.string' => 'ปีการศึกษาต้องเป็นตัวอักษร',
             'year.max' => 'ปีการศึกษาต้องไม่ยาวเกิน :max ตัวอักษร'
@@ -214,7 +260,6 @@ class OldLoanRequestController extends Controller
             'time' => 'required|string',
             'hour_count' => 'required|string',
             'description' => 'required|string',
-            'file' => 'required|file|mimes:jpeg,png,pdf|max:2048',
             'year' => 'required|string|max:4',
         ];
     
@@ -251,16 +296,14 @@ class OldLoanRequestController extends Controller
             $request->validate($rules, $messages);
             //end file validate
 
-            $currentYear = Carbon::now()->year;
-            
             $file = $request->file('file');
-            
-            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$user_id;
-            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$user_id;
-            
+
+            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$borrower_id;
+            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$borrower_id;
+
             $timestamp = now()->format('YmdHis');
-            
-            $fileNameWithTimestamp = $timestamp . '_' . $file->getClientOriginalName();
+
+            $fileNameWithTimestamp = 'activity'.$timestamp . '_' . $file->getClientOriginalName();
             $storedPath = $file->storeAs($uploadDirectory, $fileNameWithTimestamp);
             $displayPath = $displayDirectory.'/'.$fileNameWithTimestamp;
             
@@ -275,7 +318,7 @@ class OldLoanRequestController extends Controller
 
         UsefulActivities::where('id',$request->activity_id)->update($edit_data);
 
-        return Redirect::back()->with('refresh', 'true');
+        return Redirect::back()->with('refresh', 'true')->with('success', 'แก้ใขข้อมูลกิจกรรม '.$edit_data['project_name'].' เสร็จสิ้น!');
     }
 
     function delete_activity(Request $request){
@@ -287,9 +330,7 @@ class OldLoanRequestController extends Controller
         if (Storage::exists($useful_activity->store_path)) {
             Storage::delete($useful_activity->store_path);
         }
-        
-
-        return Redirect::back()->with('refresh', 'true');
+        return Redirect::back()->with('refresh', 'true')->with('success', 'ลบกิจกรรมเสร็จสิ้น!');
     }
 
     function store_citizencardfile(Request $request){
@@ -328,8 +369,8 @@ class OldLoanRequestController extends Controller
 
             $file = $request->file('citizen_card_file');
 
-            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$user_id;
-            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$user_id;
+            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$borrower_id;
+            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$borrower_id;
 
             $timestamp = now()->format('YmdHis');
 
@@ -359,23 +400,21 @@ class OldLoanRequestController extends Controller
 
             $file = $request->file('citizen_card_file');
 
-            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$user_id;
-            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$user_id;
+            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$borrower_id;
+            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$borrower_id;
 
             $timestamp = now()->format('YmdHis');
 
             $fileNameWithTimestamp = 'citizen_card_file'.$timestamp . '_' . $file->getClientOriginalName();
             $storedPath = $file->storeAs($uploadDirectory, $fileNameWithTimestamp);
+
+            // dd($storedPath);
             $displayPath = $displayDirectory.'/'.$fileNameWithTimestamp;
 
             $data = [
-                "borrower_id"=>$borrower_id,
                 "store_path"=>$storedPath,
                 "display_path"=>$displayPath,
-                "term"=>'1',
-                "year"=>$request->year,
                 "original_filename"=>$file->getClientOriginalName(),
-                "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s')
             ];
 
@@ -385,7 +424,7 @@ class OldLoanRequestController extends Controller
             }
         }
         
-        return Redirect::back()->with('refresh', 'true');
+        return Redirect::back()->with('refresh', 'true')->with('success', 'อัพโหลดไฟล์สำเนาบัตรประจำตัวประชาชนเสร็จสิ้น!');
     }
 
     
@@ -422,8 +461,8 @@ class OldLoanRequestController extends Controller
 
             $file = $request->file('gpa_file');
 
-            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$user_id;
-            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$user_id;
+            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$borrower_id;
+            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$borrower_id;
 
             $timestamp = now()->format('YmdHis');
 
@@ -453,8 +492,8 @@ class OldLoanRequestController extends Controller
             $file_db = Files::where('id',$loan_request->gpa_file)->first();
             $file = $request->file('gpa_file');
 
-            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$user_id;
-            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$user_id;
+            $uploadDirectory = 'public/uploads/'.$request->year.'/'.$borrower_id;
+            $displayDirectory = 'storage/uploads/'.$request->year.'/'.$borrower_id;
 
             $timestamp = now()->format('YmdHis');
 
@@ -463,23 +502,19 @@ class OldLoanRequestController extends Controller
             $displayPath = $displayDirectory.'/'.$fileNameWithTimestamp;
 
             $data = [
-                "borrower_id"=>$borrower_id,
                 "store_path"=>$storedPath,
                 "display_path"=>$displayPath,
-                "term"=>$request->term,
-                "year"=>$$request->year,
                 "original_filename"=>$file->getClientOriginalName(),
-                "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s')
             ];
 
-            Files::where('id',$file_db->id)->update($data);
+            Files::where('id',$loan_request->gpa_file)->update($data);
 
             if (Storage::exists($file_db->store_path)) {
                 Storage::delete($file_db->store_path);
             }
         }
-        return Redirect::back()->with('refresh', 'true');
+        return Redirect::back()->with('refresh', 'true')->with('success', 'อัพโหลดไฟล์ใบรายงานผลการเรียนเสร็จสิ้น!');
     }
 
     function send_loanrequest_doc(Request $request){
@@ -500,10 +535,6 @@ class OldLoanRequestController extends Controller
             return redirect()->back()->withErrors(['error' => 'ดูเหมือนว่าไฟล์ของคุณยังไม่ครบ']);
         }
 
-        if($loanRequestDocument->citizen_card_file == '0' || $loanRequestDocument->citizen_card_file == '0' ){
-            return redirect()->back()->withErrors(['error' => 'ดูเหมือนว่าไฟล์ของคุณยังไม่ครบ']);
-        }
-
         if($activities == null || $hour_sum < 36){
             return redirect()->back()->withErrors(['error' => 'ดูเหมือนว่าชั่วโมงกิจกรรมของคุณยังไม่ครบ']);
         }
@@ -514,5 +545,45 @@ class OldLoanRequestController extends Controller
 
         return Redirect::route('old.loanrequest')->with('success', 'ส่งเอกสารเรียบร้อยแล้ว!');
 
+    }
+    function delete_file_form_id($file_id){
+
+        $file_db = Files::where('id',$file_id)->first();
+
+        if (Storage::exists($file_db->store_path)) {
+            Storage::delete($file_db->store_path);
+        }
+
+        $file_db->delete();
+    }
+
+    function delete_loanrequest_doc(Request $request){
+
+        $user_id = 1;
+        $borrower_id = 1;
+         //file validate
+         $messages = [
+            'doc_id.required' => 'โปรดระบุ ID',
+            'doc_id.exists' => 'ID ที่ระบุไม่มีในฐานข้อมูล',
+        ];
+    
+        $request->validate([
+            'doc_id' => 'required|exists:old_loanrequest,id',
+        ], $messages);
+        //end validate
+
+        $loanRequestDocument = OldLoanRequest::where('id',$request->doc_id)->first();
+
+        if($loanRequestDocument->citizen_card_file != '0'){
+            $this->delete_file_form_id($loanRequestDocument->citizen_card_file);
+        }
+
+        if($loanRequestDocument->gpa_file != '0'){
+            $this->delete_file_form_id($loanRequestDocument->gpa_file);
+        }
+
+        $loanRequestDocument->delete();
+
+        return redirect()->route('old.loanrequest')->with('success', 'ลบเอกสารเสร็จสิ้น');
     }
 }

@@ -4,25 +4,24 @@
 @section('content')
 <section class="content">
     @if($errors->any())
-        <div class="card">
-
-            <div class="card-body">
-                <h5 class="card-title text-danger">ข้อผิดพลาด!</h5>
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li class="text-danger">{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li class="text-danger">{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
     @if(session('success'))
-        <div class="alert alert-success">
+        <div id="alert" class="alert alert-success">
             {{ session('success') }}
         </div>
+        <script>
+            setTimeout(function(){
+                document.getElementById('alert').style.display = 'none';
+            }, 3000); // Timeout in milliseconds (e.g., 5000 milliseconds = 5 seconds)
+        </script>
     @endif
     <div class="card">
         <div class="card-body">
@@ -99,10 +98,12 @@
                                 <i class="bi bi-dash"></i>
                                 สำเนาบัตรประชาชนผู้กู้พร้อมรับรองสำเนาถูกต้อง
                             </li>
+                            @if((int)$borrower_age < 20)
                             <li class="list-group-item">
                                 <i class="bi bi-dash"></i>
                                 สำเนาบัตรประชาชนผู้ผู้แทนโดยชอบธรรมพร้อมรับรองสำเนาถูกต้อง
                             </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -121,15 +122,33 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row my-2">
+                                        @if((int)$borrower_age < 20)
                                         <div class="col-sm-12 my-2 text-warning">*คลิกที่ขอบซ้ายหรือขวาของรูปภาพเพื่อดูตัวอย่างถัดไป*</div>
+                                        @endif
                                         <div class="col-sm-12">
                                             <!-- Slides with controls -->
-                                            <div id="borrower-document_1" class="carousel slide my-3 w-100 border" data-bs-ride="carousel">
+                                            <div id="citizin-card" class="carousel slide my-3 w-100 border" data-bs-ride="carousel">
                                                 <div class="carousel-inner">
                                                     <div class="carousel-item active" id="yinyorm">
                                                         <img src="{{asset('assets/img/exmImg/บัตรประชาชนผู้กู็.jpg')}}" class="d-block w-100" alt="...">
                                                     </div>
+                                                    @if((int)$borrower_age < 20)
+                                                    <div class="carousel-item" id="samnao">
+                                                        <img src="{{asset('assets/img/exmImg/สำเนาบัตรเจ้าหน้าที่รัฐ.jpeg')}}" class="d-block w-100" alt="...">
+                                                    </div>
+                                                    @endif
                                                 </div>
+                                                @if((int)$borrower_age < 20)
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#citizin-card" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#citizin-card" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                    <i class="bi bi-caret-right-fill"></i>
+                                                </button>
+                                                @endif
                                             </div><!-- End Slides with controls -->
                                         </div>
                                     </div>
@@ -151,7 +170,7 @@
                 <div class="col-md-12 row my-2">
                     <label class="col-sm-2 col-form-label text-secondary" for="citizen_card_file" >เพิ่มไฟล์</label>
                     <div class="col-sm-4">
-                        <input type="file" name="citizen_card_file" id="citizen_card_file" accept=".jpg, .jpeg, .png, .pdf" required onchange="show_submit_button('citizen')">
+                        <input class="form-control" type="file" name="citizen_card_file" id="citizen_card_file" accept=".jpg, .jpeg, .png, .pdf" required onchange="show_submit_button('citizen')">
                     </div>
                 </div>
                 @if(isset($citizencardfile))
@@ -259,7 +278,7 @@
                 <div class="col-md-12 row my-2">
                     <label class="col-sm-2 col-form-label text-secondary" for="gpa_file">เพิ่มไฟล์</label>
                     <div class="col-sm-4">
-                        <input type="file" name="gpa_file" id="gpa_file" accept=".jpg, .jpeg, .png, .pdf" required  onchange="show_submit_button('gpa')">
+                        <input class="form-control" type="file" name="gpa_file" id="gpa_file" accept=".jpg, .jpeg, .png, .pdf" required  onchange="show_submit_button('gpa')">
                     </div>
                 </div>
                 @if(isset($gpafile))
@@ -308,7 +327,7 @@
                             <th scope="col-2">จำนวนชั่วโมง</th>
                             <th scope="col-2">ลักษณะกิจกรรม</th>
                             <th scope="col-2">ไฟล์หลักฐาน</th>
-                            <th scope="col-2">:</th>
+                            <th scope="col-2" class="text-center">:</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -324,7 +343,8 @@
                                 <td class="text-center">{{$activity->hour_count}}</td>
                                 <td>{{$activity->description}}</td>
                                 <td class="text-center">
-                                    <button  class="btn btn-danger" onclick="openFile('{{asset($activity->display_path)}}')"><i class="bi bi-filetype-pdf" ></i></button>
+                                    {{-- <a class="btn btn-danger" href="{{url('/borrower/show_actv_file',['filepath' => $activity->display_path])}}" rel="noopener noreferrer"><i class="bi bi-filetype-pdf" ></i></a> --}}
+                                    <button  class="btn btn-success" onclick="openFile('{{asset($activity->display_path)}}')"><i class="bi bi-journal-bookmark"></i></button>
                                 </td>
                                 <td>
                                     <div class="dropdown">
@@ -389,6 +409,7 @@
                                 </div>
                             </td>
                             <td class="text-center">{{$hour_count}}</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                         </tr>

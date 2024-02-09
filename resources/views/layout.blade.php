@@ -19,7 +19,7 @@
         }
 
         */
-        input[type="file"]::file-selector-button {
+        /* input[type="file"]::file-selector-button {
         border-radius: 4px;
         padding: 0 16px;
         height: 40px;
@@ -38,7 +38,7 @@
 
         input[type="file"]::file-selector-button:active {
         background-color: #dc3540;;
-        } 
+        }  */
     </style>
 
     <title>Dashboard - NiceAdmin Bootstrap Template</title>
