@@ -11,13 +11,14 @@ use Carbon\Carbon;
 use App\Http\Requests\borrowerInformationValidationRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 
 class BorrowerController extends Controller
 {
 
     public function testGetdata(){
         // return Borrower::getBorrowerData();
-        $user_id = 1;
+        $user_id = Session::get('user_id','1');
 
         // $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
         //     $join->on('users.id', '=', 'borrowers.user_id')
@@ -33,7 +34,7 @@ class BorrowerController extends Controller
 
     public function getBorrowerInformation(){
 
-        $user_id = 1;
+        $user_id = Session::get('user_id','1');
 
         $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
             $join->on('users.id', '=', 'borrowers.user_id')
@@ -105,7 +106,7 @@ class BorrowerController extends Controller
     function storeInformation(borrowerInformationValidationRequest $request){
         
         // dd($request);
-        $user_id = 1;
+        $user_id = Session::get('user_id','1');
         date_default_timezone_set("Asia/Bangkok");
         
         
@@ -380,7 +381,7 @@ class BorrowerController extends Controller
 
     function borrowerEditdata(borrowerInformationValidationRequest $request){
 
-        $user_id = 1;
+        $user_id = Session::get('user_id','1');
         date_default_timezone_set("Asia/Bangkok");
         
         

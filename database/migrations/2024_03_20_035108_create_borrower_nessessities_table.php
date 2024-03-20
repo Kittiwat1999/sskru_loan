@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 use App\Models\Borrower;
+use App\Models\Nessessities;
 
 return new class extends Migration
 {
@@ -12,15 +14,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('old_loanrequest', function (Blueprint $table) {
+        Schema::create('borrower_nessessities', function (Blueprint $table) {
             $table->id();
             $table->integer('borrower_id')->foreignIdFor(Borrower::class);
-            $table->string('citizen_card_file')->default('0');
-            $table->string('gpa_file')->default('0');
-            $table->string('year');
-            $table->string('term');
-            $table->string('status');
-            $table->json('comment')->nullable();
+            $table->integer('nessessity_id')->foreignIdFor(Nessessities::class)->nullable();
+            $table->string('other');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('old_loan_requests');
+        Schema::dropIfExists('borrower_nessessities');
     }
 };

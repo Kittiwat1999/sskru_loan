@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Users;
+use App\Models\Borrower;
 use App\Models\Address;
 
 return new class extends Migration
@@ -15,19 +15,20 @@ return new class extends Migration
     {
         Schema::create('parents', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->foreignIdFor(Users::class);
+            $table->integer('borrower_id')->foreignIdFor(Borrower::class);
+            $table->foreignIdFor(Address::class)->nullable();
             $table->string('borrower_relational');
             $table->string('nationality');
             $table->string('prefix');
-            $table->string('fname');
-            $table->string('lname');
-            $table->string('birthday');
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->date('birthday');
             $table->string('citizen_id');
             $table->string('phone');
             $table->string('occupation');
             $table->string('income');
             $table->boolean('alive');
-            $table->foreignIdFor(Address::class)->nullable();
+            $table->boolean('is_main_parent');
             $table->timestamps();
         });
     }
