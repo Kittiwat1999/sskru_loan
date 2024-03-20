@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->integer('borrower_id')->foreignIdFor(Borrower::class);
             $table->integer('nessessity_id')->foreignIdFor(Nessessities::class)->nullable();
-            $table->string('other');
+            $table->string('other')->default('-');
             $table->timestamps();
         });
     }

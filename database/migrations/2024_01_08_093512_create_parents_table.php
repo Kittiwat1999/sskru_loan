@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('occupation');
             $table->string('income');
             $table->boolean('alive');
-            $table->boolean('is_main_parent');
+            $table->boolean('is_main_parent')->default(false);
             $table->timestamps();
         });
     }

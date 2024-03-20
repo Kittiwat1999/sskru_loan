@@ -73,7 +73,7 @@ class MultiTableSeeder extends Seeder
             'isactive' => true,
         ]);
         DB::table('properties')->insert([
-            'property_title' => 'ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขมใดๆมาก่อน',
+            'property_title' => 'ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขาใดๆมาก่อน',
             'isactive' => true,
         ]);
         DB::table('properties')->insert([

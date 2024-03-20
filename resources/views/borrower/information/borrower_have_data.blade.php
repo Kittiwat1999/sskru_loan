@@ -1,16 +1,4 @@
 
-<!-- <h6 class="text-secondary">กรอกข้อมูลผู้กู้</h6> -->
-<!-- Multi Columns Form -->
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li class="text-danger">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
 <form class="row g-3" id="form-borrower" method="POST" enctype="multipart/form-data" action="{{url('/borrower/edit_data')}}">
     @csrf
 
@@ -18,10 +6,9 @@
     <div class="col-md-5">
         <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
         <select id="borrower-type" name="borrower_appearance" class="form-select" aria-label="Default select example" required>
-            <option {{ ($borrower['borrower_appearance'] == 'ขาดแคลนคุณทรัพย์') ? 'selected' : '' }} value="ขาดแคลนคุณทรัพย์">ขาดแคลนคุณทรัพย์</option>
-            <option {{ ($borrower['borrower_appearance'] == 'สาขาที่ขาดแคลน') ? 'selected' : '' }} value="สาขาที่ขาดแคลน">สาขาที่ขาดแคลน</option>
-            <option {{ ($borrower['borrower_appearance'] == 'สาขาที่เป็นความต้องการหลัก') ? 'selected' : '' }} value="สาขาที่เป็นความต้องการหลัก">สาขาที่เป็นความต้องการหลัก</option>
-            <option {{ ($borrower['borrower_appearance'] == 'เรียนดีสร้างความเป็นเลิศ') ? 'selected' : '' }} value="เรียนดีสร้างความเป็นเลิศ">เรียนดีสร้างความเป็นเลิศ</option>
+            @foreach($borrower_apprearance_types as $borrower_apprearance_type)
+                <option {{ ($borrower['borrower_appearance_id'] == $borrower_apprearance_type->id) ? 'selected' : '' }} value="{{$borrower_apprearance_type->id}}">{{$borrower_apprearance_type->title}}</option>
+            @endforeach
         </select>
     </div>
     <div class="col-md-6"></div>
@@ -35,12 +22,12 @@
     </div>
     <div class="col-md-10"></div>
     <div class="col-md-5">
-        <label for="fname" class="form-label text-secondary">ชื่อ</label>
-        <input type="text" class="form-control" id="fname" name="fname" value="{{$borrower['fname']}}">
+        <label for="firstname" class="form-label text-secondary">ชื่อ</label>
+        <input type="text" class="form-control" id="firstname" name="firstname" value="{{$borrower['firstname']}}">
     </div>
     <div class="col-md-5">
-        <label for="lname" class="form-label text-secondary">นามสกุล</label>
-        <input type="text" class="form-control" id="lname" name="lname" value="{{$borrower['lname']}}">
+        <label for="lastname" class="form-label text-secondary">นามสกุล</label>
+        <input type="text" class="form-control" id="lastname" name="lastname" value="{{$borrower['lastname']}}">
     </div>
     <div class="col-md-5">
         <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
@@ -58,7 +45,7 @@
 
     <div class="col-md-5">
         <label for="student_id" class="form-label text-secondary">รหัสนักศึกษา</label>
-        <input type="number" class="form-control" id="student_id" name="student_id" value="{{$borrower['student_id']}}" required>
+        <input type="text" class="form-control" id="student_id" name="student_id" value="{{$borrower['student_id']}}" required>
     </div>
     <div class="col-md-7"></div>
     <!-- <div class="cal-md-10"></div> -->
@@ -93,8 +80,10 @@
     <div class="col-md-12"></div>
     <div class="col-md-12"></div>
 
-    <div class="col-md-11 line-section mt-2"></div>
-    <h6 class="text-primary">ข้อมูลที่อยู่</h6>
+    <div class="col-md-12 pt-4">
+        <h5 class="text-primary" >ข้อมูลที่อยู่</h5>
+        <div class="col-md-11 line-section mt-2"></div>
+    </div>
 
     <div class="col-md-5">
         <label for="village" class="form-label text-secondary">หมู่บ้าน</label>
@@ -152,8 +141,8 @@
     <div class="col-md-12"></div>
 
     <div class="col-md-5">
-        <label for="phone_number" class="form-label text-secondary">เบอร์โทรศัพท์</label>
-        <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{$borrower['phone_number']}}">
+        <label for="phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
+        <input type="text" class="form-control" id="phone" name="phone" value="{{$borrower['phone']}}">
     </div>
     <div class="col-md-12"></div>
 
@@ -164,77 +153,16 @@
     <!-- checkbox props -->
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-5">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="prop1" name="props[prop1]" value="มีรายได้ไม่เกิน 360,000 บาทต่อปี" {{ isset($borrower->borrower_properties->prop1) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="prop1">
-                    มีรายได้ไม่เกิน 360,000 บาทต่อปี
-                    </label>
+            @foreach($properties as $property)
+                <div class="col-md-5">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="properties[]" value="{{$property->id}}" {{ in_array($property->id, $borrower_properties) ? 'checked' : '' }} >
+                        <label class="form-check-label" for="properties">
+                        {{$property->property_title}}
+                        </label>
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop2" name="props[prop2]" value="ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขาใดๆมาก่อน"{{ isset($borrower->borrower_properties->prop2) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop3">
-                ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขมใดๆมาก่อน
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop3" name="props[prop3]" value="จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว" {{ isset($borrower->borrower_properties->prop3) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop3">
-                จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop4"  name="props[prop4]" value="ไม่เป็นผู้มีงานประจำ" {{ isset($borrower->borrower_properties->prop4) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop4">
-                ไม่เป็นผู้มีงานประจำ
-                </label>
-            </div>
-            </div>
-            
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop5"  name="props[prop5]" value="มีอายุไม่เกิน 30 ปีบริบูรณ์" {{ isset($borrower->borrower_properties->prop5) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop5">
-                มีอายุไม่เกิน 30 ปีบริบูรณ์
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop6"  name="props[prop6]" value="ไม่เป็นบุคคลล้มละลาย" {{ isset($borrower->borrower_properties->prop6) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop6">
-                ไม่เป็นบุคคลล้มละลาย
-                </label>
-            </div>
-            </div>
-            
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="props7"  name="props[props7]" value="ไม่เคยผิดหนี้ชำระกับกองทุน" {{ isset($borrower->borrower_properties->prop7) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop7">
-                ไม่เคยผิดหนี้ชำระกับกองทุน
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop8"  name="props[prop8]" value="ไม่เคยต้องโทษจำคุก" {{ isset($borrower->borrower_properties->prop8) ? 'checked' : '' }}>
-                <label class="form-check-label" for="prop8">
-                ไม่เคยต้องโทษจำคุก
-                </label>
-            </div>
-            </div>
+            @endforeach
             
         </div>
     </div>
@@ -246,65 +174,32 @@
     <!-- checkbox props -->
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess1" name="necess[necess1]" value="เพื่อให้ได้เรียนในสาขาที่ชอบ" {{ isset($borrower->borrower_necessity->necess1) ? 'checked' : '' }}>
-                <label class="form-check-label" for="necess1">
-                เพื่อให้ได้เรียนในสาขาที่ชอบ
-                </label>
-            </div>
-            </div>
 
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess2" name="necess[necess2]" value="ขาดแคลนคุณทรัพย์" {{ isset($borrower->borrower_necessity->necess2) ? 'checked' : '' }}>
-                <label class="form-check-label" for="necess2">
-                ขาดแคลนคุณทรัพย์
-                </label>
-            </div>
-            </div>
+            @foreach ($nessessities as $nessessity)
+                <div class="col-md-5">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="nessessities[]" value="{{$nessessity->id}}" {{ in_array($nessessity->id, $borrower_nessessities) ? 'checked' : '' }} >
+                        <label class="form-check-label" for="necess1">
+                            {{$nessessity->nessessity_title}}
+                        </label>
+                    </div>
+                </div>
+            @endforeach
 
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess3" name="necess[necess3]" value="ลดภาระผู้ปกครอง" {{ isset($borrower->borrower_necessity->necess3) ? 'checked' : '' }}>
-                <label class="form-check-label" for="necess3">
-                ลดภาระผู้ปกครอง
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess4" name="necess[necess4]" value="สาขาที่เป็นความต้องการหลัก" {{ isset($borrower->borrower_necessity->necess4) ? 'checked' : '' }}>
-                <label class="form-check-label" for="necess4">
-                สาขาที่เป็นความต้องการหลัก
-                </label>
-            </div>
-            </div>
             
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess5" name="necess[necess5]" value="สาขาที่ขาดแคลน"  {{ isset($borrower->borrower_necessity->necess5) ? 'checked' : '' }}>
-                <label class="form-check-label" for="necess5">
-                สาขาที่ขาดแคลน
-                </label>
-            </div>
-            </div>
 
-            <div class="col-md-7"></div>
+            <div class="col-md-12"></div>
 
             <div class="col-md-1">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="morePropCheck" name="morePropCheck" value="อื่นๆ"  {{ isset($borrower->borrower_necessity->moreProp) ? 'checked' : '' }}>
+                    <input class="form-check-input" type="checkbox" id="morePropCheck" name="morePropCheck" value="อื่นๆ"  {{ isset($borrower_nessessity_other) ? 'checked' : '' }}>
                     <label class="form-check-label" for="morePropCheck">
                     อื่นๆ
                     </label>
                 </div>
             </div>
             <div class="col-md-4">
-                <textarea class="form-control" style="height: 100px" id="moreProp" name="necess[moreProp]" {{ isset($borrower->borrower_necessity->moreProp) ? '' : 'disabled' }}>
-                    {{ isset($borrower->borrower_necessity->moreProp) ? $borrower->borrower_necessity->moreProp : '' }}
-                </textarea>
+                <textarea class="form-control" style="height: 100px" id="moreProp" name="moreProp" {{ isset($borrower_nessessitiy_other) ? '' : 'disabled' }}>{{ isset($borrower_nessessity_other['other']) ? $borrower_nessessity_other['other'] : '' }}</textarea>
             </div>
             
         </div><!--end row-->
@@ -374,7 +269,7 @@
     </fieldset>
 
     <div class="col-md-2">
-        <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+        <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
         <input type="text" class="form-control" id="parent1_relational" name="parent1_relational" required value="{{$parent1['borrower_relational']}}">
         @error('parent1_relational')
             <span class="text-danger">{{ $message }}</span>
@@ -397,16 +292,16 @@
     <div class="col-md-10"></div>
 
     <div class="col-md-5">
-        <label for="parent1_fname" class="form-label text-secondary">ชื่อ</label>
-        <input type="text" class="form-control" id="parent1_fname" name="parent1_fname" required onblur="mainparent_label(this.value,'parent1')" value="{{$parent1['fname']}}">
-        @error('parent1_fname')
+        <label for="parent1_firstname" class="form-label text-secondary">ชื่อ</label>
+        <input type="text" class="form-control" id="parent1_firstname" name="parent1_firstname" required onblur="mainparent_label(this.value,'parent1')" value="{{$parent1['firstname']}}">
+        @error('parent1_firstname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-5">
-        <label for="parent1_lname" class="form-label text-secondary">นามสกุล</label>
-        <input type="text" class="form-control" id="parent1_lname" name="parent1_lname" required value="{{$parent1['lname']}}">
-        @error('parent1_lname')
+        <label for="parent1_lastname" class="form-label text-secondary">นามสกุล</label>
+        <input type="text" class="form-control" id="parent1_lastname" name="parent1_lastname" required value="{{$parent1['lastname']}}">
+        @error('parent1_lastname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
@@ -531,7 +426,7 @@
         </fieldset>
 
         <div class="col-md-2">
-            <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+            <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
             <input type="text" class="form-control" id="parent2_relational" name="parent2_relational" required value="{{$parent2['borrower_relational']}}">
             @error('parent2_relational')
                 <span class="text-danger">{{ $message }}</span>
@@ -554,16 +449,16 @@
         <div class="col-md-10"></div>
 
         <div class="col-md-5">
-            <label for="parent2_fname" class="form-label text-secondary">ชื่อ</label>
-            <input type="text" class="form-control" id="parent2_fname" name="parent2_fname" required onblur="mainparent_label(this.value,'parent2')" value="{{$parent2['fname']}}">
-            @error('parent2_fname')
+            <label for="parent2_firstname" class="form-label text-secondary">ชื่อ</label>
+            <input type="text" class="form-control" id="parent2_firstname" name="parent2_firstname" required onblur="mainparent_label(this.value,'parent2')" value="{{$parent2['firstname']}}">
+            @error('parent2_firstname')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
         <div class="col-md-5">
-            <label for="parent2_lname" class="form-label text-secondary">นามสกุล</label>
-            <input type="text" class="form-control" id="parent2_lname" name="parent2_lname" required value="{{$parent2['lname']}}">
-            @error('parent2_lname')
+            <label for="parent2_lastname" class="form-label text-secondary">นามสกุล</label>
+            <input type="text" class="form-control" id="parent2_lastname" name="parent2_lastname" required value="{{$parent2['lastname']}}">
+            @error('parent2_lastname')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
@@ -662,7 +557,7 @@
         </fieldset>
 
         <div class="col-md-2">
-            <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+            <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
             <input type="text" class="form-control" id="parent2_relational" name="parent2_relational" required>
             @error('parent2_relational')
                 <span class="text-danger">{{ $message }}</span>
@@ -686,16 +581,16 @@
         <div class="col-md-10"></div>
 
         <div class="col-md-5">
-            <label for="parent2_fname" class="form-label text-secondary">ชื่อ</label>
-            <input type="text" class="form-control" id="parent2_fname" name="parent2_fname" required onblur="mainparent_label(this.value,'parent2')">
-            @error('parent2_fname')
+            <label for="parent2_firstname" class="form-label text-secondary">ชื่อ</label>
+            <input type="text" class="form-control" id="parent2_firstname" name="parent2_firstname" required onblur="mainparent_label(this.value,'parent2')">
+            @error('parent2_firstname')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
         <div class="col-md-5">
-            <label for="parent2_lname" class="form-label text-secondary">นามสกุล</label>
-            <input type="text" class="form-control" id="parent2_lname" name="parent2_lname" required>
-            @error('parent2_lname')
+            <label for="parent2_lastname" class="form-label text-secondary">นามสกุล</label>
+            <input type="text" class="form-control" id="parent2_lastname" name="parent2_lastname" required>
+            @error('parent2_lastname')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
@@ -778,21 +673,26 @@
             <div class="col-md-5">
                 <input disabled class="form-control {($borrower->marital_status->status == 'หย่า') ? '' : 'd-none'}}" type="file" id="devorceFile" name="devorce_file"  accept=".jpg, .jpeg, .png, .pdf" onchange="nonDisplayFile()">
             </div>
-            <?php 
+            @php 
                 $file_extension = last(explode('.',$borrower->marital_status->file_path));
-            ?>
-            @if($file_extension == 'pdf')
-                <div class="row my-2 isdisplay">
-                    <div class="col-md-12">
-                        <iframe src="{{asset($borrower->marital_status->file_path)}}" frameborder="0" class="w-100" height="1200"></iframe>
+            @endphp
+
+            @if(($borrower->marital_status->status == "หย่า"))
+                @if($file_extension == 'pdf')
+                    <div class="row my-2 isdisplay">
+                        <div class="col-md-12">
+                            <iframe src="{{route('marital.status.file',['file_path' => $borrower->marital_status->file_path])}}" frameborder="0" class="w-100" height="1200"></iframe>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="row my-2 isdisplay">
+                        <div class="col-md-12">
+                            <img src="{{route('marital.status.file',['file_path' => $borrower->marital_status->file_path])}}" alt="" class="w-100">
+                        </div>
+                    </div>    
+                @endif
             @else
-                <div class="row my-2 isdisplay">
-                    <div class="col-md-12">
-                        <img src="{{asset($borrower->marital_status->file_path)}}" alt="" class="w-100">
-                    </div>
-                </div>    
+                    <div class="my-2"></div>
             @endif
         </div>
         <div class="col-md-12">
@@ -828,18 +728,18 @@
             </label>
             <div class="col-md-12 my-2">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="main_parent" id="parent1_is_main_parent" value="parent1" required {{($borrower['parents_id'] == $parent1['id']) ? 'checked' : ''}}>
+                    <input class="form-check-input" type="radio" name="main_parent" id="parent1_is_main_parent" value="parent1" required {{($parent1['is_main_parent']) ? 'checked' : ''}}>
                     <label class="form-check-label" for="parent1_is_main_parent" id="label_parent1_is_main_parent">
-                        {{$parent1['prefix'].' '.$parent1['fname']}}
+                        {{$parent1['prefix'].' '.$parent1['firstname']}}
                     </label>
                 </div>
             </div>
             @if(isset($parent2))
                 <div class="col-md-12 my-2">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="main_parent" id="parent2_is_main_parent" value="parent2" required {{($borrower['parents_id'] == $parent2['id']) ? 'checked' : ''}}>
+                        <input class="form-check-input" type="radio" name="main_parent" id="parent2_is_main_parent" value="parent2" required {{($parent2['is_main_parent']) ? 'checked' : ''}}>
                         <label class="form-check-label" for="parent2_is_main_parent" id="label_parent2_is_main_parent">
-                        {{$parent2['prefix'].' '.$parent2['fname']}}
+                        {{$parent2['prefix'].' '.$parent2['firstname']}}
                         </label>
                     </div>
                 </div>
@@ -971,12 +871,11 @@
 
     <div class="text-end d-none" id="form-box">
         <a href="{{url('/borrower/information')}}" class="btn btn-secondary">ยกเลิก</a>
+        
         <!-- save Modal-->
-        {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#non-parent-basic-modal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#non-parent-basic-modal">
             บันทึก
-        </button> --}}
-
-        <button type="submit" class="btn btn-primary">บันทึก</button>
+        </button>
 
         <div class="modal fade" id="non-parent-basic-modal" tabindex="-1">
             <div class="modal-dialog">
@@ -1115,7 +1014,7 @@
         //if parent 2 don't have data
         parenat2NoData();
 
-        // window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
 
         //hide edit button
         document.getElementById('edit-box').classList.toggle('d-none')

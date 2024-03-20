@@ -33,8 +33,8 @@
                                                 #parent2_no_alive,
                                                 #parent2_relational,
                                                 #parent2_prefix,
-                                                #parent2_fname,
-                                                #parent2_lname,
+                                                #parent2_firstname,
+                                                #parent2_lastname,
                                                 #parent2_birthday,
                                                 #parent2_age,
                                                 #parent2_citizen_id,
@@ -91,8 +91,9 @@
     
     var moreProps = document.getElementById('morePropCheck');
     moreProps.onchange = () => {
-        const isdisabled = document.getElementById('moreProp').disabled;
-        document.getElementById('moreProp').disabled = !isdisabled;
+        const moreProp = document.getElementById('moreProp');
+        moreProp.value = "";
+        moreProp.disabled = !moreProp.disabled;
     }
 
     function generateSelectProvince(elementId){

@@ -210,6 +210,8 @@ Route::get('/borrower/index', function () {
 
 Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 
+Route::get('/borrower/information/marital_img/{file_path}',[BorrowerController::class,'displayFile'])->name('marital.status.file');
+
 
 
 Route::post('/store_information',[BorrowerController::class,'storeInformation']);

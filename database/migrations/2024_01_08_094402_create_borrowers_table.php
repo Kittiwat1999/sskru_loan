@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('grade');
             $table->string('gpa');
             $table->json('marital_status');
-            $table->string('phone_number');
+            $table->string('phone');
             $table->timestamps();
         });
     }

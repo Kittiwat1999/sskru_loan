@@ -1,22 +1,12 @@
 <form action="{{url('/store_information')}}" class="row g-3" id="form-information" method="post" enctype="multipart/form-data">
     @csrf    
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li class="text-danger">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <div class="col-md-5">
         <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
         <select id="borrower-type" name="borrower_appearance" class="form-select" required>
             <option disabled selected value="">เลือกลักษณะผู้กู้</option>
-            <option value="ขาดแคลนคุณทรัพย์">ขาดแคลนคุณทรัพย์</option>
-            <option value="สาขาที่ขาดแคลน">สาขาที่ขาดแคลน</option>
-            <option value="สาขาที่เป็นความต้องการหลัก">สาขาที่เป็นความต้องการหลัก</option>
-            <option value="เรียนดีสร้างความเป็นเลิศ">เรียนดีสร้างความเป็นเลิศ</option>
+            @foreach($borrower_apprearance_types as $borrower_apprearance_type)
+                <option value="{{$borrower_apprearance_type->id}}">{{$borrower_apprearance_type->title}}</option>
+            @endforeach
         </select>
         @error('borrower_appearance')
             <span class="text-danger">{{ $message }}</span>
@@ -37,16 +27,16 @@
     </div>
     <div class="col-md-10"></div>
     <div class="col-md-5">
-        <label for="fname" class="form-label text-secondary">ชื่อ</label>
-        <input type="text" class="form-control" id="fname" name="fname" required value="{{$user['fname']}}" >
-        @error('fname')
+        <label for="firstname" class="form-label text-secondary">ชื่อ</label>
+        <input type="text" class="form-control" id="firstname" name="firstname" required value="{{$user['firstname']}}" >
+        @error('firstname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-5">
-        <label for="lname" class="form-label text-secondary">นามสกุล</label>
-        <input type="text" class="form-control" id="lname" name="lname" required value="{{$user['lname']}}">
-        @error('lname')
+        <label for="lastname" class="form-label text-secondary">นามสกุล</label>
+        <input type="text" class="form-control" id="lastname" name="lastname" required value="{{$user['lastname']}}">
+        @error('lastname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
@@ -217,8 +207,8 @@
     <div class="col-md-12"></div>
 
     <div class="col-md-5">
-        <label for="phone_number" class="form-label text-secondary">เบอร์โทรศัพท์</label>
-        <input type="text" class="form-control" id="phone_number" required name="phone_number">
+        <label for="phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
+        <input type="text" class="form-control" id="phone" required name="phone">
         @error('phone_number')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -235,78 +225,16 @@
     <!-- checkbox props -->
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-5">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="prop1" name="props[prop1]" value="มีรายได้ไม่เกิน 360,000 บาทต่อปี">
-                    <label class="form-check-label" for="prop1">
-                    มีรายได้ไม่เกิน 360,000 บาทต่อปี
-                    </label>
+            @foreach($properties as $property)
+                <div class="col-md-5">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="properties[]" value="{{$property->id}}">
+                        <label class="form-check-label" for="prop1">
+                        {{$property->property_title}}
+                        </label>
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop2" name="props[prop2]" value="ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขมใดๆมาก่อน">
-                <label class="form-check-label" for="prop2">
-                ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขมใดๆมาก่อน
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop3" name="props[prop3]" value="จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว">
-                <label class="form-check-label" for="prop3">
-                จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop4"  name="props[prop4]" value="ไม่เป็นผู้มีงานประจำ">
-                <label class="form-check-label" for="prop4">
-                ไม่เป็นผู้มีงานประจำ
-                </label>
-            </div>
-            </div>
-            
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop5"  name="props[prop5]" value="มีอายุไม่เกิน 30 ปีบริบูรณ์">
-                <label class="form-check-label" for="prop5">
-                มีอายุไม่เกิน 30 ปีบริบูรณ์
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop6"  name="props[prop6]" value="ไม่เป็นบุคคลล้มละลาย">
-                <label class="form-check-label" for="prop6">
-                ไม่เป็นบุคคลล้มละลาย
-                </label>
-            </div>
-            </div>
-            
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="props7"  name="props[props7]" value="ไม่เคยผิดหนี้ชำระกับกองทุน">
-                <label class="form-check-label" for="prop7">
-                ไม่เคยผิดหนี้ชำระกับกองทุน
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="prop8"  name="props[prop8]" value="ไม่เคยต้องโทษจำคุก">
-                <label class="form-check-label" for="prop8">
-                ไม่เคยต้องโทษจำคุก
-                </label>
-            </div>
-            </div>
-            
+            @endforeach
         </div>
     </div>
     <!-- end checkbox props -->
@@ -320,64 +248,30 @@
     <!-- checkbox props -->
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess1" name="necess[necess1]" value="เพื่อให้ได้เรียนในสาขาที่ชอบ">
-                <label class="form-check-label" for="necess1">
-                เพื่อให้ได้เรียนในสาขาที่ชอบ
-                </label>
-            </div>
-            </div>
+            @foreach ($nessessities as $nessessity)
+                <div class="col-md-5">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="nessessities[]" value="{{$nessessity->id}}">
+                        <label class="form-check-label" for="necess1">
+                            {{$nessessity->nessessity_title}}
+                        </label>
+                    </div>
+                </div>
+            @endforeach
 
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess2" name="necess[necess2]" value="ขาดแคลนคุณทรัพย์">
-                <label class="form-check-label" for="necess2">
-                ขาดแคลนคุณทรัพย์
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess3" name="necess[necess3]" value="ลดภาระผู้ปกครอง">
-                <label class="form-check-label" for="necess3">
-                ลดภาระผู้ปกครอง
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess4" name="necess[necess4]" value="สาขาที่เป็นความต้องการหลัก">
-                <label class="form-check-label" for="necess4">
-                สาขาที่เป็นความต้องการหลัก
-                </label>
-            </div>
-            </div>
-            
-            <div class="col-md-5">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="necess5" name="necess[necess5]" value="สาขาที่ขาดแคลน">
-                <label class="form-check-label" for="necess5">
-                สาขาที่ขาดแคลน
-                </label>
-            </div>
-            </div>
-
-            <div class="col-md-7"></div>
+            <div class="col-md-12"></div>
 
             <div class="col-md-1">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="morePropCheck" name="morePropCheck" value="อื่นๆ">
+                    <input class="form-check-input" type="checkbox" id="morePropCheck" name="morePropCheck" value="true">
                     <label class="form-check-label" for="morePropCheck">
                     อื่นๆ
                     </label>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <textarea class="form-control" style="height: 100px" id="moreProp" name="necess[moreProp]" value="" disabled></textarea>
+            <div class="col-md-4 mt-2">
+                <textarea class="form-control" style="height: 100px" id="moreProp" name="necessMoreProp" value="" disabled></textarea>
             </div>
             
         </div><!--end row-->
@@ -443,7 +337,7 @@
     </fieldset>
 
     <div class="col-md-2">
-        <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+        <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
         <input type="text" class="form-control" id="parent1_relational" name="parent1_relational" required>
         @error('parent1_relational')
             <span class="text-danger">{{ $message }}</span>
@@ -467,16 +361,16 @@
     <div class="col-md-10"></div>
 
     <div class="col-md-5">
-        <label for="parent1_fname" class="form-label text-secondary">ชื่อ</label>
-        <input type="text" class="form-control" id="parent1_fname" name="parent1_fname" required onblur="mainparent_label(this.value,'parent1')">
-        @error('parent1_fname')
+        <label for="parent1_firstname" class="form-label text-secondary">ชื่อ</label>
+        <input type="text" class="form-control" id="parent1_firstname" name="parent1_firstname" required onblur="mainparent_label(this.value,'parent1')">
+        @error('parent1_firstname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-5">
-        <label for="parent1_lname" class="form-label text-secondary">นามสกุล</label>
-        <input type="text" class="form-control" id="parent1_lname" name="parent1_lname" required>
-        @error('parent1_lname')
+        <label for="parent1_lastname" class="form-label text-secondary">นามสกุล</label>
+        <input type="text" class="form-control" id="parent1_lastname" name="parent1_lastname" required>
+        @error('parent1_lastname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
@@ -594,7 +488,7 @@
     </fieldset>
 
     <div class="col-md-2">
-        <label for="fname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+        <label for="parent2_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
         <input type="text" class="form-control" id="parent2_relational" name="parent2_relational" required>
         @error('parent2_relational')
             <span class="text-danger">{{ $message }}</span>
@@ -618,16 +512,16 @@
     <div class="col-md-10"></div>
 
     <div class="col-md-5">
-        <label for="parent2_fname" class="form-label text-secondary">ชื่อ</label>
-        <input type="text" class="form-control" id="parent2_fname" name="parent2_fname" required onblur="mainparent_label(this.value,'parent2')">
-        @error('parent2_fname')
+        <label for="parent2_firstname" class="form-label text-secondary">ชื่อ</label>
+        <input type="text" class="form-control" id="parent2_firstname" name="parent2_firstname" required onblur="mainparent_label(this.value,'parent2')">
+        @error('parent2_firstname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
     <div class="col-md-5">
-        <label for="parent2_lname" class="form-label text-secondary">นามสกุล</label>
-        <input type="text" class="form-control" id="parent2_lname" name="parent2_lname" required>
-        @error('parent2_lname')
+        <label for="parent2_lastname" class="form-label text-secondary">นามสกุล</label>
+        <input type="text" class="form-control" id="parent2_lastname" name="parent2_lastname" required>
+        @error('parent2_lastname')
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
