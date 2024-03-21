@@ -76,7 +76,9 @@
         <label for="faculty" class="col-md-12 col-form-label text-secondary">คณะ</label>
         <select id="faculty" name="faculty" class="form-select" aria-label="Default select example" required>
             <option disabled selected value="">เลือกคณะ</option>
-            <option value="lasc">lasc</option>
+            @foreach($faculties as $faculty)
+                <option value="{{$faculty->faculty_name}}">{{$faculty->faculty_name}}</option>
+            @endforeach
         </select>
         @error('faculty')
             <span class="text-danger">{{ $message }}</span>
@@ -86,7 +88,9 @@
         <label for="major" class="col-md-12 col-form-label text-secondary">สาขา</label>
         <select id="major" name="major" class="form-select" aria-label="Default select example" required>
             <option disabled selected value="">เลือกสาขา</option>
-            <option value="software">software</option>
+            @foreach($majors as $major)
+                <option value="{{$major->major_name}}">{{$major->major_name}}</option>
+            @endforeach
         </select>
         @error('major')
             <span class="text-danger">{{ $message }}</span>
@@ -118,8 +122,10 @@
     <div class="col-md-12"></div>
     <div class="col-md-12"></div>
 
-    <h5 class="text-primary">ข้อมูลที่อยู่</h5>
-    <div class="col-md-11 line-section mt-2"></div>
+    <div class="col-md-12 pt-4">
+        <h5 class="text-primary" >ข้อมูลที่อยู่</h5>
+        <div class="col-md-11 line-section mt-2"></div>
+    </div>
 
     <div class="col-md-5">
         <label for="village" class="form-label text-secondary">หมู่บ้าน</label>

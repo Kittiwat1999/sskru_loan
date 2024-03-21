@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('teacher_comments', function (Blueprint $table) {
             $table->id();
             $table->string('comment');
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
         });
     }
 

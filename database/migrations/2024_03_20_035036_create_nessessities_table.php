@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('nessessities', function (Blueprint $table) {
             $table->id();
             $table->string('nessessity_title');
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
         });
     }
 

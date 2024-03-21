@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('majors', function (Blueprint $table) {
             $table->id();
-            $table->integer('faculty_id')->foreignIdFor(Faculties::class);
+            $table->string('faculty_name');
             $table->string('major_name');
             $table->boolean('isactive')->default(true);
         });

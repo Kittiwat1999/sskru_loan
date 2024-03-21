@@ -51,15 +51,25 @@
     <!-- <div class="cal-md-10"></div> -->
     <div class="col-md-5">
         <label for="faculty" class="col-md-12 col-form-label text-secondary">คณะ</label>
-        <select id="faculty" name="faculty" class="form-select" aria-label="Default select example">
-            <option selected>{{ $borrower['faculty']}}</option>
+        <select id="faculty" name="faculty" class="form-select" aria-label="Default select example" required>
+            @foreach($faculties as $faculty)
+                <option {{($borrower['faculty'] == $faculty->faculty_name) ? 'selected' : '' }} value="{{$faculty->faculty_name}}">{{$faculty->faculty_name}}</option>
+            @endforeach
         </select>
+        @error('faculty')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-5">
         <label for="major" class="col-md-12 col-form-label text-secondary">สาขา</label>
-        <select id="major" name="major" class="form-select" aria-label="Default select example">
-            <option selected>{{ $borrower['major']}}</option>
+        <select id="major" name="major" class="form-select" aria-label="Default select example" required>
+            @foreach($majors as $major)
+                <option {{($borrower['major'] == $major->major_name) ? 'selected' : '' }} value="{{$major->major_name}}">{{$major->major_name}}</option>
+            @endforeach
         </select>
+        @error('major')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
     </div>
     <div class="col-md-3 mt-2">
         <label for="grade" class="col-md-12 col-form-label text-secondary">ชั้นปี</label>

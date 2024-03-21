@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('doc_types', function (Blueprint $table) {
             $table->id();
             $table->string('doctype_title');
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
         });
     }
 

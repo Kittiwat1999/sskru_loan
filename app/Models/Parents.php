@@ -11,18 +11,19 @@ class Parents extends Model
     protected $table = 'parents';
 
     protected $fillable = [
-        'user_id',
+        'borrower_id',
         'borrower_relational',
         'nationality',
         'prefix',
-        'fname',
-        'lname',
+        'firstname',
+        'lastname',
         'birthday',
         'citizen_id',
         'phone',
         'occupation',
         'income',
         'alive',
-        'address_id'
+        'address_id',
+        'is_main_parent',
     ];
 }

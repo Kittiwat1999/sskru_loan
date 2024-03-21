@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ChildDocuments extends Model
 {
     use HasFactory;
+    protected $fillable = ['child_document_title','isactive','need_laon_balance'];
+    public $timestamps = true;
 }

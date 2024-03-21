@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('child_documents', function (Blueprint $table) {
             $table->id();
             $table->string('child_document_title');
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
+            $table->boolean('need_loan_balance')->default(false);
             $table->timestamps();
         });
     }

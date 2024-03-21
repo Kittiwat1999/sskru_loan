@@ -12,6 +12,8 @@ use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\BorrowerApprearanceType;
 use App\Models\BorrowerNessessities;
 use App\Models\BorrowerProperties;
+use App\Models\Faculties;
+use App\Models\Majors;
 use App\Models\Nessessities;
 use App\Models\Properties;
 use Illuminate\Support\Facades\Validator;
@@ -50,6 +52,8 @@ class BorrowerController extends Controller
         })
         ->first();
 
+        $faculties = Faculties::where('isactive',true)->get();
+        $majors = Majors::where('isactive',true)->get();
         $borrower_apprearance_types = BorrowerApprearanceType::where('isactive',true)->get();
         $nessessities = Nessessities::where('isactive',true)->get();
         $properties = Properties::where('isactive',true)->get();
@@ -62,7 +66,7 @@ class BorrowerController extends Controller
         // dd($user,$borrower);
         
         if ($borrower === null){
-            return view('/borrower/information',compact('user','borrower_apprearance_types','nessessities','properties'));
+            return view('/borrower/information',compact('user','borrower_apprearance_types','nessessities','properties','faculties','majors'));
 
         }else{
 
@@ -83,7 +87,7 @@ class BorrowerController extends Controller
                 }
     
                 // dd($borrower,$user_information,$address);
-                return view('/borrower/information',compact('borrower','address','parent1','parent_address','borrower_apprearance_types','nessessities','properties','borrower_nessessities','borrower_properties','borrower_nessessity_other'));
+                return view('/borrower/information',compact('borrower','address','parent1','parent_address','borrower_apprearance_types','nessessities','properties','borrower_nessessities','borrower_properties','borrower_nessessity_other','faculties','majors'));
             }else{
                 $parent1 = $get_parent[0];
                 $parent2 = $get_parent[1];
@@ -102,12 +106,15 @@ class BorrowerController extends Controller
                     }
                 }
                 
-
-    
                 // dd($borrower,$parent_address,$address);
-                return view('/borrower/information',compact('borrower','address','parent1','parent2','parent_address','borrower_apprearance_types','nessessities','properties','borrower_nessessities','borrower_properties','borrower_nessessity_other'));
+                return view('/borrower/information',compact('borrower','address','parent1','parent2','parent_address','borrower_apprearance_types','nessessities','properties','borrower_nessessities','borrower_properties','borrower_nessessity_other','faculties','majors'));
             }
         }
+    }
+
+    public function getMajorByFaculty($faculty){
+        $major = Majors::where('faculty_name',$faculty)->get();
+        return json_encode($major);
     }
 
     // borrowerInformationValidationRequest
@@ -526,18 +533,18 @@ class BorrowerController extends Controller
         }else{
             
             $parent2_validator = Validator::make($request->all(), [
-               "parent2_is_thai" => 'required|string|max:50',
-               
-               "parent2_alive" => 'required|string|max:10',
-               "parent2_relational" => 'required|string|max:20',
-               "parent2_prefix" => 'required|string|max:50',
-               "parent2_firstname" => 'required|string|max:100',
-               "parent2_lastname" => 'required|string|max:100',
-               "parent2_birthday" => 'required|string|max:20',
-               "parent2_citizen_id" => 'required|string|max:50',
-               "parent2_phone" => 'required|string|max:50',
-               "parent2_occupation" => 'required|string|max:100',
-               "parent2_income" => 'required|string|max:50',
+                
+                "parent2_is_thai" => 'required|string|max:50',
+                "parent2_alive" => 'required|string|max:10',
+                "parent2_relational" => 'required|string|max:20',
+                "parent2_prefix" => 'required|string|max:50',
+                "parent2_firstname" => 'required|string|max:100',
+                "parent2_lastname" => 'required|string|max:100',
+                "parent2_birthday" => 'required|string|max:20',
+                "parent2_citizen_id" => 'required|string|max:50',
+                "parent2_phone" => 'required|string|max:50',
+                "parent2_occupation" => 'required|string|max:100',
+                "parent2_income" => 'required|string|max:50',
             ]);
             
             // Check if validation fails
@@ -651,7 +658,7 @@ class BorrowerController extends Controller
 
     public function deleteFile($file)
     {
-        $path = storage_path('mariatal/'.$file);
+        $path = storage_path('uploads/marital/'.$file);
 
         if (File::exists($path)) {
             File::delete($path);
@@ -662,7 +669,7 @@ class BorrowerController extends Controller
 
     private function storeFile($file,)
     {
-        $path = storage_path('mariatal/');
+        $path = storage_path('uploads/marital/');
 
         !file_exists($path) && mkdir($path, 0777, true);
 
@@ -674,7 +681,7 @@ class BorrowerController extends Controller
 
     public function displayFile($file)
     {
-        $path = storage_path('mariatal/'.$file);
+        $path = storage_path('uploads/marital/'.$file);
 
         if (!File::exists($path)) {
             abort(404);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('borrower_apprearance_types', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
         });
     }
 

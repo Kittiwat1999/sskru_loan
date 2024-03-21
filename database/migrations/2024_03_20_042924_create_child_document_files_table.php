@@ -15,6 +15,8 @@ return new class extends Migration
         Schema::create('child_document_files', function (Blueprint $table) {
             $table->id();
             $table->integer('child_document_id')->foreignIdFor(ChildDocuments::class);
+            $table->string('description');
+            $table->string('file_for');
             $table->string('file_path');
             $table->string('file_name');
             $table->string('file_type');

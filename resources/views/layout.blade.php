@@ -229,7 +229,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
+        $privilage = "admin";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -244,12 +244,7 @@
                 </a>
             </li><!-- End สรุปข้อมูล Page Nav -->
 
-            <!-- <li class="nav-item">
-                <a id="return_document" class="nav-link collapsed" href="{{url('/admin/return_document')}}">
-                <i class="bi bi-clipboard-x"></i>
-                <span>คำร้องขอแก้ใขเอกสาร</span>
-                </a>
-            </li> -->
+            
             <!-- End คำร้องขอแก้ใขเอกสาร Page Nav -->
             <li class="nav-heading text-secondary">admin menu</li>
             <li class="nav-item">
@@ -258,6 +253,13 @@
                 <span>จัดการบัญชีผู้ใช้</span>
                 </a>
             </li><!-- จัดการบัญชีผู้ใช้ Page Nav -->
+
+            <li class="nav-item">
+                <a id="manage_documents" class="nav-link collapsed" href="{{url('/admin/manage_documents')}}">
+                <i class="bi bi-file-earmark-spreadsheet"></i>
+                <span>จัดการเอกสาร</span>
+                </a>
+            </li>
             
             <li class="nav-item">
                 <a id="settime" class="nav-link collapsed" href="{{url('/admin/settime')}}">
@@ -398,14 +400,39 @@
     </aside>
     <main id="main" class="main">
         @if($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" id="error-alert">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li class="text-danger">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
+            <script>
+                // Wait for 3000 milliseconds (3 seconds) and then remove the element
+                setTimeout(function() {
+                    const elementToRemove = document.getElementById('error-alert');
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }, 3000);
+            </script>
         @endif
+
+        @if (!empty(session('success')))
+            <div class="alert alert-success" id="success-alert">
+                {{ session('success') }}
+            </div>
+            <script>
+                // Wait for 3000 milliseconds (3 seconds) and then remove the element
+                setTimeout(function() {
+                    const elementToRemove = document.getElementById('success-alert');
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }, 3000);
+            </script>
+        @endif
+
         @yield('content')
         
     </main>

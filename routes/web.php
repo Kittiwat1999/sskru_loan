@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BorrowerController;
+use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\OldLoanRequestController;
 use App\Models\OldLoanRequest;
 
@@ -50,7 +51,7 @@ Route::get('/admin/settime',function (){
 });
 
 Route::get('/admin/manage_account',[UsersController::class,'admin_getUsersData'])->name('admin_manage_account');
-Route::get('/admin/manage_account/{privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
+Route::get('/admin/manage_account/{select_privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
 
 Route::get('/admin/getUser/{id}',[UsersController::class,'admin_getUserById'])->name('admin.getUser');
 
@@ -58,6 +59,7 @@ Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])
 
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
 Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
+Route::get('/admin/manage_documents',[DocumentsController::class,'manage_documents'])->name('admin.edit.documents');
 
 
 
@@ -209,6 +211,8 @@ Route::get('/borrower/index', function () {
 });
 
 Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
+
+Route::get('/borrower/major_by_faculty/{faculty}',[BorrowerController::class,'getMajorByFaculty']);
 
 Route::get('/borrower/information/marital_img/{file_path}',[BorrowerController::class,'displayFile'])->name('marital.status.file');
 

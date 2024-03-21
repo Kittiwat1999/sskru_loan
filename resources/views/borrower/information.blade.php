@@ -24,6 +24,26 @@
     <!-- end card toggle -->
     <script>
         //check if no data ckecked
+    const faculty = document.getElementById('faculty');
+    faculty.addEventListener('change', async function() {
+
+        fetch(`/borrower/major_by_faculty/${this.value}`)
+        .then((response) => response.json())
+        .then((data) => {
+            majorOprionChange(data);// Process the data here
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+    });
+
+    function majorOprionChange(majors){
+        const major = document.getElementById('major');
+        major.innerHTML = '<option disabled selected value="">เลือกสาขา</option>';
+        major.innerHTML += majors.map(major =>{
+            return `<option value="${major.major_name}">${major.major_name}</option>`;
+        }).join("");
+    }
 
     function parenat2NoData(){
         const parent2_no_data = document.getElementById('parent2_no_data');

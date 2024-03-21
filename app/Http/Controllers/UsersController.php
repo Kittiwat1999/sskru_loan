@@ -5,19 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Users;
 use App\HTTP\Requests\AdminMgeAccountRequest;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
-    function admin_getUsersData(){
-        $privilage = "employee";
-        $users = Users::where('isactive',true)->where('privilage',$privilage)->get(['id','username','email','fname','lname','privilage','created_at','updated_at']);
-        return view('/admin/manage_account',compact('users','privilage'));
+    function admin_getUsersData(Request $request){
+        $select_privilage = $request->session()->get('select_privilage','employee');
+        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','username','email','firstname','lastname','privilage','created_at','updated_at']);
+        $request->session()->put('select_privilage', $select_privilage);
+        return view('/admin/manage_account',compact('users'));
     }
 
-    function admin_getUsersDataByPrivilage($privilage){
-        $users = Users::where('isactive',true)->where('privilage',$privilage)->get(['id','username','email','fname','lname','privilage','created_at','updated_at']);
-        return view('/admin/manage_account',compact('users','privilage'));
+    function admin_getUsersDataByPrivilage(Request $request, $select_privilage){
+        $request->session()->put('select_privilage', $select_privilage);
+        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','username','email','firstname','lastname','privilage','created_at','updated_at']);
+        return view('/admin/manage_account',compact('users'));
     }
 
     function admin_getUserById($id){
@@ -38,8 +41,8 @@ class UsersController extends Controller
 
         $data = [
             'prefix'=>$request->prefix,
-            'fname'=>$request->fname,
-            'lname'=>$request->lname,
+            'firstname'=>$request->firstname,
+            'lastname'=>$request->lastname,
             'username'=>$request->username,
             'password'=>Hash::make($request->password),
             'privilage'=>$request->privilage,
@@ -63,8 +66,8 @@ class UsersController extends Controller
         $request->validate(
             [
                 'prefix' => 'required|string|max:30',
-                'fname' => 'required|string|max:50',
-                'lname' => 'required|string|max:50',
+                'firstname' => 'required|string|max:50',
+                'lastname' => 'required|string|max:50',
                 'privilage' => 'required|string|max:50',
             ],
             [
@@ -76,8 +79,8 @@ class UsersController extends Controller
 
         $data = [
             'prefix'=>$request->prefix,
-            'fname'=>$request->fname,
-            'lname'=>$request->lname,
+            'firstname'=>$request->firstname,
+            'lastname'=>$request->lastname,
             'privilage'=>$request->privilage,
             'updated_at'=>date('Y-m-d H:i:s')
         ];

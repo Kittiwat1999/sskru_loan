@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->string('property_title');
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
         });
     }
 

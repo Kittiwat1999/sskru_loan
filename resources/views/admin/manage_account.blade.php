@@ -4,28 +4,21 @@
     <section class="section dashboard">
         <div class="card">
             <div class="card-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <h5 class="card-title">Manage account</h5>
+                <h5 class="card-title">จัดการบัญชีผู้ใช้</h5>
                 <div class="row mb-4">
                     <!-- <div class="col-md-2">
                         <label for="privilage" class="col-form-label text-secondary">ประเภทผู้ใช้</label>
                     </div> -->
+                    @php
+                        $select_privilage = Session::get('select_privilage');
+                    @endphp
                     <div class="col-md-4">
-                        <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                        <select id="major" class="form-select" aria-label="Default select example" name="privilage" required onchange="getUsersByPrivilage(this.value)">
-                            <option {{($privilage == "admin") ? 'selected' : '' }} value="admin">แอดมิน</option>
-                            <option {{($privilage == "employee") ? 'selected' : '' }} value="employee">พนักงานทุนฯ</option>
-                            <option {{($privilage == "major") ? 'selected' : '' }} value="major">คณะ</option>
-                            <option {{($privilage == "teacher") ? 'selected' : '' }} value="teacher">อาจารย์ที่ปรึกษา</option>
-                            <option {{($privilage == "borrower") ? 'selected' : '' }} value="borrower">ผู้กู้</option>
+                        <select id="select-level-show" class="form-select" aria-label="Default select example" name="privilage" required onchange="getUsersByPrivilage(this.value)">
+                            <option {{($select_privilage == "admin") ? 'selected' : '' }} value="admin">แอดมิน</option>
+                            <option {{($select_privilage == "employee") ? 'selected' : '' }} value="employee">พนักงานทุนฯ</option>
+                            <option {{($select_privilage == "major") ? 'selected' : '' }} value="major">คณะ</option>
+                            <option {{($select_privilage == "teacher") ? 'selected' : '' }} value="teacher">อาจารย์ที่ปรึกษา</option>
+                            <option {{($select_privilage == "borrower") ? 'selected' : '' }} value="borrower">ผู้กู้</option>
                         </select>
                     </div>
                     <div class="col-md-5"></div>
@@ -58,17 +51,17 @@
                                     </div>
                                     @enderror
                                     <div class="col-12">
-                                        <label for="fname" class="col-form-label">ชื่อ</label>
-                                        <input type="text" name="fname" class="form-control" required>
+                                        <label for="firstname" class="col-form-label">ชื่อ</label>
+                                        <input type="text" name="firstname" class="form-control" required>
                                     </div>
-                                    @error('fname')
+                                    @error('firstname')
                                     <div class="my-2">
                                         <span class="text-danger">{{$message}}</span>
                                     </div>
                                     @enderror
                                     <div class="col-12">
-                                        <label for="lname" class="col-form-label">นามสกุล</label>
-                                        <input type="text" name="lname" class="form-control" required>
+                                        <label for="lastname" class="col-form-label">นามสกุล</label>
+                                        <input type="text" name="lastname" class="form-control" required>
                                     </div>
                                     @error('lanme')
                                     <div class="my-2">
@@ -150,7 +143,7 @@
                             @foreach($users as $user)
                             <tr>
                                 <td>{{$i++}}</td>
-                                <td class="text-dark fw-light">{{$user->prefix}} {{$user->fname}} {{$user->lname}}</td>
+                                <td class="text-dark fw-light">{{$user->prefix}} {{$user->firstname}} {{$user->lastname}}</td>
                                 <td>{{$user->username}}</td>
                                 <td>
                                     @if($user->privilage == "admin")
@@ -183,7 +176,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div id="delete-modal-content" class="modal-body">
-                                                ต้องการลบข้อมูลของผู้ใช้ {{$user->fname}}
+                                                ต้องการลบข้อมูลของผู้ใช้ {{$user->firstname}}
                                             </div>
                                             <div id="delete-button-area" class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
@@ -260,12 +253,12 @@
                     </select>
                 </div>
                 <div class="col-12">
-                    <label for="fname" class="col-form-label">ชื่อ</label>
-                    <input type="text" name="fname" class="form-control" value="${user[0].fname}" required>
+                    <label for="firstname" class="col-form-label">ชื่อ</label>
+                    <input type="text" name="firstname" class="form-control" value="${user[0].firstname}" required>
                 </div>
                 <div class="col-12">
-                    <label for="lname" class="col-form-label">นามสกุล</label>
-                    <input type="text" name="lname" class="form-control" value="${user[0].lname}" required>
+                    <label for="lastname" class="col-form-label">นามสกุล</label>
+                    <input type="text" name="lastname" class="form-control" value="${user[0].lastname}" required>
                 </div>
                 <div class="col-12">
                     <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
@@ -284,7 +277,7 @@
                 </div>
                 <div class="col-12">
                     <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                    <select id="major" class="form-select" aria-label="Default select example" name="privilage" required>
+                    <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required>
                         <option ${(user[0].privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
                         <option ${(user[0].privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
                         <option ${(user[0].privilage == 'major') ? 'selected':'' } value="major">คณะ</option>
@@ -327,9 +320,9 @@
         }
         }
 
-        function getUsersByPrivilage(privilage){
+        function getUsersByPrivilage(select_privilage){
             // console.log(privilage);
-            window.location.href = '{{ route('admin.manageaccount.privilage', ['privilage' => ':privilage']) }}'.replace(':privilage', privilage);
+            window.location.href = '{{ route('admin.manageaccount.privilage', ['select_privilage' => ':select_privilage']) }}'.replace(':select_privilage', select_privilage);
         }
 
 
