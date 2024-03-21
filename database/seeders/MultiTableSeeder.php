@@ -124,6 +124,26 @@ class MultiTableSeeder extends Seeder
             'isactive' => true,
         ]);
 
+        //faculties
+        DB::table('faculties')->insert([
+            'faculty_name' => 'คณะมนุษยศาสตร์และสังคมศาสตร์',
+        ]);
+        DB::table('faculties')->insert([
+            'faculty_name' => 'คณะพยาบาลศาสตร์',
+        ]);
+        DB::table('faculties')->insert([
+            'faculty_name' => 'วิทยาลัยกฎหมายและการปกครอง',
+        ]);
+        DB::table('faculties')->insert([
+            'faculty_name' => 'คณะบริหารธุรกิจและการบัญชี',
+        ]);
+        DB::table('faculties')->insert([
+            'faculty_name' => 'คณะครุศาสตร์',
+        ]);
+        DB::table('faculties')->insert([
+            'faculty_name' => 'คณะศิลปศาสตร์และวิทยาศาสตร์',
+        ]);
 
+        
     }
 }

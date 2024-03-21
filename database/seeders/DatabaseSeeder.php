@@ -19,7 +19,10 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([
-            MultiTableSeeder::class
+            MultiTableSeeder::class,
+        ]);
+        $this->call([
+            MajorsSeeder::class
         ]);
 
     }
