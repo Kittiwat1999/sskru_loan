@@ -224,9 +224,8 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'หนังสือแสดงความเห็นอาจารย์ที่ปรึกษา'],
             ['child_document_title'=>'ใบรายงานผลการเรียน'],
             ['child_document_title'=>'สัญญากู้ยืม'],
-            ['child_document_title'=>'แบบยืนยันการเบิกเงิน','need_loan_balance'=>true],
+            ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืมเกินหลักสูตร'],
-
         ]);
     }
 }

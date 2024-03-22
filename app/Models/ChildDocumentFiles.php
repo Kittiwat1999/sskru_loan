@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ChildDocumentFiles extends Model
 {
     use HasFactory;
+    protected $fillable = ['child_document_id','desciption','file_for','file_path','file_name','file_type','full_path','upload_date'];
+    public $timestamps = true;
 }

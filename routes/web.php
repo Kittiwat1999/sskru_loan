@@ -59,9 +59,8 @@ Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])
 
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
 Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
-Route::get('/admin/manage_documents',[DocumentsController::class,'manage_documents'])->name('admin.edit.documents');
-
-
+Route::get('/admin/manage_documents',[DocumentsController::class,'manage_documents'])->name('admin.manage.documents');
+Route::put('/admin/manage_documents/srore_document',[DocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
 
 
 Route::get('/contract', function () {

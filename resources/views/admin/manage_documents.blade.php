@@ -167,7 +167,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form class="row" action="" method="post" id="addChildDocForm" enctype="multipart/form-data">
+                                                        <form class="row" action="" method="post" id="eidtChildDocForm" enctype="multipart/form-data">
                                                             @csrf
                                                             <div class="col-12 mb-3">
                                                                 <label for="child_doc_title" class="form-label">เอกสาร</label>
@@ -182,7 +182,7 @@
                                                                 </select>
                                                             </div>
                                                             
-                                                            <div id="file_everyone_area">
+                                                            {{-- <div id="file_everyone_area">
                                                                 <div class="col-12 mb-3">
                                                                     <label for="file_everyone" class="form-label">ตัวอย่างเอกสาร 1</label>
                                                                     <input type="file" class="form-control" id="file_everyone" name="file_everyone[]" required>
@@ -199,7 +199,7 @@
                                                             <div class="col-12 mt-3">
                                                                 <label for="file_minors" class="form-label">ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี</label>
                                                                 <input type="file" class="form-control" id="file_minors" name="file_minors">
-                                                            </div>
+                                                            </div> --}}
                                                         {{-- </form>  must be closed here --}}
                                                     </div>
                                                     <div class="modal-footer">
@@ -259,29 +259,42 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form class="row" action="" method="post" id="addChildDocForm" enctype="multipart/form-data">
+                                        <form id="addChildDocForm"  class="row" action="{{route('admin.manage.documents.storedocument')}}" method="POST" enctype="multipart/form-data">
                                             @csrf
+                                            @method('PUT')
                                             <div class="col-12 mb-3">
                                                 <label for="child_doc_title" class="form-label">เอกสาร</label>
-                                                <input type="text" class="form-control" id="child_doc_title" name="child_doc_title" required>
+                                                <input type="text" class="form-control need-custom-validate" id="child_doc_title" name="child_doc_title">
+                                                <div id="child_doc_title_invalid" class="invalid-feedback">
+                                                    กรุณากรอกหัวข้อเอกสาร
+                                                </div>
                                             </div>
                                             <div class="col-12 mb-5">
                                                 <label for="need_laon_balance" class="form-label">ข้อมูลยอดเงินกู้</label>
-                                                <select id="need_laon_balance" class="form-select" name="need_laon_balance" required>
+                                                <select id="need_laon_balance" class="form-select need-custom-validate" name="need_laon_balance">
                                                     <option selected disabled value="" >เลือก...</option>
                                                     <option value="true">ต้องการ</option>
                                                     <option value="false">ไม่ต้องการ</option>
                                                 </select>
+                                                <div id="need_laon_balance_invalid" class="invalid-feedback">
+                                                    กรุณาเลือก ข้อมูลยอดเงิน
+                                                </div>
                                             </div>
                                             
                                             <div id="file_everyone_area">
                                                 <div class="col-12 mb-3">
                                                     <label for="file_everyone" class="form-label">ตัวอย่างเอกสาร 1</label>
-                                                    <input type="file" class="form-control" id="file_everyone" name="file_everyone[]" required>
+                                                    <input type="file" class="form-control need-custom-validate" id="file_everyone" name="file_everyone[]">
+                                                    <div id="file_everyone_invalid1" class="invalid-feedback">
+                                                        กรุณาเลือกไฟล์ตัวอย่างเอกสาร
+                                                    </div>
                                                 </div>
                                                 <div class="col-12 mb-3">
                                                     <label for="description" class="form-label">คำอธิบายสำหรับตัวอย่างเอกสาร 1</label>
-                                                    <input type="text" class="form-control" id="description" name="description[]" required>
+                                                    <input type="text" class="form-control need-custom-validate" id="description" name="description[]" accept="jpg,jpeg,png,pdf">
+                                                    <div id="description_invalid1" class="invalid-feedback">
+                                                        กรุณากรอกคำอธิบายตัวอย่างเอกสาร
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-12 mb-3">
@@ -290,15 +303,17 @@
                                             </div>
                                             <div class="col-12 mt-3">
                                                 <label for="file_minors" class="form-label">ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี</label>
-                                                <input type="file" class="form-control" id="file_minors" name="file_minors">
+                                                <input type="file" class="form-control" id="file_minors" name="file_minors" accept="jpg,jpeg,png,pdf">
                                             </div>
-                                        {{-- </form>  must be closed here --}}
+                                        </form>  
+                                        {{-- must be closed here --}}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                        <button type="sumbit" class="btn btn-primary">บันทึก</button>
+                                        <button type="button" class="btn btn-primary" onclick="submitForm('addChildDocForm')">บันทึก</button>
                                     </div>
-                                    </form> <!-- but i'm lazy and here it easy to validate-->
+                                    {{-- </form>  --}}
+                                    <!-- but i'm lazy and here it easy to validate-->
                                 </div>
                             </div>
                         </div>
@@ -318,11 +333,17 @@
             file_everyone_area.innerHTML += `
                 <div class="col-12 mb-3" id="file_everyone${fileIndex}">
                     <label for="file_everyone" class="form-label">ไฟล์ตัวอย่าง ${fileIndex}</label>
-                    <input type="file" class="form-control" name="file_everyone[]" required>
+                    <input type="file" class="form-control need-custom-validate" name="file_everyone[]">
+                    <div id="file_everyone_invalid${fileIndex}" class="invalid-feedback">
+                        กรุณาเลือกไฟล์ตัวอย่างเอกสาร
+                    </div>
                 </div>
                 <div class="col-12 mb-3" id="description${fileIndex}">
                     <label for="description" class="form-label">คำอธิบายสำหรับไฟล์ตัวอย่าง ${fileIndex}</label>
-                    <input type="text" class="form-control" name="description[]" required>
+                    <input type="text" class="form-control need-custom-validate" name="description[]" accept="jpg,jpeg,png,pdf">
+                    <div id="description_invalid${fileIndex}" class="invalid-feedback">
+                        กรุณากรอกคำอธิบายตัวอย่างเอกสาร
+                    </div>
                 </div>
             `;
         }
@@ -335,5 +356,18 @@
 
             if(fileIndex > 1)fileIndex-- ;
         }
+
+        function submitForm(formId){
+            var form = document.getElementById(formId);
+            var input_element = form.querySelectorAll('input[type="text"].need-custom-validate');
+            var select_element = form.querySelector('select.need-custom-validate');
+            var file_input_element = form.querySelectorAll('input[type="file"].need-custom-validate ');
+            // console.log(input_element);
+            console.log(select_element);
+            // console.log(file_input_element);
+
+        }
+        
+
     </script>
 @endsection
