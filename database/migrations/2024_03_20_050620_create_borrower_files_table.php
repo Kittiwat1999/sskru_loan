@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->integer('borrower_id')->foreignIdFor(Borrower::class);
             $table->string('description');
+            $table->string('original_name');
             $table->string('file_path');
             $table->string('file_name');
             $table->string('file_type');

@@ -59,8 +59,13 @@ Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])
 
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
 Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
+
 Route::get('/admin/manage_documents',[DocumentsController::class,'manage_documents'])->name('admin.manage.documents');
 Route::put('/admin/manage_documents/srore_document',[DocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
+Route::post('/admin/manage_documents/edit_document',[DocumentsController::class,'EditChildDoc'])->name('admin.manage.documents.editdocument');
+
+Route::get('/admin/displayfile/{file_id}',[DocumentsController::class,'displayfile_page'])->name('admin.displayfile.page');
+Route::get('/admin/deisplayfile/file/{file_name}',[DocumentsController::class,'displayFile'])->name('admin.displayfile');
 
 
 Route::get('/contract', function () {

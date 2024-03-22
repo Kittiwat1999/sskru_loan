@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChildDocuments;
+use App\Models\ChildDocumentFiles;
 use App\Models\DocTypes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
+
 
 class DocumentsController extends Controller
 {
@@ -14,48 +18,48 @@ class DocumentsController extends Controller
         $doc_types = DocTypes::where('isactive',true)->get();
         $child_documents = ChildDocuments::where('isactive',true)->get();
 
+        foreach($child_documents as $child_document){
+            $child_document['everyone_files'] = ChildDocumentFiles::where('child_document_id',$child_document['id'])->where('file_for','everyone')->select('id','description')->get();
+            $child_document['minors_file'] = ChildDocumentFiles::where('child_document_id',$child_document['id'])->where('file_for','minors')->select('id','description')->first();
+        }
         return view('admin.manage_documents',compact('doc_types','child_documents'));
     }
 
     public function storeDocument(Request $request){
 
-        $validated = $request->validate(
-            [
-                'child_document_title' => 'required|string|max:100',
-                'need_loan_balance' => 'required|string',
-                
-                //file
-                'file_everyone.*' => 'requird|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'description.*' => 'required',
-                'file_minors' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
-            ], [
-                'child_document_title.required' => 'กรุณากรอกชื่อเอกสารลูกหนี้',
-                'child_document_title.string' => 'ชื่อเอกสารลูกหนี้ต้องเป็นข้อความ',
-                'child_document_title.max' => 'ชื่อเอกสารลูกหนี้ต้องมีความยาวไม่เกิน :max ตัวอักษร',
-                'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
-                'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการต้องเป็นข้อความ',
-                'file_everyone.*.required' => 'กรุณาเลือกไฟล์ที่ต้องการ',
-                'file_everyone.*.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',
-                'file_everyone.*.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
-                'file_everyone.*.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
-                'description.*.required' => 'กรุณากรอกคำอธิบาย',
-                'file_minors.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',
-                'file_minors.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
-                'file_minors.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
-            ]
-        );
-
-        if($validated->fails()){
-            return back()->withErrors($validated->errors());
-        }
+        $rules = [
+            'child_document_title' => 'required|string|max:100',
+            'need_loan_balance' => 'required|string',
+            'file_everyone.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'description.*' => 'required',
+            'file_minors' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ];
+        
+        $messages = [
+            'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
+            'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
+            'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
+            'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการต้องเป็นข้อความ',
+            'file_everyone.*.required' => 'กรุณาเลือกไฟล์ที่ต้องการ',
+            'file_everyone.*.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',
+            'file_everyone.*.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
+            'file_everyone.*.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
+            'description.*.required' => 'กรุณากรอกคำอธิบาย',
+            'file_minors.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',
+            'file_minors.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
+            'file_minors.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
+        ];
+        
+        $request->validate($rules,$messages);
 
         $child_document = new ChildDocuments();
-        $child_document['child_document_title'] = $request->child_ducument_title;
+        $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
         $child_document['isactive'] = true;
         $child_document->save();
 
-        $file_everyone = $request->files('file_everyone');
+        $file_everyone = $request->file('file_everyone');
         $file_everyone_description = $request->description;
 
         if(count($file_everyone) !== count($file_everyone_description)){
@@ -68,29 +72,38 @@ class DocumentsController extends Controller
             $child_document_file['child_document_id'] = $child_document['id'];
             $child_document_file['description'] = $file_everyone_description[$i];
             $child_document_file['file_for'] = 'everyone';
-            $child_document_file['file_path'] = $child_document_file_path.$file_name;
+            $child_document_file['original_name'] = $file_everyone[$i]->getClientOriginalName();
+            $child_document_file['file_path'] = $this->child_document_file_path;
             $child_document_file['file_name'] = $file_name;
-            $child_document_file['file_type'] = $file_everyone[$i]->extension();
+            $child_document_file['file_type'] = last(explode('.', $file_name));
+            $child_document_file['full_path'] = $this->child_document_file_path.$file_name;
             $child_document_file['upload_date'] = date('Y-m-d');
+            $child_document_file->save();
             
         }
+
         if($request->hasFile('file_minors')){
             $file_minors = $request->file('file_minors');
             $file_name = $this->storeFile($file_minors);
             $child_document_file = new ChildDocumentFiles();
             $child_document_file['child_document_id'] = $child_document['id'];
-            $child_document_file['description'] = $file_everyone_description[$i];
+            $child_document_file['description'] = 'ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี';
+            $child_document_file['original_name'] = $file_minors->getClientOriginalName();
             $child_document_file['file_for'] = 'minors';
-            $child_document_file['file_path'] = $child_document_file_path.$file_name;
+            $child_document_file['file_path'] = $this->child_document_file_path;
             $child_document_file['file_name'] = $file_name;
-            $child_document_file['file_type'] = $file_minors->extension();
+            $child_document_file['file_type'] = last(explode('.', $file_name));
+            $child_document_file['full_path'] = $this->child_document_file_path.$file_name;
             $child_document_file['upload_date'] = date('Y-m-d');
+            $child_document_file->save();
             
         }
-
-
         return redirect()->back()->with(['success'=>'เพิ่มข้อมูลเอกสารเรียบร้อยแล้ว']);
 
+    }
+
+    public function EditChildDoc(Request $request){
+        dd($request);
     }
 
     public function deleteFile($file)
@@ -131,5 +144,10 @@ class DocumentsController extends Controller
         $response->header("Content-Type", $type);
 
         return $response;
+    }
+
+    public function displayfile_page($file_id){
+        $file = ChildDocumentFiles::find($file_id);
+        return view('admin.display_file',compact('file'));
     }
 }

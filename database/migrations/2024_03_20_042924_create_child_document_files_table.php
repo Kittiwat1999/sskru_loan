@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('child_document_id')->foreignIdFor(ChildDocuments::class);
             $table->string('description');
             $table->string('file_for');
+            $table->string('original_name');
             $table->string('file_path');
             $table->string('file_name');
             $table->string('file_type');
