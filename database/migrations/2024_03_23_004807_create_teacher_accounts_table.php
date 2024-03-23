@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\Faculties;
+use App\Models\Majors;
+use App\Models\Users;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Faculties;
 
 return new class extends Migration
 {
@@ -12,10 +14,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('majors', function (Blueprint $table) {
+        Schema::create('teacher_accounts', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->foreignIdFor(Users::class);
             $table->integer('faculty_id')->foreignIdFor(Faculties::class);
-            $table->string('major_name');
+            $table->integer('major_id')->foreignIdFor(Majors::class);
             $table->boolean('isactive')->default(true);
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('majors');
+        Schema::dropIfExists('teacher_accounts');
     }
 };

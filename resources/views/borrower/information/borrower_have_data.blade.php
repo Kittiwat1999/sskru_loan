@@ -53,7 +53,7 @@
         <label for="faculty" class="col-md-12 col-form-label text-secondary">คณะ</label>
         <select id="faculty" name="faculty" class="form-select" aria-label="Default select example" required>
             @foreach($faculties as $faculty)
-                <option {{($borrower['faculty'] == $faculty->faculty_name) ? 'selected' : '' }} value="{{$faculty->faculty_name}}">{{$faculty->faculty_name}}</option>
+                <option {{($borrower['faculty_id'] == $faculty->id) ? 'selected' : '' }} value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
             @endforeach
         </select>
         @error('faculty')
@@ -64,7 +64,7 @@
         <label for="major" class="col-md-12 col-form-label text-secondary">สาขา</label>
         <select id="major" name="major" class="form-select" aria-label="Default select example" required>
             @foreach($majors as $major)
-                <option {{($borrower['major'] == $major->major_name) ? 'selected' : '' }} value="{{$major->major_name}}">{{$major->major_name}}</option>
+                <option {{($borrower['major_id'] == $major->id) ? 'selected' : '' }} value="{{$major->id}}">{{$major->major_name}}</option>
             @endforeach
         </select>
         @error('major')

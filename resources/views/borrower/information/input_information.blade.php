@@ -77,7 +77,7 @@
         <select id="faculty" name="faculty" class="form-select" aria-label="Default select example" required>
             <option disabled selected value="">เลือกคณะ</option>
             @foreach($faculties as $faculty)
-                <option value="{{$faculty->faculty_name}}">{{$faculty->faculty_name}}</option>
+                <option value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
             @endforeach
         </select>
         @error('faculty')
@@ -89,7 +89,7 @@
         <select id="major" name="major" class="form-select" aria-label="Default select example" required>
             <option disabled selected value="">เลือกสาขา</option>
             @foreach($majors as $major)
-                <option value="{{$major->major_name}}">{{$major->major_name}}</option>
+                <option value="{{$major->id}}">{{$major->major_name}}</option>
             @endforeach
         </select>
         @error('major')

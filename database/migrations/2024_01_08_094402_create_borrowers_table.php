@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\Address;
 use App\Models\Users;
 use App\Models\BorrowerApprearanceType;
+use App\Models\Faculties;
+use App\Models\Majors;
 
 return new class extends Migration
 {
@@ -23,8 +25,8 @@ return new class extends Migration
             $table->date('birthday');
             $table->string('citizen_id');
             $table->string('student_id');
-            $table->string('faculty');
-            $table->string('major');
+            $table->integer('faculty_id')->foreignIdFor(Faculties::class);
+            $table->integer('major_id')->foreignIdFor(Majors::class);
             $table->integer('grade');
             $table->string('gpa');
             $table->json('marital_status');

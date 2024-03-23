@@ -12,7 +12,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
-                                <th>เอกสาร</th>
+                                <th>หนังสือ</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                         </thead>
@@ -23,12 +23,12 @@
                                 <td>{{$doc_type->doctype_title}}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editDocTypeModal" ><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#deleteDocTypeModal" ><i class="bi bi-trash"></i></button>
+                                        <button type="button" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#editDocTypeModal{{$doc_type->id}}" ><i class="bi bi-pencil-fill"></i></button>
+                                        <button class="btn btn-light w-50" data-bs-toggle="modal" data-bs-target="#deleteDocTypeModal{{$doc_type->id}}" ><i class="bi bi-trash"></i></button>
                                     </div>
 
                                     <!-- edit Modal -->
-                                    <div class="modal fade" id="editDocTypeModal" tabindex="-1" aria-labelledby="editDocTypeModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="editDocTypeModal{{$doc_type->id}}" tabindex="-1" aria-labelledby="editDocTypeModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -36,25 +36,27 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form class="row" action="" method="post" id="addDocTypeForm">
+                                                    <form class="row" action="{{route('admin.manage.documents.editdoctype',['doc_type_id' => $doc_type->id])}}" method="post" id="editDocTypeForm{{$doc_type->id}}">
                                                         @csrf
                                                         <div class="col-12">
-                                                            <label for="doctype_title" class="form-label">หนังสือ</label>
-                                                            <input type="text" class="form-control" id="doctype_title" required>
+                                                            <label for="doctype_title" class="form-label">ชื่อหนังสือ</label>
+                                                            <input type="text" class="form-control need-custom-validate" id="doctype_title" name="doctype_title" value="{{$doc_type->doctype_title}}">
+                                                            <div class="invalid-feedback">
+                                                                กรุณากรอกชื่อหนังสือ
+                                                            </div>
                                                         </div>
-                                                        {{-- </form>  must be closed here --}}
+                                                        </form> 
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                                    <button type="button" class="btn btn-primary">บันทึก</button>
+                                                    <button type="button" class="btn btn-primary" onclick="doctypeFormSubmit('editDocTypeForm{{$doc_type->id}}')">บันทึก</button>
                                                 </div>
-                                                </form> <!-- but i'm lazy and here it easy to validate-->
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <!-- delete Modal -->
-                                    <div class="modal fade" id="deleteDocTypeModal" tabindex="-1" aria-labelledby="deleteDocTypeModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="deleteDocTypeModal{{$doc_type->id}}" tabindex="-1" aria-labelledby="deleteDocTypeModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -62,14 +64,16 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form class="row" action="" method="post" id="addDocTypeForm">
+                                                    <form class="row" action="{{route('admin.manage.documents.deletedoctype',['doc_type_id' => $doc_type->id])}}" method="post" id="deleteDocTypeForm">
                                                         @csrf
-                                                            <label for="" class="form-label">ต้องการลบเอกสารนี้หรือไม่</label>
+                                                        @method('DELETE')
+
+                                                            <label for="" class="form-label">ต้องการลบหนังสือ <span class="text-danger">{{$doc_type->doctype_title}}</span> หรือไม่</label>
                                                     {{-- </form>  must be closed here --}}
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
-                                                    <button type="button" class="btn btn-secondary">ลบ</button>
+                                                    <button type="sumbit" class="btn btn-light">ลบหนังสือ</button>
                                                 </div>
                                                 </form> <!-- but i'm lazy and here it easy to validate-->
                                             </div>
@@ -101,19 +105,22 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="row" action="" method="post" id="addDocTypeForm">
+                                    <form class="row" action="{{route('admin.manage.documents.storedoctype')}}" method="post" id="addDocTypeForm">
                                         @csrf
+                                        @method('PUT')
                                         <div class="col-12">
-                                            <label for="doctype_title" class="form-label">หนังสือ</label>
-                                            <input type="text" class="form-control" id="doctype_title" required>
+                                            <label for="doctype_title" class="form-label">ชื่อหนังสือ</label>
+                                            <input type="text" class="form-control need-custom-validate" id="doctype_title"  name="doctype_title">
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกชื่อหนังสือ
+                                            </div>
                                         </div>
-                                        {{-- </form>  must be closed here --}}
+                                    </form> 
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                    <button type="button" class="btn btn-primary">บันทึก</button>
+                                    <button type="button" class="btn btn-primary" onclick="doctypeFormSubmit('addDocTypeForm')">บันทึก</button>
                                 </div>
-                                </form> <!-- but i'm lazy and here it easy to validate-->
                             </div>
                         </div>
                     </div>
@@ -140,7 +147,7 @@
                             @foreach ($child_documents as $child_document)
                             <tr>
                                 <td class="text-center fw-bold">{{$loop->index+1}}</td>
-                                <td>{{$child_document->child_document_title}}</td>
+                                <td>{{ Str::limit($child_document->child_document_title, $limit = 35, $end = '...') }}</td>
                                 <td class="text-center">
                                     @if ($child_document->need_loan_balance)
                                         <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
@@ -148,18 +155,18 @@
                                 </td>
                                 <td class="text-center">
                                     @foreach ($child_document->everyone_files as $everyone_file)
-                                        <a class="btn btn-sm btn-outline-dark mb-2" href="{{route('admin.displayfile.page',['file_id' => $everyone_file->id ])}}">{{$everyone_file->description}}</a><br>
+                                        <a class="btn btn-sm btn-outline-dark mb-2 w-100" href="{{route('admin.displayfile.page',['file_id' => $everyone_file->id ])}}">{{ Str::limit($everyone_file->description, $limit = 25, $end = '...') }}</a><br>
                                     @endforeach
                                 </td>
                                 <td class="text-center">
                                     @if ($child_document->minors_file != null)
-                                        <a class="btn btn-sm btn-outline-dark" href="{{route('admin.displayfile.page',['file_id' => $child_document->minors_file->id])}}">ดูเอกสาร</a>
+                                        <a class="btn btn-sm btn-outline-dark w-100" href="{{route('admin.displayfile.page',['file_id' => $child_document->minors_file->id])}}">ดูเอกสาร</a>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <button class="btn btn-primary" onclick="openEditModal({{$child_document}})"><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-light" data-bs-toggle="modal"   data-bs-target="#deleteDocChildModal"><i class="bi bi-trash"></i></button>
+                                        <button class="btn btn-light" data-bs-toggle="modal"   data-bs-target="#deleteDocChildModal{{$child_document->id}}"><i class="bi bi-trash"></i></button>
                                     </div>
 
                                     <div>
@@ -175,31 +182,32 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                                        <button type="sumbit" class="btn btn-primary">บันทึก</button>
+                                                        <button type="button" class="btn btn-primary" onclick="submitEditChildDocForm('eidtChildDocForm')">บันทึก</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- delete Modal -->
-                                    <div class="modal fade" id="deleteDocChildModal" tabindex="-1" aria-labelledby="deleteDocChildModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="deleteDocChildModal{{$child_document->id}}" tabindex="-1" aria-labelledby="deleteDocChildModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteDocChildModalLabel">ลบหนังสือ</h5>
+                                                    <h5 class="modal-title" id="deleteDocChildModalLabel">ลบเอกสาร</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form class="row" action="" method="post" id="addDocTypeForm">
+                                                    <form class="row" action="{{route('admin.manage.documents.deletedocument',['child_document_id' => $child_document->id])}}" method="post" id="addDocTypeForm">
                                                         @csrf
-                                                            <label for="" class="form-label">ต้องการลบเอกสารนี้หรือไม่</label>
+                                                        @method('DELETE')
+                                                            <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$child_document->child_document_title}}</span> หรือไม่</label>
                                                     {{-- </form>  must be closed here --}}
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
-                                                    <button type="button" class="btn btn-secondary">ลบ</button>
+                                                    <button type="submit" class="btn btn-light">ลบเอกสาร</button>
                                                 </div>
-                                                </form> <!-- but i'm lazy and here it easy to validate-->
+                                                </form> <!-- but i'm lazy-->
                                             </div>
                                         </div>
                                     </div>
@@ -295,6 +303,33 @@
     </section>
 
     <script>
+
+        async function doctypeFormSubmit(formId){
+            var form_validated = await validateSubmitDocType(formId)
+
+            if(form_validated){
+                form = document.getElementById(formId);
+                form.submit();
+            }
+        }
+
+        async function validateSubmitDocType(formId){
+            var form = document.getElementById(formId);
+            var input = form.querySelector('input[type="text"].need-custom-validate');
+            var validate = true;
+
+            if(input.value == ''){
+                validate = false;
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+
+            return validate;
+        }
+
         var fileIndexAdd = 1;
         var fileIndexEdit = 1;
         
@@ -440,22 +475,21 @@
 
             editModalBody.innerHTML = '';
             editModalBody.innerHTML = `
-                <form class="row" action="" method="post" id="eidtChildDocForm" enctype="multipart/form-data">
+                <form class="row" action="{{route('admin.manage.documents.editdocument',['child_document_id' => 'PLACEHOLDER_CHILD_DOCUMENT_ID'])}}" method="post" id="eidtChildDocForm" enctype="multipart/form-data">
                     @csrf
                     <div id="delete-file-area">
                         
                     </div>
                     <div class="col-12 mb-3">
                         <label for="child_doc_title" class="form-label">เอกสาร</label>
-                        <input type="text" class="form-control need-custom-validate" id="child_doc_title" name="child_doc_title" value="${child_document.child_document_title}" required>
+                        <input type="text" class="form-control need-custom-validate" name="child_document_title" value="${child_document.child_document_title}" required>
                         <div class="invalid-feedback">
                             กรุณากรอกหัวข้อเอกสาร
                         </div>
                     </div>
                     <div class="col-12 mb-3">
                         <label for="need_laon_balance" class="form-label">ข้อมูลยอดเงินกู้</label>
-                        <select id="need_laon_balance" class="form-select" name="need_laon_balance" required>
-                            <option selected disabled value="" >เลือก...</option>
+                        <select class="form-select" name="need_loan_balance" required>
                             <option ${child_document.need_loan_balance ? 'selected' : '' } value="true">ต้องการ</option>
                             <option ${!child_document.need_loan_balance ? 'selected' : '' } value="false">ไม่ต้องการ</option>
                         </select>
@@ -468,10 +502,10 @@
                                 return `
                                     <div class="row mb-3" id="file-description${everyone_file.id}">
                                         <div class="col-9 text-start">
-                                            <input class="form-control need-custom-validate" value="${everyone_file.description}" name="edit_description[${everyone_file.id}]">
-                                        </div>
-                                        <div class="invalid-feedback">
-                                            กรุณากรอกคำอธิบายตัวอย่างเอกสาร
+                                            <input type="text" class="form-control need-custom-validate" value="${everyone_file.description}" name="edit_description[${everyone_file.id}]">
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกคำอธิบายตัวอย่างเอกสาร
+                                            </div>
                                         </div>
                                         <div class="col-3 text-end">
                                             <button type="button" id="removefile-button${everyone_file.id}" class="btn btn-light w-100" onclick="deleteFileEdit('${everyone_file.id}')">ลบไฟล์</button>
@@ -484,11 +518,17 @@
                     <div id="file_everyone_area_edit">
                         <div class="col-12 mb-3">
                             <label for="file_everyone" class="form-label">ตัวอย่างเอกสาร 1</label>
-                            <input type="file" class="form-control" id="file_everyone" name="file_everyone[]" required>
+                            <input type="file" class="form-control" name="file_everyone[]">
+                            <div id="file_everyone_invalid1" class="invalid-feedback">
+                                กรุณาเลือกไฟล์ตัวอย่างเอกสาร
+                            </div>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="description" class="form-label">คำอธิบายสำหรับตัวอย่างเอกสาร 1</label>
-                            <input type="text" class="form-control" id="description" name="description[]" required>
+                            <input type="text" class="form-control" name="description[]">
+                            <div id="description_invalid1" class="invalid-feedback">
+                                กรุณากรอกคำอธิบายตัวอย่างเอกสาร
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 mb-3">
@@ -503,6 +543,7 @@
                 </form> 
             
             `;
+            editModalBody.innerHTML = editModalBody.innerHTML.replace('PLACEHOLDER_CHILD_DOCUMENT_ID', child_document.id);
             editChildDocModal.show();
         }
 
@@ -515,12 +556,64 @@
             inputHidden.name = 'delete_file[]';
             inputHidden.value = fileId;
             deleteFileArea.appendChild(inputHidden);
-            console.log(fileLenght--);
+            fileLenght--;
+
             if(fileLenght == 0){
                 fileEditArea = document.getElementById('file-edit-area');
                 fileEditArea.remove();
+                var inputs = document.querySelectorAll('[name="description[]"]');
+                var file_input_elements = document.querySelectorAll('[name="file_everyone[]"]');
+                inputs.forEach((input) => {
+                    if(!input.classList.contains('need-custom-validate'))input.classList.add('need-custom-validate');
+                });
+
+                file_input_elements.forEach((file_input_element) => {
+                    if(!file_input_element.classList.contains('need-custom-validate'))file_input_element.classList.add('need-custom-validate');
+                });
+
             }
             
+        }
+
+        async function submitEditChildDocForm(formId){
+            var form_validated = await validateEditChildDocForm(formId)
+
+            if(form_validated){
+                form = document.getElementById(formId);
+                form.submit();
+            }
+        }
+
+        async function validateEditChildDocForm(formId){
+            var form = document.getElementById(formId);
+            var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
+            var file_input_elements = form.querySelectorAll('input[type="file"].need-custom-validate');
+            var validate = true;
+
+            inputs.forEach((input) => {
+                if(input.value == ''){
+                    validate = false;
+                    var invalid_element = input.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.add('d-inline');
+                }else{
+                    var invalid_element = input.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.remove('d-inline');
+                }
+
+            });
+
+            await file_input_elements.forEach((file_input) => {
+                if(file_input.value == ''){
+                    validate = false;
+                    var invalid_element = file_input.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.add('d-inline');
+                }else{
+                    var invalid_element = file_input.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.remove('d-inline');
+                }
+            });
+
+            return validate;
         }
     </script>
 @endsection

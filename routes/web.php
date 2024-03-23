@@ -62,7 +62,13 @@ Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->
 
 Route::get('/admin/manage_documents',[DocumentsController::class,'manage_documents'])->name('admin.manage.documents');
 Route::put('/admin/manage_documents/srore_document',[DocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
-Route::post('/admin/manage_documents/edit_document',[DocumentsController::class,'EditChildDoc'])->name('admin.manage.documents.editdocument');
+Route::post('/admin/manage_documents/edit_document/{child_document_id}',[DocumentsController::class,'EditChildDoc'])->name('admin.manage.documents.editdocument');
+Route::delete('/admin/manage_documents/delete_document/{child_document_id}',[DocumentsController::class,'DeleteChildDoc'])->name('admin.manage.documents.deletedocument');
+
+Route::put('/admin/manage_documents/store_doctype',[DocumentsController::class,'sotoreDocType'])->name('admin.manage.documents.storedoctype');
+Route::post('/admin/manage_documents/edit_doctype/{doc_type_id}',[DocumentsController::class,'editDocType'])->name('admin.manage.documents.editdoctype');
+Route::delete('/admin/manage_documents/delete_doctype/{doc_type_id}',[DocumentsController::class,'deleteDocType'])->name('admin.manage.documents.deletedoctype');
+
 
 Route::get('/admin/displayfile/{file_id}',[DocumentsController::class,'displayfile_page'])->name('admin.displayfile.page');
 Route::get('/admin/deisplayfile/file/{file_name}',[DocumentsController::class,'displayFile'])->name('admin.displayfile');
