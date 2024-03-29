@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 
-class DocumentsController extends Controller
+class AdminManageDocumentsController extends Controller
 {
     private $child_document_file_path = "app/public/child_document_files/";
 

@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-admin settime
+admin document scheduler
 @endsection
 @section('content')
 <section class="section dashboard">
@@ -28,9 +28,10 @@ admin settime
                     </div>
                     <div class="col-sm-9 mt-3">
                         <select id="select-document" name="select-document" class="form-select" aria-label="Default select example">
-                            <option selected>เลือกเอกสาร</option>
-                            <option value="1">แบบยืนยัน</option>
-                            <option value="2">แบบคำขอกู้ยืม(รายเก่า)</option>
+                            <option selected disabled value="" >เลือกเอกสาร...</option>
+                            @foreach($doc_types as $doc_type)
+                            <option value="{{$doc_type->id}}">{{$doc_type->doctype_title}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-sm-3 mt-3">

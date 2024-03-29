@@ -262,9 +262,9 @@
             </li>
             
             <li class="nav-item">
-                <a id="settime" class="nav-link collapsed" href="{{url('/admin/settime')}}">
+                <a id="document_scheduler" class="nav-link collapsed" href="{{url('/admin/document_scheduler')}}">
                     <i class="bi bi-calendar-date"></i>
-                    <span>กำหนดระยะเวลา</span>
+                    <span>กำหนดการส่งเอกสาร</span>
                 </a>
             </li><!-- End กำหนดระยะเวลา Page Nav -->
             
