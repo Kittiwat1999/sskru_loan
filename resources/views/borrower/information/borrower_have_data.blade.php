@@ -31,7 +31,12 @@
     </div>
     <div class="col-md-5">
         <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="borrower_birthday" name="birthday" value="{{$borrower['birthday']}}" onchange="ageCal('borrower')">
+        <div class="input-group date" id="">
+            <input type="text" name="birthday" id="borrower_birthday" class="form-control"
+                placeholder="วว/ดด/ปปปป" value="{{ \Carbon\Carbon::createFromFormat('Y-m-d', $borrower['birthday'])->format('d-m-Y')}}" onchange="ageCal('borrower')"/>
+            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+        </div>
+        {{-- <input type="date" class="form-control" id="borrower_birthday" name="birthday" > --}}
     </div>
     <div class="col-md-3">
         <label for="age" class="form-label text-secondary">อายุ</label>
@@ -317,7 +322,12 @@
     </div>
     <div class="col-md-5">
         <label for="parent1_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" required onchange="ageCal('parent1')" value="{{$parent1['birthday']}}">
+        <div class="input-group date" id="">
+            <input type="text" name="parent1_birthday" id="parent1_birthday" class="form-control"
+                placeholder="วว/ดด/ปปปป" onchange="ageCal('parent1')" value="{{ \Carbon\Carbon::createFromFormat('Y-m-d', $parent1['birthday'])->format('d-m-Y')}}" required/>
+            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+        </div>
+        {{-- <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" required > --}}
         @error('parent1_birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -474,7 +484,12 @@
         </div>
         <div class="col-md-5">
             <label for="parent2_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-            <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required onchange="ageCal('parent2')" value="{{$parent2['birthday']}}">
+            <div class="input-group date" id="">
+                <input type="text" name="parent2_birthday" id="parent2_birthday" class="form-control"
+                    placeholder="วว/ดด/ปปปป" onchange="ageCal('parent2')" value="{{ \Carbon\Carbon::createFromFormat('Y-m-d', $parent2['birthday'])->format('d-m-Y')}}" required/>
+                <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+            </div>
+            {{-- <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required > --}}
             @error('parent2_birthday')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -606,7 +621,12 @@
         </div>
         <div class="col-md-5">
             <label for="parent2_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-            <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required onchange="ageCal('parent2')">
+            <div class="input-group date" id="">
+                <input type="text" name="parent2_birthday" id="parent2_birthday" class="form-control"
+                    placeholder="วว/ดด/ปปปป" onchange="ageCal('parent2')" required/>
+                <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+            </div>
+            {{-- <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required onchange="ageCal('parent2')"> --}}
             @error('parent2_birthday')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -962,25 +982,20 @@
         var parent1_not_thai = document.getElementById('parent1_not_thai');
         const parent1_nationality = document.getElementById('parent1_nationality');
         if(parent1_not_thai.checked){
-            console.log('enabled')
             parent1_nationality.disabled = false;
             parent1_nationality.required = true;
         }else{
-            console.log('disabled')
             parent1_nationality.disabled = true;
             parent1_nationality.required = false;
         }
         
         //setup enable or disable
         var parent2_not_thai = document.getElementById('parent2_not_thai');
-        console.log(parent2_not_thai)
         const parent2_nationality = document.getElementById('parent2_nationality');
         if(parent2_not_thai.checked){
-            console.log('enabled')
             parent2_nationality.disabled = false;
             parent2_nationality.required = true;
         }else{
-            console.log('disabled')
             parent2_nationality.disabled = true;
             parent2_nationality.required = false;
         }
@@ -1007,7 +1022,6 @@
 
         const address_currently_with_borrower = document.getElementById('address_currently_with_borrower');
         if (address_currently_with_borrower.checked) {
-            console.log('checked')
             const address_input = document.querySelectorAll('.fake-class');
             address_input.forEach((e)=>{
                 e.disabled = true;
@@ -1020,6 +1034,29 @@
                 e.required = true;
             });
         }
+
+        $("#borrower_birthday").datetimepicker({
+            disabled:false,
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+        $("#parent1_birthday").datetimepicker({
+            disabled:false,
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+        $("#parent2_birthday").datetimepicker({
+            disabled:false,
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+        
 
         //if parent 2 don't have data
         parenat2NoData();
@@ -1074,27 +1111,32 @@
     //age cal with data form database
     function ageCalFromData(role){
 
-        var inputBirthday = document.getElementById(role+'_birthday');
-        // Get the input value
+        var inputBirthday = document.getElementById(role + '_birthday');
+        // Get the input value (assuming it's in the format "d-m-y")
         var birthDate = inputBirthday.value;
 
         // Parse the selected date
-        var selectedDate = new Date(birthDate);
+        var dateParts = birthDate.split('-');
+        var selectedDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // Month is 0-based
 
         // Calculate the current date
         var currentDate = new Date();
 
+        // Convert the current year to the Buddhist calendar (543 years ahead)
+        var buddhistCurrentYear = currentDate.getFullYear() + 543;
+
         // Calculate the age
-        var age = currentDate.getFullYear() - selectedDate.getFullYear();
+        var age = buddhistCurrentYear - (selectedDate.getFullYear());
 
         // Check if the birthday has already occurred this year
         if (currentDate.getMonth() < selectedDate.getMonth() || (currentDate.getMonth() === selectedDate.getMonth() && currentDate.getDate() < selectedDate.getDate())) {
             age--;
         }
-        if(age<0){
-            document.getElementById(role+'_age').value = "สวัสดีผู้มาจากอนาคต";
-        }else{
-            document.getElementById(role+'_age').value = age;
+
+        if (age < 0) {
+            document.getElementById(role + '_age').value = "สวัสดีผู้มาจากอนาคต";
+        } else {
+            document.getElementById(role + '_age').value = age;
         }
     }
 </script>

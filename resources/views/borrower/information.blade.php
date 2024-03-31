@@ -22,8 +22,12 @@
 
     </div>
     <!-- end card toggle -->
+
+@endsection
+@section('script')
     <script>
         //check if no data ckecked
+
     const faculty = document.getElementById('faculty');
     faculty.addEventListener('change', async function() {
 
@@ -78,29 +82,35 @@
         }
     }
 
-    function ageCal(role){
-
-        var inputBirthday = document.getElementById(role+'_birthday');
-        // Get the input value
+    function ageCal(role) {
+        var inputBirthday = document.getElementById(role + '_birthday');
+        // Get the input value (assuming it's in the format "d-m-y")
         var birthDate = inputBirthday.value;
 
         // Parse the selected date
-        var selectedDate = new Date(birthDate);
+        var dateParts = birthDate.split('-');
+        var selectedDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // Month is 0-based
 
         // Calculate the current date
         var currentDate = new Date();
 
+        // Convert the current year to the Buddhist calendar (543 years ahead)
+        var buddhistCurrentYear = currentDate.getFullYear() + 543;
+
         // Calculate the age
-        var age = currentDate.getFullYear() - selectedDate.getFullYear();
+        var age = buddhistCurrentYear - (selectedDate.getFullYear());
 
         // Check if the birthday has already occurred this year
         if (currentDate.getMonth() < selectedDate.getMonth() || (currentDate.getMonth() === selectedDate.getMonth() && currentDate.getDate() < selectedDate.getDate())) {
             age--;
         }
-        if(age<0){
-            document.getElementById(role+'_age').value = "สวัสดีผู้มาจากอนาคต";
-        }else{
-            document.getElementById(role+'_age').value = age;
+
+        console.log(age);
+
+        if (age < 0) {
+            document.getElementById(role + '_age').value = "สวัสดีผู้มาจากอนาคต";
+        } else {
+            document.getElementById(role + '_age').value = age;
         }
     }
 

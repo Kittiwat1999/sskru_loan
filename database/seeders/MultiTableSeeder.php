@@ -28,6 +28,7 @@ class MultiTableSeeder extends Seeder
          $this->seedBorrowerNecessities();
          $this->seedBorrowerProperties();
          $this->seedChildDocuments();
+         $this->seedConfig();
 
     }
 
@@ -115,7 +116,7 @@ class MultiTableSeeder extends Seeder
                 'user_id' => 1,
                 'address_id' => 1,
                 'borrower_appearance_id' => 1,
-                'birthday' => '2024-03-02',
+                'birthday' => '2542-04-26',
                 'citizen_id' => '1234567890123',
                 'student_id' => '1231231231',
                 'faculty_id' => 6,
@@ -160,7 +161,7 @@ class MultiTableSeeder extends Seeder
                 'prefix' => 'นาย',
                 'firstname' => 'ฉลอง',
                 'lastname' => 'เทียนเพ็ชร',
-                'birthday' => '2024-03-01',
+                'birthday' => '2505-01-20',
                 'citizen_id' => '23413421423',
                 'phone' => '+66931037881',
                 'occupation' => 'รับจ้าง',
@@ -179,7 +180,7 @@ class MultiTableSeeder extends Seeder
                 'prefix' => 'นางสาว',
                 'firstname' => 'จงรักษ์',
                 'lastname' => 'นาคยอง',
-                'birthday' => '2024-03-01',
+                'birthday' => '2521-08-20',
                 'citizen_id' => '1231513421423',
                 'phone' => '+66931037881',
                 'occupation' => 'รับจ้าง',
@@ -226,6 +227,12 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'สัญญากู้ยืม'],
             ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืมเกินหลักสูตร'],
+        ]);
+    }
+
+    private function seedConfig(){
+        DB::table('configs')->insert([
+            ['useful_activity_hour'=>36],
         ]);
     }
 }

@@ -300,9 +300,59 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">แก้ไขชั่วโมงกิจกรรมจิตอาสา</h5>
+                    <form class="row" action="{{route('admin.manage.documents.update.useful.hour')}}" method="post" id="useful_activity_hour_form">
+                        @csrf
+                        <label for="inputEmail3" class="col-md-2 col-form-label">ชั่วโมงกิจกรรมจิตอาสา</label>
+                        <div class="col-md-6">
+                            <input type="number" name="useful_activity_hour" id="" class="form-control need-custom-validate" value="{{$useful_activity_hour}}">
+                            <div id="description_invalid1" class="invalid-feedback">
+                                กรุณากรอกชั่วโมงกิจกรรมจิตอาสา
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="" class="col-form-label">ชั่วโมง</label>
+
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="w-100 btn btn-primary" onclick="useful_activity_hour_form_submit()">บันทึก</button>
+                        </div>
+                    </form>
+
+            </div>
+        </div>
     </section>
 
+@endsection
+
+@section('script')
     <script>
+        async function useful_activity_hour_form_submit(){
+            var form_validated = await validateSubmitUsefulActivityHour();
+            if(form_validated){
+                form = document.getElementById('useful_activity_hour_form');
+                form.submit();
+            }
+        }
+
+        function validateSubmitUsefulActivityHour(){
+            var form = document.getElementById('useful_activity_hour_form');
+            var input = form.querySelector('input[type="number"].need-custom-validate');
+            var validate = true;
+
+            if(input.value == ''){
+                validate = false;
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+            return validate;
+        }
+
 
         async function doctypeFormSubmit(formId){
             var form_validated = await validateSubmitDocType(formId)

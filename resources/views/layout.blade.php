@@ -53,6 +53,9 @@
     <link href="{{asset('assets/img/favicon.png')}}" rel="icon">
     <link href="{{asset('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
+
+
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +71,11 @@
     <!-- <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet"> -->
     <link href="{{asset('assets/vendor/DataTables/datatables.min.css')}}" rel="stylesheet">
 
+    <!-- jquery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+    <!-- jquery datetimepicker -->
+    <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.20/build/jquery.datetimepicker.min.css">
 
     <!-- Template Main CSS File -->
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
@@ -451,7 +459,7 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
     <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/vendor/chart.js/chart.umd.js')}}"></script>
@@ -461,6 +469,7 @@
     <script src="{{asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
     <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
     <!-- <script src="assets/vendor/simple-datatables/simple-datatables.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.20/build/jquery.datetimepicker.full.min.js"></script>
 
 
     <!-- Template Main JS File -->
@@ -482,6 +491,8 @@
         // console.log(path);         //log path with 
         activeSidebar(path);          // call active sidebar function
            
-    </script>
+
+        </script>
+        @yield('script')
 </body>
 </html>

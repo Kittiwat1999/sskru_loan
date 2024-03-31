@@ -63,14 +63,14 @@ Route::get('/admin/manage_documents',[AdminManageDocumentsController::class,'man
 Route::put('/admin/manage_documents/srore_document',[AdminManageDocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
 Route::post('/admin/manage_documents/edit_document/{child_document_id}',[AdminManageDocumentsController::class,'EditChildDoc'])->name('admin.manage.documents.editdocument');
 Route::delete('/admin/manage_documents/delete_document/{child_document_id}',[AdminManageDocumentsController::class,'DeleteChildDoc'])->name('admin.manage.documents.deletedocument');
-
 Route::put('/admin/manage_documents/store_doctype',[AdminManageDocumentsController::class,'sotoreDocType'])->name('admin.manage.documents.storedoctype');
 Route::post('/admin/manage_documents/edit_doctype/{doc_type_id}',[AdminManageDocumentsController::class,'editDocType'])->name('admin.manage.documents.editdoctype');
 Route::delete('/admin/manage_documents/delete_doctype/{doc_type_id}',[AdminManageDocumentsController::class,'deleteDocType'])->name('admin.manage.documents.deletedoctype');
+Route::post('/admin/manage_documents/update_useful_activity_hour',[AdminManageDocumentsController::class,'updateUsefulActivitytHour'])->name('admin.manage.documents.update.useful.hour');
 
 
-Route::get('/admin/displayfile/{file_id}',[AdminManageDocumentsController::class,'displayfile_page'])->name('admin.displayfile.page');
-Route::get('/admin/deisplayfile/file/{file_name}',[AdminManageDocumentsController::class,'displayFile'])->name('admin.displayfile');
+Route::get('/admin/manage_documents/displayfile/{file_id}',[AdminManageDocumentsController::class,'displayfile_page'])->name('admin.displayfile.page');
+Route::get('/admin/manage_documents/deisplayfile/file/{file_name}',[AdminManageDocumentsController::class,'displayFile'])->name('admin.displayfile');
 
 
 Route::get('/contract', function () {
@@ -170,8 +170,6 @@ Route::get('/faculty/new_loan_submission', function () {
     $privilage = "employee";
     return view('faculty_new_loan_submission',compact('privilage'));
 });
-
-
 
 Route::get('/faculty/new_loan_submission/to_edit/{id}',function ($id){
     $loan_request = array(

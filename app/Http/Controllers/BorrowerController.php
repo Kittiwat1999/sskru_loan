@@ -25,19 +25,11 @@ use Illuminate\Support\Facades\Response;
 class BorrowerController extends Controller
 {
 
-    public function testGetdata(){
-        // return Borrower::getBorrowerData();
-        $user_id = Session::get('user_id','1');
+    private function convert_date($inputDate){
+        $parsedDate = Carbon::createFromFormat('d-m-Y', $inputDate);
+        $isoDate = $parsedDate->format('Y-m-d');
 
-        // $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
-        //     $join->on('users.id', '=', 'borrowers.user_id')
-        //          ->where('borrowers.user_id', '=', $user_id);
-        // })
-        // ->first();
-        // dd($borrower);
-
-        $borrower = Borrower::with('users')->get();
-        dd($borrower);
+        return $isoDate;
 
     }
 
@@ -223,11 +215,11 @@ class BorrowerController extends Controller
 
         $borrower = new Borrower();
         $borrower['user_id'] = $user_id;
-        $borrower['birthday'] = $request->birthday;
+        $borrower['birthday'] = $this->convert_date($request->birthday);
         $borrower['citizen_id'] = $request->citizen_id;
         $borrower['student_id'] = $request->student_id;
-        $borrower['faculty'] = $request->faculty;
-        $borrower['major'] = $request->major;
+        $borrower['faculty_id'] = $request->faculty;
+        $borrower['major_id'] = $request->major;
         $borrower['grade'] = $request->grade;
         $borrower['gpa'] = $request->gpa;
         $borrower['phone'] = $request->phone;
@@ -250,7 +242,7 @@ class BorrowerController extends Controller
         $parent1['prefix'] = $request->parent1_prefix;
         $parent1['firstname'] = $request->parent1_firstname;
         $parent1['lastname'] = $request->parent1_lastname;
-        $parent1['birthday'] = $request->parent1_birthday;
+        $parent1['birthday'] = $this->convert_date($request->parent1_birthday);
         $parent1['citizen_id'] = $request->parent1_citizen_id;
         $parent1['phone'] = $request->parent1_phone;
         $parent1['occupation'] = $request->parent1_occupation;
@@ -312,7 +304,7 @@ class BorrowerController extends Controller
             $parent2['prefix'] = $request->parent2_prefix;
             $parent2['firstname'] = $request->parent2_firstname;
             $parent2['lastname'] = $request->parent2_lastname;
-            $parent2['birthday'] = $request->parent2_birthday;
+            $parent2['birthday'] = $this->convert_date($request->parent2_birthday);
             $parent2['citizen_id'] = $request->parent2_citizen_id;
             $parent2['phone'] = $request->parent2_phone;
             $parent2['occupation'] = $request->parent2_occupation;
@@ -506,7 +498,7 @@ class BorrowerController extends Controller
             'prefix'=>$request->parent1_prefix,
             'firstname'=>$request->parent1_firstname,
             'lastname'=>$request->parent1_lastname,
-            'birthday'=>$request->parent1_birthday,
+            'birthday'=>$this->convert_date($request->parent1_birthday),
             'citizen_id'=>$request->parent1_citizen_id,
             'phone'=>$request->parent1_phone,
             'occupation'=>$request->parent1_occupation,
@@ -580,7 +572,7 @@ class BorrowerController extends Controller
                'prefix'=>$request->parent2_prefix,
                'firstname'=>$request->parent2_firstname,
                'lastname'=>$request->parent2_lastname,
-               'birthday'=>$request->parent2_birthday,
+               'birthday'=>$this->convert_date($request->parent2_birthday),
                'citizen_id'=>$request->parent2_citizen_id,
                'phone'=>$request->parent2_phone,
                'occupation'=>$request->parent2_occupation,
@@ -621,11 +613,11 @@ class BorrowerController extends Controller
 
         $borrower = [
             'user_id'=>$user_id,
-            'birthday'=>$request->birthday,
+            'birthday'=>$this->convert_date($request->birthday),
             'citizen_id'=>$request->citizen_id,
             'student_id'=>$request->student_id,
-            'faculty'=>$request->faculty,
-            'major'=>$request->major,
+            'faculty_id'=>$request->faculty,
+            'major_id'=>$request->major,
             'grade'=>$request->grade,
             'gpa'=>$request->gpa,
             'borrower_appearance_id'=>$request->borrower_appearance,

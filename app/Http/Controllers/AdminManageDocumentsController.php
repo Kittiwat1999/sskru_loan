@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChildDocuments;
 use App\Models\ChildDocumentFiles;
+use App\Models\Config;
 use App\Models\DocTypes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -17,12 +18,13 @@ class AdminManageDocumentsController extends Controller
     public function manage_documents(Request $request){
         $doc_types = DocTypes::where('isactive',true)->get();
         $child_documents = ChildDocuments::where('isactive',true)->get();
+        $useful_activity_hour = Config::where('id',1)->value('useful_activity_hour');
 
         foreach($child_documents as $child_document){
             $child_document['everyone_files'] = ChildDocumentFiles::where('child_document_id',$child_document['id'])->where('file_for','everyone')->select('id','description')->get();
             $child_document['minors_file'] = ChildDocumentFiles::where('child_document_id',$child_document['id'])->where('file_for','minors')->select('id','description')->first();
         }
-        return view('admin.manage_documents',compact('doc_types','child_documents'));
+        return view('admin.manage_documents',compact('doc_types','child_documents','useful_activity_hour'));
     }
 
     public function storeDocument(Request $request){
@@ -303,5 +305,19 @@ class AdminManageDocumentsController extends Controller
     public function displayfile_page($file_id){
         $file = ChildDocumentFiles::find($file_id);
         return view('admin.display_file',compact('file'));
+    }
+
+    public function updateUsefulActivitytHour(Request $request){
+        $request->validate(
+            ['useful_activity_hour' => 'required'],
+            [
+                'doctype_title.required' => 'ต้องกรอกชัวโมงกิจกรรมจิตอาสา',
+            ]
+        );
+
+        Config::where('id',1)->update(['useful_activity_hour'=>$request->useful_activity_hour]);
+
+        return redirect()->back()->with(['success'=>'แก้ใขชั่วโมงกิจกรรมจิตอาสาเป็น '.$request->useful_activity_hour.' ชั่วโมง เรียบร้อยแล้ว']);
+
     }
 }
