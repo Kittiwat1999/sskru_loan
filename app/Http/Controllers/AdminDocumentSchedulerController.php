@@ -53,8 +53,8 @@ class AdminDocumentSchedulerController extends Controller
         if($request->description != null)$document['description'] = $request->description;
         $document->save();
 
-        foreach($request->child_documents as $child_document){
-            DocStructure::create(['child_document_id'=>$child_document,'document_id'=>$document['id']]);
+        foreach($request->child_documents as $child_document_id){
+            DocStructure::create(['child_document_id'=>$child_document_id,'document_id'=>$document['id']]);
         }
 
         return redirect()->back()->with(['success'=>'เพิ่มรายการเอกสารที่ผู้กู้ต้องส่งเรียบร้อยแล้ว']);
@@ -63,7 +63,49 @@ class AdminDocumentSchedulerController extends Controller
     public function getDocumentById($document_id){
         $document = Documents::find($document_id);
         $document['child_document_id'] = DocStructure::where('document_id',$document_id)->pluck('child_document_id')->toArray();
+        $document['doctype_title'] = DocTypes::where('id',$document['doctype_id'])->value('doctype_title');
 
         return json_encode($document);
+    }
+
+    public function postDocSchedulerData(AdminDocumentSchedulerRequest $request,$document_id){
+        $user_id = $request->session()->get('user_id','1');
+
+        $document = Documents::find($document_id);
+        $document['doctype_id'] = $request->doctype_id;
+        $document['last_access'] = $user_id;
+        $document['term'] = $request->term;
+        $document['year'] = $request->year;
+        $document['start_date'] = $this->convert_date($request->start_date);
+        $document['end_date'] = $this->convert_date($request->end_date);
+        $document['need_useful_activity'] = filter_var($request->need_useful_activity, FILTER_VALIDATE_BOOLEAN);
+        $document['need_teacher_comment'] = filter_var($request->need_teacher_comment, FILTER_VALIDATE_BOOLEAN);
+        if($request->description != null)$document['description'] = $request->description;
+        $document->save();
+
+        $child_document_inDB = DocStructure::where('document_id',$document_id)->pluck('child_document_id')->toArray();
+        $child_document_inREQ = $request->child_documents;
+
+        $child_document_for_delete = array_diff($child_document_inDB,$child_document_inREQ);
+        $child_document_for_add = array_diff($child_document_inREQ,$child_document_inDB);
+
+        foreach($child_document_for_delete as $child_document_id){
+            Docstructure::where('document_id',$document_id)->where('child_document_id',$child_document_id)->delete();
+        }
+
+        foreach($child_document_for_add as $child_document_id){
+            DocStructure::create(['child_document_id'=>$child_document_id,'document_id'=>$document_id]);
+        }
+
+        return redirect()->back()->with(['success'=>'แก้ใขข้อมูลหนังสือเรียบร้อยแล้ว']);
+    }
+
+    public function deleteDocSchedulerData($document_id){
+        $document = Documents::find($document_id);
+        $document['isactive'] = false;
+        $document->save();
+
+        return redirect()->back()->with(['success'=>'ลบข้อมูลหนังสือเรียบร้อยแล้ว']);
+
     }
 }

@@ -9,7 +9,7 @@ admin document scheduler
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">เพิ่มรายการส่งเอกสารสำหรับผู้กู้</h5>
-                <form class="row" action="{{route('admin.doc.scheduler.putdata')}}" method="post" id="document-scheduler-form">
+                <form class="row" action="{{route('admin.doc.scheduler.putdata')}}" method="post" id="document-scheduler-put-form">
                     @csrf
                     @method('PUT')
                     <div class="col-md-3">
@@ -70,7 +70,7 @@ admin document scheduler
                                 กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
                             </label>
                         </div>
-                        <div id="checkbox-invalid" class="invalid-feedback">
+                        <div id="checkbox-invalid-document-scheduler-put-form" class="invalid-feedback">
                             กรุณาเลือกเอกสาร
                         </div>
                     </div>
@@ -112,7 +112,7 @@ admin document scheduler
                     </div>
                     <div class="col-md-12 text-end mt-3">
                         <button type="reset" class="btn btn-secondary">ล้างฟอร์ม</button>
-                        <button type="button" class="w-25 btn btn-success" onclick="document_scheduler_submitform()">เพิ่ม</button>
+                        <button type="button" class="w-25 btn btn-success" onclick="document_scheduler_submitform('document-scheduler-put-form')">เพิ่ม</button>
                     </div>
                 </form>
             </div>
@@ -147,8 +147,12 @@ admin document scheduler
                                 <td>{{$document->last_access}}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary" onclick="fetchDocumnetById({{$document->id}})"><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-light"><i class="bi bi-trash"></i></button>
+                                        <button class="btn btn-primary" onclick="fetchDocumnetById({{$document->id}})">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#deleteDocumentModal-{{$document->id}}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                     </div>
 
                                     {{-- edit modal --}}
@@ -160,6 +164,34 @@ admin document scheduler
                                                 </div>
                                             </div>
                                           </div>
+                                    </div>
+
+                                    {{-- delete modal --}}
+                                    <div>
+                                        <div class="modal fade" id="deleteDocumentModal-{{$document->id}}" tabindex="-1" style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">ลบหนังสือ</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{route('admin.doc.scheduler.deletedata',['document_id' => $document->id])}}" method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$document->doctype_title}} {{$document->term}} / {{$document->year}}</span> หรือไม่</label>
+                                                            
+                                                        {{-- </form> form must close here --}}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary w-25" data-bs-dismiss="modal">ปิด</button>
+                                                        <button type="submit" class="btn btn-light">ลบ</button>
+                                                    </div>
+                                                </form> 
+                                                {{-- but i'm lazy and here to easy --}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -202,17 +234,17 @@ admin document scheduler
        
     })
 
-    async function document_scheduler_submitform(){
-        var form_validated = await validate_document_scheduler_form();
+    async function document_scheduler_submitform(formId){
+        var form_validated = await validate_document_scheduler_form(formId);
 
         if(form_validated){
-            const form = document.getElementById('document-scheduler-form');
+            const form = document.getElementById(formId);
             form.submit();
         }
     }
 
-    async function validate_document_scheduler_form(){
-        var form = document.getElementById('document-scheduler-form');
+    async function validate_document_scheduler_form(formId){
+        var form = document.getElementById(formId);
         var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
         var select = form.querySelector('select.need-custom-validate');
         var checkbox_inputs = form.querySelectorAll('input[type="checkbox"].need-custom-validate');
@@ -238,11 +270,11 @@ admin document scheduler
 
         if(checkbox_empty){
             validate = false;
-            var invalid_checkbox = document.getElementById('checkbox-invalid');
+            var invalid_checkbox = document.getElementById('checkbox-invalid-'+formId);
             invalid_checkbox.classList.add('d-inline');
 
         }else{
-            var invalid_checkbox = document.getElementById('checkbox-invalid');
+            var invalid_checkbox = document.getElementById('checkbox-invalid-'+formId);
             invalid_checkbox.classList.remove('d-inline');
         }
 
@@ -282,11 +314,11 @@ admin document scheduler
         modalcontent.innerHTML = '';
         modalcontent.innerHTML = `
             <div class="modal-header">
-                <h5 class="modal-title">Extra Large Modal</h5>
+                <h5 class="modal-title">แก้ใขเอกสาร <strong>${document_data.doctype_title} ${document_data.term}/${document_data.year}</strong></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" >
-                <form class="row" action="admin.doc.scheduler.postdata" method="post" id="document-scheduler-edit-form">
+                <form class="row" action="{{route('admin.doc.scheduler.postdata',['document_id' => 'PLACEHOLDER_DOCUMENT_ID'])}}" method="post" id="document-scheduler-post-form">
                     @csrf
                     <div class="col-md-3">
                         <label for="term" class="col-form-label text-secondary">เลือกปีการศึกษา</label>
@@ -345,7 +377,7 @@ admin document scheduler
                                 กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
                             </label>
                         </div>
-                        <div id="checkbox-invalid" class="invalid-feedback">
+                        <div id="checkbox-invalid-document-scheduler-post-form" class="invalid-feedback">
                             กรุณาเลือกเอกสาร
                         </div>
                     </div>
@@ -388,11 +420,12 @@ admin document scheduler
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button type="button" class="btn btn-primary w-25" onclick="document_scheduler_submitform('document-scheduler-post-form')" >บันทึก</button>
             </div>
         
             `;
+        modalcontent.innerHTML = modalcontent.innerHTML.replace('PLACEHOLDER_DOCUMENT_ID', document_data.id);
         modal.show();
 
         $('#edit_start_date').datetimepicker({
