@@ -5,127 +5,163 @@ admin document scheduler
 @section('content')
 <section class="section dashboard">
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">เพิ่มรายการส่งเอกสารสำหรับผู้กู้</h5>
-                <form class="row" action="#" method="post">
-                    <div class="col-sm-3">
-                        <label for="year" class="col-form-label text-secondary">เลือกปีการศึกษา</label>
+                <form class="row" action="{{route('admin.doc.scheduler.putdata')}}" method="post" id="document-scheduler-form">
+                    @csrf
+                    @method('PUT')
+                    <div class="col-md-3">
+                        <label for="term" class="col-form-label text-secondary">เลือกปีการศึกษา</label>
                     </div>
-                    <div class="col-sm-2">
-                        <input type="text" name="term" id="term" class="form-control" value="" placeholder="1">
+                    <div class="col-md-2">
+                        <input type="text" name="term" id="term" class="form-control need-custom-validate">
+                        <div class="invalid-feedback">
+                            กรุณากรอกภาคเรียน
+                        </div>
                     </div>
-                    <div class="col-sm-1">
-                        <label for="term" class="col-form-label text-secondary">/</label>
+                    <div class="col-md-1">
+                        <label for="yaer" class="col-form-label text-secondary">/</label>
                     </div>
-                    <div class="col-sm-3">
-                        <input type="text" name="year" id="year" class="form-control" value="" placeholder="{{date('Y')+543}}">
+                    <div class="col-md-3">
+                        <input type="text" name="year" id="year" class="form-control need-custom-validate">
+                        <div class="invalid-feedback">
+                            กรุณากรอกปีการศึกษา
+                        </div>
                     </div>
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-3 mt-3">
-                        <label for="select-document" class="col-form-label text-secondary">เลือกหนังสือ</label>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3 mt-3">
+                        <label for="doctype_id" class="col-form-label text-secondary">เลือกหนังสือ</label>
                     </div>
-                    <div class="col-sm-9 mt-3">
-                        <select id="select-document" name="select-document" class="form-select" aria-label="Default select example">
+                    <div class="col-md-6 mt-3">
+                        <select id="doctype_id" name="doctype_id" class="form-select need-custom-validate" aria-label="Default select example">
                             <option selected disabled value="" >เลือกหนังสือ...</option>
                             @foreach($doc_types as $doc_type)
                             <option value="{{$doc_type->id}}">{{$doc_type->doctype_title}}</option>
                             @endforeach
                         </select>
+                        <div class="invalid-feedback">
+                            กรุณาเลือกหนังสือ
+                        </div>
                     </div>
-                    <div class="col-sm-3 mt-3">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3 mt-3">
                         <label for="start-date" class="col-form-label text-secondary">เลือกเอกสาร</label>
                     </div>
-                    <div class="col-sm-9 mt-3">
+                    <div class="col-md-9 mt-3">
                         @foreach($child_documents as $child_document)
                         <div class="form-check my-2">
-                            <input class="form-check-input" type="checkbox" id="document{{$loop->index+1}}" name="child_documents[]" value="{{$child_document->id}}">
                             <label class="form-check-label" for="document">
                                 {{$child_document->child_document_title}}
                             </label>
+                            <input class="form-check-input need-custom-validate" type="checkbox" id="document{{$loop->index+1}}" name="child_documents[]" value="{{$child_document->id}}">
                         </div>
                         @endforeach
                         <div class="form-check my-2">
-                            <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
-                            <label class="form-check-label" for="useful-act">
-                                กิจกรรมจิตอาสา
+                            <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true">
+                            <label class="form-check-label" for="teacher-comment">
+                                หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
                             </label>
                         </div>
-                    </div>
-                    <div class="col-sm-3 mt-3">
-                        <label for="start_date" class="col-form-label text-secondary">วันที่เริมต้น</label>
-                    </div>
-                    <div class="col-sm-9 mt-3">
-                        <div class="input-group date" id="">
-                            <input type="text" name="start_date" id="start_date" class="form-control"
-                                placeholder="วว/ดด/ปปปป" required />
-                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
+                            <label class="form-check-label" for="useful-act">
+                                กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
+                            </label>
+                        </div>
+                        <div id="checkbox-invalid" class="invalid-feedback">
+                            กรุณาเลือกเอกสาร
                         </div>
                     </div>
+                    <div class="col-sm-3 mt-3">
+                        <label for="start_date" class="col-form-label text-secondary">วันที่เริ่มต้น</label>
+                    </div>
+                    <div class="col-sm-5 mt-3">
+                        <div class="input-group date" id="">
+                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                            <input type="text" name="start_date" id="start_date" class="form-control need-custom-validate"
+                                placeholder="วว/ดด/ปปปป" required />
+                            <div class="invalid-feedback">
+                                กรุณากรอกวันที่เริ่มต้นการส่งเอกสาร
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
                     <div class="col-sm-3 mt-3">
                         <label for="end_date" class="col-form-label text-secondary">วันที่สิ้นสุด</label>
-                        
                     </div>
-                    <div class="col-sm-9 mt-3">
+                    <div class="col-sm-5 mt-3">
                         <div class="input-group date" id="">
-                            <input type="text" name="end_date" id="end_date" class="form-control"
-                                placeholder="วว/ดด/ปปปป" required />
                             <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                            <input type="text" name="end_date" id="end_date" class="form-control need-custom-validate"
+                                placeholder="วว/ดด/ปปปป" required />
+                            <div class="invalid-feedback">
+                                กรุณากรอกวันที่สิ้นสุดการส่งเอกสาร
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-4"></div>
                     <div class="col-sm-3 mt-3">
                         <label for="description" class="col-form-label text-secondary">คำอธิบาย</label>
-                        
                     </div>
                     <div class="col-sm-9 mt-3">
-                        <div class="input-group" id="description">
-                            <textarea class="form-control" name="" id="" cols="30" rows="5"></textarea>
+                        <div class="input-group mt-3" id="description">
+                            <textarea class="form-control need-custom-validate" name="description" id="" cols="30" rows="5"></textarea>
                         </div>
                     </div>
-                    <div class="text-end mt-3">
+                    <div class="col-md-12 text-end mt-3">
                         <button type="reset" class="btn btn-secondary">ล้างฟอร์ม</button>
-                        <button type="submit" class="btn btn-success">เพิ่ม</button>
+                        <button type="button" class="w-25 btn btn-success" onclick="document_scheduler_submitform()">เพิ่ม</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">รายการกำหนดการ</h5>
-                <?php 
-                $test_data = array(
-                    array('name'=>'แบบยืนยันการเบิกเงิน','start_date'=>date("Y/m/d"),'end_date'=>date("Y/m/d"),'creater'=>'แล้วแต่','term'=>'1/2566'),
-                    array('name'=>'แบบคำขอกู้ยืมรายเก่า','start_date'=>date("Y/m/d"),'end_date'=>date("Y/m/d"),'creater'=>'เธอ','term'=>'1/2566'),
-                    array('name'=>'แบบยืนยันการเบิกเงิน','start_date'=>date("Y/m/d"),'end_date'=>date("Y/m/d"),'creater'=>'น่ารัก','term'=>'2/2565'),
-                    array('name'=>'แบบคำขอกู้ยืมรายเก่า','start_date'=>date("Y/m/d"),'end_date'=>date("Y/m/d"),'creater'=>'ตามใจ','term'=>'2/2565')
-                );
-                $i=1;
-                ?>
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table datatable table-striped">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">เอกสาร</th>
-                            <th scope="col">วันที่เริ่ม</th>
-                            <th scope="col">วันที่สิ้นสุด</th>
+                            <th scope="col" class="text-center">วันที่เริ่ม</th>
+                            <th scope="col" class="text-center">วันที่สิ้นสุด</th>
                             <th scope="col">เพิ่มโดย</th>
+                            <th scope="col" class="text-center">แก้ใข / ลบ</th>
                         </tr>
                         </thead>
                         <tbody>
-                            @foreach($test_data as $list)
+                            @foreach($documents as $document)
                             <tr>
-                                <td>{{$i++}}</td>
+                                <td>{{$loop->index+1}}</td>
                                 <td>
-                                    <span>{{$list['name']}}</span><br>
-                                    <span class="text-secondary fw-light">{{$list['term']}}</span>
+                                    <span>{{$document->doctype_title}}</span><br>
+                                    <span class="text-secondary fw-light">{{$document->term}} / {{$document->year}}</span>
                                 </td>
-                                <td>{{$list['start_date']}}</td>
-                                <td>{{$list['end_date']}}</td>
-                                <td>{{$list['creater']}}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->start_date)->format('d-m-Y')}}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->end_date)->format('d-m-Y')}}</td>
+                                <td>{{$document->last_access}}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-primary" onclick="fetchDocumnetById({{$document->id}})"><i class="bi bi-pencil-fill"></i></button>
+                                        <button class="btn btn-light"><i class="bi bi-trash"></i></button>
+                                    </div>
+
+                                    {{-- edit modal --}}
+                                    <div>
+                                        <div class="modal fade" id="editDocumentModal" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                                                <div class="modal-content" id="editDocumentModalContent">
+                                                    
+                                                </div>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -141,6 +177,11 @@ admin document scheduler
 
 @section('script')
 <script>
+
+    var doc_types = {!! json_encode($doc_types) !!};
+    var child_documents = {!! json_encode($child_documents) !!};
+
+
     $(document).ready(function () {
         $.datetimepicker.setLocale('th'); 
   
@@ -157,6 +198,235 @@ admin document scheduler
             yearOffset: 543, 
             closeOnDateSelect: true 
         });
+
+       
     })
+
+    async function document_scheduler_submitform(){
+        var form_validated = await validate_document_scheduler_form();
+
+        if(form_validated){
+            const form = document.getElementById('document-scheduler-form');
+            form.submit();
+        }
+    }
+
+    async function validate_document_scheduler_form(){
+        var form = document.getElementById('document-scheduler-form');
+        var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
+        var select = form.querySelector('select.need-custom-validate');
+        var checkbox_inputs = form.querySelectorAll('input[type="checkbox"].need-custom-validate');
+        var validate = true;
+        
+        await inputs.forEach((input) => {
+            if(input.value == ''){
+                validate = false;
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+        });
+
+        var checkbox_empty = true;
+        await checkbox_inputs.forEach((checkbox_input) => {
+                    if(checkbox_input.checked){
+                        checkbox_empty = false;
+                    }
+                });
+
+        if(checkbox_empty){
+            validate = false;
+            var invalid_checkbox = document.getElementById('checkbox-invalid');
+            invalid_checkbox.classList.add('d-inline');
+
+        }else{
+            var invalid_checkbox = document.getElementById('checkbox-invalid');
+            invalid_checkbox.classList.remove('d-inline');
+        }
+
+        if(select.value == ''){
+            validate = false;
+            var select = select.nextElementSibling;
+            if(select)select.classList.add('d-inline');
+        }else{
+            var select = select.nextElementSibling;
+            if(select)select.classList.remove('d-inline');
+        }
+        return validate;
+    }
+
+    function fetchDocumnetById(document_id){
+        fetch(`/admin/document_scheduler/get/document/${document_id}`)
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Work with JSON data here
+            // console.log(data);
+            generateEditmodalContent(data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    function generateEditmodalContent(document_data){
+        const modal = new bootstrap.Modal(document.getElementById('editDocumentModal'));
+
+        const modalcontent = document.getElementById('editDocumentModalContent');
+        modalcontent.innerHTML = '';
+        modalcontent.innerHTML = `
+            <div class="modal-header">
+                <h5 class="modal-title">Extra Large Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" >
+                <form class="row" action="admin.doc.scheduler.postdata" method="post" id="document-scheduler-edit-form">
+                    @csrf
+                    <div class="col-md-3">
+                        <label for="term" class="col-form-label text-secondary">เลือกปีการศึกษา</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="term" id="term" class="form-control need-custom-validate" value="${document_data.term}">
+                        <div class="invalid-feedback">
+                            กรุณากรอกภาคเรียน
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label for="yaer" class="col-form-label text-secondary">/</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="year" id="year" class="form-control need-custom-validate" value="${document_data.year}">
+                        <div class="invalid-feedback">
+                            กรุณากรอกปีการศึกษา
+                        </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3 mt-3">
+                        <label for="doctype_id" class="col-form-label text-secondary">เลือกหนังสือ</label>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <select id="doctype_id" name="doctype_id" class="form-select need-custom-validate" aria-label="Default select example" value="${document_data.doctype_id}">
+                            ${doc_types.map((doc_type)=>{
+                                return `<option ${(document_data.doctype_id == doc_type.id) ? 'selected' : '' } value="${doc_type.id}">${doc_type.doctype_title}</option>`
+                            }).join('')}
+                        </select>
+                        <div class="invalid-feedback">
+                            กรุณาเลือกหนังสือ
+                        </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3 mt-3">
+                        <label for="start-date" class="col-form-label text-secondary">เลือกเอกสาร</label>
+                    </div>
+                    <div class="col-md-9 mt-3">
+                        ${child_documents.map((child_document)=>{
+                            return `<div class="form-check my-2">
+                                        <label class="form-check-label" for="document">
+                                            ${child_document.child_document_title}
+                                        </label>
+                                        <input class="form-check-input need-custom-validate" type="checkbox"  name="child_documents[]" value="${child_document.id}" ${(document_data.child_document_id.includes(child_document.id)) ? 'checked' : ''}>
+                                    </div>`
+                        }).join('')}
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true" ${(document_data.need_teacher_comment) ? 'checked' : ''}>
+                            <label class="form-check-label" for="teacher-comment">
+                                หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
+                            </label>
+                        </div>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true" ${(document_data.need_useful_activity) ? 'checked' : ''}>
+                            <label class="form-check-label" for="useful-act">
+                                กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
+                            </label>
+                        </div>
+                        <div id="checkbox-invalid" class="invalid-feedback">
+                            กรุณาเลือกเอกสาร
+                        </div>
+                    </div>
+                    <div class="col-sm-3 mt-3">
+                        <label for="start_date" class="col-form-label text-secondary">วันที่เริ่มต้น</label>
+                    </div>
+                    <div class="col-sm-5 mt-3">
+                        <div class="input-group date" id="">
+                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                            <input type="text" name="start_date" id="edit_start_date" class="form-control need-custom-validate"
+                                placeholder="วว/ดด/ปปปป" value="${formatDate(document_data.start_date)}" />
+                            <div class="invalid-feedback">
+                                กรุณากรอกวันที่เริ่มต้นการส่งเอกสาร
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-sm-3 mt-3">
+                        <label for="end_date" class="col-form-label text-secondary">วันที่สิ้นสุด</label>
+                    </div>
+                    <div class="col-sm-5 mt-3">
+                        <div class="input-group date" id="">
+                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                            <input type="text" name="end_date" id="edit_end_date" class="form-control need-custom-validate"
+                                placeholder="วว/ดด/ปปปป" value="${formatDate(document_data.end_date)}" />
+                            <div class="invalid-feedback">
+                                กรุณากรอกวันที่สิ้นสุดการส่งเอกสาร
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-sm-3 mt-3">
+                        <label for="description" class="col-form-label text-secondary">คำอธิบาย</label>
+                    </div>
+                    <div class="col-sm-9 mt-3">
+                        <div class="input-group mt-3" id="description">
+                            <textarea class="form-control need-custom-validate" name="description" id="" cols="30" rows="5">${document_data.description}</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        
+            `;
+        modal.show();
+
+        $('#edit_start_date').datetimepicker({
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true 
+        });
+
+        $('#edit_end_date').datetimepicker({
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true 
+        });
+    }
+
+    function formatDate(inputDate) {
+        // Parse the input date string into a Date object
+        const parts = inputDate.split("-");
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+        const date = new Date(year, month - 1, day); // Month is 0-indexed in JavaScript Date object
+
+        // Get the day, month, and year components from the Date object
+        const formattedDay = String(date.getDate()).padStart(2, "0"); // Ensure leading zero if necessary
+        const formattedMonth = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed, so add 1
+        const formattedYear = date.getFullYear();
+
+        // Construct the new date string in "dd-mm-YYYY" format
+        const formattedDate = `${formattedDay}-${formattedMonth}-${formattedYear}`;
+
+        return formattedDate;
+    }
 </script>
 @endsection

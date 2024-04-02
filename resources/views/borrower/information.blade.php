@@ -105,8 +105,6 @@
             age--;
         }
 
-        console.log(age);
-
         if (age < 0) {
             document.getElementById(role + '_age').value = "สวัสดีผู้มาจากอนาคต";
         } else {

@@ -19,11 +19,12 @@ return new class extends Migration
             $table->integer('last_access')->foreignIdFor(Users::class);
             $table->string('year');
             $table->string('term');
-            $table->boolean('need_useful_activity');
+            $table->boolean('need_useful_activity')->default(false);
+            $table->boolean('need_teacher_comment')->default(false);
             $table->date('start_date');
             $table->date('end_date');
-            $table->boolean('isactive');
-            $table->string('description');
+            $table->boolean('isactive')->default(true);
+            $table->string('description')->default('-');
             $table->timestamps();
         });
     }

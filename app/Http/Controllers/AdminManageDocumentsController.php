@@ -42,7 +42,7 @@ class AdminManageDocumentsController extends Controller
             'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
             'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
             'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
-            'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
+            'need_loan_balance.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
             'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการต้องเป็นข้อความ',
             'file_everyone.*.required' => 'กรุณาเลือกไฟล์ที่ต้องการ',
             'file_everyone.*.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',

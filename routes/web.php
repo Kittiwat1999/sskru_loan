@@ -48,6 +48,8 @@ Route::get('/admin/edit_informaion_request/to_edit/{id}', function ($id) {
 });
 
 Route::get('/admin/document_scheduler',[AdminDocumentSchedulerController::class, 'index']);
+Route::put('/admin/document_scheduler/putdata',[AdminDocumentSchedulerController::class, 'putDocSchedulerData'])->name('admin.doc.scheduler.putdata');
+Route::get('/admin/document_scheduler/get/document/{document_id}',[AdminDocumentSchedulerController::class, 'getDocumentById'])->name('admin.doc.scheduler.get.document');
 
 Route::get('/admin/manage_account',[UsersController::class,'admin_getUsersData'])->name('admin_manage_account');
 Route::get('/admin/manage_account/{select_privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');

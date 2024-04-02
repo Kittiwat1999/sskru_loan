@@ -332,7 +332,7 @@
         async function useful_activity_hour_form_submit(){
             var form_validated = await validateSubmitUsefulActivityHour();
             if(form_validated){
-                form = document.getElementById('useful_activity_hour_form');
+                const form = document.getElementById('useful_activity_hour_form');
                 form.submit();
             }
         }
@@ -358,7 +358,7 @@
             var form_validated = await validateSubmitDocType(formId)
 
             if(form_validated){
-                form = document.getElementById(formId);
+                const form = document.getElementById(formId);
                 form.submit();
             }
         }
@@ -380,8 +380,8 @@
             return validate;
         }
 
-        var fileIndexAdd = 1;
-        var fileIndexEdit = 1;
+        var fileIndexAdd = 1; //for add child document modal
+        var fileIndexEdit = 1; //for edit child document modal
         
         function addfile(formtype) {
             var file_everyone_area = document.getElementById('file_everyone_area_'+formtype);
@@ -467,7 +467,7 @@
             var form_validated = await validateAddChildDocForm(formId)
 
             if(form_validated){
-                form = document.getElementById(formId);
+                const form = document.getElementById(formId);
                 form.submit();
             }
         }
@@ -629,7 +629,7 @@
             var form_validated = await validateEditChildDocForm(formId)
 
             if(form_validated){
-                form = document.getElementById(formId);
+                const form = document.getElementById(formId);
                 form.submit();
             }
         }

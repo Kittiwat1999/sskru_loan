@@ -222,7 +222,6 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง'],
             ['child_document_title'=>'หนังสือรับรองรายได้ครอบครัว'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืม (กยศ. 101)'],
-            ['child_document_title'=>'หนังสือแสดงความเห็นอาจารย์ที่ปรึกษา'],
             ['child_document_title'=>'ใบรายงานผลการเรียน'],
             ['child_document_title'=>'สัญญากู้ยืม'],
             ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
