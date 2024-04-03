@@ -1,10 +1,11 @@
 <?php
 
-use App\Models\Comments;
-use App\Models\BorrowerDocuments;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
+use App\Models\Comments;
+use App\Models\BorrowerChildDocuments;
 
 return new class extends Migration
 {
@@ -13,10 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments_borrower_documnets', function (Blueprint $table) {
+        Schema::create('comments_borrower_child_documents', function (Blueprint $table) {
             $table->id();
             $table->integer('comment_id')->foreignIdFor(Comments::class);
-            $table->integer('borrower_ducument_id')->foreignIdFor(BorrowerDocuments::class);
+            $table->integer('borrower_ducument_id')->foreignIdFor(BorrowerChildDocuments::class);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments_borrower_documnets');
+        Schema::dropIfExists('comments_borrower_child_documents');
     }
 };

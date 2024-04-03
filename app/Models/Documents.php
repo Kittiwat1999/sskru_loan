@@ -12,11 +12,12 @@ class Documents extends Model
     public $timestamps = true;
 
     public function user(){
-        return $this->hasOne(Users::class);
+        return $this->belongsTo(Users::class);
     }
 
-    public function doc_structure(){
-        return $this->hasMany(DocStructure::class);
+
+    public function doc_type(){
+        return $this->belongsTo(DocTypes::class);
     }
 
 }

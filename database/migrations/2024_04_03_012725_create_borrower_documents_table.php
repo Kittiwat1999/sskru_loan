@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\ChildDocuments;
-use App\Models\Documents;
-use App\Models\BorrowerFiles;
-use App\Models\Users;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
+use App\Models\Borrower;
+use App\Models\Documents;
+
 
 return new class extends Migration
 {
@@ -18,11 +18,7 @@ return new class extends Migration
         Schema::create('borrower_documents', function (Blueprint $table) {
             $table->id();
             $table->integer('document_id')->foreignIdFor(Documents::class);
-            $table->integer('child_documnet_id')->foreignIdFor(ChildDocuments::class);
-            $table->integer('borrower_file_id')->foreignIdFor(BorrowerFiles::class);
-            $table->integer('checker_id')->foreignIdFor(Users::class)->nullable();
-            $table->integer('education_fee');
-            $table->integer('living_exprenses');
+            $table->integer('borrower_id')->foreignIdFor(Borrower::class);
             $table->string('status');
             $table->timestamps();
         });

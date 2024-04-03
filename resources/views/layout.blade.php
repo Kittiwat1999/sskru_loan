@@ -8,37 +8,72 @@
         @yield('title')
     </title>
     <style>
-
-        /* iframe {
-            width: 100%;
-            height:80rem;
+        .icon-46 {
+            color: #FAA4A4;
+            font-size: 300%; 
+        }
+        .button-46 {
+            position: relative;
+            width: 100%; /* Adjust as needed */
+            height: 100%;
+            background-color: #FFE7E7;
+            border:none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 0;
+            text-align: center;
+            text-decoration: none;
+            transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            white-space: nowrap;
         }
 
-        .text-progress-step{
-            font-size: 11px;
+        .button-46:active,
+        .button-46:hover,
+        .button-46:focus {
+        outline: 0;
         }
 
-        */
-        /* input[type="file"]::file-selector-button {
-        border-radius: 4px;
-        padding: 0 16px;
-        height: 40px;
-        cursor: pointer;
-        background-color: #dc3545;
-        color:#f8f9fa;
-        border: 1px solid rgba(0, 0, 0, 0.16);
-        box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
-        margin-right: 16px;
-        transition: background-color 200ms;
+        .icon-45 {
+            color: #31708F;
+            font-size: 300%; 
+        }
+        .button-45 {
+            position: relative;
+            width: 100%; /* Adjust as needed */
+            height: 100%;
+            background-color: #D9EDF7; /* Light blue background color */
+            border: 0.2rem solid #BCE8F1; /* Light blue border color */
+            /* border-radius: 12%; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 0;
+            text-align: center;
+            text-decoration: none;
+            transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            white-space: nowrap;
         }
 
-        input[type="file"]::file-selector-button:hover {
-        background-color: #dc3540;;
+        .button-45:active,
+        .button-45:hover,
+        .button-45:focus {
+        outline: 0;
         }
 
-        input[type="file"]::file-selector-button:active {
-        background-color: #dc3540;;
-        }  */
+        .card-menu:hover {
+            cursor: pointer;
+        }
     </style>
 
     <title>Dashboard - NiceAdmin Bootstrap Template</title>
@@ -95,141 +130,116 @@
     <nav class="header-nav ms-auto">
     <ul class="d-flex align-items-center">
 
-        <li class="nav-item d-block d-lg-none">
-            <a class="nav-link nav-icon search-bar-toggle " href="#">
-                <i class="bi bi-search"></i>
-            </a>
-        </li><!-- End Search Icon-->
+        <li class="nav-item dropdown pe-3">
 
-        <li class="nav-item dropdown">
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                <i class="bi bi-bell"></i>
+                <span class="badge bg-primary badge-number">4</span>
+            </a><!-- End Profile Iamge Icon -->
 
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span>
-        </a><!-- End Notification Icon -->
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                <li class="dropdown-header">
+                    <h6>Kevin Anderson</h6>
+                    <span>Web Designer</span>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-            You have 4 new notifications
-            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-            <hr class="dropdown-divider">
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <i class="bi bi-person"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li class="notification-item">
-            <i class="bi bi-exclamation-circle text-warning"></i>
-            <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-            </div>
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <i class="bi bi-gear"></i>
+                        <span>Account Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li>
-            <hr class="dropdown-divider">
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                        <i class="bi bi-question-circle"></i>
+                        <span>Need Help?</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li class="notification-item">
-            <i class="bi bi-x-circle text-danger"></i>
-            <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-            </div>
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </a>
+                </li>
 
-            <li>
-            <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-            <i class="bi bi-check-circle text-success"></i>
-            <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-            </div>
-            </li>
-
-            <li>
-            <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-            <i class="bi bi-info-circle text-primary"></i>
-            <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-            </div>
-            </li>
-
-            <li>
-            <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-            <a href="#">Show all notifications</a>
-            </li>
-
-        </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
+            </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
 
         <li class="nav-item dropdown pe-3">
 
-        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{asset('assets/img/profile-img.jpg')}}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-        </a><!-- End Profile Iamge Icon -->
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                <img src="{{asset('assets/img/profile-img.jpg')}}" alt="Profile" class="rounded-circle">
+                <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+            </a><!-- End Profile Iamge Icon -->
 
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-            <h6>Kevin Anderson</h6>
-            <span>Web Designer</span>
-            </li>
-            <li>
-            <hr class="dropdown-divider">
-            </li>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                <li class="dropdown-header">
+                    <h6>Kevin Anderson</h6>
+                    <span>Web Designer</span>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li>
-            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-            </a>
-            </li>
-            <li>
-            <hr class="dropdown-divider">
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <i class="bi bi-person"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li>
-            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-            </a>
-            </li>
-            <li>
-            <hr class="dropdown-divider">
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <i class="bi bi-gear"></i>
+                        <span>Account Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li>
-            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-            </a>
-            </li>
-            <li>
-            <hr class="dropdown-divider">
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                        <i class="bi bi-question-circle"></i>
+                        <span>Need Help?</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-            <li>
-            <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-            </a>
-            </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Sign Out</span>
+                    </a>
+                </li>
 
-        </ul><!-- End Profile Dropdown Items -->
+            </ul><!-- End Profile Dropdown Items -->
         </li><!-- End Profile Nav -->
 
     </ul>
@@ -237,7 +247,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "admin";//admin,borrower,faculty,teacher,employee
+        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -342,15 +352,22 @@
                 </a>
             </li><!-- End กรอกข้อมูลผู้กู้ Page Nav -->
 
-            <li class="nav-heading text-secondary">รายการเอกสารที่ส่ง</li>
+            <li class="nav-heading text-secondary">เอกสาร</li>
             <li class="nav-item">
                 <a id="index" class="nav-link collapsed" href="{{url('/borrower/index')}}">
-                <i class="bi bi-card-list"></i>
+                    <i class="bi bi-file-earmark-check"></i>
                 <span>เอกสารที่ส่งแล้ว</span>
                 </a>
             </li><!-- End เอกสารที่ส่งแล้ว Page Nav -->
-            <li class="nav-heading text-secondary">ยืนกู้</li>
+
             <li class="nav-item">
+                <a id="send_document" class="nav-link collapsed" href="{{url('/borrower/send_document')}}">
+                    <i class="bi bi-file-earmark-arrow-up"></i>
+                <span>ส่งเอกสาร</span>
+                </a>
+            </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
+            
+            {{-- <li class="nav-item">
                 <a id="new_loan_request" class="nav-link collapsed" href="{{url('/borrower/new_loan_request')}}">
                 <i class="bi bi-file-earmark-plus"></i>
                 <span>ยื่นกู้รายใหม่</span>
@@ -384,7 +401,8 @@
                 <i class="bi bi-file-check"></i>
                 <span>ส่งแบบยืนยัน</span>
                 </a>
-            </li><!-- End Login Page Nav -->
+            </li> --}}
+
             <li class="nav-heading text-secondary">ขอแก้ใขข้อมูล</li>
             <li class="nav-item">
                 <a id="edit_borrower_information" class="nav-link collapsed" href="{{url('/borrower/edit_borrower_information')}}">
@@ -480,18 +498,18 @@
 
         function activeSidebar(paths){
             path.forEach(paths => {
-                activeElemen = document.getElementById(paths);
-                if(activeElemen != null){
-                    activeElemen.className = 'nav-link '
+                activeElement = document.getElementById(paths);
+                if(activeElement != null){
+                    activeElement.className = 'nav-link '
+                    var firstChild = activeElement.firstElementChild;
+                    firstChild.className += '-fill';
                 }
             });
         }
         var path = window.location.pathname; //get path name
         path = path.split('/');             //split path with '/'
-        // console.log(path);         //log path with 
         activeSidebar(path);          // call active sidebar function
            
-
         </script>
         @yield('script')
 </body>

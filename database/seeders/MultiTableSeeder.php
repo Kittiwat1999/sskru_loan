@@ -29,6 +29,8 @@ class MultiTableSeeder extends Seeder
          $this->seedBorrowerProperties();
          $this->seedChildDocuments();
          $this->seedConfig();
+         $this->seedDocuments();
+         $this->seedDocStructure();
 
     }
 
@@ -226,12 +228,25 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'สัญญากู้ยืม'],
             ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืมเกินหลักสูตร'],
+            ['child_document_title'=>'สำเนาบัตรประชาชนผผู้กู้'],
         ]);
     }
 
     private function seedConfig(){
         DB::table('configs')->insert([
             ['useful_activity_hour'=>36],
+        ]);
+    }
+    private function seedDocuments(){ 
+        DB::table('documents')->insert([
+            ['doctype_id'=>'2','last_access'=>'1','year'=>'2566','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'0','start_date'=>'2567-02-19','end_date'=>'2567-03-01'],
+        ]);
+    }
+
+    private function seedDocStructure(){
+        DB::table('doc_structures')->insert([
+            ['document_id'=>'1','child_document_id'=>'9'],
+            ['document_id'=>'1','child_document_id'=>'5'],
         ]);
     }
 }

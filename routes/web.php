@@ -6,6 +6,8 @@ use App\Http\Controllers\BorrowerController;
 use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\OldLoanRequestController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
+use App\Http\Controllers\SendDocumentController;
+
 use App\Models\OldLoanRequest;
 
 /*
@@ -229,7 +231,6 @@ Route::get('/borrower/major_by_faculty/{faculty}',[BorrowerController::class,'ge
 Route::get('/borrower/information/marital_img/{file_path}',[BorrowerController::class,'displayFile'])->name('marital.status.file');
 
 
-
 Route::post('/store_information',[BorrowerController::class,'storeInformation']);
 
 Route::post('/borrower/edit_data',[BorrowerController::class,'borrowerEditdata']);
@@ -301,8 +302,7 @@ Route::get('/login_teacher',function () {
     return view('/login_teacher');
 });
 
-Route::get('/menu', function () {
-    return view('/menu');
-});
+Route::get('borrower/send_document',[SendDocumentController::class,'index']);
+Route::get('borrower/send_document/{document_id}',[SendDocumentController::class,'sendDocument'])->name('borrower.send_document.id');
 
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
