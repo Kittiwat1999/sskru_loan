@@ -40,6 +40,6 @@ class SendDocumentController extends Controller
             ->where('doc_structures.document_id',$document_id)
             ->get();
 
-        return view('borrower.send_document',compact('document','child_documents'));
+        return view('borrower.upload_document',compact('document','child_documents'));
     }
 }

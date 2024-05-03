@@ -1,0 +1,11 @@
+@extends('layout')
+@section('title')
+ดาวน์โหลดเอกสาร
+@endsection
+@section('content')
+content
+@endsection
+@section('script')
+<script>
+</script>
+@endsection

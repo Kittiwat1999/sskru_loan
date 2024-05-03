@@ -7,7 +7,7 @@ use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\OldLoanRequestController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\SendDocumentController;
-
+use App\Http\Controllers\DownloadDocumentController;
 use App\Models\OldLoanRequest;
 
 /*
@@ -236,52 +236,6 @@ Route::post('/store_information',[BorrowerController::class,'storeInformation'])
 Route::post('/borrower/edit_data',[BorrowerController::class,'borrowerEditdata']);
 
 
-Route::get('/borrower/new_loan_request', function () {
-    //เปลี่ยนค่าตรงนี้เพื่อไปยังหน้าต่างๆของการยื่นกู้
-    $page = "download";  //"document","samary","success","download"
-    return view('/borrower/new_loan_request',compact('page'));
-});
-
-
-
-Route::get('/borrower/send_contract',function () {
-    return view('/borrower/send_contract');
-});
-
-Route::get('/borrower/loan_over_course',function () {
-    return view('/borrower/loan_over_course');
-});
-
-Route::get('/borrower/send_confirmation_form',function () {
-    return view('/borrower/send_confirmation_form');
-});
-
-Route::get('/borrower/loan_request',[OldLoanRequestController::class,'index'])->name('old.loanrequest');
-
-Route::get('/borrower/loan_request/upload/{doc_id}',[OldLoanRequestController::class,'upload_page']);
-
-Route::get('/borrower/loan_request/edit/{doc_id}',[OldLoanRequestController::class,'edit_page']);
-
-Route::post('borrower/create_oldloan_doc',[OldLoanRequestController::class,'create_doc'])->name('add.oldloan.request');
-
-Route::post('borrower/delete_oldloan_doc',[OldLoanRequestController::class,'delete_loanrequest_doc'])->name('delete.oldloan.request');
-
-Route::get('/borrower/getActivity/{id}',[OldLoanRequestController::class,'get_activity_by_id']);
-
-Route::get('/borrower/show_actv_file/{filePath}',[OldLoanRequestController::class,'show_actv_file']);
-
-Route::post('/store_activities',[OldLoanRequestController::class,'store_activits'])->name('store.activities');
-
-Route::post('/borrower/edit_activity',[OldLoanRequestController::class,'edit_activity'])->name('edit.activity');
-
-Route::post('/borrower/delete_activity',[OldLoanRequestController::class,'delete_activity'])->name('delete.activity');
-
-Route::post('/borrower/store_citizencardfile',[OldLoanRequestController::class,'store_citizencardfile'])->name('store.citizencardfile');
-
-Route::post('/borrower/store_gpafile',[OldLoanRequestController::class,'store_gpafile'])->name('store.gpafile');
-
-Route::post('/borrower/loan_request/send_loanrequest_doc',[OldLoanRequestController::class,'send_loanrequest_doc'])->name('send.loanrequest.doc');
-
 Route::get('/borrower/edit_borrower_information',function () {
     return view('/borrower/edit_borrower_information');
 });
@@ -302,7 +256,8 @@ Route::get('/login_teacher',function () {
     return view('/login_teacher');
 });
 
-Route::get('borrower/send_document',[SendDocumentController::class,'index']);
-Route::get('borrower/send_document/{document_id}',[SendDocumentController::class,'sendDocument'])->name('borrower.send_document.id');
+Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
+Route::get('/borrower/upload_document/{document_id}',[SendDocumentController::class,'sendDocument'])->name('borrower.upload_document.id');
 
+Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);

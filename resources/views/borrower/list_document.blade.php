@@ -39,7 +39,7 @@
                 </div>
               </div>
             </div>
-            <a href="{{route('borrower.send_document.id',['document_id'=>$document->id])}}" id="a-{{$document->id}}" class="d-none"></a>
+            <a href="{{route('borrower.upload_document.id',['document_id'=>$document->id])}}" id="a-{{$document->id}}" class="d-none"></a>
           @endforeach
         </div>
     </section>

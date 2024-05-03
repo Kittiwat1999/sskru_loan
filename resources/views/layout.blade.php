@@ -247,7 +247,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
+        $privilage = "admin";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -361,21 +361,21 @@
             </li><!-- End เอกสารที่ส่งแล้ว Page Nav -->
 
             <li class="nav-item">
-                <a id="send_document" class="nav-link collapsed" href="{{url('/borrower/send_document')}}">
+                <a id="upload_document" class="nav-link collapsed" href="{{url('/borrower/upload_document')}}">
                     <i class="bi bi-file-earmark-arrow-up"></i>
                 <span>ส่งเอกสาร</span>
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
             
-            {{-- <li class="nav-item">
-                <a id="new_loan_request" class="nav-link collapsed" href="{{url('/borrower/new_loan_request')}}">
-                <i class="bi bi-file-earmark-plus"></i>
-                <span>ยื่นกู้รายใหม่</span>
+            <li class="nav-item">
+                <a id="download_document" class="nav-link collapsed" href="{{url('/borrower/download_document')}}">
+                <i class="bi bi-file-earmark-arrow-down"></i>
+                <span>ดาวน์โหลดเอกสาร</span>
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
             
             
-            <li class="nav-item">
+            {{--<li class="nav-item">
                 <a id="loan_request" class="nav-link collapsed" href="{{url('/borrower/loan_request')}}">
                     <i class="bi bi-file-arrow-up"></i>
                     <span>ยื่นกู้รายเก่าเลื่อนชั้นปี</span>
