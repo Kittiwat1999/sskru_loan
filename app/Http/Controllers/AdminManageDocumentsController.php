@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChildDocuments;
-use App\Models\ChildDocumentFiles;
+use App\Models\ChildDocumentExampleFiles;
 use App\Models\Config;
 use App\Models\DocTypes;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Response;
 
 class AdminManageDocumentsController extends Controller
 {
-    private $child_document_file_path = "app/public/child_document_files/";
+    private $child_document_example_file_path = "app/public/child_document_example_files/";
 
     public function manage_documents(Request $request){
         $doc_types = DocTypes::where('isactive',true)->get();
@@ -21,8 +21,8 @@ class AdminManageDocumentsController extends Controller
         $useful_activity_hour = Config::where('id',1)->value('useful_activity_hour');
 
         foreach($child_documents as $child_document){
-            $child_document['everyone_files'] = ChildDocumentFiles::where('child_document_id',$child_document['id'])->where('file_for','everyone')->select('id','description')->get();
-            $child_document['minors_file'] = ChildDocumentFiles::where('child_document_id',$child_document['id'])->where('file_for','minors')->select('id','description')->first();
+            $child_document['everyone_files'] = ChildDocumentExampleFiles::where('child_document_id',$child_document['id'])->where('file_for','everyone')->select('id','description')->get();
+            $child_document['minors_file'] = ChildDocumentExampleFiles::where('child_document_id',$child_document['id'])->where('file_for','minors')->select('id','description')->first();
         }
         return view('admin.manage_documents',compact('doc_types','child_documents','useful_activity_hour'));
     }
@@ -71,15 +71,15 @@ class AdminManageDocumentsController extends Controller
 
         for($i = 0; $i < count($file_everyone); $i++){
             $file_name = $this->storeFile($file_everyone[$i]);
-            $child_document_file = new ChildDocumentFiles();
+            $child_document_file = new ChildDocumentExampleFiles();
             $child_document_file['child_document_id'] = $child_document['id'];
             $child_document_file['description'] = $file_everyone_description[$i];
             $child_document_file['file_for'] = 'everyone';
             $child_document_file['original_name'] = $file_everyone[$i]->getClientOriginalName();
-            $child_document_file['file_path'] = $this->child_document_file_path;
+            $child_document_file['file_path'] = $this->child_document_example_file_path;
             $child_document_file['file_name'] = $file_name;
             $child_document_file['file_type'] = last(explode('.', $file_name));
-            $child_document_file['full_path'] = $this->child_document_file_path.$file_name;
+            $child_document_file['full_path'] = $this->child_document_example_file_path.$file_name;
             $child_document_file['upload_date'] = date('Y-m-d');
             $child_document_file->save();
             
@@ -88,15 +88,15 @@ class AdminManageDocumentsController extends Controller
         if($request->hasFile('file_minors')){
             $file_minors = $request->file('file_minors');
             $file_name = $this->storeFile($file_minors);
-            $child_document_file = new ChildDocumentFiles();
+            $child_document_file = new ChildDocumentExampleFiles();
             $child_document_file['child_document_id'] = $child_document['id'];
             $child_document_file['description'] = 'ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี';
             $child_document_file['original_name'] = $file_minors->getClientOriginalName();
             $child_document_file['file_for'] = 'minors';
-            $child_document_file['file_path'] = $this->child_document_file_path;
+            $child_document_file['file_path'] = $this->child_document_example_file_path;
             $child_document_file['file_name'] = $file_name;
             $child_document_file['file_type'] = last(explode('.', $file_name));
-            $child_document_file['full_path'] = $this->child_document_file_path.$file_name;
+            $child_document_file['full_path'] = $this->child_document_example_file_path.$file_name;
             $child_document_file['upload_date'] = date('Y-m-d');
             $child_document_file->save();
             
@@ -137,13 +137,13 @@ class AdminManageDocumentsController extends Controller
 
         if(isset($request->edit_description)){
             foreach($request->edit_description as $id => $description){
-                ChildDocumentFiles::where('id',$id)->update(['description'=>$description]);
+                ChildDocumentExampleFiles::where('id',$id)->update(['description'=>$description]);
             }
         }
 
         if(isset($request->delete_file)){
             foreach($request->delete_file as $delete_file_id){
-                $child_document_file_to_delete = ChildDocumentFiles::where('id',$delete_file_id)->first();
+                $child_document_file_to_delete = ChildDocumentExampleFiles::where('id',$delete_file_id)->first();
                 $this->deleteFile($child_document_file_to_delete->file_name);
                 $child_document_file_to_delete->delete();
             }
@@ -174,15 +174,15 @@ class AdminManageDocumentsController extends Controller
 
             for($i = 0; $i < count($file_everyone); $i++){
                 $file_name = $this->storeFile($file_everyone[$i]);
-                $child_document_file = new ChildDocumentFiles();
+                $child_document_file = new ChildDocumentExampleFiles();
                 $child_document_file['child_document_id'] = $child_document_id;
                 $child_document_file['description'] = $file_everyone_description[$i];
                 $child_document_file['file_for'] = 'everyone';
                 $child_document_file['original_name'] = $file_everyone[$i]->getClientOriginalName();
-                $child_document_file['file_path'] = $this->child_document_file_path;
+                $child_document_file['file_path'] = $this->child_document_example_file_path;
                 $child_document_file['file_name'] = $file_name;
                 $child_document_file['file_type'] = last(explode('.', $file_name));
-                $child_document_file['full_path'] = $this->child_document_file_path.$file_name;
+                $child_document_file['full_path'] = $this->child_document_example_file_path.$file_name;
                 $child_document_file['upload_date'] = date('Y-m-d');
                 $child_document_file->save();
             }
@@ -191,15 +191,15 @@ class AdminManageDocumentsController extends Controller
         if($request->hasFile('file_minors')){
             $file_minors = $request->file('file_minors');
             $file_name = $this->storeFile($file_minors);
-            $child_document_file = new ChildDocumentFiles();
+            $child_document_file = new ChildDocumentExampleFiles();
             $child_document_file['child_document_id'] = $child_document_id;
             $child_document_file['description'] = 'ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี';
             $child_document_file['original_name'] = $file_minors->getClientOriginalName();
             $child_document_file['file_for'] = 'minors';
-            $child_document_file['file_path'] = $this->child_document_file_path;
+            $child_document_file['file_path'] = $this->child_document_example_file_path;
             $child_document_file['file_name'] = $file_name;
             $child_document_file['file_type'] = last(explode('.', $file_name));
-            $child_document_file['full_path'] = $this->child_document_file_path.$file_name;
+            $child_document_file['full_path'] = $this->child_document_example_file_path.$file_name;
             $child_document_file['upload_date'] = date('Y-m-d');
             $child_document_file->save();
             
@@ -264,7 +264,7 @@ class AdminManageDocumentsController extends Controller
 
     public function deleteFile($file)
     {
-        $path = storage_path($this->child_document_file_path.$file);
+        $path = storage_path($this->child_document_example_file_path.$file);
 
         if (File::exists($path)) {
             File::delete($path);
@@ -275,7 +275,7 @@ class AdminManageDocumentsController extends Controller
 
     private function storeFile($file,)
     {
-        $path = storage_path($this->child_document_file_path);
+        $path = storage_path($this->child_document_example_file_path);
 
         !file_exists($path) && mkdir($path, 0777, true);
 
@@ -287,7 +287,7 @@ class AdminManageDocumentsController extends Controller
 
     public function displayFile($file)
     {
-        $path = storage_path($this->child_document_file_path.$file);
+        $path = storage_path($this->child_document_example_file_path.$file);
 
         if (!File::exists($path)) {
             abort(404);
@@ -303,7 +303,7 @@ class AdminManageDocumentsController extends Controller
     }
 
     public function displayfile_page($file_id){
-        $file = ChildDocumentFiles::find($file_id);
+        $file = ChildDocumentExampleFiles::find($file_id);
         return view('admin.display_file',compact('file'));
     }
 
