@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('child_document_title');
             $table->boolean('isactive')->default(true);
             $table->boolean('need_loan_balance')->default(false);
+            $table->boolean('generate_file')->default(false);
+            $table->boolean('available_for_download')->default(false);
             $table->timestamps();
         });
     }

@@ -43,8 +43,8 @@
         <input disabled type="text" class="form-control" id="borrower_age" name="age">
     </div>
     <div class="col-md-5">
-        <label for="citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="citizen_id" name="citizen_id" maxlength="13" value="{{$borrower['citizen_id']}}">
+        <label for="citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก</label>
+        <input type="text" class="form-control" id="citizen_id"  name="citizen_id" oninput="formatThaiID(this)" maxlength="17" value="{{$borrower['citizen_id']}}" required >
     </div>
     <div class="col-md-7"></div>
 
@@ -169,7 +169,7 @@
     <div class="col-md-12">
         <div class="row">
             @foreach($properties as $property)
-                <div class="col-md-5">
+                <div class="col-md-5 my-2">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="properties[]" value="{{$property->id}}" {{ in_array($property->id, $borrower_properties) ? 'checked' : '' }} >
                         <label class="form-check-label" for="properties">
@@ -191,7 +191,7 @@
         <div class="row">
 
             @foreach ($nessessities as $nessessity)
-                <div class="col-md-5">
+                <div class="col-md-5 my-2">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="nessessities[]" value="{{$nessessity->id}}" {{ in_array($nessessity->id, $borrower_nessessities) ? 'checked' : '' }} >
                         <label class="form-check-label" for="necess1">
@@ -231,7 +231,7 @@
         @error('parent1_is_thai')
             <span class="text-danger">{{ $message }}</span>
         @enderror
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_is_thai" id="parent1_is_thai" value="ไทย" required onchange="enableInputCountry('parent1',this.value)" {{($parent1['nationality'] == 'ไทย') ? 'checked' : ''}}>
                 <label class="form-check-label" for="parent1_is_thai">
@@ -239,7 +239,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_is_thai" id="parent1_not_thai" value="parent1_not_thai" required onchange="enableInputCountry('parent1',this.value)" {{($parent1['nationality'] == 'ไทย') ? '' : 'checked'}}>
                 <label class="form-check-label" for="parent1_not_thai">
@@ -264,7 +264,7 @@
         @error('parent1_alive')
             <span class="text-danger">{{ $message }}</span>
         @enderror
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_alive" id="parent1_is_alive" value="true" required onchange="disabledMainParentRadio(true,'parent1')" {{($parent1['alive']) ? 'checked' : ''}}>
                 <label class="form-check-label" for="parent1_is_alive">
@@ -272,7 +272,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_alive" id="parent1_no_alive" value="false" required onchange="disabledMainParentRadio(false,'parent1')" {{($parent1['alive']) ? '' : 'checked'}}>
                 <label class="form-check-label" for="parent1_no_alive">
@@ -283,15 +283,41 @@
         
     </fieldset>
 
-    <div class="col-md-2">
-        <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
-        <input type="text" class="form-control" id="parent1_relational" name="parent1_relational" required value="{{$parent1['borrower_relational']}}">
-        @error('parent1_relational')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>
+    <label for="parent1_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+    <fieldset class="row mb-3">
+        <div class="col-md-12 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent1_relational_option"  value="บิดา" onchange="parentRelational('parent1',this.value)" {{($parent1['borrower_relational'] == 'บิดา') ? 'checked' : ''}} required>
+                <label class="form-check-label">
+                    บิดา
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent1_relational_option"  value="มารดา" onchange="parentRelational('parent1',this.value)" {{($parent1['borrower_relational'] == 'มารดา') ? 'checked' : ''}} required>
+                <label class="form-check-label">
+                    มารดา
+                </label>
+            </div>
+        </div>
+        <div class="col-md-1 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent1_relational_option" value="อื่นๆ" onchange="parentRelational('parent1',this.value)" {{($parent1['borrower_relational'] != 'มารดา' && $parent1['borrower_relational'] != 'บิดา') ? 'checked' : ''}} required>
+                <label class="form-check-label">
+                    อื่นๆ
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="parent1_cutiom_relational" onblur="setCustomRelational('parent1',this.value)" {{($parent1['borrower_relational'] != 'มารดา' || $parent1['borrower_relational'] != 'บิดา') ? '' : 'disabled'}} >
+            <input type="hidden" id="parent1_relational" name="parent1_relational" value="{{$parent1['borrower_relational']}}" required>
+        </div>
+    </fieldset>
+    @error('parent1_relational')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
 
-    <div class="col-md-10"></div>
 
     <div class="col-md-2">
         <label for="parent1_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -327,7 +353,6 @@
                 placeholder="วว/ดด/ปปปป" onchange="ageCal('parent1')" value="{{ \Carbon\Carbon::createFromFormat('Y-m-d', $parent1['birthday'])->format('d-m-Y')}}" required/>
             <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
         </div>
-        {{-- <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" required > --}}
         @error('parent1_birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -341,7 +366,9 @@
     </div>
     <div class="col-md-5">
         <label for="parent1_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="parent1_citizen_id" name="parent1_citizen_id" required value="{{$parent1['citizen_id']}}">
+        <div id="div_parent1_citizen_id">
+            <input type="text" class="form-control" id="parent1_citizen_id" name="parent1_citizen_id" maxlength="17" oninput="formatThaiID(this)" value="{{$parent1['citizen_id']}}" required>
+        </div>
         @error('parent1_citizen_id')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -361,8 +388,15 @@
         @enderror
     </div>
     <div class="col-md-5">
+        <label for="parent1_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
+        <input type="text" class="form-control" id="parent1_place_of_work" name="parent1_place_of_work" required value="{{$parent1['place_of_work']}}">
+        @error('parent1_place_of_work')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-md-5">
         <label for="parent1_income" class="form-label text-secondary">รายได้ต่อปี</label>
-        <input type="text" class="form-control" id="parent1_income" name="parent1_income" required value="{{$parent1['income']}}">
+        <input type="text" class="form-control" id="parent1_income" name="parent1_income" oninput="formatIncome(this)" placeholder="1,000,000" value="{{$parent1['income']}}" required>
         @error('parent1_income')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -445,15 +479,40 @@
             
         </fieldset>
 
-        <div class="col-md-2">
-            <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
-            <input type="text" class="form-control" id="parent2_relational" name="parent2_relational" required value="{{$parent2['borrower_relational']}}">
-            @error('parent2_relational')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div class="col-md-10"></div>
+        <label for="parent2_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+        <fieldset class="row mb-3">
+            <div class="col-md-12 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent2_relational_option"  value="บิดา" onchange="parentRelational('parent2',this.value)" {{($parent2['borrower_relational'] == 'บิดา') ? 'checked' : ''}} required>
+                    <label class="form-check-label">
+                        บิดา
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent2_relational_option"  value="มารดา" onchange="parentRelational('parent2',this.value)" {{($parent2['borrower_relational'] == 'มารดา') ? 'checked' : ''}} required>
+                    <label class="form-check-label">
+                        มารดา
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent2_relational_option" value="อื่นๆ" onchange="parentRelational('parent2',this.value)" {{($parent2['borrower_relational'] != 'มารดา' && $parent2['borrower_relational'] != 'บิดา') ? 'checked' : ''}} required>
+                    <label class="form-check-label">
+                        อื่นๆ
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="parent2_cutiom_relational" onblur="setCustomRelational('parent2',this.value)" {{($parent2['borrower_relational'] != 'มารดา' || $parent2['borrower_relational'] != 'บิดา') ? 'disabled' : ''}} >
+                <input type="hidden" id="parent2_relational" name="parent2_relational" value="{{$parent2['borrower_relational']}}" required>
+            </div>
+        </fieldset>
+        @error('parent2_relational')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
 
         <div class="col-md-2">
             <label for="parent2_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -503,7 +562,9 @@
         </div>
         <div class="col-md-5">
             <label for="parent2_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-            <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" required value="{{$parent2['citizen_id']}}">
+            <div id="div_parent2_citizen_id">
+                <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" maxlength="17" oninput="formatThaiID(this)" value="{{$parent2['citizen_id']}}" required>
+            </div>
             @error('parent2_citizen_id')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -523,8 +584,15 @@
             @enderror
         </div>
         <div class="col-md-5">
+            <label for="parent2_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
+            <input type="text" class="form-control" id="parent2_place_of_work" name="parent2_place_of_work" required value="{{$parent2['place_of_work']}}">
+            @error('parent2_place_of_work')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="col-md-5">
             <label for="parent2_income" class="form-label text-secondary">รายได้ต่อปี</label>
-            <input type="text" class="form-control" id="parent2_income" name="parent2_income" required value="{{$parent2['income']}}">
+            <input type="text" class="form-control" id="parent2_income" name="parent2_income" oninput="formatIncome(this)" placeholder="1,000,000" value="{{$parent1['income']}}" required>
             @error('parent2_income')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -581,15 +649,40 @@
             @enderror
         </fieldset>
 
-        <div class="col-md-2">
-            <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
-            <input type="text" class="form-control" id="parent2_relational" name="parent2_relational" required>
-            @error('parent2_relational')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div class="col-md-10"></div>
+        <label for="parent2_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+        <fieldset class="row mb-3">
+            <div class="col-md-12 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent2_relational_option"  value="บิดา" onchange="parentRelational('parent2',this.value)" required>
+                    <label class="form-check-label">
+                        บิดา
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent2_relational_option"  value="มารดา" onchange="parentRelational('parent2',this.value)" required>
+                    <label class="form-check-label">
+                        มารดา
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent2_relational_option" value="อื่นๆ" onchange="parentRelational('parent2',this.value)" required>
+                    <label class="form-check-label">
+                        อื่นๆ
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="parent2_cutiom_relational" onblur="setCustomRelational('parent2',this.value)" disabled >
+                <input type="hidden" id="parent2_relational" name="parent2_relational" required>
+            </div>
+        </fieldset>
+        @error('parent2_relational')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
 
         <div class="col-md-2">
             <label for="parent2_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -640,7 +733,9 @@
         </div>
         <div class="col-md-5">
             <label for="parent2_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-            <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" required>
+            <div id="div_parent2_citizen_id">
+                <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" maxlength="17" oninput="formatThaiID(this)" required>
+            </div>
             @error('parent2_citizen_id')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -660,8 +755,15 @@
             @enderror
         </div>
         <div class="col-md-5">
+            <label for="parent2_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
+            <input type="text" class="form-control" id="parent2_place_of_work" name="parent2_place_of_work" required value="{{$parent1['place_of_work']}}">
+            @error('parent2_place_of_work')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="col-md-5">
             <label for="parent2_income" class="form-label text-secondary">รายได้ต่อปี</label>
-            <input type="text" class="form-control" id="parent2_income" name="parent2_income" required>
+            <input type="text" class="form-control" id="parent2_income" name="parent2_income"  oninput="formatIncome(this)" placeholder="1,000,000" required>
             @error('parent2_income')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -1035,27 +1137,27 @@
             });
         }
 
-        $("#borrower_birthday").datetimepicker({
-            disabled:false,
-            format: 'd-m-Y', 
-            timepicker: false, 
-            yearOffset: 543, 
-            closeOnDateSelect: true,
-        });
-        $("#parent1_birthday").datetimepicker({
-            disabled:false,
-            format: 'd-m-Y', 
-            timepicker: false, 
-            yearOffset: 543, 
-            closeOnDateSelect: true,
-        });
-        $("#parent2_birthday").datetimepicker({
-            disabled:false,
-            format: 'd-m-Y', 
-            timepicker: false, 
-            yearOffset: 543, 
-            closeOnDateSelect: true,
-        });
+        // $("#borrower_birthday").datetimepicker({
+        //     disabled:false,
+        //     format: 'd-m-Y', 
+        //     timepicker: false, 
+        //     yearOffset: 543, 
+        //     closeOnDateSelect: true,
+        // });
+        // $("#parent1_birthday").datetimepicker({
+        //     disabled:false,
+        //     format: 'd-m-Y', 
+        //     timepicker: false, 
+        //     yearOffset: 543, 
+        //     closeOnDateSelect: true,
+        // });
+        // $("#parent2_birthday").datetimepicker({
+        //     disabled:false,
+        //     format: 'd-m-Y', 
+        //     timepicker: false, 
+        //     yearOffset: 543, 
+        //     closeOnDateSelect: true,
+        // });
         
 
         //if parent 2 don't have data

@@ -42,7 +42,11 @@
     </div>
     <div class="col-md-5">
         <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="borrower_birthday" name="birthday" required onchange="ageCal('borrower')">
+        <div class="input-group date" id="">
+            <input type="text" name="birthday" id="borrower_birthday" class="form-control"
+                placeholder="วว/ดด/ปปปป" onchange="ageCal('borrower')"/>
+            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+        </div>
         @error('birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -56,7 +60,7 @@
     </div>
     <div class="col-md-5">
         <label for="citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="citizen_id"  name="citizen_id" required>
+        <input type="text" class="form-control" id="citizen_id"  name="citizen_id" oninput="formatThaiID(this)" maxlength="17" required>
         @error('citizen_id')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -232,7 +236,7 @@
     <div class="col-md-12">
         <div class="row">
             @foreach($properties as $property)
-                <div class="col-md-5">
+                <div class="col-md-5 my-2">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="properties[]" value="{{$property->id}}">
                         <label class="form-check-label" for="prop1">
@@ -255,7 +259,7 @@
     <div class="col-md-12">
         <div class="row">
             @foreach ($nessessities as $nessessity)
-                <div class="col-md-5">
+                <div class="col-md-5 my-2">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="nessessities[]" value="{{$nessessity->id}}">
                         <label class="form-check-label" for="necess1">
@@ -267,7 +271,7 @@
 
             <div class="col-md-12"></div>
 
-            <div class="col-md-1">
+            <div class="col-md-1 my-2">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="morePropCheck" name="morePropCheck" value="true">
                     <label class="form-check-label" for="morePropCheck">
@@ -294,7 +298,7 @@
         @error('parent1_is_thai')
             <span class="text-danger">{{ $message }}</span>
         @enderror
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_is_thai" id="parent1_is_thai" value="ไทย" required onchange="enableInputCountry('parent1',this.value)">
                 <label class="form-check-label" for="parent1_is_thai">
@@ -302,7 +306,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_is_thai" id="parent1_not_thai" value="parent1_not_thai" required onchange="enableInputCountry('parent1',this.value)">
                 <label class="form-check-label" for="parent1_not_thai">
@@ -323,7 +327,7 @@
         @error('parent1_alive')
             <span class="text-danger">{{ $message }}</span>
         @enderror
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_alive" id="parent1_is_alive" value="true" required onchange="disabledMainParentRadio(true,'parent1')">
                 <label class="form-check-label" for="parent1_is_alive">
@@ -331,7 +335,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent1_alive" id="parent1_no_alive" value="false" required onchange="disabledMainParentRadio(false,'parent1')">
                 <label class="form-check-label" for="parent1_no_alive">
@@ -342,15 +346,41 @@
         
     </fieldset>
 
-    <div class="col-md-2">
-        <label for="firstname" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
-        <input type="text" class="form-control" id="parent1_relational" name="parent1_relational" required>
-        @error('parent1_relational')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>
+    <label for="parent1_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+    <fieldset class="row mb-3">
+        <div class="col-md-12 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent1_relational_option"  value="บิดา" onchange="parentRelational('parent1',this.value)" required>
+                <label class="form-check-label">
+                    บิดา
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent1_relational_option"  value="มารดา" onchange="parentRelational('parent1',this.value)" required>
+                <label class="form-check-label">
+                    มารดา
+                </label>
+            </div>
+        </div>
+        <div class="col-md-1 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent1_relational_option" value="อื่นๆ" onchange="parentRelational('parent1',this.value)" required>
+                <label class="form-check-label">
+                    อื่นๆ
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="parent1_cutiom_relational" onblur="setCustomRelational('parent1',this.value)" disabled>
+            <input type="hidden" id="parent1_relational" name="parent1_relational" required>
+        </div>
+    </fieldset>
+    @error('parent1_relational')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
 
-    <div class="col-md-10"></div>
 
     <div class="col-md-2">
         <label for="parent1_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -382,7 +412,11 @@
     </div>
     <div class="col-md-5">
         <label for="parent1_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="parent1_birthday" name="parent1_birthday" required onchange="ageCal('parent1')">
+        <div class="input-group date" id="">
+            <input type="text" name="parent1_birthday" id="parent1_birthday" class="form-control"
+                placeholder="วว/ดด/ปปปป" onchange="ageCal('parent1')" required/>
+            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+        </div>
         @error('parent1_birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -396,7 +430,9 @@
     </div>
     <div class="col-md-5">
         <label for="parent1_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="parent1_citizen_id" name="parent1_citizen_id" required>
+        <div id="div_parent1_citizen_id">
+            <input type="text" class="form-control" id="parent1_citizen_id" name="parent1_citizen_id" maxlength="17" oninput="formatThaiID(this)" required>
+        </div>
         @error('parent1_citizen_id')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -416,8 +452,15 @@
         @enderror
     </div>
     <div class="col-md-5">
+        <label for="parent1_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
+        <input type="text" class="form-control" id="parent1_place_of_work" name="parent1_place_of_work" required>
+        @error('parent1_place_of_work')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-md-5">
         <label for="parent1_income" class="form-label text-secondary">รายได้ต่อปี</label>
-        <input type="text" class="form-control" id="parent1_income" name="parent1_income" required>
+        <input type="text" class="form-control" id="parent1_income" name="parent1_income" oninput="formatIncome(this)" placeholder="1,000,000" required>
         @error('parent1_income')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -444,10 +487,7 @@
     </div>
     <div class="col-md-7"></div>
     <fieldset class="row mb-3 mt-4">
-        @error('parent2_is_thai')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent2_is_thai" id="parent2_is_thai" value="ไทย" required onchange="enableInputCountry('parent2',this.value)">
                 <label class="form-check-label" for="parent2_is_thai">
@@ -455,7 +495,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent2_is_thai" id="parent2_not_thai" value="parent2_not_thai" required onchange="enableInputCountry('parent2',this.value)">
                 <label class="form-check-label" for="parent2_not_thai">
@@ -472,7 +512,7 @@
     </fieldset>
     <fieldset class="row mb-3 mt-4" id="thaiperson">
         <!-- <legend class="form-label col-sm-2 pt-0" for>Radios</legend> -->
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent2_alive" id="parent2_is_alive" value="true" required onchange="disabledMainParentRadio(true,'parent2')">
                 <label class="form-check-label" for="parent2_is_alive">
@@ -480,7 +520,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 my-2">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="parent2_alive" id="parent2_no_alive" value="false" required onchange="disabledMainParentRadio(false,'parent2')">
                 <label class="form-check-label" for="parent2_no_alive">
@@ -493,15 +533,43 @@
         @enderror
     </fieldset>
 
-    <div class="col-md-2">
-        <label for="parent2_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
-        <input type="text" class="form-control" id="parent2_relational" name="parent2_relational" required>
-        @error('parent2_relational')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>
+    
+    <label for="parent2_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+    <fieldset class="row mb-3">
+        <div class="col-md-12 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent2_relational_option"  value="บิดา" onchange="parentRelational('parent2',this.value)" required>
+                <label class="form-check-label">
+                    บิดา
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent2_relational_option"  value="มารดา" onchange="parentRelational('parent2',this.value)" required>
+                <label class="form-check-label">
+                    มารดา
+                </label>
+            </div>
+        </div>
+        <div class="col-md-1 my-2">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="parent2_relational_option" value="อื่นๆ" onchange="parentRelational('parent2',this.value)" required>
+                <label class="form-check-label">
+                    อื่นๆ
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="parent2_cutiom_relational" onblur="setCustomRelational('parent2',this.value)" disabled>
+            <input type="hidden" id="parent2_relational" name="parent2_relational" required>
+        </div>
+    </fieldset>
+    @error('parent2_relational')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
 
-    <div class="col-md-10"></div>
+    {{-- <div class="col-md-10"></div> --}}
 
     <div class="col-md-2">
         <label for="parent2_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
@@ -533,7 +601,11 @@
     </div>
     <div class="col-md-5">
         <label for="parent2_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
-        <input type="date" class="form-control" id="parent2_birthday" name="parent2_birthday" required onchange="ageCal('parent2')">
+        <div class="input-group date" id="">
+            <input type="text" name="parent2_birthday" id="parent2_birthday" class="form-control"
+                placeholder="วว/ดด/ปปปป" onchange="ageCal('parent2')" required/>
+            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+        </div>
         @error('parent2_birthday')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -547,7 +619,9 @@
     </div>
     <div class="col-md-5">
         <label for="parent2_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
-        <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" required>
+        <div id="div_parent2_citizen_id">
+            <input type="text" class="form-control" id="parent2_citizen_id" name="parent2_citizen_id" maxlength="17" oninput="formatThaiID(this)" required>
+        </div>
         @error('parent2_citizen_id')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -567,8 +641,15 @@
         @enderror
     </div>
     <div class="col-md-5">
+        <label for="parent2_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
+        <input type="text" class="form-control" id="parent2_place_of_work" name="parent2_place_of_work" required>
+        @error('parent2_place_of_work')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-md-5">
         <label for="parent2_income" class="form-label text-secondary">รายได้ต่อปี</label>
-        <input type="text" class="form-control" id="parent2_income" name="parent2_income" required>
+        <input type="text" class="form-control" id="parent2_income" name="parent2_income" oninput="formatIncome(this)" placeholder="1,000,000" required>
         @error('parent2_income')
             <span class="text-danger">{{ $message }}</span>
         @enderror

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('citizen_id');
             $table->string('phone');
             $table->string('occupation');
+            $table->string('place_of_work');
             $table->string('income');
             $table->boolean('alive');
             $table->boolean('is_main_parent')->default(false);

@@ -247,7 +247,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "admin";//admin,borrower,faculty,teacher,employee
+        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -267,7 +267,7 @@
             <li class="nav-heading text-secondary">admin menu</li>
             <li class="nav-item">
                 <a id="manage_account" class="nav-link collapsed" href="{{url('/admin/manage_account')}}">
-                <i class="bi bi-person-square"></i>
+                <i class="bi bi-person"></i>
                 <span>จัดการบัญชีผู้ใช้</span>
                 </a>
             </li><!-- จัดการบัญชีผู้ใช้ Page Nav -->

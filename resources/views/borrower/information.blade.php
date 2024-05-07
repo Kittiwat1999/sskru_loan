@@ -220,11 +220,12 @@
     }
 
     function enableInputCountry(parentNo,isthai){
-        console.log(parentNo)
         if(isthai == `${parentNo}_not_thai`){
+            document.querySelector(`#div_${parentNo}_citizen_id`).innerHTML=`<input type="text" class="form-control" id="${parentNo}_citizen_id" name="${parentNo}_citizen_id" required>`
             document.querySelector(`#${parentNo}_nationality`).disabled = false;
             document.querySelector(`#${parentNo}_nationality`).required = true;
         }else{
+            document.querySelector(`#div_${parentNo}_citizen_id`).innerHTML=`<input type="text" class="form-control" id="${parentNo}_citizen_id" name="${parentNo}_citizen_id" maxlength="17" oninput="formatThaiID(this)" required>`
             document.querySelector(`#${parentNo}_nationality`).disabled = true;
             document.querySelector(`#${parentNo}_nationality`).required = false;
         }
@@ -294,6 +295,84 @@
             parent_element.checked = false;
         }
     }
+
+    function formatThaiID(input) {
+        if(input.name == 'citizen_id'){
+            const digits = input.value.replace(/\D/g, '');
+            const formatted = digits.replace(
+                /^(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})$/,
+                '$1-$2-$3-$4-$5'
+            );
+            input.value = formatted;
+        }else{
+            var parent = (input.name == 'parent1_citizen_id') ? "1" : "2";
+            var parent_is_thai = document.getElementById(`parent${parent}_is_thai`).checked;
+            console.log(parent);
+
+            if(parent_is_thai){
+                input.maxlength = '17';
+                const digits = input.value.replace(/\D/g, '');
+                const formatted = digits.replace(
+                    /^(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})$/,
+                    '$1-$2-$3-$4-$5'
+                );
+                input.value = formatted;
+            }
+        }
+    }
+
+    function formatIncome(input) {
+        // ลบตัวอักษรที่ไม่ใช่ตัวเลขและคอมมา
+        const digits = input.value.replace(/[^\d]/g, '');
+
+        // แบ่งกลุ่มตัวเลขเป็นสามหลักจากขวาไปซ้ายและใส่คอมมา
+        const formatted = digits.replace(
+            /\B(?=(\d{3})+(?!\d))/g,
+            ','
+        );
+
+        // อัพเดตค่าของ input
+        input.value = formatted;
+    }
+    function parentRelational(parent,relation){
+        if(relation == 'อื่นๆ'){
+            document.getElementById(`${parent}_cutiom_relational`).disabled = false;
+            document.getElementById(`${parent}_cutiom_relational`).required = true;
+            document.getElementById(`${parent}_relational`).value = '';
+        }else{
+            document.getElementById(`${parent}_cutiom_relational`).disabled = true;
+            document.getElementById(`${parent}_cutiom_relational`).required = false;
+            document.getElementById(`${parent}_relational`).value = relation;
+        }
+    }
+
+    function setCustomRelational(parent,customRelation){
+        document.getElementById(`${parent}_relational`).value = customRelation;
+    }
+
+    $("#borrower_birthday").datetimepicker({
+        disabled:false,
+        format: 'd-m-Y', 
+        timepicker: false, 
+        yearOffset: 543, 
+        closeOnDateSelect: true,
+    });
+    $("#parent1_birthday").datetimepicker({
+        disabled:false,
+        format: 'd-m-Y', 
+        timepicker: false, 
+        yearOffset: 543, 
+        closeOnDateSelect: true,
+    });
+    $("#parent2_birthday").datetimepicker({
+        disabled:false,
+        format: 'd-m-Y', 
+        timepicker: false, 
+        yearOffset: 543, 
+        closeOnDateSelect: true,
+    });
+
+    
     </script>
       
 @endsection

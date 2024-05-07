@@ -8,6 +8,7 @@ use App\Http\Controllers\OldLoanRequestController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
+use App\Http\Controllers\ExampleController;
 use App\Models\OldLoanRequest;
 
 /*
@@ -261,3 +262,5 @@ Route::get('/borrower/upload_document/{document_id}',[SendDocumentController::cl
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
+
+Route::get('/generate_rabrongraidai',[ExampleController::class,'generate_rabrongraidai']);

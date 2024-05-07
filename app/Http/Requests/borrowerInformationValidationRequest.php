@@ -27,7 +27,7 @@ class borrowerInformationValidationRequest extends FormRequest
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
             'birthday' => 'required|string|max:20',
-            'citizen_id' => 'required|string|max:13',
+            'citizen_id' => 'required|string|max:50',
             'student_id' => 'required|string|max:50',
             'faculty' => 'required|string|max:100',
             'major' => 'required|string|max:100',
@@ -60,6 +60,7 @@ class borrowerInformationValidationRequest extends FormRequest
             "parent1_citizen_id" => 'required|string|max:50',
             "parent1_phone" => 'required|string|max:50',
             "parent1_occupation" => 'required|string|max:100',
+            "parent1_place_of_work" => 'required|string|max:100',
             "parent1_income" => 'required|string|max:50',
 
             "parent2_is_thai" => 'nullable|string|max:50',
@@ -73,6 +74,7 @@ class borrowerInformationValidationRequest extends FormRequest
             "parent2_citizen_id" => 'nullable|string|max:50',
             "parent2_phone" => 'nullable|string|max:50',
             "parent2_occupation" => 'nullable|string|max:100',
+            "parent2_place_of_work" => 'nullable|string|max:100',
             "parent2_income" => 'nullable|string|max:50',
 
             "main_parent" => 'required|string|max:50',
@@ -169,6 +171,8 @@ class borrowerInformationValidationRequest extends FormRequest
             "parent1_phone.max" => 'เบอร์โทรศัพท์ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
             "parent1_occupation.required" => 'ต้องระบุอาชีพผู้ปกครอง',
             "parent1_occupation.max" => 'อาชีพผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+            "parent1_place_of_work.required" => 'ต้องระบุสถานที่ทำงานผู้ปกครอง',
+            "parent1_place_of_work.max" => 'สถานที่ทำงานผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
             "parent1_income.required" => 'ต้องระบุรายได้ผู้ปกครอง',
             "parent1_income.max" => 'รายได้ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
 
@@ -182,6 +186,7 @@ class borrowerInformationValidationRequest extends FormRequest
             "parent2_birthday.max" => 'วันเกิดผู้ปกครองไม่ถูกต้อง',
             "parent2_citizen_id.max" => 'เลขบัตรประชาชนผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
             "parent2_phone.max" => 'เบอร์โทรศัพท์ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+            "parent2_place_of_work.max" => 'สถานที่ทำงานผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
             "parent2_occupation.max" => 'อาชีพผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
             "parent2_income.max" => 'รายได้ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
 

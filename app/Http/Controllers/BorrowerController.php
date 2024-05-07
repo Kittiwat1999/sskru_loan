@@ -213,21 +213,6 @@ class BorrowerController extends Controller
             $parent_address_id = $parent_address['id'];
         }
 
-        $borrower = new Borrower();
-        $borrower['user_id'] = $user_id;
-        $borrower['birthday'] = $this->convert_date($request->birthday);
-        $borrower['citizen_id'] = $request->citizen_id;
-        $borrower['student_id'] = $request->student_id;
-        $borrower['faculty_id'] = $request->faculty;
-        $borrower['major_id'] = $request->major;
-        $borrower['grade'] = $request->grade;
-        $borrower['gpa'] = $request->gpa;
-        $borrower['phone'] = $request->phone;
-        $borrower['address_id'] = $borrower_address_id;
-        $borrower['borrower_appearance_id'] = $request->borrower_appearance;
-        $borrower['marital_status'] = json_encode($marital_status);
-        $borrower->save();
-
         //check nationality of parent 1
         if($request->parent1_is_thai == "ไทย"){
             $parent1_nationality = "ไทย";
@@ -236,7 +221,6 @@ class BorrowerController extends Controller
         }
 
         $parent1 = new Parents();
-        $parent1['borrower_id'] = $borrower['id'];
         $parent1['borrower_relational'] = $request->parent1_relational;
         $parent1['nationality'] = $parent1_nationality;
         $parent1['prefix'] = $request->parent1_prefix;
@@ -246,29 +230,28 @@ class BorrowerController extends Controller
         $parent1['citizen_id'] = $request->parent1_citizen_id;
         $parent1['phone'] = $request->parent1_phone;
         $parent1['occupation'] = $request->parent1_occupation;
+        $parent1['place_of_work'] = $request->parent1_place_of_work;
         $parent1['income'] = $request->parent1_income;
         $parent1['alive'] = filter_var($request->parent1_alive, FILTER_VALIDATE_BOOLEAN);
-        // $parent1->save()
-
 
         //parent 2 have data
         if(filter_var($request->parent2_no_data, FILTER_VALIDATE_BOOLEAN))
         {
             $parent2_have_data = false;
         }else{
-            
+
             $parent2_validator = Validator::make($request->all(), [
                "parent2_is_thai" => 'required|string|max:50',
-               
                "parent2_alive" => 'required|string|max:10',
                "parent2_relational" => 'required|string|max:20',
                "parent2_prefix" => 'required|string|max:50',
                "parent2_firstname" => 'required|string|max:100',
-               "lastname" => 'required|string|max:100',
+               "parent2_lastname" => 'required|string|max:100',
                "parent2_birthday" => 'required|string|max:20',
                "parent2_citizen_id" => 'required|string|max:50',
                "parent2_phone" => 'required|string|max:50',
                "parent2_occupation" => 'required|string|max:100',
+               "parent2_place_of_work" => 'required|string|max:100',
                "parent2_income" => 'required|string|max:50',
             ]);
             
@@ -298,7 +281,6 @@ class BorrowerController extends Controller
            }
 
             $parent2 = new Parents();
-            $parent2['borrower_id'] = $borrower['id'];
             $parent2['borrower_relational'] = $request->parent2_relational;
             $parent2['nationality'] = $parent2_nationality;
             $parent2['prefix'] = $request->parent2_prefix;
@@ -308,9 +290,9 @@ class BorrowerController extends Controller
             $parent2['citizen_id'] = $request->parent2_citizen_id;
             $parent2['phone'] = $request->parent2_phone;
             $parent2['occupation'] = $request->parent2_occupation;
+            $parent2['place_of_work'] = $request->parent2_place_of_work;
             $parent2['income'] = $request->parent2_income;
             $parent2['alive'] = filter_var($request->parent2_alive, FILTER_VALIDATE_BOOLEAN);
-
             $parent2_have_data = true;
         }    
 
@@ -327,6 +309,24 @@ class BorrowerController extends Controller
         }
 
         // insert to database
+        $borrower = new Borrower();
+        $borrower['user_id'] = $user_id;
+        $borrower['birthday'] = $this->convert_date($request->birthday);
+        $borrower['citizen_id'] = $request->citizen_id;
+        $borrower['student_id'] = $request->student_id;
+        $borrower['faculty_id'] = $request->faculty;
+        $borrower['major_id'] = $request->major;
+        $borrower['grade'] = $request->grade;
+        $borrower['gpa'] = $request->gpa;
+        $borrower['phone'] = $request->phone;
+        $borrower['address_id'] = $borrower_address_id;
+        $borrower['borrower_appearance_id'] = $request->borrower_appearance;
+        $borrower['marital_status'] = json_encode($marital_status);
+        $borrower->save();
+
+        $parent1['borrower_id'] = $borrower['id'];
+        $parent2['borrower_id'] = $borrower['id'];
+        // dd($parent2);
         $parent1->save();
         if($parent2_have_data)$parent2->save();
 
@@ -502,6 +502,7 @@ class BorrowerController extends Controller
             'citizen_id'=>$request->parent1_citizen_id,
             'phone'=>$request->parent1_phone,
             'occupation'=>$request->parent1_occupation,
+            'place_of_work'=>$request->parent1_place_of_work,
             'income'=>$request->parent1_income,
             'alive'=>filter_var($request->parent1_alive, FILTER_VALIDATE_BOOLEAN),
             'updated_at'=>date('Y-m-d H:i:s')
@@ -536,6 +537,7 @@ class BorrowerController extends Controller
                 "parent2_citizen_id" => 'required|string|max:50',
                 "parent2_phone" => 'required|string|max:50',
                 "parent2_occupation" => 'required|string|max:100',
+                "parent2_place_of_work" => 'required|string|max:100',
                 "parent2_income" => 'required|string|max:50',
             ]);
             
