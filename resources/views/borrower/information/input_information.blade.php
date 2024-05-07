@@ -373,7 +373,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" id="parent1_cutiom_relational" onblur="setCustomRelational('parent1',this.value)" disabled>
+            <input type="text" class="form-control" id="parent1_custom_relational" onblur="setCustomRelational('parent1',this.value)" disabled>
             <input type="hidden" id="parent1_relational" name="parent1_relational" required>
         </div>
     </fieldset>
@@ -437,7 +437,15 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
-    <div class="col-md-3">
+    <div class="col-md-7"></div>
+    <div class="col-md-5">
+        <label for="parent1_email" class="form-label text-secondary">อีเมลล์</label>
+        <input type="text" class="form-control" id="parent1_email" name="parent1_email" required>
+        @error('parent1_email')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-md-5">
         <label for="parent1_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="parent1_phone" name="parent1_phone" required>
         @error('parent1_phone')
@@ -561,7 +569,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" id="parent2_cutiom_relational" onblur="setCustomRelational('parent2',this.value)" disabled>
+            <input type="text" class="form-control" id="parent2_custom_relational" onblur="setCustomRelational('parent2',this.value)" disabled>
             <input type="hidden" id="parent2_relational" name="parent2_relational" required>
         </div>
     </fieldset>
@@ -626,7 +634,15 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
-    <div class="col-md-3">
+    <div class="col-md-7"></div>
+    <div class="col-md-5">
+        <label for="parent2_email" class="form-label text-secondary">อีเมลล์</label>
+        <input type="text" class="form-control" id="parent2_email" name="parent2_email" required>
+        @error('parent2_email')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-md-5">
         <label for="parent2_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="parent2_phone" name="parent2_phone" required>
         @error('parent2_phone')

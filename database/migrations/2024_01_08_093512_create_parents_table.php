@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('birthday');
             $table->string('citizen_id');
             $table->string('phone');
+            $table->string('email');
             $table->string('occupation');
             $table->string('place_of_work');
             $table->string('income');

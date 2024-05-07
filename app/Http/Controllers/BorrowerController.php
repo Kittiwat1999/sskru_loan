@@ -105,7 +105,7 @@ class BorrowerController extends Controller
     }
 
     public function getMajorByFaculty($faculty){
-        $major = Majors::where('faculty_name',$faculty)->get();
+        $major = Majors::where('faculty_id',$faculty)->get();
         return json_encode($major);
     }
 
@@ -229,6 +229,7 @@ class BorrowerController extends Controller
         $parent1['birthday'] = $this->convert_date($request->parent1_birthday);
         $parent1['citizen_id'] = $request->parent1_citizen_id;
         $parent1['phone'] = $request->parent1_phone;
+        $parent1['email'] = $request->parent1_email;
         $parent1['occupation'] = $request->parent1_occupation;
         $parent1['place_of_work'] = $request->parent1_place_of_work;
         $parent1['income'] = $request->parent1_income;
@@ -250,6 +251,7 @@ class BorrowerController extends Controller
                "parent2_birthday" => 'required|string|max:20',
                "parent2_citizen_id" => 'required|string|max:50',
                "parent2_phone" => 'required|string|max:50',
+               "parent2_email" => 'required|string|max:100',
                "parent2_occupation" => 'required|string|max:100',
                "parent2_place_of_work" => 'required|string|max:100',
                "parent2_income" => 'required|string|max:50',
@@ -289,6 +291,7 @@ class BorrowerController extends Controller
             $parent2['birthday'] = $this->convert_date($request->parent2_birthday);
             $parent2['citizen_id'] = $request->parent2_citizen_id;
             $parent2['phone'] = $request->parent2_phone;
+            $parent2['email'] = $request->parent2_email;
             $parent2['occupation'] = $request->parent2_occupation;
             $parent2['place_of_work'] = $request->parent2_place_of_work;
             $parent2['income'] = $request->parent2_income;
@@ -349,6 +352,7 @@ class BorrowerController extends Controller
 
     function borrowerEditdata(borrowerInformationValidationRequest $request){
 
+        // dd($request);
         $user_id = Session::get('user_id','1');
         $borrower_id = Session::get('borrower_id','1');
         date_default_timezone_set("Asia/Bangkok");
@@ -408,7 +412,6 @@ class BorrowerController extends Controller
             }
 
             $file_path = $this->storeFile($file);
-
             $marital_status = ['status'=>'หย่า','file_path'=>$file_path];
         }
 
@@ -424,10 +427,10 @@ class BorrowerController extends Controller
         $address['tambon'] = $request->tambon;
         $address->save();
         
-        //check address parent are living with borrower
+        //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย
         if($request->address_with_borrower != null){
 
-            //if change from not living to living
+            //ถ้าเปลี่ยนจากไม่อยู่เป็นอยู่
             if($main_parents_from_db->address_id != $borrower_from_db->address_id){
 
                 $parent_address = Address::find($main_parents_from_db->address_id);
@@ -459,26 +462,23 @@ class BorrowerController extends Controller
                     ->withInput();
             }
 
-            $parent_address = new Address();
-            $parent_address['village'] = $request->main_parent_village;
-            $parent_address['house_no'] = $request->main_parent_house_no;
-            $parent_address['village_no'] = $request->main_parent_village_no;
-            $parent_address['street'] = $request->main_parent_street;
-            $parent_address['road'] = $request->main_parent_road;
-            $parent_address['postcode'] = $request->main_parent_postcode;
-            $parent_address['province'] = $request->main_parent_province;
-            $parent_address['aumphure'] = $request->main_parent_aumphure;
-            $parent_address['tambon'] = $request->main_parent_tambon;
-
-            // if change form living with borrower to not living with borrower
+            $parent_address = [
+                'village' => $request->main_parent_village,
+                'house_no' => $request->main_parent_house_no,
+                'village_no' => $request->main_parent_village_no,
+                'street' => $request->main_parent_street,
+                'road' => $request->main_parent_road,
+                'postcode' => $request->main_parent_postcode,
+                'province' => $request->main_parent_province,
+                'aumphure' => $request->main_parent_aumphure,
+                'tambon' => $request->main_parent_tambon,
+            ];
+            // เปลี่ยนจากอยู่ด้วยเป็นไม่อยู่
             if($main_parents_from_db->address_id == $borrower_from_db->address_id){
-
-                $parent_address->save();
+                $parent_address = Address::create($parent_address);
                 $parent_address_id = $parent_address['id'];
-                
             }else{
                 Address::where('id',$main_parents_from_db->address_id)->update($parent_address);
-                
                 $parent_address_id = $main_parents_from_db->address_id;
             }
         }
@@ -501,6 +501,7 @@ class BorrowerController extends Controller
             'birthday'=>$this->convert_date($request->parent1_birthday),
             'citizen_id'=>$request->parent1_citizen_id,
             'phone'=>$request->parent1_phone,
+            'email'=>$request->parent1_email,
             'occupation'=>$request->parent1_occupation,
             'place_of_work'=>$request->parent1_place_of_work,
             'income'=>$request->parent1_income,
@@ -526,7 +527,6 @@ class BorrowerController extends Controller
         }else{
             
             $parent2_validator = Validator::make($request->all(), [
-                
                 "parent2_is_thai" => 'required|string|max:50',
                 "parent2_alive" => 'required|string|max:10',
                 "parent2_relational" => 'required|string|max:20',
@@ -536,6 +536,7 @@ class BorrowerController extends Controller
                 "parent2_birthday" => 'required|string|max:20',
                 "parent2_citizen_id" => 'required|string|max:50',
                 "parent2_phone" => 'required|string|max:50',
+                "parent2_email" => 'required|string|max:100',
                 "parent2_occupation" => 'required|string|max:100',
                 "parent2_place_of_work" => 'required|string|max:100',
                 "parent2_income" => 'required|string|max:50',
@@ -566,7 +567,6 @@ class BorrowerController extends Controller
                $parent2_nationality = $request->parent2_nationality;
            }
 
-
            $parent2 = [
                'borrower_id'=>$borrower_id,
                'borrower_relational'=>$request->parent2_relational,
@@ -577,7 +577,9 @@ class BorrowerController extends Controller
                'birthday'=>$this->convert_date($request->parent2_birthday),
                'citizen_id'=>$request->parent2_citizen_id,
                'phone'=>$request->parent2_phone,
+               'email'=>$request->parent2_email,
                'occupation'=>$request->parent2_occupation,
+               'place_of_work'=>$request->parent2_place_of_work,
                'income'=>$request->parent2_income,
                'alive'=>filter_var($request->parent2_alive, FILTER_VALIDATE_BOOLEAN),
                'updated_at'=>date('Y-m-d H:i:s')
@@ -599,8 +601,6 @@ class BorrowerController extends Controller
             $parent1['is_main_parent'] = false;
             $parent1['address_id'] = null;
         }
-
-        
 
         // insert to database
         $parent1_updated = Parents::where('id',$parents_from_db[0]->id)->update($parent1);

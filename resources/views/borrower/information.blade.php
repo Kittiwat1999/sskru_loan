@@ -45,7 +45,7 @@
         const major = document.getElementById('major');
         major.innerHTML = '<option disabled selected value="">เลือกสาขา</option>';
         major.innerHTML += majors.map(major =>{
-            return `<option value="${major.major_name}">${major.major_name}</option>`;
+            return `<option value="${major.id}">${major.major_name}</option>`;
         }).join("");
     }
 
@@ -67,15 +67,24 @@
                                                 #parent2_income,
                                                 #parent2_is_main_parent
                                                 `);
-
+        var parent2_relation = document.querySelectorAll('input[name="parent2_relational_option"]');
+        console.log(parent2_relation);
         // disable of required
         if(parent2_no_data.checked){
             parent2_element.forEach((e)=>{
                 e.disabled = true;
                 e.required = false;
             });
+            parent2_relation.forEach((e) => {
+                e.disabled = true;
+                e.required = false;
+            });
         }else{
             parent2_element.forEach((e)=>{
+                e.disabled = false;
+                e.required = true;
+            });
+            parent2_relation.forEach((e) => {
                 e.disabled = false;
                 e.required = true;
             });
@@ -111,11 +120,6 @@
             document.getElementById(role + '_age').value = age;
         }
     }
-
-    // var idCardNumber = document.getElementById('idCardNumber');
-    // idCardNumber.onkeyup = () =>{
-    //   document.getElementById('formattedNumber').innerHTML = idCardNumber.value;
-    //   }
     
     var moreProps = document.getElementById('morePropCheck');
     moreProps.onchange = () => {
@@ -335,13 +339,15 @@
         input.value = formatted;
     }
     function parentRelational(parent,relation){
+        var parentRelational = document.getElementById(`${parent}_custom_relational`);
         if(relation == 'อื่นๆ'){
-            document.getElementById(`${parent}_cutiom_relational`).disabled = false;
-            document.getElementById(`${parent}_cutiom_relational`).required = true;
+            parentRelational.disabled = false;
+            parentRelational.required = true;
             document.getElementById(`${parent}_relational`).value = '';
         }else{
-            document.getElementById(`${parent}_cutiom_relational`).disabled = true;
-            document.getElementById(`${parent}_cutiom_relational`).required = false;
+            parentRelational.disabled = true;
+            parentRelational.required = false;
+            parentRelational.value = '';
             document.getElementById(`${parent}_relational`).value = relation;
         }
     }

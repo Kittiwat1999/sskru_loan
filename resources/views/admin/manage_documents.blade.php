@@ -138,6 +138,7 @@
                                 <th class="text-center fw-bold">#</th>
                                 <th>เอกสาร</th>
                                 <th class="text-center">ข้อมูลยอดเงินกู้</th>
+                                <th class="text-center">เอกสารสำหรับดาวน์โหลด</th>
                                 <th class="text-center">ตัวอย่างเอกสาร</th>
                                 <th class="text-center">ตัวอย่างเอกสาร<br>(ผู้มีอายุต่ำกว่า 20 ปี)</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
@@ -153,6 +154,7 @@
                                         <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
                                     @endif
                                 </td>
+                                <td>..</td>
                                 <td class="text-center">
                                     @foreach ($child_document->everyone_files as $everyone_file)
                                         <a class="btn btn-sm btn-outline-dark mb-2 w-100" href="{{route('admin.displayfile.page',['file_id' => $everyone_file->id ])}}">{{ Str::limit($everyone_file->description, $limit = 25, $end = '...') }}</a><br>
@@ -170,6 +172,7 @@
                                     </div>
 
                                     <div>
+
                                         <div class="modal fade" id="editChildDocModal" tabindex="-1" aria-hidden="true" style="display: none;">
                                             <div class="modal-dialog modal-dialog-scrollable">
                                                 <div class="modal-content">
@@ -189,28 +192,28 @@
                                         </div>
 
                                         <!-- delete Modal -->
-                                    <div class="modal fade" id="deleteDocChildModal{{$child_document->id}}" tabindex="-1" aria-labelledby="deleteDocChildModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteDocChildModalLabel">ลบเอกสาร</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="modal fade" id="deleteDocChildModal{{$child_document->id}}" tabindex="-1" aria-labelledby="deleteDocChildModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteDocChildModalLabel">ลบเอกสาร</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="row" action="{{route('admin.manage.documents.deletedocument',['child_document_id' => $child_document->id])}}" method="post" id="addDocTypeForm">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                                <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$child_document->child_document_title}}</span> หรือไม่</label>
+                                                        {{-- </form>  must be closed here --}}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
+                                                        <button type="submit" class="btn btn-light">ลบเอกสาร</button>
+                                                    </div>
+                                                    </form> <!-- but i'm lazy-->
                                                 </div>
-                                                <div class="modal-body">
-                                                    <form class="row" action="{{route('admin.manage.documents.deletedocument',['child_document_id' => $child_document->id])}}" method="post" id="addDocTypeForm">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                            <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$child_document->child_document_title}}</span> หรือไม่</label>
-                                                    {{-- </form>  must be closed here --}}
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
-                                                    <button type="submit" class="btn btn-light">ลบเอกสาร</button>
-                                                </div>
-                                                </form> <!-- but i'm lazy-->
                                             </div>
                                         </div>
-                                    </div>
 
                                     </div>
                                 </td>

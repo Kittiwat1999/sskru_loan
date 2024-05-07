@@ -303,14 +303,14 @@
         </div>
         <div class="col-md-1 my-2">
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="parent1_relational_option" value="อื่นๆ" onchange="parentRelational('parent1',this.value)" {{($parent1['borrower_relational'] != 'มารดา' && $parent1['borrower_relational'] != 'บิดา') ? 'checked' : ''}} required>
+                <input class="form-check-input" type="radio" id="parent1moreRelational" name="parent1_relational_option" value="อื่นๆ" onchange="parentRelational('parent1',this.value)" {{($parent1['borrower_relational'] != 'มารดา' && $parent1['borrower_relational'] != 'บิดา') ? 'checked' : ''}} required>
                 <label class="form-check-label">
                     อื่นๆ
                 </label>
             </div>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" id="parent1_cutiom_relational" onblur="setCustomRelational('parent1',this.value)" {{($parent1['borrower_relational'] != 'มารดา' || $parent1['borrower_relational'] != 'บิดา') ? '' : 'disabled'}} >
+            <input type="text" class="form-control" id="parent1_custom_relational" onblur="setCustomRelational('parent1',this.value)" {{($parent1['borrower_relational'] != 'มารดา' || $parent1['borrower_relational'] != 'บิดา') ? '' : 'disabled'}} >
             <input type="hidden" id="parent1_relational" name="parent1_relational" value="{{$parent1['borrower_relational']}}" required>
         </div>
     </fieldset>
@@ -373,7 +373,15 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
-    <div class="col-md-3">
+    <div class="col-md-7"></div>
+    <div class="col-md-5">
+        <label for="parent1_email" class="form-label text-secondary">อีเมลล์</label>
+        <input type="text" class="form-control" id="parent1_email" name="parent1_email" value="{{$parent1['email']}}" required>
+        @error('parent1_email')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <div class="col-md-5">
         <label for="parent1_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
         <input type="text" class="form-control" id="parent1_phone" name="parent1_phone" required value="{{$parent1['phone']}}">
         @error('parent1_phone')
@@ -499,14 +507,14 @@
             </div>
             <div class="col-md-1 my-2">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="parent2_relational_option" value="อื่นๆ" onchange="parentRelational('parent2',this.value)" {{($parent2['borrower_relational'] != 'มารดา' && $parent2['borrower_relational'] != 'บิดา') ? 'checked' : ''}} required>
+                    <input class="form-check-input" type="radio" id="parent2moreRelational" name="parent2_relational_option" value="อื่นๆ" onchange="parentRelational('parent2',this.value)" {{($parent2['borrower_relational'] != 'มารดา' && $parent2['borrower_relational'] != 'บิดา') ? 'checked' : ''}} required>
                     <label class="form-check-label">
                         อื่นๆ
                     </label>
                 </div>
             </div>
             <div class="col-md-4">
-                <input type="text" class="form-control" id="parent2_cutiom_relational" onblur="setCustomRelational('parent2',this.value)" {{($parent2['borrower_relational'] != 'มารดา' || $parent2['borrower_relational'] != 'บิดา') ? 'disabled' : ''}} >
+                <input type="text" class="form-control" id="parent2_custom_relational" onblur="setCustomRelational('parent2',this.value)" {{($parent2['borrower_relational'] != 'มารดา' || $parent2['borrower_relational'] != 'บิดา') ? 'disabled' : ''}} >
                 <input type="hidden" id="parent2_relational" name="parent2_relational" value="{{$parent2['borrower_relational']}}" required>
             </div>
         </fieldset>
@@ -569,7 +577,15 @@
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
-        <div class="col-md-3">
+        <div class="col-md-7"></div>
+        <div class="col-md-5">
+            <label for="parent2_email" class="form-label text-secondary">อีเมลล์</label>
+            <input type="text" class="form-control" id="parent2_email" name="parent2_email" value="{{$parent2['email']}}" required>
+            @error('parent2_email')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="col-md-5">
             <label for="parent2_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
             <input type="text" class="form-control" id="parent2_phone" name="parent2_phone" required value="{{$parent2['phone']}}">
             @error('parent2_phone')
@@ -592,7 +608,7 @@
         </div>
         <div class="col-md-5">
             <label for="parent2_income" class="form-label text-secondary">รายได้ต่อปี</label>
-            <input type="text" class="form-control" id="parent2_income" name="parent2_income" oninput="formatIncome(this)" placeholder="1,000,000" value="{{$parent1['income']}}" required>
+            <input type="text" class="form-control" id="parent2_income" name="parent2_income" oninput="formatIncome(this)" placeholder="1,000,000" value="{{$parent2['income']}}" required>
             @error('parent2_income')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -638,7 +654,7 @@
             </div>
             <div class="col-md-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="parent2_alive" id="parent2_no_alive" value="false" required onchange="disabledMainParentRadio(false,'parent2')">
+                    <input class="form-check-input" type="radio" name="parent2_alive" id="parent2_no_alive" value="false" onchange="disabledMainParentRadio(false,'parent2')">
                     <label class="form-check-label" for="parent2_no_alive">
                     ถึงแก่กรรม
                     </label>
@@ -676,7 +692,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <input type="text" class="form-control" id="parent2_cutiom_relational" onblur="setCustomRelational('parent2',this.value)" disabled >
+                <input type="text" class="form-control" id="parent2_custom_relational" onblur="setCustomRelational('parent2',this.value)" disabled >
                 <input type="hidden" id="parent2_relational" name="parent2_relational" required>
             </div>
         </fieldset>
@@ -740,7 +756,15 @@
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
-        <div class="col-md-3">
+        <div class="col-md-7"></div>
+        <div class="col-md-5">
+            <label for="parent2_email" class="form-label text-secondary">อีเมลล์</label>
+            <input type="text" class="form-control" id="parent2_email" name="parent2_email" required>
+            @error('parent2_email')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="col-md-5">
             <label for="parent2_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
             <input type="text" class="form-control" id="parent2_phone" name="parent2_phone" required>
             @error('parent2_phone')
@@ -756,7 +780,7 @@
         </div>
         <div class="col-md-5">
             <label for="parent2_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
-            <input type="text" class="form-control" id="parent2_place_of_work" name="parent2_place_of_work" required value="{{$parent1['place_of_work']}}">
+            <input type="text" class="form-control" id="parent2_place_of_work" name="parent2_place_of_work" required>
             @error('parent2_place_of_work')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -1137,29 +1161,6 @@
             });
         }
 
-        // $("#borrower_birthday").datetimepicker({
-        //     disabled:false,
-        //     format: 'd-m-Y', 
-        //     timepicker: false, 
-        //     yearOffset: 543, 
-        //     closeOnDateSelect: true,
-        // });
-        // $("#parent1_birthday").datetimepicker({
-        //     disabled:false,
-        //     format: 'd-m-Y', 
-        //     timepicker: false, 
-        //     yearOffset: 543, 
-        //     closeOnDateSelect: true,
-        // });
-        // $("#parent2_birthday").datetimepicker({
-        //     disabled:false,
-        //     format: 'd-m-Y', 
-        //     timepicker: false, 
-        //     yearOffset: 543, 
-        //     closeOnDateSelect: true,
-        // });
-        
-
         //if parent 2 don't have data
         parenat2NoData();
 
@@ -1240,6 +1241,18 @@
         } else {
             document.getElementById(role + '_age').value = age;
         }
+    }
+
+    var parent1_moreRelational = document.getElementById('parent1moreRelational');
+    if(parent1_moreRelational.checked){
+        relational_value = document.getElementById('parent1_relational').value;
+        document.getElementById('parent1_custom_relational').value = relational_value;
+    }
+
+    var parent2_moreRelational = document.getElementById('parent2moreRelational');
+    if(parent2_moreRelational.checked){
+        relational_value = document.getElementById('parent2_relational').value;
+        document.getElementById('parent2_custom_relational').value = relational_value;
     }
 </script>
 
