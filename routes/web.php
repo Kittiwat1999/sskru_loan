@@ -77,8 +77,9 @@ Route::delete('/admin/manage_documents/delete_doctype/{doc_type_id}',[AdminManag
 Route::post('/admin/manage_documents/update_useful_activity_hour',[AdminManageDocumentsController::class,'updateUsefulActivitytHour'])->name('admin.manage.documents.update.useful.hour');
 
 
-Route::get('/admin/manage_documents/displayfile/{file_id}',[AdminManageDocumentsController::class,'displayfile_page'])->name('admin.displayfile.page');
-Route::get('/admin/manage_documents/deisplayfile/file/{file_name}',[AdminManageDocumentsController::class,'displayFile'])->name('admin.displayfile');
+Route::get('/admin/manage_documents/display_example_file/{file_id}',[AdminManageDocumentsController::class,'display_example_file_page'])->name('admin.display.example.file.page');
+Route::get('/admin/manage_documents/display_file/{generate_file}/{file_id}',[AdminManageDocumentsController::class,'display_file_page'])->name('admin.display.file.page');
+Route::get('/admin/manage_documents/deisplayfile/file/{file_path}/{file_name}',[AdminManageDocumentsController::class,'displayFile'])->name('admin.display.file');
 
 
 Route::get('/contract', function () {

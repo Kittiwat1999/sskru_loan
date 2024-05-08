@@ -154,15 +154,19 @@
                                         <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
                                     @endif
                                 </td>
-                                <td>..</td>
+                                <td>
+                                    @if ($child_document->file_download != null)
+                                        <a class="btn btn-sm btn-outline-dark w-100" href="{{route('admin.display.file.page',['generate_file' => $child_document->generate_file,'file_id' => $child_document->file_download->id])}}">ดูเอกสาร</a>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     @foreach ($child_document->everyone_files as $everyone_file)
-                                        <a class="btn btn-sm btn-outline-dark mb-2 w-100" href="{{route('admin.displayfile.page',['file_id' => $everyone_file->id ])}}">{{ Str::limit($everyone_file->description, $limit = 25, $end = '...') }}</a><br>
+                                        <a class="btn btn-sm btn-outline-dark mb-2 w-100" href="{{route('admin.display.example.file.page',['file_id' => $everyone_file->id ])}}">{{ Str::limit($everyone_file->description, $limit = 25, $end = '...') }}</a><br>
                                     @endforeach
                                 </td>
                                 <td class="text-center">
                                     @if ($child_document->minors_file != null)
-                                        <a class="btn btn-sm btn-outline-dark w-100" href="{{route('admin.displayfile.page',['file_id' => $child_document->minors_file->id])}}">ดูเอกสาร</a>
+                                        <a class="btn btn-sm btn-outline-dark w-100" href="{{route('admin.display.example.file.page',['file_id' => $child_document->minors_file->id])}}">ดูเอกสาร</a>
                                     @endif
                                 </td>
                                 <td>
@@ -174,7 +178,7 @@
                                     <div>
 
                                         <div class="modal fade" id="editChildDocModal" tabindex="-1" aria-hidden="true" style="display: none;">
-                                            <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">แก้ใขเอกสาร</h5>
@@ -233,7 +237,7 @@
                     <div>
                         {{-- modal --}}
                         <div class="modal fade" id="addChildDocModal" tabindex="-1" aria-hidden="true" style="display: none;">
-                            <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">เพิ่มเอกสาร</h5>
@@ -250,7 +254,7 @@
                                                     กรุณากรอกหัวข้อเอกสาร
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-5">
+                                            <div class="col-12 mb-3">
                                                 <label for="need_loan_balance" class="form-label">ข้อมูลยอดเงินกู้</label>
                                                 <select id="need_loan_balance" class="form-select need-custom-validate" name="need_loan_balance">
                                                     <option selected disabled value="" >เลือก...</option>
@@ -261,30 +265,13 @@
                                                     กรุณาเลือก ข้อมูลยอดเงิน
                                                 </div>
                                             </div>
-                                            
-                                            <div id="file_everyone_area_add">
-                                                <div class="col-12 mb-3">
-                                                    <label for="file_everyone" class="form-label">ตัวอย่างเอกสาร 1</label>
-                                                    <input type="file" class="form-control need-custom-validate" id="file_everyone" name="file_everyone[]">
-                                                    <div id="file_everyone_invalid1" class="invalid-feedback">
-                                                        กรุณาเลือกไฟล์ตัวอย่างเอกสาร
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 mb-3">
-                                                    <label for="description" class="form-label">คำอธิบายสำหรับตัวอย่างเอกสาร 1</label>
-                                                    <input type="text" class="form-control need-custom-validate" id="description" name="description[]" accept="jpg,jpeg,png,pdf">
-                                                    <div id="description_invalid1" class="invalid-feedback">
-                                                        กรุณากรอกคำอธิบายตัวอย่างเอกสาร
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="col-12 mb-3">
-                                                <button type="button" class="btn btn-success" onclick="addfile('add')"> + เพิ่มไฟล์</button>
-                                                <button type="button" class="btn btn-light" onclick="deletefile('add')"> ลบไฟล์</button>
-                                            </div>
-                                            <div class="col-12 mt-3">
-                                                <label for="file_minors" class="form-label">ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี</label>
-                                                <input type="file" class="form-control" id="file_minors" name="file_minors" accept="jpg,jpeg,png,pdf">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="generate_file" name="generate_file" value="true">
+                                                    <label class="form-check-label" for="generate_file">
+                                                        เลือกหากต้องการให้ระบบกรอกเอกสารให้ผู้กู้
+                                                    </label>
+                                                </div>
                                             </div>
                                         </form>  
                                         {{-- must be closed here --}}
@@ -479,7 +466,6 @@
             var form = document.getElementById(formId);
             var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
             var select = form.querySelector('select.need-custom-validate');
-            var file_input_elements = form.querySelectorAll('input[type="file"].need-custom-validate ');
             var validate = true;
 
             await inputs.forEach((input) => {
@@ -494,17 +480,6 @@
 
             });
 
-            await file_input_elements.forEach((file_input) => {
-                if(file_input.value == ''){
-                    validate = false;
-                    var invalid_element = file_input.nextElementSibling;
-                    if(invalid_element)invalid_element.classList.add('d-inline');
-                }else{
-                    var invalid_element = file_input.nextElementSibling;
-                    if(invalid_element)invalid_element.classList.remove('d-inline');
-                }
-            });
-
             if(select.value == ''){
                 validate = false;
                 var invalid_element = select.nextElementSibling;
@@ -515,11 +490,7 @@
             }
 
             return validate;
-
         }
-
-
-        var fileLenght;
 
         function openEditModal(child_document){
             var editChildDocModal = new bootstrap.Modal(document.getElementById('editChildDocModal'));
@@ -530,9 +501,6 @@
             editModalBody.innerHTML = `
                 <form class="row" action="{{route('admin.manage.documents.editdocument',['child_document_id' => 'PLACEHOLDER_CHILD_DOCUMENT_ID'])}}" method="post" id="eidtChildDocForm" enctype="multipart/form-data">
                     @csrf
-                    <div id="delete-file-area">
-                        
-                    </div>
                     <div class="col-12 mb-3">
                         <label for="child_doc_title" class="form-label">เอกสาร</label>
                         <input type="text" class="form-control need-custom-validate" name="child_document_title" value="${child_document.child_document_title}" required>
@@ -547,85 +515,19 @@
                             <option ${!child_document.need_loan_balance ? 'selected' : '' } value="false">ไม่ต้องการ</option>
                         </select>
                     </div>
-                    <div class="mb-2"></div>
-                    <div id="child-document-file">
-                        <div id="file-edit-area" class="form-group border border-1 p-2 mb-3">
-                            <label for="#" class="form-label">ตัวอย่างเอกสาร</label>
-                            ${child_document.everyone_files.map((everyone_file) =>{
-                                return `
-                                    <div class="row mb-3" id="file-description${everyone_file.id}">
-                                        <div class="col-9 text-start">
-                                            <input type="text" class="form-control need-custom-validate" value="${everyone_file.description}" name="edit_description[${everyone_file.id}]">
-                                            <div class="invalid-feedback">
-                                                กรุณากรอกคำอธิบายตัวอย่างเอกสาร
-                                            </div>
-                                        </div>
-                                        <div class="col-3 text-end">
-                                            <button type="button" id="removefile-button${everyone_file.id}" class="btn btn-light w-100" onclick="deleteFileEdit('${everyone_file.id}')">ลบไฟล์</button>
-                                        </div>
-                                    </div>
-                            `}).join('')}
-                        </div>
-                    </div>
-                    <div class="my-2"></div>
-                    <div id="file_everyone_area_edit">
-                        <div class="col-12 mb-3">
-                            <label for="file_everyone" class="form-label">ตัวอย่างเอกสาร 1</label>
-                            <input type="file" class="form-control" name="file_everyone[]">
-                            <div id="file_everyone_invalid1" class="invalid-feedback">
-                                กรุณาเลือกไฟล์ตัวอย่างเอกสาร
-                            </div>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="description" class="form-label">คำอธิบายสำหรับตัวอย่างเอกสาร 1</label>
-                            <input type="text" class="form-control" name="description[]">
-                            <div id="description_invalid1" class="invalid-feedback">
-                                กรุณากรอกคำอธิบายตัวอย่างเอกสาร
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-12 mb-3">
-                        <button type="button" class="btn btn-success" onclick="addfile('edit')"> + เพิ่มไฟล์</button>
-                        <button type="button" class="btn btn-light" onclick="deletefile('edit')"> ลบไฟล์</button>
-                    </div>
-                    <div class="col-12 mt-3">
-                        <label for="file_minors" class="form-label">ตัวอย่างเอกสารสำหรับผู้มีอายุต่ำกว่า 20 ปี</label>
-                        <input type="file" class="form-control" id="file_minors" name="file_minors">
-                        <div class="text-warning my-1">อัพโหลดไฟล์ใหม่หากต้องการแก้ใข</div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="generate_file" value="true" ${(child_document.generate_file)? 'checked':''}>
+                            <label class="form-check-label" for="generate_file">
+                                เลือกหากต้องการให้ระบบกรอกเอกสารให้ผู้กู้
+                            </label>
+                        </div>
                     </div>
                 </form> 
             
             `;
             editModalBody.innerHTML = editModalBody.innerHTML.replace('PLACEHOLDER_CHILD_DOCUMENT_ID', child_document.id);
             editChildDocModal.show();
-        }
-
-        function deleteFileEdit(fileId){
-            document.getElementById('file-description'+fileId).remove();
-
-            var deleteFileArea = document.getElementById('delete-file-area');
-            var inputHidden = document.createElement('input');
-            inputHidden.type = 'hidden';
-            inputHidden.name = 'delete_file[]';
-            inputHidden.value = fileId;
-            deleteFileArea.appendChild(inputHidden);
-            fileLenght--;
-
-            if(fileLenght == 0){
-                fileEditArea = document.getElementById('file-edit-area');
-                fileEditArea.remove();
-                var inputs = document.querySelectorAll('[name="description[]"]');
-                var file_input_elements = document.querySelectorAll('[name="file_everyone[]"]');
-                inputs.forEach((input) => {
-                    if(!input.classList.contains('need-custom-validate'))input.classList.add('need-custom-validate');
-                });
-
-                file_input_elements.forEach((file_input_element) => {
-                    if(!file_input_element.classList.contains('need-custom-validate'))file_input_element.classList.add('need-custom-validate');
-                });
-
-            }
-            
         }
 
         async function submitEditChildDocForm(formId){
@@ -640,7 +542,6 @@
         async function validateEditChildDocForm(formId){
             var form = document.getElementById(formId);
             var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
-            var file_input_elements = form.querySelectorAll('input[type="file"].need-custom-validate');
             var validate = true;
 
             inputs.forEach((input) => {
@@ -654,18 +555,6 @@
                 }
 
             });
-
-            await file_input_elements.forEach((file_input) => {
-                if(file_input.value == ''){
-                    validate = false;
-                    var invalid_element = file_input.nextElementSibling;
-                    if(invalid_element)invalid_element.classList.add('d-inline');
-                }else{
-                    var invalid_element = file_input.nextElementSibling;
-                    if(invalid_element)invalid_element.classList.remove('d-inline');
-                }
-            });
-
             return validate;
         }
     </script>

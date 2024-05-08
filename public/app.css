@@ -7,3 +7,9 @@
     height: 0.7px;
     background-color: #adb5bd;
   }
+
+  .line-section-modal{
+    width: 100%;
+    height: 4px;
+    background-color: #696969;
+  }

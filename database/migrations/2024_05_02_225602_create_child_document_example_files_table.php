@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('file_type');
             $table->string('full_path');
             $table->date('upload_date');
-            $table->boolean('created_by_server');
             $table->timestamps();
         });
     }
