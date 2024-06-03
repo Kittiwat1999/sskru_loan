@@ -265,3 +265,4 @@ Route::get('/borrower/download_document',[DownloadDocumentController::class,'ind
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
 
 Route::get('/generate_rabrongraidai',[ExampleController::class,'generate_rabrongraidai']);
+Route::get('/generate_yinyorm',[ExampleController::class,'generate_yinyorm']);
