@@ -138,9 +138,7 @@
                                 <th class="text-center fw-bold">#</th>
                                 <th>เอกสาร</th>
                                 <th class="text-center">ข้อมูลยอดเงินกู้</th>
-                                <th class="text-center">เอกสารสำหรับดาวน์โหลด</th>
-                                <th class="text-center">ตัวอย่างเอกสาร</th>
-                                <th class="text-center">ตัวอย่างเอกสาร<br>(ผู้มีอายุต่ำกว่า 20 ปี)</th>
+                                <th class="text-center">จัดการไฟล์</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                         </thead>
@@ -154,20 +152,8 @@
                                         <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
                                     @endif
                                 </td>
-                                <td>
-                                    @if ($child_document->file_download != null)
-                                        <a class="btn btn-sm btn-outline-dark w-100" href="{{route('admin.display.file.page',['generate_file' => $child_document->generate_file,'file_id' => $child_document->file_download->id])}}">ดูเอกสาร</a>
-                                    @endif
-                                </td>
                                 <td class="text-center">
-                                    @foreach ($child_document->everyone_files as $everyone_file)
-                                        <a class="btn btn-sm btn-outline-dark mb-2 w-100" href="{{route('admin.display.example.file.page',['file_id' => $everyone_file->id ])}}">{{ Str::limit($everyone_file->description, $limit = 25, $end = '...') }}</a><br>
-                                    @endforeach
-                                </td>
-                                <td class="text-center">
-                                    @if ($child_document->minors_file != null)
-                                        <a class="btn btn-sm btn-outline-dark w-100" href="{{route('admin.display.example.file.page',['file_id' => $child_document->minors_file->id])}}">ดูเอกสาร</a>
-                                    @endif
+                                    <a href="{{route('admin.manage.file.document',['child_document_id' => $child_document->id])}}" class="btn btn-danger">จัดการไฟล์</a>                                    
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">

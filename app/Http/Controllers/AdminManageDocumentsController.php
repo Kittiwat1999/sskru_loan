@@ -20,6 +20,7 @@ class AdminManageDocumentsController extends Controller
     public function manage_documents(Request $request){
         $doc_types = DocTypes::where('isactive',true)->get();
         $useful_activity_hour = Config::where('id',1)->value('useful_activity_hour');
+        $child_documents = ChildDocuments::where('isactive',true)->get();
         return view('admin.manage_documents',compact('doc_types','child_documents','useful_activity_hour'));
     }
 
@@ -294,5 +295,9 @@ class AdminManageDocumentsController extends Controller
 
         return redirect()->back()->with(['success'=>'แก้ใขชั่วโมงกิจกรรมจิตอาสาเป็น '.$request->useful_activity_hour.' ชั่วโมง เรียบร้อยแล้ว']);
 
+    }
+
+    public function mangefile_page($child_document_id){
+        return view('admin.manage_file_document');
     }
 }
