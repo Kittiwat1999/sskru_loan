@@ -449,5 +449,120 @@ class ExampleController extends Controller
             'Content-Disposition' => 'inline; filename="generated_form.pdf"',
         ]);
     }
+
+    public function teachers_comment(){
+        $teachers = [
+            'prefix'=>'นาย',
+            'firstname' => 'เฉลิมเดช',
+            'lastname' => 'ประพิณไพโรจน',
+            'position'=>'อาจารย์',
+            'field_of_study' => 'วิศวกรรมซอฟต์แวร์',
+            'faculty' => 'ศิลปศาสตร์และวิทยาศาสตร์',
+            'comment' => 'รสนิยมทางดนตรีเราจะเริ่มเป็นอัมพาตหลังจากอายุ 30 แน่นอนว่าไม่ใช่ทุกคนหรือทุกครั้งที่จะรู้สึกว่าเพลงสมัยใหม่ไม่เพราะ แต่โดยส่วนใหญ่ รสนิยมทางดนตรีเราจะเริ่มเป็นอัมพาตหลังจากอายุ 30 ปี และจะยิ่งเป็นหนักมากขึ้น ถ้าไม่นับว่าเราทำงานเกี่ยวข้องกับด้านดนตรี ซึ่งไม่เพียงแค่เรื่องของเพลง แต่อาจเรียกได้ว่า เราจะเริ่มเป็น “อัมพาตทางรสนิยม” ด้วยเลยก็ได้ เช่นเรื่องการแต่งตัว การไปตามสถานที่ อาหารการกิน ยิ่งอายุมากขึ้นเราจะชอบแต่อะไรเดิม ๆ หรือคิดถึงแต่สิ่งเก่า ๆ',
+        ];
+
+        $borrower = [
+            'prefix'=>'นาย',
+            'firstname' => 'กิตติวัฒน์',
+            'lastname' => 'เทียนเพ็ชร',
+            'grade' => 'ปี 4',
+        ];
+
+        $decrypData = [
+            'teachers_prefix' => iconv('UTF-8', 'cp874', $teachers['prefix']),
+            'teachers_firstname' => iconv('UTF-8', 'cp874', $teachers['firstname']),
+            'teachers_lastname' => iconv('UTF-8', 'cp874', $teachers['lastname']),
+            'teachers_position' => iconv('UTF-8', 'cp874', $teachers['position']),
+            'teachers_field_of_study' => iconv('UTF-8', 'cp874', $teachers['field_of_study']),
+            'teachers_faculty' => iconv('UTF-8', 'cp874', $teachers['faculty']),
+            'teachers_comment' => iconv('UTF-8', 'cp874', $teachers['comment']),
+
+            'borrower_prefix' => iconv('UTF-8', 'cp874', $borrower['prefix']),
+            'borrower_firstname' => iconv('UTF-8', 'cp874', $borrower['firstname']),
+            'borrower_lastname' => iconv('UTF-8', 'cp874', $borrower['lastname']),
+            'borrower_grade' => iconv('UTF-8', 'cp874', $borrower['grade']),
+        ];
+
+        // Create a StreamedResponse
+        return new StreamedResponse(function () use ($decrypData) {
+            // Initialize the PDF
+            $pdf = new Fpdi();
+            
+            // Add the page
+            $pdf->AddPage();
+            $pdf->setSourceFile(public_path('child_document_files/teachers_comment.pdf')); // Import an existing PDF form
+            $templateId = $pdf->importPage(1);
+            $pdf->useTemplate($templateId, 0, 0);
+
+            //date
+            $gregorianDate = Carbon::now();
+            $buddhistYear = $gregorianDate->year + 543;
+            
+            // Set the font and add text at specific locations
+            $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
+            $pdf->SetFont('THSarabunNew', '', 12);
+
+            //write date
+            $pdf->Text(118, 42,$gregorianDate->day);
+            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $pdf->Text(141, 42,$month);
+            $pdf->Text(173, 42,$buddhistYear);
+
+            $teachers_name_input = 74;
+            $fullname_teachers_lenght = strlen($decrypData['teachers_prefix'].$decrypData['teachers_firstname'].'   '.$decrypData['teachers_lastname']);
+            $teachers_name_x = 51+($teachers_name_input/2 - $fullname_teachers_lenght/2)-3;
+            $pdf->Text($teachers_name_x, 58,$decrypData['teachers_prefix'].$decrypData['teachers_firstname'].'   '.$decrypData['teachers_lastname']);
+            
+            $teachers_position_input = 43;
+            $position_teachers_lenght = strlen($decrypData['teachers_position']);
+            $teachers_position_x = 140+($teachers_position_input/2 - $position_teachers_lenght/2);
+            $pdf->Text($teachers_position_x, 58,$decrypData['teachers_position']);
+
+            $teachers_field_of_study_input = 114;
+            $field_of_study_teachers_lenght = strlen($decrypData['teachers_field_of_study']);
+            $teachers_field_of_study_x = 69+($teachers_field_of_study_input/2 - $field_of_study_teachers_lenght/2)-3;
+            $pdf->Text($teachers_field_of_study_x, 66,$decrypData['teachers_field_of_study']);
+
+            $teachers_faculty_input = 89;
+            $faculty_teachers_lenght = strlen($decrypData['teachers_faculty']);
+            $teachers_faculty_x = 48+($teachers_faculty_input/2 - $faculty_teachers_lenght/2)-2;
+            $pdf->Text($teachers_faculty_x, 75,$decrypData['teachers_faculty']);
+
+            $borrower_name_input = 83;
+            $fullname_borrower_lenght = strlen($decrypData['borrower_prefix'].$decrypData['borrower_firstname'].'   '.$decrypData['borrower_lastname']);
+            $borrower_name_x = 65+($borrower_name_input/2 - $fullname_borrower_lenght/2)-3;
+            $pdf->Text($borrower_name_x, 83,$decrypData['borrower_prefix'].$decrypData['borrower_firstname'].'   '.$decrypData['borrower_lastname']);
+
+            $borrower_grade_input = 7;
+            $grade_borrower_lenght = strlen($decrypData['borrower_grade']);
+            $borrower_grade_x = 176+($borrower_grade_input/2 - $grade_borrower_lenght/2);
+            $pdf->Text($borrower_grade_x, 83,$decrypData['borrower_grade']);
+
+            //comment
+            $pdf->SetXY(26, 93);
+            $pdf->MultiCell(158, 8,$decrypData['teachers_comment']);
+            
+            //signature
+            $teachers_firstname_input = 65;
+            $firstname_teachers_lenght = strlen($decrypData['teachers_firstname']);
+            $teachers_firstname_x = 116+($teachers_firstname_input/2 - $firstname_teachers_lenght/2)-2;
+            $pdf->Text($teachers_firstname_x, 140,$decrypData['teachers_firstname']);
+
+            $teachers_name_input = 73;
+            $grade_teachers_lenght = strlen($decrypData['teachers_prefix'].$decrypData['teachers_firstname'].'   '.$decrypData['teachers_lastname']);
+            $teachers_name_x = 108+($teachers_name_input/2 - $grade_teachers_lenght/2)-3;
+            $pdf->Text($teachers_name_x, 147,$decrypData['teachers_prefix'].$decrypData['teachers_firstname'].'   '.$decrypData['teachers_lastname']);
+            
+            $teachers_position_input = 63;
+            $position_teachers_lenght = strlen($decrypData['teachers_position']);
+            $teachers_position_x = 120+($teachers_position_input/2 - $position_teachers_lenght/2)-2;
+            $pdf->Text($teachers_position_x, 155,$decrypData['teachers_position']);
+
+            $pdf->Output(); 
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="generated_form.pdf"',
+        ]);
+    }
     
 }
