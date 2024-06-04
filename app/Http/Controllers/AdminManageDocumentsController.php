@@ -145,7 +145,6 @@ class AdminManageDocumentsController extends Controller
         $rules = [
             'child_document_title' => 'required|string|max:100',
             'need_loan_balance' => 'required|string',
-            'generate_file' => 'string',
         ];
         
         $messages = [
@@ -153,14 +152,12 @@ class AdminManageDocumentsController extends Controller
             'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
             'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
             'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
-            'generate_file.string' => 'ตัวเลือกระบบออกเอกสารต้องเป็นข้อความ',
         ];
         
         $request->validate($rules,$messages);
         $child_document = ChildDocuments::find($child_document_id);
         $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
-        $child_document['generate_file'] = filter_var($request->generate_file, FILTER_VALIDATE_BOOLEAN);
         $child_document->save();
 
         return redirect()->back()->with(['success'=>'แก้ใขข้อมูลเอกสาร'.$child_document['child_document_title'].'เรียบร้อยแล้ว']);
@@ -223,7 +220,6 @@ class AdminManageDocumentsController extends Controller
     }
 
     public function deleteDocType($doc_type_id){
-
         $doc_type = DocTypes::find($doc_type_id);
         $doc_type['isactive'] = false;
         $doc_type->save();
@@ -232,10 +228,8 @@ class AdminManageDocumentsController extends Controller
 
     }
 
-    public function deleteFile($file_path,$file_name)
-    {
+    public function deleteFile($file_path,$file_name){
         $path = storage_path('app/public/'.$file_path.'/'.$file_name);
-
         if (File::exists($path)) {
             File::delete($path);
         } else {
@@ -243,20 +237,16 @@ class AdminManageDocumentsController extends Controller
         }
     }
 
-    private function storeFile($file_path,$file)
-    {
+    private function storeFile($file_path,$file){
         $path = storage_path('app/public/'.$file_path);
-
         !file_exists($path) && mkdir($path, 0777, true);
-
         $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
         $file->move($path, $name);
 
         return $name;
     }
 
-    public function displayFile($file_path,$file_name)
-    {
+    public function displayFile($file_path,$file_name){
 
         $path = storage_path('app/public/'.$file_path.'/'.$file_name);
 
@@ -298,6 +288,7 @@ class AdminManageDocumentsController extends Controller
     }
 
     public function mangefile_page($child_document_id){
-        return view('admin.manage_file_document');
+        $child_document = ChildDocuments::find($child_document_id); 
+        return view('admin.manage_file_document',compact('child_document'));
     }
 }

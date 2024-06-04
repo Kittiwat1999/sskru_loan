@@ -69,13 +69,13 @@ Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->
 
 Route::get('/admin/manage_documents',[AdminManageDocumentsController::class,'manage_documents'])->name('admin.manage.documents');
 Route::put('/admin/manage_documents/srore_document',[AdminManageDocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
-Route::post('/admin/manage_documents/edit_document/{child_document_id}',[AdminManageDocumentsController::class,'EditChildDoc'])->name('admin.manage.documents.editdocument');
+Route::post('/admin/manage_documents/edit_document/{child_document_id}',[AdminManageDocumentsController::class,'edit_child_document'])->name('admin.manage.documents.editdocument');
 Route::delete('/admin/manage_documents/delete_document/{child_document_id}',[AdminManageDocumentsController::class,'DeleteChildDoc'])->name('admin.manage.documents.deletedocument');
 Route::put('/admin/manage_documents/store_doctype',[AdminManageDocumentsController::class,'sotoreDocType'])->name('admin.manage.documents.storedoctype');
 Route::post('/admin/manage_documents/edit_doctype/{doc_type_id}',[AdminManageDocumentsController::class,'editDocType'])->name('admin.manage.documents.editdoctype');
 Route::delete('/admin/manage_documents/delete_doctype/{doc_type_id}',[AdminManageDocumentsController::class,'deleteDocType'])->name('admin.manage.documents.deletedoctype');
 Route::post('/admin/manage_documents/update_useful_activity_hour',[AdminManageDocumentsController::class,'updateUsefulActivitytHour'])->name('admin.manage.documents.update.useful.hour');
-Route::get('/admin/manage_document/files/{child_document_id}',[AdminManageDocumentsController::class,'mangefile_page'])->name('admin.manage.file.document');
+Route::get('/admin/manage_documents/files/{child_document_id}',[AdminManageDocumentsController::class,'mangefile_page'])->name('admin.manage.file.document');
 
 Route::get('/admin/manage_documents/display_example_file/{file_id}',[AdminManageDocumentsController::class,'display_example_file_page'])->name('admin.display.example.file.page');
 Route::get('/admin/manage_documents/display_file/{generate_file}/{file_id}',[AdminManageDocumentsController::class,'display_file_page'])->name('admin.display.file.page');

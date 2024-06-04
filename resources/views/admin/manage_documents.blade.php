@@ -4,7 +4,7 @@
 @endsection
 @section('content')
     <section class="section dashboard">
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">รายการหนังสือ</h5>
                 <div class="table-responsive mb-3">
@@ -481,7 +481,6 @@
         function openEditModal(child_document){
             var editChildDocModal = new bootstrap.Modal(document.getElementById('editChildDocModal'));
             var editModalBody = document.getElementById('edit-modal-body');
-            fileLenght = parseInt(child_document.everyone_files.length);
 
             editModalBody.innerHTML = '';
             editModalBody.innerHTML = `
@@ -500,14 +499,6 @@
                             <option ${child_document.need_loan_balance ? 'selected' : '' } value="true">ต้องการ</option>
                             <option ${!child_document.need_loan_balance ? 'selected' : '' } value="false">ไม่ต้องการ</option>
                         </select>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="generate_file" value="true" ${(child_document.generate_file)? 'checked':''}>
-                            <label class="form-check-label" for="generate_file">
-                                เลือกหากต้องการให้ระบบกรอกเอกสารให้ผู้กู้
-                            </label>
-                        </div>
                     </div>
                 </form> 
             
