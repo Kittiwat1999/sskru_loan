@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
-            $table->integer('useful_activity_hour');
+            $table->string('variable');
+            $table->string('value');
         });
     }
 

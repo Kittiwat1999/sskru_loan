@@ -238,7 +238,9 @@ class MultiTableSeeder extends Seeder
 
     private function seedConfig(){
         DB::table('configs')->insert([
-            ['useful_activity_hour'=>36],
+            ['variable'=>'useful_activity_hour','value'=>36],
+            ['variable'=>'child_document_files_path','value'=>'child_document_files'],
+            ['variable'=>'child_document_example_file_path','value'=>'child_document_example_file'],
         ]);
     }
     private function seedDocuments(){ 

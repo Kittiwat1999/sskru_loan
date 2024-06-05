@@ -72,8 +72,8 @@
                                                     {{-- </form>  must be closed here --}}
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
                                                     <button type="sumbit" class="btn btn-light">ลบหนังสือ</button>
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
                                                 </div>
                                                 </form> <!-- but i'm lazy and here it easy to validate-->
                                             </div>
@@ -146,7 +146,7 @@
                             @foreach ($child_documents as $child_document)
                             <tr>
                                 <td class="text-center fw-bold">{{$loop->index+1}}</td>
-                                <td>{{ Str::limit($child_document->child_document_title, $limit = 35, $end = '...') }}</td>
+                                <td>{{ Str::limit($child_document->child_document_title, $limit = 40, $end = '...') }}</td>
                                 <td class="text-center">
                                     @if ($child_document->need_loan_balance)
                                         <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
@@ -197,8 +197,8 @@
                                                         {{-- </form>  must be closed here --}}
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
                                                         <button type="submit" class="btn btn-light">ลบเอกสาร</button>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
                                                     </div>
                                                     </form> <!-- but i'm lazy-->
                                                 </div>
@@ -354,89 +354,6 @@
             }
 
             return validate;
-        }
-
-        var fileIndexAdd = 1; //for add child document modal
-        var fileIndexEdit = 1; //for edit child document modal
-        
-        function addfile(formtype) {
-            var file_everyone_area = document.getElementById('file_everyone_area_'+formtype);
-            if(formtype == 'add'){
-                fileIndex = ++fileIndexAdd;
-            }else{
-                fileIndex = ++fileIndexEdit;
-            }
-
-            //file input
-            var div_file_input = document.createElement('div');
-            div_file_input.id = 'file_everyone_'+formtype+fileIndex;
-            div_file_input.className = "col-12 mb-3";
-            
-            var label_file_input = document.createElement('label');
-            label_file_input.className = 'form-label';
-            label_file_input.textContent = 'ตัวอย่างเอกสาร '+fileIndex;
-
-            var file_input = document.createElement('input');
-            file_input.type = 'file';
-            file_input.name = 'file_everyone[]';
-            file_input.className = 'form-control need-custom-validate';
-            file_input.accept="jpg,jpeg,png,pdf";
-
-            var div_invalid_file = document.createElement('div');
-            div_invalid_file.className = 'invalid-feedback';
-            div_invalid_file.textContent = 'กรุณาเลือกไฟล์ตัวอย่างเอกสาร';
-
-            div_file_input.appendChild(label_file_input);
-            div_file_input.appendChild(file_input);
-            div_file_input.appendChild(div_invalid_file);
-
-            //description
-            var div_description_input = document.createElement('div');
-            div_description_input.id = 'description_'+formtype+fileIndex;
-            div_description_input.className = "col-12 mb-3";
-
-            var label_description_input = document.createElement('label');
-            label_description_input.className = 'form-label';
-            label_description_input.textContent = 'คำอธิบายสำหรับตัวอย่างเอกสาร '+fileIndex;
-
-            var description_input = document.createElement('input');
-            description_input.type = 'text';
-            description_input.name = 'description[]';
-            description_input.className = 'form-control need-custom-validate';
-
-            var div_invalid_description = document.createElement('div');
-            div_invalid_description.className = 'invalid-feedback';
-            div_invalid_description.textContent = 'กรุณาเลือกไฟล์ตัวอย่างเอกสาร '+fileIndex;
-
-            div_description_input.appendChild(label_description_input);
-            div_description_input.appendChild(description_input);
-            div_description_input.appendChild(div_invalid_description);
-            
-            //append to form
-            file_everyone_area.appendChild(div_file_input);
-            file_everyone_area.appendChild(div_description_input);
-        }
-
-        function deletefile(formtype){
-            if(formtype == 'add'){
-                fileIndex = fileIndexAdd;
-            }else{
-                fileIndex = fileIndexEdit;
-            }
-
-            var file_everyone_area = document.getElementById('file_everyone_area_'+formtype);
-            var file_element = document.getElementById(`file_everyone_${formtype}${fileIndex}`);
-            var text_element = document.getElementById(`description_${formtype}${fileIndex}`);
-            if(file_element)file_everyone_area.removeChild(file_element);
-            if(text_element)file_everyone_area.removeChild(text_element);
-
-            if(fileIndex > 1){
-                if(formtype == 'add'){
-                    fileIndexAdd--;
-                }else{
-                    fileIndexEdit--;
-                }
-            }
         }
 
         async function submitAddChildDocForm(formId){
