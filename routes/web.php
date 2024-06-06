@@ -78,9 +78,11 @@ Route::post('/admin/manage_documents/update_useful_activity_hour',[AdminManageDo
 Route::get('/admin/manage_documents/files/{child_document_id}',[AdminManageDocumentsController::class,'mangefile_page'])->name('admin.manage.file.document');
 
 Route::post('/admin/manage_child_document/file/store/{child_document_id}',[AdminManageDocumentsController::class,'store_child_document_file'])->name('admin.store.child.documeent.file');
+Route::delete('/admin/manage_child_document/file/delete/{child_document_file_id}',[AdminManageDocumentsController::class,'delete_child_document_file'])->name('admin.delete.child.documeent.file');
 Route::put('/admin/manage_child_document/update/generate_file/{child_document_id}',[AdminManageDocumentsController::class,'update_child_document_generate_file'])->name('admim.child.document.update.generatefile');
 
 Route::post('/admin/manage_child_document/example_file/store/{child_document_id}',[AdminManageDocumentsController::class,'store_example_file'])->name('admin.store.example.file');
+Route::delete('/admin/manage_child_document/example_file/delete/{example_file_id}',[AdminManageDocumentsController::class,'delete_example_file'])->name('admin.delete.example.file');
 Route::post('/admin/manage_child_document/minors_example_file/store/{child_document_id}',[AdminManageDocumentsController::class,'stroe_minors_example_file'])->name('admin.store.minors.example.file');
 
 

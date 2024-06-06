@@ -54,6 +54,34 @@ class AdminManageDocumentsController extends Controller
         return redirect()->back()->with(['success'=>'เพิ่มข้อมูลเอกสารเรียบร้อยแล้ว']);
     }
 
+    public function edit_child_document(Request $request,$child_document_id){
+        // dd($request);
+        $rules = [
+            'child_document_title' => 'required|string|max:100',
+            'need_loan_balance' => 'required|string',
+        ];
+        
+        $messages = [
+            'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
+            'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
+            'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
+        ];
+        $request->validate($rules,$messages);
+        $child_document = ChildDocuments::find($child_document_id);
+        $child_document['child_document_title'] = $request->child_document_title;
+        $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
+        $child_document->save();
+        return redirect()->back()->with(['success'=>'แก้ใขข้อมูลเอกสาร'.$child_document['child_document_title'].'เรียบร้อยแล้ว']);
+    }
+
+    public function DeleteChildDoc($child_document_id){
+        $child_document = ChildDocuments::find($child_document_id);
+        $child_document['isactive'] = false;
+        $child_document->save();
+        return redirect()->back()->with(['success'=>'ลบเอกสาร'.$child_document['child_document_title'].'เรียบร้อยแล้ว']);
+    }
+
     public function store_child_document_file(Request $request,$child_document_id){
         // dd($request,$child_document_id);
         $rules = [
@@ -95,6 +123,13 @@ class AdminManageDocumentsController extends Controller
             $child_document->save();
             return redirect()->back()->with(['success'=>'ปิดใช้งานระบบช่วยกรอกเอกสารสำหรับ '.$child_document->child_document_title. 'แล้ว']);
         }
+    }
+
+    public function delete_child_document_file($child_document_file_id){
+        $child_document_file = ChildDocumentFiles::find($child_document_file_id);
+        $this->deleteFile($child_document_file->file_path, $child_document_file->file_name);
+        $child_document_file->delete();
+        return redirect()->back()->with(['success'=>'ลบไฟล์เสร็จสิ้น']);
     }
 
     public function store_example_file(Request $request,$child_document_id){
@@ -158,44 +193,11 @@ class AdminManageDocumentsController extends Controller
         return redirect()->back()->with(['success'=>'เพิ่มไฟล์ตัวอย่างเสร็จสิ้น']);
     }
 
-    public function edit_child_document(Request $request,$child_document_id){
-        // dd($request);
-        $rules = [
-            'child_document_title' => 'required|string|max:100',
-            'need_loan_balance' => 'required|string',
-        ];
-        
-        $messages = [
-            'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
-            'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
-            'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
-            'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
-        ];
-        $request->validate($rules,$messages);
-        $child_document = ChildDocuments::find($child_document_id);
-        $child_document['child_document_title'] = $request->child_document_title;
-        $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
-        $child_document->save();
-        return redirect()->back()->with(['success'=>'แก้ใขข้อมูลเอกสาร'.$child_document['child_document_title'].'เรียบร้อยแล้ว']);
-    }
-
-    public function delete_file_download($file_id){
-        $file_download = ChildDocumentFiles::where('id',$file_id)->first();
-        $this->deleteFile($file_download->file_path,$file_download->file_name);
-        $file_download->delete();
-    }
-
-    public function delete_example_file($file_id){
-        $example_file = ChildDocumentExampleFiles::where('id',$file_id)->first();
-        $this->deleteFile($example_file->file_path,$example_file->file_name);
+    public function delete_example_file($example_file_id){
+        $example_file = ChildDocumentExampleFiles::find($example_file_id);
+        $this->deleteFile($example_file->file_path, $example_file->file_name);
         $example_file->delete();
-    }
-
-    public function DeleteChildDoc($child_document_id){
-        $child_document = ChildDocuments::find($child_document_id);
-        $child_document['isactive'] = false;
-        $child_document->save();
-        return redirect()->back()->with(['success'=>'ลบเอกสาร'.$child_document['child_document_title'].'เรียบร้อยแล้ว']);
+        return redirect()->back()->with(['success'=>'ลบไฟล์เสร็จสิ้น']);
     }
 
     public function sotoreDocType(Request $request){
@@ -238,8 +240,6 @@ class AdminManageDocumentsController extends Controller
         $path = public_path($file_path.'/'.$file_name);
         if (File::exists($path)) {
             File::delete($path);
-        } else {
-            echo 'File does not exist.';
         }
     }
 
