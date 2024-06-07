@@ -36,12 +36,5 @@ class Borrower extends Model
         return $this->hasMany(UsefulActivities::class);
     }
 
-    public function old_loanrequest(){
-        return $this->hasMany(OldLoanRequest::class);
-    }
-
-    public function files(){
-        return $this->hasMany(Files::class);
-    }
 
 }

@@ -251,14 +251,6 @@
                                                     กรุณาเลือก ข้อมูลยอดเงิน
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="generate_file" name="generate_file" value="true">
-                                                    <label class="form-check-label" for="generate_file">
-                                                        เลือกหากต้องการให้ระบบกรอกเอกสารให้ผู้กู้
-                                                    </label>
-                                                </div>
-                                            </div>
                                         </form>  
                                         {{-- must be closed here --}}
                                     </div>
@@ -276,6 +268,146 @@
                 </div>
             </div>
         </div>
+        {{-- add-on document --}}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">รายการเอกสารส่วนเสริม</h5>
+                
+                <div class="table-responsive mb-3">
+                    <table class="table datatable table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center fw-bold">#</th>
+                                <th>เอกสาร</th>
+                                <th class="text-center">สำหรับผู้กู้ที่อายุต่ำกว่า 20 ปี</th>
+                                <th class="text-center">จัดการไฟล์</th>
+                                <th class="text-center">แก้ไข/ลบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($addon_documents as $addon_document)
+                            <tr>
+                                <td class="text-center fw-bold">{{$loop->index+1}}</td>
+                                <td>{{ Str::limit($addon_document->title, $limit = 40, $end = '...') }}</td>
+                                <td class="text-center">
+                                    @if ($addon_document->for_minors)
+                                        <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{route('admin.manage.addon.file.document',['addon_document_id' => $addon_document->id])}}" class="btn btn-danger">จัดการไฟล์</a>                                    
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-primary" onclick="openEditAddOnDocumentModal({{$addon_document}})"><i class="bi bi-pencil-fill"></i></button>
+                                        <button class="btn btn-light" data-bs-toggle="modal"   data-bs-target="#deleteAddOnDocumentModal{{$addon_document->id}}"><i class="bi bi-trash"></i></button>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="modal fade" id="editAddOnDocumentModal" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">แก้ใขเอกสาร</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body" id="edit-addon-document-modal-body">
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                        <button type="button" class="btn btn-primary" onclick="submitAddOnDocumentForm('editAddOnDocumentForm')">บันทึก</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- delete Modal -->
+                                        <div class="modal fade" id="deleteAddOnDocumentModal{{$addon_document->id}}" tabindex="-1" aria-labelledby="deleteAddOnDocumentModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteDocChildModalLabel">ลบเอกสาร</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="row" action="{{route('admin.manage.documents.delete.addon_document',['addon_document_id' => $addon_document->id])}}" method="post" id="addDocTypeForm">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                                <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$addon_document->title}}</span> หรือไม่</label>
+                                                        {{-- </form>  must be closed here --}}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-light">ลบเอกสาร</button>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
+                                                    </div>
+                                                    </form> <!-- but i'm lazy-->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+                            </tr>
+                                
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#addAddOnDocumnetModal">
+                            + เพิ่มเอกสารส่วนเสริม
+                          </button>
+                    </div>
+                    <div class="col-md-9"></div>
+                    <div>
+                        {{-- modal --}}
+                        <div class="modal fade" id="addAddOnDocumnetModal" tabindex="-1" aria-hidden="true" style="display: none;">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">เพิ่มเอกสารส่วนเสริม</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addAddonDocumentForm"  class="row" action="{{route('admin.manage.documents.store.addon_document')}}" method="POST">
+                                            @csrf
+                                            <div class="col-12 mb-3">
+                                                <label for="title" class="form-label">เอกสาร</label>
+                                                <input type="text" class="form-control need-custom-validate" id="title" name="title">
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกชื่อเอกสารส่วนเสริม
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <div class="form-check my-2">
+                                                    <input class="form-check-input" type="checkbox" id="for_minors" name="for_minors" value="true">
+                                                    <label class="form-check-label" for="for_minors">
+                                                        สำหรับผู้กู้ที่อายุน้อยกว่า 20 ปี
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>  
+                                        {{-- must be closed here --}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                        <button type="button" class="btn btn-primary" onclick="submitAddOnDocumentForm('addAddonDocumentForm')">บันทึก</button>
+                                    </div>
+                                    {{-- </form>  --}}
+                                    <!-- but i'm lazy and here it easy to validate-->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- end add-on document --}}
+        {{-- useful activities --}}
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">แก้ไขชั่วโมงกิจกรรมจิตอาสา</h5>
@@ -434,6 +566,65 @@
         }
 
         async function validateEditChildDocForm(formId){
+            var form = document.getElementById(formId);
+            var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
+            var validate = true;
+
+            inputs.forEach((input) => {
+                if(input.value == ''){
+                    validate = false;
+                    var invalid_element = input.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.add('d-inline');
+                }else{
+                    var invalid_element = input.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.remove('d-inline');
+                }
+
+            });
+            return validate;
+        }
+
+        function openEditAddOnDocumentModal(addon_document){
+            var editAddOnDocumentModal = new bootstrap.Modal(document.getElementById('editAddOnDocumentModal'));
+            var editModalBody = document.getElementById('edit-addon-document-modal-body');
+
+            editModalBody.innerHTML = '';
+            editModalBody.innerHTML = `
+                <form id="editAddOnDocumentForm"  class="row" action="{{route('admin.manage.documents.edit.addon_document',['addon_document_id' => 'PLACEHOLDER_ADDON_DOCUMENT_ID'])}}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="col-12 mb-3">
+                        <label for="title" class="form-label">เอกสาร</label>
+                        <input type="text" class="form-control need-custom-validate" id="title" name="title" value="${addon_document.title}">
+                        <div class="invalid-feedback">
+                            กรุณากรอกหัวข้อเอกสาร
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" id="for_minors" name="for_minors" value="true" ${(addon_document.for_minors) ? 'checked' : ''}>
+                            <label class="form-check-label" for="for_minors">
+                                สำหรับผู้กู้ที่อายุน้อยกว่า 20 ปี
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            
+            `;
+            editModalBody.innerHTML = editModalBody.innerHTML.replace('PLACEHOLDER_ADDON_DOCUMENT_ID', addon_document.id);
+            editAddOnDocumentModal.show();
+        }
+
+        async function submitAddOnDocumentForm(formId){
+            var form_validated = await validateAddOnDocumentForm(formId)
+
+            if(form_validated){
+                const form = document.getElementById(formId);
+                form.submit();
+            }
+        }
+
+        async function validateAddOnDocumentForm(formId){
             var form = document.getElementById(formId);
             var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
             var validate = true;

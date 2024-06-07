@@ -31,6 +31,7 @@ class MultiTableSeeder extends Seeder
          $this->seedConfig();
          $this->seedDocuments();
          $this->seedDocStructure();
+         $this->seedAddOnDocument();
 
     }
 
@@ -240,7 +241,9 @@ class MultiTableSeeder extends Seeder
         DB::table('configs')->insert([
             ['variable'=>'useful_activity_hour','value'=>36],
             ['variable'=>'child_document_files_path','value'=>'child_document_files'],
-            ['variable'=>'child_document_example_file_path','value'=>'child_document_example_file'],
+            ['variable'=>'child_document_example_files_path','value'=>'child_document_example_files'],
+            ['variable'=>'addon_document_files_path','value'=>'add_on_document_files'],
+            ['variable'=>'addon_document_example_files_path','value'=>'addon_document_example_files'],
         ]);
     }
     private function seedDocuments(){ 
@@ -253,6 +256,17 @@ class MultiTableSeeder extends Seeder
         DB::table('doc_structures')->insert([
             ['document_id'=>'1','child_document_id'=>'9'],
             ['document_id'=>'1','child_document_id'=>'5'],
+        ]);
+    }
+
+    private function seedAddOnDocument(){
+        DB::table('addon_documents')->insert([
+            ['title'=>'สำเนาบัตรประจำตัวประชาชนผู้กู้','for_minors'=>false],
+            ['title'=>'สำเนาบัตรประจำตัวประชาชนบิดา','for_minors'=>false],
+            ['title'=>'สำเนาบัตรประจำตัวประชาชนมารดา','for_minors'=>false],
+            ['title'=>'สำเนาบัตรประจำตัวประชาชนผู้แทนโดยชอบธรรม','for_minors'=>true],
+            ['title'=>'สำเนาบัตรประจำตัวเจ้าหน้าที่รัฐ','for_minors'=>false],
+
         ]);
     }
 }

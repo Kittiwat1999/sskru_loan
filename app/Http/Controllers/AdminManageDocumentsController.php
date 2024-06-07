@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddOnDocument;
+use App\Models\AddOnDocumentFile;
+use App\Models\AddOnDocumentExampleFile;
 use App\Models\ChildDocuments;
 use App\Models\ChildDocumentExampleFiles;
 use App\Models\ChildDocumentFiles;
@@ -14,14 +17,12 @@ use Illuminate\Support\Facades\Response;
 
 class AdminManageDocumentsController extends Controller
 {
-    private $child_document_example_file_path = "child_document_example_files";
-    private $child_document_file_path = "child_document_files";
-
     public function manage_documents(Request $request){
         $doc_types = DocTypes::where('isactive',true)->get();
         $useful_activity_hour = Config::where('variable','useful_activity_hour')->value('value');
         $child_documents = ChildDocuments::where('isactive',true)->get();
-        return view('admin.manage_documents',compact('doc_types','child_documents','useful_activity_hour'));
+        $addon_documents = AddOnDocument::where('isactive',true)->get();
+        return view('admin.manage_documents',compact('doc_types','child_documents','useful_activity_hour','addon_documents'));
     }
 
     public function manage_documents_file($child_document_id){
@@ -146,18 +147,18 @@ class AdminManageDocumentsController extends Controller
             'description.string' => 'คำอธิบายต้องเป็นข้อความ',
         ];
         $request->validate($rules,$messages);
-        $child_document_example_file_path = Config::where('variable','child_document_example_file_path')->value('value');
+        $child_document_example_files_path = Config::where('variable','child_document_example_files_path')->value('value');
         $get_example_file = $request->file('example_file');
-        $file_name = $this->storeFile($child_document_example_file_path,$get_example_file);
+        $file_name = $this->storeFile($child_document_example_files_path,$get_example_file);
         $example_file = new ChildDocumentExampleFiles();
         $example_file['child_document_id'] = $child_document_id;
         $example_file['description'] = $request->description;
         $example_file['file_for'] = 'everyone';
         $example_file['original_name'] = $get_example_file->getClientOriginalName();
-        $example_file['file_path'] = $child_document_example_file_path;
+        $example_file['file_path'] = $child_document_example_files_path;
         $example_file['file_name'] = $file_name;
         $example_file['file_type'] = last(explode('.', $file_name));
-        $example_file['full_path'] = $child_document_example_file_path.'/'.$file_name;
+        $example_file['full_path'] = $child_document_example_files_path.'/'.$file_name;
         $example_file['upload_date'] = date('Y-m-d');
         $example_file->save();
         return redirect()->back()->with(['success'=>'เพิ่มไฟล์ตัวอย่างเสร็จสิ้น']);
@@ -176,18 +177,18 @@ class AdminManageDocumentsController extends Controller
             'description.string' => 'คำอธิบายต้องเป็นข้อความ',
         ];
         $request->validate($rules,$messages);
-        $child_document_example_file_path = Config::where('variable','child_document_example_file_path')->value('value');
+        $child_document_example_files_path = Config::where('variable','child_document_example_files_path')->value('value');
         $get_minors_example_file = $request->file('example_file');
-        $file_name = $this->storeFile($child_document_example_file_path,$get_minors_example_file);
+        $file_name = $this->storeFile($child_document_example_files_path,$get_minors_example_file);
         $minors_example_file = new ChildDocumentExampleFiles();
         $minors_example_file['child_document_id'] = $child_document_id;
         $minors_example_file['description'] = $request->description;
         $minors_example_file['original_name'] = $get_minors_example_file->getClientOriginalName();
         $minors_example_file['file_for'] = 'minors';
-        $minors_example_file['file_path'] = $child_document_example_file_path;
+        $minors_example_file['file_path'] = $child_document_example_files_path;
         $minors_example_file['file_name'] = $file_name;
         $minors_example_file['file_type'] = last(explode('.', $file_name));
-        $minors_example_file['full_path'] = $child_document_example_file_path.'/'.$file_name;
+        $minors_example_file['full_path'] = $child_document_example_files_path.'/'.$file_name;
         $minors_example_file['upload_date'] = date('Y-m-d');
         $minors_example_file->save();
         return redirect()->back()->with(['success'=>'เพิ่มไฟล์ตัวอย่างเสร็จสิ้น']);
@@ -236,6 +237,132 @@ class AdminManageDocumentsController extends Controller
         return redirect()->back()->with(['success'=>'ลบหนังสือ '.$doc_type['doctype_title'].' เรียบร้อยแล้ว']);
     }
 
+    public function store_addon_document(Request $request){
+        $request->validate(
+            ['title' => 'required|string'],
+            [
+                'title.required' => 'ต้องกรอกชื่อเอกสารส่วนเสริม',
+                'title.string' => 'ชื่อเอกสารส่วนเสริมต้องเป็นตัวอักษร',
+            ]
+        );
+
+        $add_on_document = new AddOnDocument();
+        $add_on_document->title = $request->title;
+        $add_on_document->for_minors = (isset($request->for_minors)) ? true : false ;
+        $add_on_document->save();
+        return redirect()->back()->with(['success'=>'เพิ่มเอกสารส่วนเสริม '.$add_on_document->title.' เรียบร้อยแล้ว']);
+    }
+
+    public function edit_addon_document(Request $request, $addon_document_id){
+        $request->validate(
+            ['title' => 'required|string'],
+            [
+                'title.required' => 'ต้องกรอกชื่อเอกสารส่วนเสริม',
+                'title.string' => 'ชื่อเอกสารส่วนเสริมต้องเป็นตัวอักษร',
+            ]
+        );
+
+        $add_on_document = AddOnDocument::find($addon_document_id);
+        $add_on_document->title = $request->title;
+        $add_on_document->for_minors = (isset($request->for_minors)) ? true : false ;
+        $add_on_document->save();
+        return redirect()->back()->with(['success'=>'แก้ใขเอกสารส่วนเสริม '.$add_on_document->title.' เรียบร้อยแล้ว']);
+    }
+
+    public function  delete_addon_document($add_on_document_id){
+        $add_on_document = AddOnDocument::find($add_on_document_id);
+        $add_on_document->isactive = false;
+        $add_on_document->save();
+        return redirect()->back()->with(['success'=>'ลบเอกสารส่วนเสริม '.$add_on_document->title.' เรียบร้อยแล้ว']);
+    }
+
+    public function store_addon_document_file(Request $request,$addon_document_id){
+        // dd($request,$addon_document_id);
+        $rules = [
+            'addon_document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
+        ];
+        $messages = [
+            'addon_document_file.required' => 'กรุณาเลือกไฟล์',
+            'addon_document_file.file' => 'ต้องเป็นไฟล์',
+            'addon_document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
+            'addon_document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
+        ];
+        $request->validate($rules,$messages);
+        $addon_document_files_path = Config::where('variable','addon_document_files_path')->value('value');
+        $addon_document = AddOnDocument::find($addon_document_id);
+        $get_addon_document_file = $request->file('addon_document_file');
+        $file_name = $this->storeFile($addon_document_files_path,$get_addon_document_file);
+        $addon_document_file = new AddOnDocumentFile();
+        $addon_document_file['addon_document_id'] = $addon_document['id'];
+        $addon_document_file['description'] = $addon_document['title'];
+        $addon_document_file['original_name'] = $get_addon_document_file->getClientOriginalName();
+        $addon_document_file['file_path'] = $addon_document_files_path;
+        $addon_document_file['file_name'] = $file_name;
+        $addon_document_file['file_type'] = last(explode('.', $file_name));
+        $addon_document_file['full_path'] = $addon_document_files_path.'/'.$file_name;
+        $addon_document_file['upload_date'] = date('Y-m-d');
+        $addon_document_file->save();
+        return redirect()->back()->with(['success'=>'เพิ่มไฟล์สำหรับดาวน์โหลดเสร็จสิ้น']);
+    }
+
+    public function update_addon_document_generate_file(Request $request,$add_on_documnet_file){
+        if(isset($request->generate_file)){
+            $addon_document = AddOnDocument::find($add_on_documnet_file);
+            $addon_document->generate_file = true;
+            $addon_document->save();
+            return redirect()->back()->with(['success'=>'เปิดใช้งานระบบช่วยกรอกเอกสารสำหรับ '.$addon_document->title. 'แล้ว']);
+        }else{
+            $addon_document = AddOnDocument::find($add_on_documnet_file);
+            $addon_document->generate_file = false;
+            $addon_document->save();
+            return redirect()->back()->with(['success'=>'ปิดใช้งานระบบช่วยกรอกเอกสารสำหรับ '.$addon_document->title. 'แล้ว']);
+        }
+    }
+
+    public function delete_addon_document_file($addon_document_file_id){
+        $addon_document_file = AddOnDocumentFile::find($addon_document_file_id);
+        $this->deleteFile($addon_document_file->file_path, $addon_document_file->file_name);
+        $addon_document_file->delete();
+        return redirect()->back()->with(['success'=>'ลบไฟล์เสร็จสิ้น']);
+    }
+
+    public function store_example_addon_file(Request $request,$addon_document_id){
+        $rules = [
+            'addon_example_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'description' => 'required|string',
+        ];
+        $messages = [
+            'addon_example_file.required' => 'กรุณาเลือกไฟล์ที่ต้องการ',
+            'addon_example_file.file' => 'ไฟล์ที่เลือกต้องเป็นไฟล์',
+            'addon_example_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
+            'addon_example_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
+            'description.required' => 'กรุณากรอกคำอธิบาย',
+            'description.string' => 'คำอธิบายต้องเป็นข้อความ',
+        ];
+        $request->validate($rules,$messages);
+        $addon_document_example_files_path = Config::where('variable','addon_document_example_files_path')->value('value');
+        $get_addon_example_file = $request->file('addon_example_file');
+        $file_name = $this->storeFile($addon_document_example_files_path,$get_addon_example_file);
+        $addon_example_file = new AddOnDocumentExampleFile();
+        $addon_example_file['addon_document_id'] = $addon_document_id;
+        $addon_example_file['description'] = $request->description;
+        $addon_example_file['original_name'] = $get_addon_example_file->getClientOriginalName();
+        $addon_example_file['file_path'] = $addon_document_example_files_path;
+        $addon_example_file['file_name'] = $file_name;
+        $addon_example_file['file_type'] = last(explode('.', $file_name));
+        $addon_example_file['full_path'] = $addon_document_example_files_path.'/'.$file_name;
+        $addon_example_file['upload_date'] = date('Y-m-d');
+        $addon_example_file->save();
+        return redirect()->back()->with(['success'=>'เพิ่มไฟล์ตัวอย่างเสร็จสิ้น']);
+    }
+
+    public function delete_example_addon_file($example_addon_file_id){
+        $addon_example_file = AddOnDocumentExampleFile::find($example_addon_file_id);
+        $this->deleteFile($addon_example_file->file_path, $addon_example_file->file_name);
+        $addon_example_file->delete();
+        return redirect()->back()->with(['success'=>'ลบไฟล์เสร็จสิ้น']);
+    }
+
     public function deleteFile($file_path,$file_name){
         $path = public_path($file_path.'/'.$file_name);
         if (File::exists($path)) {
@@ -282,5 +409,13 @@ class AdminManageDocumentsController extends Controller
         $example_files = ChildDocumentExampleFiles::where('child_document_id',$child_document_id)->where('file_for','everyone')->select('id','original_name','file_path','file_type','file_name','description')->get();
         $minors_example_files = ChildDocumentExampleFiles::where('child_document_id',$child_document_id)->where('file_for','minors')->select('id','original_name','file_path','file_type','file_name','description')->get();
         return view('admin.manage_file_document',compact('child_document','child_document_file','example_files','minors_example_files'));
+    }
+
+    public function mange_addon_file_page($addon_document_id){
+        $addon_document = AddOnDocument::find($addon_document_id); 
+        $addon_document_file = AddOnDocumentFile::where('addon_document_id',$addon_document_id)->select('id','original_name','file_path','file_type','file_name')->first();
+        $addon_example_files = AddOnDocumentExampleFile::where('addon_document_id',$addon_document_id)->select('id','original_name','file_path','file_type','file_name','description')->get();
+    
+        return view('admin.manage_file_addon_document',compact('addon_document','addon_document_file','addon_example_files'));
     }
 }

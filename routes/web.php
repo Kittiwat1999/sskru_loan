@@ -67,24 +67,45 @@ Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
 Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
 
+//manage document page
 Route::get('/admin/manage_documents',[AdminManageDocumentsController::class,'manage_documents'])->name('admin.manage.documents');
-Route::put('/admin/manage_documents/srore_document',[AdminManageDocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
+// child doc crud
+Route::put('/admin/manage_documents/store_document',[AdminManageDocumentsController::class,'storeDocument'])->name('admin.manage.documents.storedocument');
 Route::post('/admin/manage_documents/edit_document/{child_document_id}',[AdminManageDocumentsController::class,'edit_child_document'])->name('admin.manage.documents.editdocument');
 Route::delete('/admin/manage_documents/delete_document/{child_document_id}',[AdminManageDocumentsController::class,'DeleteChildDoc'])->name('admin.manage.documents.deletedocument');
+
+// addon crud
+Route::post('/admin/manage_documents/store_addon_document',[AdminManageDocumentsController::class,'store_addon_document'])->name('admin.manage.documents.store.addon_document');
+Route::put('/admin/manage_documents/edit_addon_document/{addon_document_id}',[AdminManageDocumentsController::class,'edit_addon_document'])->name('admin.manage.documents.edit.addon_document');
+Route::delete('/admin/manage_documents/delete_addon_document/{addon_document_id}',[AdminManageDocumentsController::class,'delete_addon_document'])->name('admin.manage.documents.delete.addon_document');
+
+//doctype crud
 Route::put('/admin/manage_documents/store_doctype',[AdminManageDocumentsController::class,'sotoreDocType'])->name('admin.manage.documents.storedoctype');
 Route::post('/admin/manage_documents/edit_doctype/{doc_type_id}',[AdminManageDocumentsController::class,'editDocType'])->name('admin.manage.documents.editdoctype');
 Route::delete('/admin/manage_documents/delete_doctype/{doc_type_id}',[AdminManageDocumentsController::class,'deleteDocType'])->name('admin.manage.documents.deletedoctype');
+
 Route::post('/admin/manage_documents/update_useful_activity_hour',[AdminManageDocumentsController::class,'updateUsefulActivitytHour'])->name('admin.manage.documents.update.useful.hour');
+
+//child doc files
 Route::get('/admin/manage_documents/files/{child_document_id}',[AdminManageDocumentsController::class,'mangefile_page'])->name('admin.manage.file.document');
 
-Route::post('/admin/manage_child_document/file/store/{child_document_id}',[AdminManageDocumentsController::class,'store_child_document_file'])->name('admin.store.child.documeent.file');
-Route::delete('/admin/manage_child_document/file/delete/{child_document_file_id}',[AdminManageDocumentsController::class,'delete_child_document_file'])->name('admin.delete.child.documeent.file');
+Route::post('/admin/manage_child_document/file/store/{child_document_id}',[AdminManageDocumentsController::class,'store_child_document_file'])->name('admin.store.child.document.file');
+Route::delete('/admin/manage_child_document/file/delete/{child_document_file_id}',[AdminManageDocumentsController::class,'delete_child_document_file'])->name('admin.delete.child.document.file');
 Route::put('/admin/manage_child_document/update/generate_file/{child_document_id}',[AdminManageDocumentsController::class,'update_child_document_generate_file'])->name('admim.child.document.update.generatefile');
 
 Route::post('/admin/manage_child_document/example_file/store/{child_document_id}',[AdminManageDocumentsController::class,'store_example_file'])->name('admin.store.example.file');
 Route::delete('/admin/manage_child_document/example_file/delete/{example_file_id}',[AdminManageDocumentsController::class,'delete_example_file'])->name('admin.delete.example.file');
 Route::post('/admin/manage_child_document/minors_example_file/store/{child_document_id}',[AdminManageDocumentsController::class,'stroe_minors_example_file'])->name('admin.store.minors.example.file');
 
+// addon file
+Route::get('/admin/manage_documents/addon/files/{addon_document_id}',[AdminManageDocumentsController::class,'mange_addon_file_page'])->name('admin.manage.addon.file.document');
+
+Route::post('/admin/manage_addon_document/file/store/{addon_document_id}',[AdminManageDocumentsController::class,'store_addon_document_file'])->name('admin.store.addon.document.file');
+Route::delete('/admin/manage_addon_document/file/delete/{addon_document_file_id}',[AdminManageDocumentsController::class,'delete_addon_document_file'])->name('admin.delete.addon.document.file');
+Route::put('/admin/manage_addon_document/update/generate_file/{addon_document_id}',[AdminManageDocumentsController::class,'update_addon_document_generate_file'])->name('admim.addon.document.update.generatefile');
+
+Route::post('/admin/manage_addon_document/example_addon_file/store/{addon_document_id}',[AdminManageDocumentsController::class,'store_example_addon_file'])->name('admin.store.example.addon.file');
+Route::delete('/admin/manage_addon_document/example_addon_file/delete/{example_addon_file_id}',[AdminManageDocumentsController::class,'delete_example_addon_file'])->name('admin.delete.example.addon.file');
 
 Route::get('/admin/manage_documents/deisplayfile/file/{file_path}/{file_name}',[AdminManageDocumentsController::class,'displayFile'])->name('admin.display.file');
 
