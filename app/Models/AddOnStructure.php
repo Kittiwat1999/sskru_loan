@@ -10,5 +10,5 @@ class AddOnStructure extends Model
     use HasFactory;
     protected $table = 'addon_structures';
     protected $fillable = ['child_document_id','addon_document_id'];
-    public $timestamps = true;
+    public $timestamps = false;
 }

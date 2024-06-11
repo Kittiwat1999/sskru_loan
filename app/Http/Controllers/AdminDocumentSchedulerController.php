@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Http\Requests\AdminDocumentSchedulerRequest;
-
+use App\Models\AddOnStructure;
 use App\Models\DocTypes;
 use App\Models\Users;
 use App\Models\ChildDocuments;
@@ -27,14 +27,19 @@ class AdminDocumentSchedulerController extends Controller
     public function index(){
         $doc_types = DocTypes::where('isactive',true)->get();
         $child_documents = ChildDocuments::where('isactive',true)->get();
-        $useful_activity_hour = Config::where('id',1)->value('useful_activity_hour');
+        $useful_activity_hour = Config::where('variable','useful_activity_hour')->value('value');
         $documents = Documents::where('isactive',true)->get();
 
         foreach($documents as $document){
             $document['last_access'] = Users::where('id',$document['last_access'])->value('firstname');
             $document['doctype_title'] = DocTypes::where('id',$document['doctype_id'])->value('doctype_title');
         }
-
+        foreach($child_documents as $child_document){
+            $child_document['addon_documents'] = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
+                ->where('addon_structures.child_document_id',$child_document->id)
+                ->select('addon_documents.id','addon_documents.title','addon_documents.for_minors',)
+                ->get();
+        }
         return view('admin.document_scheduler',compact('doc_types','child_documents','useful_activity_hour','documents'));
     }
 
@@ -64,7 +69,10 @@ class AdminDocumentSchedulerController extends Controller
         $document = Documents::find($document_id);
         $document['child_document_id'] = DocStructure::where('document_id',$document_id)->pluck('child_document_id')->toArray();
         $document['doctype_title'] = DocTypes::where('id',$document['doctype_id'])->value('doctype_title');
-
+        $child_document['addon_documents'] = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
+            ->where('addon_structures.child_document_id',$document['id'])
+            ->select('addon_documents.id','addon_documents.title','addon_documents.for_minors',)
+            ->get();
         return json_encode($document);
     }
 

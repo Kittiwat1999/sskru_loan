@@ -50,29 +50,42 @@ admin document scheduler
                         <label for="start-date" class="col-form-label text-secondary">เลือกเอกสาร</label>
                     </div>
                     <div class="col-md-9 mt-3">
-                        @foreach($child_documents as $child_document)
-                        <div class="form-check my-2">
-                            <label class="form-check-label" for="document">
-                                {{$child_document->child_document_title}}
-                            </label>
-                            <input class="form-check-input need-custom-validate" type="checkbox" id="document{{$loop->index+1}}" name="child_documents[]" value="{{$child_document->id}}">
-                        </div>
-                        @endforeach
-                        <div class="form-check my-2">
-                            <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true">
-                            <label class="form-check-label" for="teacher-comment">
-                                หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
-                            </label>
-                        </div>
-                        <div class="form-check my-2">
-                            <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
-                            <label class="form-check-label" for="useful-act">
-                                กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
-                            </label>
+                        <div class="list-group">
+                            @foreach($child_documents as $child_document)
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="document{{$child_document->id}}">
+                                        {{$child_document->child_document_title}}
+                                    </label>
+                                    <input class="form-check-input need-custom-validate" type="checkbox" id="document{{$child_document->id}}" name="child_documents[]" value="{{$child_document->id}}">
+                                </div>
+                                @foreach($child_document->addon_documents as $addon_document)
+                                    <small>+ {{$addon_document->title}} {{($addon_document->for_minors) ? '(สำหรับผู้กู้อายุต่ำว่า 20 ปี)' : '' }}</small><br>
+                                @endforeach
+                            </div>
+                            @endforeach
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true">
+                                    <label class="form-check-label" for="teacher-comment">
+                                        หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
+                                    <label class="form-check-label" for="useful-act">
+                                        กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div id="checkbox-invalid-document-scheduler-put-form" class="invalid-feedback">
                             กรุณาเลือกเอกสาร
                         </div>
+
+                        
                     </div>
                     <div class="col-sm-3 mt-3">
                         <label for="start_date" class="col-form-label text-secondary">วันที่เริ่มต้น</label>
@@ -357,25 +370,37 @@ admin document scheduler
                         <label for="start-date" class="col-form-label text-secondary">เลือกเอกสาร</label>
                     </div>
                     <div class="col-md-9 mt-3">
-                        ${child_documents.map((child_document)=>{
-                            return `<div class="form-check my-2">
-                                        <label class="form-check-label" for="document">
-                                            ${child_document.child_document_title}
-                                        </label>
-                                        <input class="form-check-input need-custom-validate" type="checkbox"  name="child_documents[]" value="${child_document.id}" ${(document_data.child_document_id.includes(child_document.id)) ? 'checked' : ''}>
-                                    </div>`
-                        }).join('')}
-                        <div class="form-check my-2">
-                            <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true" ${(document_data.need_teacher_comment) ? 'checked' : ''}>
-                            <label class="form-check-label" for="teacher-comment">
-                                หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
-                            </label>
-                        </div>
-                        <div class="form-check my-2">
-                            <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true" ${(document_data.need_useful_activity) ? 'checked' : ''}>
-                            <label class="form-check-label" for="useful-act">
-                                กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
-                            </label>
+                        <div class="list-group">
+                            ${child_documents.map((child_document)=>{
+                                return `<div class="list-group-item">
+                                            <div class="form-check">
+                                                <label class="form-check-label" for="document">
+                                                    ${child_document.child_document_title}
+                                                </label>
+                                                <input class="form-check-input need-custom-validate" type="checkbox"  name="child_documents[]" value="${child_document.id}" ${(document_data.child_document_id.includes(child_document.id)) ? 'checked' : ''}>
+                                            </div>
+                                            ${child_document.addon_documents.map((addon_document)=>{
+                                                return `<small>+ ${addon_document.title} ${(addon_document.for_minors) ? '(สำหรับผู้กู้อายุต่ำว่า 20 ปี)' : '' } </small><br>`
+                                            }).join('')}
+                                        </div>`
+                            }).join('')}
+                            
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true" ${(document_data.need_teacher_comment) ? 'checked' : ''}>
+                                    <label class="form-check-label" for="teacher-comment">
+                                        หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true" ${(document_data.need_useful_activity) ? 'checked' : ''}>
+                                    <label class="form-check-label" for="useful-act">
+                                        กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div id="checkbox-invalid-document-scheduler-post-form" class="invalid-feedback">
                             กรุณาเลือกเอกสาร

@@ -422,7 +422,6 @@
                         </div>
                         <div class="col-md-2">
                             <label for="" class="col-form-label">ชั่วโมง</label>
-
                         </div>
                         <div class="col-md-2">
                             <button type="button" class="w-100 btn btn-primary" onclick="useful_activity_hour_form_submit()">บันทึก</button>
@@ -431,8 +430,8 @@
 
             </div>
         </div>
-    </section>
 
+    </section>
 @endsection
 
 @section('script')

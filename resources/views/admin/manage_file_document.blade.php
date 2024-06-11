@@ -232,6 +232,57 @@
         {{--end ตัวอย่างคนอายุไม่ถึง 20 --}}
         </div>
     </div>
+
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">เลือกเอกสารส่วนเสริม</h5>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="list-group">
+                        @foreach($child_document_addons as $chile_document_addon)
+                        <li class="list-group-item">{{$chile_document_addon->title}}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn btn-outline-primary  w-100" data-bs-toggle="modal" data-bs-target="#largeModal">
+                        + เพิ่ม/แก้ใขเอกสารส่วนเสริม
+                    </button>
+                    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">เพิ่ม/แก้ใขเอกสารส่วนเสริม</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{route('admim.child.document.update.addon',['child_document_id' => $child_document->id])}}" method="post">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-body">
+                                        <ul class="list-group">
+                                        @foreach($addon_documents as $addon_document)
+                                            <li class="list-group-item">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="addon-id-{{$addon_document->id}}" name="addons[]" value="{{$addon_document->id}}" {{(in_array($addon_document->id,$child_document_addon_id)) ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-dark" for="addon-id-{{$addon_document->id}}">
+                                                        {{$addon_document->title}} <span class="text-secondary">{{($addon_document->for_minors) ? '(สำหรับผู้กู้อายุต่ำว่า 20 ปี)' : ''}}</span>
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                        </ul>
+                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @endsection

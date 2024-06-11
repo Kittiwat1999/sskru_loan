@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AddOnDocument;
 use App\Models\AddOnDocumentFile;
 use App\Models\AddOnDocumentExampleFile;
+use App\Models\AddOnStructure;
 use App\Models\ChildDocuments;
 use App\Models\ChildDocumentExampleFiles;
 use App\Models\ChildDocumentFiles;
@@ -200,6 +201,8 @@ class AdminManageDocumentsController extends Controller
         $example_file->delete();
         return redirect()->back()->with(['success'=>'ลบไฟล์เสร็จสิ้น']);
     }
+
+
 
     public function sotoreDocType(Request $request){
         $request->validate(
@@ -403,19 +406,52 @@ class AdminManageDocumentsController extends Controller
         return redirect()->back()->with(['success'=>'แก้ใขชั่วโมงกิจกรรมจิตอาสาเป็น '.$request->useful_activity_hour.' ชั่วโมง เรียบร้อยแล้ว']);
     }
 
-    public function mangefile_page($child_document_id){
+    public function mange_file_page($child_document_id){
         $child_document = ChildDocuments::find($child_document_id); 
         $child_document_file = ChildDocumentFiles::where('child_document_id',$child_document_id)->select('id','original_name','file_path','file_type','file_name')->first();
         $example_files = ChildDocumentExampleFiles::where('child_document_id',$child_document_id)->where('file_for','everyone')->select('id','original_name','file_path','file_type','file_name','description')->get();
         $minors_example_files = ChildDocumentExampleFiles::where('child_document_id',$child_document_id)->where('file_for','minors')->select('id','original_name','file_path','file_type','file_name','description')->get();
-        return view('admin.manage_file_document',compact('child_document','child_document_file','example_files','minors_example_files'));
+        $addon_documents = AddOnDocument::where('isactive',true)->get();
+        $all_addon_id = AddOnDocument::where('isactive',true)->pluck('id')->toArray();
+        $child_document_addons = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
+            ->select('addon_documents.*')
+            ->get();
+        $child_document_addon_id = AddOnStructure::where('child_document_id',$child_document_id)->pluck('addon_document_id')->toArray();
+        return view('admin.manage_file_document',compact('child_document','child_document_file','example_files','minors_example_files','addon_documents','child_document_addons','child_document_addon_id','all_addon_id'));
     }
 
     public function mange_addon_file_page($addon_document_id){
         $addon_document = AddOnDocument::find($addon_document_id); 
         $addon_document_file = AddOnDocumentFile::where('addon_document_id',$addon_document_id)->select('id','original_name','file_path','file_type','file_name')->first();
         $addon_example_files = AddOnDocumentExampleFile::where('addon_document_id',$addon_document_id)->select('id','original_name','file_path','file_type','file_name','description')->get();
-    
         return view('admin.manage_file_addon_document',compact('addon_document','addon_document_file','addon_example_files'));
+    }
+
+    public function update_child_document_addon(Request $request,$child_document_id){
+        // dd($request,$child_document_id);
+        $validate_request = $request->validate(
+            [
+                'addons' => 'array',
+            ],
+            [
+                'addons.aray' => 'ประเภทข้อมูลไม่ถูกต้อง',
+            ]
+        );
+        if(!isset($request->addons)) $validate_request['addons'] = [];
+        $child_document_addon = AddOnStructure::where('child_document_id',$child_document_id)->pluck('addon_document_id')->toArray();
+        $addon_to_add = array_diff($validate_request['addons'],$child_document_addon);
+        $addon_to_delete = array_diff($child_document_addon,$validate_request['addons']);
+        // dd($addon_to_delete);
+        foreach($addon_to_add as $addon_document_id){
+            $addon_structure = new AddOnStructure();
+            $addon_structure->child_document_id = $child_document_id;
+            $addon_structure->addon_document_id = $addon_document_id;
+            $addon_structure->save();
+        }
+        foreach($addon_to_delete as $addon_document_id){
+            AddOnStructure::where('addon_document_id',$addon_document_id)->delete();
+        }
+
+        return redirect()->back()->with(['success'=>'แก้ใขข้อมูลเอกสารส่วนเสริมเรียบร้อยแลล้ว']);
     }
 }
