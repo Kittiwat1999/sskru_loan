@@ -2,7 +2,6 @@
 @section('title','manage data')
 @section('content')
     <section class="section dashboard">
-
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">คณะ</h5>
@@ -11,17 +10,18 @@
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
-                                <th class="text-center">คณะ</th>
+                                <th>คณะ</th>
                                 <th class="text-center">สาขา</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($faculties as $faculty)
                             <tr>
-                                <td class="text-center">1</td>
-                                <td class="text-center">คณะศิลปศาสตร์และวิทยาศาสตร์</td>
+                                <td class="text-center">{{$faculty->id}}</td>
+                                <td>{{$faculty->faculty_name}}</td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-danger">จัดการข้อมูลสาขา</button>
+                                    <a href="{{route('admin.manage.data.major',['faculty_id' => $faculty->id])}}" type="button" class="btn btn-danger">จัดการข้อมูลสาขา</a>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
@@ -30,6 +30,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

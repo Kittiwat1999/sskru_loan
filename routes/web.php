@@ -6,6 +6,7 @@ use App\Http\Controllers\BorrowerController;
 use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\OldLoanRequestController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
+use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\ExampleController;
@@ -300,6 +301,5 @@ Route::get('/generate_rabrongraidai',[ExampleController::class,'generate_rabrong
 Route::get('/generate_yinyorm',[ExampleController::class,'generate_yinyorm']);
 Route::get('/teachers_comment',[ExampleController::class,'teachers_comment']);
 
-Route::get('/admin/manage_data',function () {
-    return view('/admin/manage_data');
-});
+Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
+Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
