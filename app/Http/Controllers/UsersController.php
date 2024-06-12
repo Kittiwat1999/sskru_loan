@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Users;
 use App\HTTP\Requests\AdminMgeAccountRequest;
+use App\Models\Faculties;
+use App\Models\Majors;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
-    function admin_getUsersData(Request $request){
+    function index(Request $request){
         $select_privilage = $request->session()->get('select_privilage','employee');
         $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','username','email','firstname','lastname','privilage','created_at','updated_at']);
         $request->session()->put('select_privilage', $select_privilage);
-        return view('/admin/manage_account',compact('users'));
+        $faculties = Faculties::where('isactive',true)->get();
+        return view('/admin/manage_account',compact('users','faculties'));
     }
 
     function admin_getUsersDataByPrivilage(Request $request, $select_privilage){
@@ -130,5 +133,10 @@ class UsersController extends Controller
 
         Users::where('id',$request->id)->update($data);
         return redirect('/admin/manage_account');
+    }
+
+    public function get_major_by_faculty_id($faculty_id){
+        $majors = Majors::where('isactive',true)->where('faculty_id',$faculty_id)->get();
+        return json_encode($majors);
     }
 }

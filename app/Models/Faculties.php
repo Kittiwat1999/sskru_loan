@@ -10,5 +10,6 @@ class Faculties extends Model
     use HasFactory;
     protected $table = "faculties";
     protected $fillable = ['faculty_name','isactive'];
+    public $timestamps = false;
 
 }

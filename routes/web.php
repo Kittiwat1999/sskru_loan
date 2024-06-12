@@ -58,7 +58,7 @@ Route::post('/admin/document_scheduler/postdata/{document_id}',[AdminDocumentSch
 Route::delete('/admin/document_scheduler/deletedata/{document_id}',[AdminDocumentSchedulerController::class, 'deleteDocSchedulerData'])->name('admin.doc.scheduler.deletedata');
 
 
-Route::get('/admin/manage_account',[UsersController::class,'admin_getUsersData'])->name('admin_manage_account');
+Route::get('/admin/manage_account',[UsersController::class,'index'])->name('admin_manage_account');
 Route::get('/admin/manage_account/{select_privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
 
 Route::get('/admin/getUser/{id}',[UsersController::class,'admin_getUserById'])->name('admin.getUser');
@@ -67,6 +67,8 @@ Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])
 
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
 Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
+
+Route::get('/admin/manage_account/get_major_by_faculty_id/{faculty_id}',[UsersController::class,'get_major_by_faculty_id']);
 
 //manage document page
 Route::get('/admin/manage_documents',[AdminManageDocumentsController::class,'manage_documents'])->name('admin.manage.documents');
@@ -303,3 +305,4 @@ Route::get('/teachers_comment',[ExampleController::class,'teachers_comment']);
 
 Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
 Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
+Route::delete('/admin/manage_data/faculty/delete/{faculty_id}',[AdminManageDataController::class,'delete_faculty'])->name('admin.manage.data.delete.faculty');

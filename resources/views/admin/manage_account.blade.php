@@ -26,98 +26,108 @@
                         <!-- form Modal-->
                         <button type="button" class="btn btn-success w-100"  data-bs-toggle="modal" data-bs-target="#form-modal"><i class="bi bi-plus"></i> เพิ่มผู้ใช้</button>
                         <div class="modal fade" id="form-modal" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">เพิ่มผู้ใช้</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title">เพิ่มผู้ใช้</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="row" action="{{route('admin.createUser')}}" method="post">
+                                            @csrf
+                                            <div class="col-6">
+                                                <label for="prefix" class="col-form-label">คำนำหน้า</label>
+                                                <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
+                                                    <option value="" disabled selected>---</option>
+                                                    <option value="นาย">นาย</option>
+                                                    <option value="นาง">นาง</option>
+                                                    <option value="นางสาว">นางสาว</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    กรุณาเลือกคำนำหน้า
+                                                </div>
+                                            </div>
+                                            <div class="col-6"></div>
+                                            <div class="col-6">
+                                                <label for="firstname" class="col-form-label">ชื่อ</label>
+                                                <input type="text" name="firstname" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกชื่อ
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="lastname" class="col-form-label">นามสกุล</label>
+                                                <input type="text" name="lastname" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกนามสกุล
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="username" class="col-form-label">ชื่อบัญชี</label>
+                                                <input type="text" name="username" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกชื่อบัญชี
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="email" class="col-form-label">อีเมล์</label>
+                                                <input type="text" name="email" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกอีเมลล์
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="password" class="col-form-label">รหัสผ่าน</label>
+                                                <input id="new-input-password" type="password" name="password" class="form-control" required>
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกรหัสผ่าน
+                                                </div>
+                                            </div>
+                                            <div class="col-6"></div>
+                                            <div class="col-12">
+                                                <label for="privilage" class="col-form-label text-secondary">ประเภทผู้ใช้</label>
+                                                <select id="privilage" class="form-select" aria-label="Default select example" name="privilage" required>
+                                                    <option selected disabled value="admin">เลือกประเภทผู้ใช้..</option>
+                                                    <option value="admin">แอดมิน</option>
+                                                    <option value="employee">พนักงานทุนฯ</option>
+                                                    <option value="major">คณะ</option>
+                                                    <option value="teacher">อาจารย์ที่ปรึกษา</option>
+                                                    <option value="borrower">ผู้กู้</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    กรุณาเลือกประเภทผู้ใช้
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="faculty" class="col-form-label text-secondary">คณะ</label>
+                                                <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" required onchange="getMajorByFacultyId(this.value,'major')">
+                                                    <option selected disabled value="admin">เลือกคณะ..</option>
+                                                    @foreach($faculties as $faculty)
+                                                        <option value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    กรุณาเลือกคณะ
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="major" class="col-form-label text-secondary">สาขา</label>
+                                                <select id="major" class="form-select" aria-label="Default select example" name="major" required>
+                                                    <option selected disabled value="admin">เลือกสาขา..</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    กรุณาเลือกสาขา
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                            <button type="button" class="btn btn-primary">บันทึก</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                <form class="row" action="{{route('admin.createUser')}}" method="post">
-                                    @csrf
-                                    <div class="col-md-5">
-                                        <label for="prefix" class="col-form-label">คำนำหน้า</label>
-                                        <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
-                                            <option value="" disabled selected>---</option>
-                                            <option value="นาย">นาย</option>
-                                            <option value="นาง">นาง</option>
-                                            <option value="นางสาว">นางสาว</option>
-                                        </select>
-                                    </div>
-
-                                    @error('prefix')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="col-12">
-                                        <label for="firstname" class="col-form-label">ชื่อ</label>
-                                        <input type="text" name="firstname" class="form-control" required>
-                                    </div>
-                                    @error('firstname')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="col-12">
-                                        <label for="lastname" class="col-form-label">นามสกุล</label>
-                                        <input type="text" name="lastname" class="form-control" required>
-                                    </div>
-                                    @error('lanme')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="col-12">
-                                        <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
-                                        <input type="text" name="username" class="form-control" required>
-                                    </div>
-                                    @error('username')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="col-12">
-                                        <label for="email" class="col-form-label">email</label>
-                                        <input type="text" name="email" class="form-control" required>
-                                    </div>
-                                    @error('email')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="col-12">
-                                        <label for="password" class="col-form-label">รหัสผ่าน</label>
-                                        <input id="new-input-password" type="password" name="password" class="form-control" required>
-                                    </div>
-                                    @error('password')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="col-12">
-                                        <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                                        <select id="major" class="form-select" aria-label="Default select example" name="privilage" required>
-                                            <option selected disabled value="admin">---</option>
-                                            <option value="admin">แอดมิน</option>
-                                            <option value="employee">พนักงานทุนฯ</option>
-                                            <option value="major">คณะ</option>
-                                            <option value="teacher">อาจารย์ที่ปรึกษา</option>
-                                            <option value="borrower">ผู้กู้</option>
-                                        </select>
-                                    </div>
-                                    @error('privilage')
-                                    <div class="my-2">
-                                        <span class="text-danger">{{$message}}</span>
-                                    </div>
-                                    @enderror
-                                    <div class="text-end mt-3">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                        <button type="submit" class="btn btn-primary">บันทึก</button>
-                                    </div>
-                                </form>
-                                </div>
-                            </div>
                             </div>
                         </div><!-- End form Modal-->
                     </div>
@@ -195,11 +205,6 @@
             </div>
         </div>
     </section>
-
-   
-
-    
-
 
     <button id="button-showDataModal" class="d-none" type="button" data-bs-toggle="modal" data-bs-target="#showDataModal">
     </button>
@@ -325,7 +330,30 @@
             window.location.href = '{{ route('admin.manageaccount.privilage', ['select_privilage' => ':select_privilage']) }}'.replace(':select_privilage', select_privilage);
         }
 
+       
 
-        // Example: Fetch user with ID 123
+        function getMajorByFacultyId(faculty_id,major_element_id){
+
+            fetch(`{{url('/admin/manage_account/get_major_by_faculty_id/${faculty_id}')}}`)
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(majors => {
+                var select_major_element = document.getElementById(major_element_id);
+                select_major_element.innerHTML = `<option selected disabled value="admin">เลือกสาขา..</option>`;
+                majors.forEach((major) => {
+                    var option = document.createElement('option');
+                    option.value = major.id;
+                    option.innerText = major.major_name;
+                    select_major_element.appendChild(option);
+                })
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+        }
     </script>
 @endsection

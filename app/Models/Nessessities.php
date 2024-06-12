@@ -10,4 +10,5 @@ class Nessessities extends Model
     use HasFactory;
     protected $table = "nessessities";
     protected $fillable = ['nessessity_title','isactive'];
+    public $timestamps = false;
 }

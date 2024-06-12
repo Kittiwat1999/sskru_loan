@@ -26,4 +26,5 @@ class Parents extends Model
         'address_id',
         'is_main_parent',
     ];
+    public $timestamps = false;
 }
