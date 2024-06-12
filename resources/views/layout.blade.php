@@ -292,6 +292,13 @@
                 <span>คำร้องขอแก้ใขข้อมูล</span>
                 </a>
             </li><!-- End คำร้องขอแก้ใขข้อมูล Page Nav -->
+
+            <li class="nav-item">
+                <a id="manage_data" class="nav-link collapsed" href="{{url('/admin/manage_data')}}">
+                <i class="bi bi-box-seam"></i>
+                <span>แก้ไขเอกสาร</span>
+                </a>
+            </li><!-- End แก้ไขเอกสาร Page Nav -->
         @endif
 
         @if(($privilage == 'admin' || $privilage == "employee") || $privilage == 'faculty')

@@ -299,3 +299,7 @@ Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
 Route::get('/generate_rabrongraidai',[ExampleController::class,'generate_rabrongraidai']);
 Route::get('/generate_yinyorm',[ExampleController::class,'generate_yinyorm']);
 Route::get('/teachers_comment',[ExampleController::class,'teachers_comment']);
+
+Route::get('/admin/manage_data',function () {
+    return view('/admin/manage_data');
+});
