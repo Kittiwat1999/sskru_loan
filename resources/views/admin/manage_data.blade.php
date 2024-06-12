@@ -57,16 +57,18 @@
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                             <tbody>
-                                <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">ลักษณะที่ 1</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
-                                            <button class="btn btn-light w-25"><i class="bi bi-trash"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @foreach ($borrowerapprearancetype as $apprearancetype)
+                                    <tr>
+                                        <td class="text-center">{{$apprearancetype->id}}</td>
+                                        <td>{{$apprearancetype->title}}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center">
+                                                <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
+                                                <button class="btn btn-light w-25"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </thead>
                     </table>
@@ -94,9 +96,10 @@
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                             <tbody>
+                                @foreach ($properties as $property)
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">รายได้น้อย</td>
+                                    <td class="text-center">{{$property->id}}</td>
+                                    <td>{{$property->property_title}}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
@@ -104,6 +107,7 @@
                                         </div>
                                     </td>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </thead>
                     </table>
@@ -131,9 +135,10 @@
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                             <tbody>
+                                @foreach ($nessessities as $nessessity)
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">ไม่มีเงินกินข้าว</td>
+                                    <td class="text-center">{{$nessessity->id}}</td>
+                                    <td>{{$nessessity->nessessity_title}}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
@@ -141,6 +146,7 @@
                                         </div>
                                     </td>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </thead>
                     </table>

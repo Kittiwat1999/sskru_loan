@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class BorrowerApprearanceType extends Model
 {
     use HasFactory;
+    protected $table = "borrower_apprearance_types";
+    protected $fillable = ['title','isactive'];
 }
