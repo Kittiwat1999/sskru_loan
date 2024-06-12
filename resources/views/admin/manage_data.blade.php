@@ -85,7 +85,28 @@
                                         <td>
                                             <div class="d-flex justify-content-center">
                                                 <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
-                                                <button class="btn btn-light w-25"><i class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_apprearancetype{{$apprearancetype->id}}"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                            <div class="modal fade" id="delete_apprearancetype{{$apprearancetype->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">ลบประเภทผู้กู้ {{$apprearancetype->title}}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{route('admin.manage.data.delete.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
+                                                            <div class="modal-body">
+                                                                @csrf
+                                                                <div>ท่านต้องการลบ <span class="text-danger">{{$apprearancetype->title}}</span></div>
+                                                                @method('DELETE')
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-secondary">ลบ</button>
+                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -124,7 +145,28 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
-                                            <button class="btn btn-light w-25"><i class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_property{{$property->id}}"><i class="bi bi-trash"></i></button>
+                                        </div>
+                                        <div class="modal fade" id="delete_property{{$property->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">ลบประเภทผู้กู้ {{$property->property_title}}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{route('admin.manage.data.delete.property',['property_id' => $property->id])}}" method="post">
+                                                        <div class="modal-body">
+                                                            @csrf
+                                                            <div>ท่านต้องการลบ <span class="text-danger">{{$property->property_title}}</span></div>
+                                                            @method('DELETE')
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-secondary">ลบ</button>
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -163,7 +205,28 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
-                                            <button class="btn btn-light w-25"><i class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_nessessity{{$nessessity->id}}"><i class="bi bi-trash"></i></button>
+                                        </div>
+                                        <div class="modal fade" id="delete_nessessity{{$nessessity->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">ลบประเภทผู้กู้ {{$nessessity->nessessity_title}}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{route('admin.manage.data.delete.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
+                                                        <div class="modal-body">
+                                                            @csrf
+                                                            <div>ท่านต้องการลบ <span class="text-danger">{{$nessessity->nessessity_title}}</span></div>
+                                                            @method('DELETE')
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-secondary">ลบ</button>
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

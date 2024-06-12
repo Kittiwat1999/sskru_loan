@@ -306,3 +306,7 @@ Route::get('/teachers_comment',[ExampleController::class,'teachers_comment']);
 Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
 Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
 Route::delete('/admin/manage_data/faculty/delete/{faculty_id}',[AdminManageDataController::class,'delete_faculty'])->name('admin.manage.data.delete.faculty');
+Route::delete('/admin/manage_data/apprearancetype/delete/{apprearancetype_id}',[AdminManageDataController::class,'delete_apprearancetype'])->name('admin.manage.data.delete.apprearancetype');
+Route::delete('/admin/manage_data/property/delete/{property_id}',[AdminManageDataController::class,'delete_property'])->name('admin.manage.data.delete.property');
+Route::delete('/admin/manage_data/nessessity/delete/{nessessity_id}',[AdminManageDataController::class,'delete_nessessity'])->name('admin.manage.data.delete.nessessity');
+Route::delete('/admin/manage_data/major/delete/{major_id}',[AdminManageDataController::class,'delete_major'])->name('admin.manage.data.delete.major');

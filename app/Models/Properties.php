@@ -10,4 +10,5 @@ class Properties extends Model
     use HasFactory;
     protected $table = "properties";
     protected $fillable = ['property_title','isactive'];
+    public $timestamps = false;
 }
