@@ -48,7 +48,8 @@ class AdminManageDataController extends Controller
 
     public function major_page($faculty_id){
         $majors = Majors::where('isactive',true)->where('faculty_id',$faculty_id)->get();
-        return view('admin.manage_data_major' ,compact('majors'));
+        $faculty = Faculties::find($faculty_id);
+        return view('admin.manage_data_major' ,compact('majors','faculty'));
     }
 
     public function delete_major($major_id){
@@ -56,5 +57,42 @@ class AdminManageDataController extends Controller
         $major->isactive = false;
         $major->save();
         return redirect()->back()->with(['success'=>'ลบ'.$major->major_name.'แล้ว']);
+    }
+
+    public function add_faculty(Request $request){
+        $faculty = new Faculties();
+        $faculty->faculty_name = $request->faculty_name;
+        $faculty->save();
+        return redirect()->back()->with(['success'=>'เพิ่มคณะ '.$faculty->faculty_name.' เรียบร้อยแล้ว']);
+    }
+
+    public function add_apprearancetype(Request $request){
+        $apprearancetype = new BorrowerApprearanceType();
+        $apprearancetype->title = $request->apprearancetype_title;
+        $apprearancetype->save();
+        return redirect()->back()->with(['success'=>'เพิ่มประเภทผู้กู้ '.$apprearancetype->title.' เรียบร้อยแล้ว']);
+    }
+
+    public function add_property(Request $request){
+        $property = new Properties();
+        $property->property_title = $request->property_title;
+        $property->save();
+        return redirect()->back()->with(['success'=>'เพิ่มคุณสมบัติผู้กู้ '.$property->property_title.' เรียบร้อยแล้ว']);
+    }
+
+    
+    public function add_nessessity(Request $request){
+        $nessessity = new Nessessities();
+        $nessessity->nessessity_title = $request->nessessity_title;
+        $nessessity->save();
+        return redirect()->back()->with(['success'=>'เพิ่มคุณสมบัติผู้กู้ '.$nessessity->nessessity_title.' เรียบร้อยแล้ว']);
+    }
+
+    public function add_major(Request $request,$faculty_id){
+        $major = new majors();
+        $major->major_name = $request->major_name;
+        $major->faculty_id = $faculty_id;
+        $major->save();
+        return redirect()->back()->with(['success'=>'เพิ่มสาขา '.$major->major_name.' เรียบร้อยแล้ว']);
     }
 }

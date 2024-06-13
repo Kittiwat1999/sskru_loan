@@ -310,3 +310,8 @@ Route::delete('/admin/manage_data/apprearancetype/delete/{apprearancetype_id}',[
 Route::delete('/admin/manage_data/property/delete/{property_id}',[AdminManageDataController::class,'delete_property'])->name('admin.manage.data.delete.property');
 Route::delete('/admin/manage_data/nessessity/delete/{nessessity_id}',[AdminManageDataController::class,'delete_nessessity'])->name('admin.manage.data.delete.nessessity');
 Route::delete('/admin/manage_data/major/delete/{major_id}',[AdminManageDataController::class,'delete_major'])->name('admin.manage.data.delete.major');
+Route::post('/admin/manage_data/faculty/add/',[AdminManageDataController::class,'add_faculty'])->name('admin.manage.data.add.faculty');
+Route::post('/admin/manage_data/apprearancetype/add/',[AdminManageDataController::class,'add_apprearancetype'])->name('admin.manage.data.add.apprearancetype');
+Route::post('/admin/manage_data/property/add/',[AdminManageDataController::class,'add_property'])->name('admin.manage.data.add.property');
+Route::post('/admin/manage_data/nessessity/add/',[AdminManageDataController::class,'add_nessessity'])->name('admin.manage.data.add.nessessity');
+Route::post('/admin/manage_data/major/add/{faculty_id}',[AdminManageDataController::class,'add_major'])->name('admin.manage.data.add.major');
