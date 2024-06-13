@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Users;
 use App\HTTP\Requests\AdminMgeAccountRequest;
 use App\Models\Faculties;
+use App\Models\FacultyAccounts;
 use App\Models\Majors;
+use App\Models\TeacherAccounts;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,7 +25,8 @@ class UsersController extends Controller
     function admin_getUsersDataByPrivilage(Request $request, $select_privilage){
         $request->session()->put('select_privilage', $select_privilage);
         $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','username','email','firstname','lastname','privilage','created_at','updated_at']);
-        return view('/admin/manage_account',compact('users'));
+        $faculties = Faculties::where('isactive',true)->get();
+        return view('/admin/manage_account',compact('users','faculties'));
     }
 
     function admin_getUserById($id){
@@ -41,7 +44,7 @@ class UsersController extends Controller
 
     function admin_createUser(AdminMgeAccountRequest $request){
         date_default_timezone_set("Asia/Bangkok");
-
+        // dd($request);
         $data = [
             'prefix'=>$request->prefix,
             'firstname'=>$request->firstname,
@@ -54,18 +57,55 @@ class UsersController extends Controller
             'updated_at'=>date('Y-m-d H:i:s')
         ];
         // dd($data);
-        Users::create($data);
+        $create_user = Users::create($data);
 
-        return redirect('/admin/manage_account');
+        if($request->privilage == 'faculty'){
+            $request->validate(
+                ['faculty'=>'required|string'],
+                [
+                    'faculty.required' => 'บัญชีคณะต้องระบุคณะที่สังกัด',
+                    'faculty.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
+                ]
+                );
+            $faculty = $request->faculty;
+        }
+        if($request->privilage == 'teacher'){
+            $request->validate(
+                [   
+                    'major'=>'required|string',
+                    'faculty'=>'required|string'
+                ],
+                [
+                    'major.required' => 'บัญชีสาขาต้องระบุสาขาที่สังกัด',
+                    'major.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
+                    'faculty.required' => 'บัญชีคณะต้องระบุคณะที่สังกัด',
+                    'faculty.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
+                ]
+                );
+            $major = $request->major;
+            $faculty = $request->faculty;
+
+        }
+
+        if($create_user->privilage == 'faculty'){
+            $faculty_account = new FacultyAccounts();
+            $faculty_account->user_id = $create_user->id;
+            $faculty_account->faculty_id = $faculty;
+            $faculty_account->save();
+        }else if($create_user->privilage == 'teacher'){
+            $teacher_account = new TeacherAccounts();
+            $teacher_account->user_id = $create_user->id;
+            $teacher_account->faculty_id = $faculty;
+            $teacher_account->major_id = $major;
+            $teacher_account->save();
+        }
+
+        return redirect()->back()->with(['success'=>'เพิ่มข้อมูลผู้ใช้ user_id:'.$create_user->username.'แล้ว']);
     }
 
     function admin_editAccount(Request $request){
         date_default_timezone_set("Asia/Bangkok");
-
         $user = Users::where('id',$request->id)->first();
-
-
-        // dd($request);
         $request->validate(
             [
                 'prefix' => 'required|string|max:30',
@@ -79,7 +119,6 @@ class UsersController extends Controller
                 'max' => 'กรุณากรอก :attribute ไม่เกิน :max ตัวอักษร',
             ]
         );
-
         $data = [
             'prefix'=>$request->prefix,
             'firstname'=>$request->firstname,
@@ -87,7 +126,6 @@ class UsersController extends Controller
             'privilage'=>$request->privilage,
             'updated_at'=>date('Y-m-d H:i:s')
         ];
-
         if($request->username != $user->username){
             $request->validate(
                 ['username' => 'required|string|unique:users,username|max:255'],
@@ -98,10 +136,8 @@ class UsersController extends Controller
                     'unique' => ':attribute นี้มีอยู่ในระบบแล้ว',
                 ]
             );
-
             $data['username'] = $request->username;
         }
-
         if($request->email != $user->email){
             $request->validate(
                 ['email' => 'required|string|unique:users,email|max:255'],
@@ -115,7 +151,6 @@ class UsersController extends Controller
 
             $data['email'] = $request->email;
         }
-
         //check password are input
         if($request->password != null){
             $request->validate(
@@ -129,10 +164,64 @@ class UsersController extends Controller
 
             $data['password'] = Hash::make($request->password);
         }
-        // dd($data);
 
-        Users::where('id',$request->id)->update($data);
-        return redirect('/admin/manage_account');
+        $update_user = Users::where('id',$request->id)->update($data);
+
+        if($request->privilage == 'faculty' || $request->privilage == 'teacher'){
+            $request->validate(
+                ['faculty'=>'required|string'],
+                [
+                    'faculty.required' => 'บัญชีคณะต้องระบุคณะที่สังกัด',
+                    'faculty.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
+                ]
+                );
+            $faculty = $request->faculty;
+        }
+        if($request->privilage == 'teacher'){
+            $request->validate(
+                ['major'=>'required|string'],
+                [
+                    'major.required' => 'บัญชีสาขาต้องระบุสาขาที่สังกัด',
+                    'major.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
+                ]
+                );
+            $major = $request->major;
+        }
+
+        if($user->privilage != $data['privilage']){
+            if($user->privilage == 'faculty'){
+                $faculty_account = FacultyAccounts::find($user->id);
+                $faculty_account->delete();
+            }else if($user->privilage == 'teacher'){
+                $teacher_account = TeacherAccounts::find($user->id);
+                $teacher_account->delete();
+            }
+
+            if($update_user->privilage == 'faculty'){
+                $faculty_account = new FacultyAccounts();
+                $faculty_account->user_id = $user->id;
+                $faculty_account->faculty_id = $faculty;
+                $faculty_account->save();
+            }else if($update_user->privilage == 'teacher'){
+                $teacher_account = new TeacherAccounts();
+                $teacher_account->user_id = $user->id;
+                $teacher_account->faculty_id = $faculty;
+                $teacher_account->major_id = $major;
+                $teacher_account->save();
+            }
+        }else{
+            if($user->privilage == 'faculty'){
+                $faculty_account = FacultyAccounts::find($user->id);
+                $faculty_account->faculty_id = $faculty;
+                $faculty_account->save();
+            }else if($user->privilage == 'teacher'){
+                $teacher_account = TeacherAccounts::find($user->id);
+                $teacher_account->faculty_id = $faculty;
+                $teacher_account->major_id = $major;
+                $teacher_account->save();
+            }
+        }
+        return redirect()->back()->with(['success'=>'แก้ใขข้อมูลผู้ใช้เสร็จสิ้น']);
     }
 
     public function get_major_by_faculty_id($faculty_id){

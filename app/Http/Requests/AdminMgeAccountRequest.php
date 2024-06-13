@@ -15,8 +15,8 @@ class AdminMgeAccountRequest extends FormRequest
     {
         return [
             'prefix' => 'required|string|max:30',
-            'fname' => 'required|string|max:50',
-            'lname' => 'required|string|max:50',
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
             'username' => 'required|string|unique:users,username|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8', // Add more complex rules as needed
