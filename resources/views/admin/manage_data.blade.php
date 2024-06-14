@@ -26,14 +26,14 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
+                                        <button type="button" class="btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#edit_faculty{{$faculty->id}}"><i class="bi bi-pencil-fill"></i></button>
                                         <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_faculty{{$faculty->id}}"><i class="bi bi-trash"></i></button>
                                     </div>
                                     <div class="modal fade" id="delete_faculty{{$faculty->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">ลบคณะ {{$faculty->faculty_name}}</h5>
+                                                    <h5 class="modal-title">ลบคณะ</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <form action="{{route('admin.manage.data.delete.faculty',['faculty_id' => $faculty->id])}}" method="post">
@@ -45,6 +45,33 @@
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-secondary">ลบ</button>
                                                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="edit_faculty{{$faculty->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">แก้ไขชื่อ</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{{route('admin.manage.data.edit.faculty',['faculty_id' => $faculty->id])}}" method="post">
+                                                    <div class="modal-body">
+                                                        @csrf
+                                                        <div class="col-12">
+                                                            <label for="faculty_name" class="form-label">ชื่อคณะ</label>
+                                                            <input type="text" class="form-control need-custom-validate" id="faculty_name"  name="faculty_name" value="{{$faculty->faculty_name}}">
+                                                            <div class="invalid-feedback">
+                                                                กรุณากรอกชื่อคณะ
+                                                            </div>
+                                                        </div>
+                                                        @method('PUT')
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                        <button type="submit" class="btn btn-primary">บันทึก</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -111,14 +138,14 @@
                                         <td>{{$apprearancetype->title}}</td>
                                         <td>
                                             <div class="d-flex justify-content-center">
-                                                <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
+                                                <button type="button" class="btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#edit_apprearancetype{{$apprearancetype->id}}"><i class="bi bi-pencil-fill"></i></button>
                                                 <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_apprearancetype{{$apprearancetype->id}}"><i class="bi bi-trash"></i></button>
                                             </div>
                                             <div class="modal fade" id="delete_apprearancetype{{$apprearancetype->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">ลบประเภทผู้กู้ {{$apprearancetype->title}}</h5>
+                                                            <h5 class="modal-title">ลบประเภทผู้กู้</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <form action="{{route('admin.manage.data.delete.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
@@ -130,6 +157,33 @@
                                                             <div class="modal-footer">
                                                                 <button type="submit" class="btn btn-secondary">ลบ</button>
                                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="edit_apprearancetype{{$apprearancetype->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">แก้ไขประเภทผู้กู้ {{$apprearancetype->apprearancetype_title}}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{route('admin.manage.data.edit.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
+                                                            <div class="modal-body">
+                                                                @csrf
+                                                                <div class="col-12">
+                                                                    <label for="apprearancetype_title" class="form-label">ประเภทผู้กู้</label>
+                                                                    <input type="text" class="form-control need-custom-validate" id="apprearancetype_title"  name="apprearancetype_title" value="{{$apprearancetype->title}}">
+                                                                    <div class="invalid-feedback">
+                                                                        กรุณากรอกประเภทผู้กู้
+                                                                    </div>
+                                                                </div>
+                                                                @method('PUT')
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                                <button type="submit" class="btn btn-primary">บันทึก</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -197,14 +251,14 @@
                                     <td>{{$property->property_title}}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
+                                            <button type="button" class="btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#edit_property{{$property->id}}"><i class="bi bi-pencil-fill"></i></button>
                                             <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_property{{$property->id}}"><i class="bi bi-trash"></i></button>
                                         </div>
                                         <div class="modal fade" id="delete_property{{$property->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">คุณสมบัติผู้กู้ {{$property->property_title}}</h5>
+                                                        <h5 class="modal-title">ลบคุณสมบัติผู้กู้</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <form action="{{route('admin.manage.data.delete.property',['property_id' => $property->id])}}" method="post">
@@ -216,6 +270,33 @@
                                                         <div class="modal-footer">
                                                             <button type="submit" class="btn btn-secondary">ลบ</button>
                                                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="edit_property{{$property->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">แก้ไขคุณสมบัติผู้กู้</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{route('admin.manage.data.edit.property',['property_id' => $property->id])}}" method="post">
+                                                        <div class="modal-body">
+                                                            @csrf
+                                                            <div class="col-12">
+                                                                <label for="property_title" class="form-label">คุณสมบัติผู้กู้</label>
+                                                                <input type="text" class="form-control need-custom-validate" id="property_title"  name="property_title" value="{{$property->property_title}}">
+                                                                <div class="invalid-feedback">
+                                                                    กรุณากรอกคุณสมบัติผู้กู้
+                                                                </div>
+                                                            </div>
+                                                            @method('PUT')
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                            <button type="submit" class="btn btn-primary">บันทึก</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -283,14 +364,14 @@
                                     <td>{{$nessessity->nessessity_title}}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
+                                            <button type="button" class="btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#edit_nessessity{{$nessessity->id}}"><i class="bi bi-pencil-fill"></i></button>
                                             <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_nessessity{{$nessessity->id}}"><i class="bi bi-trash"></i></button>
                                         </div>
                                         <div class="modal fade" id="delete_nessessity{{$nessessity->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">ลบเหตุผลจำเป็นของการกู้ยืม {{$nessessity->nessessity_title}}</h5>
+                                                        <h5 class="modal-title">ลบเหตุผลจำเป็นของการกู้ยืม</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <form action="{{route('admin.manage.data.delete.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
@@ -302,6 +383,33 @@
                                                         <div class="modal-footer">
                                                             <button type="submit" class="btn btn-secondary">ลบ</button>
                                                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="edit_nessessity{{$nessessity->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">แก้ไขเหตุผลจำเป็นของการกู้ยืม</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{route('admin.manage.data.edit.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
+                                                        <div class="modal-body">
+                                                            @csrf
+                                                            <div class="col-12">
+                                                                <label for="nessessity_title" class="form-label">เหตุผลจำเป็นของการกู้ยืม</label>
+                                                                <input type="text" class="form-control need-custom-validate" id="nessessity_title"  name="nessessity_title" value="{{$nessessity->nessessity_title}}">
+                                                                <div class="invalid-feedback">
+                                                                    กรุณากรอกเหตุผลจำเป็นของการกู้ยืม
+                                                                </div>
+                                                            </div>
+                                                            @method('PUT')
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                            <button type="submit" class="btn btn-primary">บันทึก</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -350,6 +458,6 @@
                 </div>
             </div>
         </div>
-    
+
     </section>
 @endsection

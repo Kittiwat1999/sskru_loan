@@ -80,7 +80,7 @@ class AdminManageDataController extends Controller
         return redirect()->back()->with(['success'=>'เพิ่มคุณสมบัติผู้กู้ '.$property->property_title.' เรียบร้อยแล้ว']);
     }
 
-    
+
     public function add_nessessity(Request $request){
         $nessessity = new Nessessities();
         $nessessity->nessessity_title = $request->nessessity_title;
@@ -94,5 +94,40 @@ class AdminManageDataController extends Controller
         $major->faculty_id = $faculty_id;
         $major->save();
         return redirect()->back()->with(['success'=>'เพิ่มสาขา '.$major->major_name.' เรียบร้อยแล้ว']);
+    }
+
+    public function edit_faculty(Request $request,$faculty_id){
+        $faculty = Faculties::find($faculty_id);
+        $faculty->faculty_name = $request->input('faculty_name');
+        $faculty->save();
+        return redirect()->back()->with(['success'=>'แก้ไขชื่อคณะ '.$faculty->faculty_name.' เรียบร้อยแล้ว']);
+    }
+
+    public function edit_apprearancetype(Request $request,$apprearancetype_id){
+        $apprearancetype = BorrowerApprearanceType::find($apprearancetype_id);
+        $apprearancetype->title = $request->input('apprearancetype_title');
+        $apprearancetype->save();
+        return redirect()->back()->with(['success'=>'แก้ไขประเภทผู้กู้ '.$apprearancetype->title.' เรียบร้อยแล้ว']);
+    }
+
+    public function edit_property(Request $request,$property_id){
+        $property = Properties::find($property_id);
+        $property->property_title = $request->input('property_title');
+        $property->save();
+        return redirect()->back()->with(['success'=>'แก้ไขคุณสมบัติผู้กู้ '.$property->property_title.' เรียบร้อยแล้ว']);
+    }
+
+    public function edit_nessessity(Request $request,$nessessity_id){
+        $nessessity = Nessessities::find($nessessity_id);
+        $nessessity->nessessity_title = $request->input('nessessity_title');
+        $nessessity->save();
+        return redirect()->back()->with(['success'=>'แก้ไขเหตุผลจำเป็นของการกู้ยืม '.$nessessity->nessessity_title.' เรียบร้อยแล้ว']);
+    }
+
+    public function edit_major(Request $request,$major_id){
+        $major = majors::find($major_id);
+        $major->major_name = $request->input('major_name');
+        $major->save();
+        return redirect()->back()->with(['success'=>'แก้ไขเหตุผลจำเป็นของการกู้ยืม '.$major->major_name.' เรียบร้อยแล้ว']);
     }
 }

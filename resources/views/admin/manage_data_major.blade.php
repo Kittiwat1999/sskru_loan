@@ -21,14 +21,14 @@
                                 <td>{{$major->major_name}}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary w-25"><i class="bi bi-pencil-fill"></i></button>
+                                        <button type="button" class="btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#edit_major{{$major->id}}"><i class="bi bi-pencil-fill"></i></button>
                                         <button type="submit" class="btn btn-light w-25"  data-bs-toggle="modal" data-bs-target="#delete_major{{$major->id}}"><i class="bi bi-trash"></i></button>
                                     </div>
                                     <div class="modal fade" id="delete_major{{$major->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">ลบสาขา {{$major->major_name}}</h5>
+                                                    <h5 class="modal-title">ลบสาขา</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <form action="{{route('admin.manage.data.delete.major',['major_id' => $major->id])}}" method="post">
@@ -40,6 +40,33 @@
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-secondary">ลบ</button>
                                                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="edit_major{{$major->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">แก้ไขชื่อ</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{{route('admin.manage.data.edit.major',['major_id' => $major->id])}}" method="post">
+                                                    <div class="modal-body">
+                                                        @csrf
+                                                        <div class="col-12">
+                                                            <label for="major_name" class="form-label">ชื่อสาขา</label>
+                                                            <input type="text" class="form-control need-custom-validate" id="major_name"  name="major_name" value="{{$major->major_name}}">
+                                                            <div class="invalid-feedback">
+                                                                กรุณากรอกชื่อสาขา
+                                                            </div>
+                                                        </div>
+                                                        @method('PUT')
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                        <button type="submit" class="btn btn-primary">บันทึก</button>
                                                     </div>
                                                 </form>
                                             </div>

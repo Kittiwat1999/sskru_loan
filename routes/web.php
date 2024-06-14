@@ -315,3 +315,8 @@ Route::post('/admin/manage_data/apprearancetype/add/',[AdminManageDataController
 Route::post('/admin/manage_data/property/add/',[AdminManageDataController::class,'add_property'])->name('admin.manage.data.add.property');
 Route::post('/admin/manage_data/nessessity/add/',[AdminManageDataController::class,'add_nessessity'])->name('admin.manage.data.add.nessessity');
 Route::post('/admin/manage_data/major/add/{faculty_id}',[AdminManageDataController::class,'add_major'])->name('admin.manage.data.add.major');
+Route::put('/admin/manage_data/faculty/edit/{faculty_id}',[AdminManageDataController::class,'edit_faculty'])->name('admin.manage.data.edit.faculty');
+Route::put('/admin/manage_data/apprearancetype/edit/{apprearancetype_id}',[AdminManageDataController::class,'edit_apprearancetype'])->name('admin.manage.data.edit.apprearancetype');
+Route::put('/admin/manage_data/property/edit/{property_id}',[AdminManageDataController::class,'edit_property'])->name('admin.manage.data.edit.property');
+Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}',[AdminManageDataController::class,'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
+Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController::class,'edit_major'])->name('admin.manage.data.edit.major');
