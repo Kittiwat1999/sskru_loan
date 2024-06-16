@@ -86,7 +86,7 @@
                                             <div class="col-6"></div>
                                             <div class="col-12">
                                                 <label for="privilage" class="col-form-label">ประเภทผู้ใช้</label>
-                                                <select id="privilage" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'faculty','major')">
+                                                <select id="privilage" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'input-faculty','major')">
                                                     <option selected disabled value="">เลือกประเภทผู้ใช้..</option>
                                                     <option value="admin">แอดมิน</option>
                                                     <option value="employee">พนักงานทุนฯ</option>
@@ -100,8 +100,8 @@
                                             </div>
                                             <div class="col-6">
                                                 <label for="faculty" class="col-form-label">คณะ</label>
-                                                <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" disabled onchange="getMajorByFacultyId(this.value,'major')">
-                                                    <option selected disabled value="">เลือกคณะ..</option>
+                                                <select id="input-faculty" class="form-select" aria-label="Default select example" name="faculty" disabled onchange="getMajorByFacultyId(this.value,'major')">
+                                                    <option selected disabled value="">เลือก..</option>
                                                     @foreach($faculties as $faculty)
                                                         <option value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
                                                     @endforeach
@@ -124,7 +124,7 @@
                                     <div class="modal-footer">
                                         <div class="text-end">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                            <button type="button" class="btn btn-primary" onclick="submitForm('add-user-form')">เพิ่มผู้ใช้</button>
+                                            <button type="button" class="btn btn-success" onclick="submitForm('add-user-form')">เพิ่มผู้ใช้</button>
                                         </div>
                                     </div>
                                 </div>
@@ -227,58 +227,56 @@
     <script>
         var faculties = @json($faculties);
         function getUserById(userid) {
-        // Using the fetch API
-        fetch(`{{url('admin/getUser/${userid}')}}`)
+        fetch(`{{url('admin/get_user_by_id/${userid}')}}`)
             .then(response => {
-            // Check if the response status is OK (200)
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            // Parse the JSON data in the response
             return response.json();
             })
-            .then(user => {
-            // Handle the user data
-            // console.log(user[0]);
+            .then(data => {
+            // console.log(data);
+            var user = data.user;
+            var majors = data.majors;
             const modalContent = document.getElementById('showDataModal-content');
             modalContent.innerHTML = `
             <form class="row" action="{{route('admin.editAccount')}}" method="POST" id="edit-user">
                 @csrf
-                <input type="hidden" name="id" class="form-control" value="${user[0].id}" required>
-                <div class="col-md-6">
+                <input type="hidden" name="id" class="form-control" value="${user.id}" required>
+                <div class="col-6">
                     <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
-                    <select id="prefix" name="prefix" class="form-select" aria-label="Default select example">
+                    <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
                         <option >เลือกคำนำหน้าชื่อ</option>
-                        <option ${(user[0].prefix == 'นาย')? 'selected': ''} value="นาย">นาย</option>
-                        <option ${(user[0].prefix == 'นาง')? 'selected': ''} value="นาง">นาง</option>
-                        <option ${(user[0].prefix == 'นางสาว')? 'selected': ''} value="นางสาว">นางสาว</option>
+                        <option ${(user.prefix == 'นาย')? 'selected': ''} value="นาย">นาย</option>
+                        <option ${(user.prefix == 'นาง')? 'selected': ''} value="นาง">นาง</option>
+                        <option ${(user.prefix == 'นางสาว')? 'selected': ''} value="นางสาว">นางสาว</option>
                     </select>
                 </div>
                 <div class="col-6"></div>
                 <div class="col-6">
                     <label for="firstname" class="col-form-label">ชื่อ</label>
-                    <input type="text" name="firstname" class="form-control" value="${user[0].firstname}" required>
+                    <input type="text" name="firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
                     <div class="invalid-feedback">
                         กรุณากรอกชื่อ
                     </div>
                 </div>
                 <div class="col-6">
                     <label for="lastname" class="col-form-label">นามสกุล</label>
-                    <input type="text" name="lastname" class="form-control" value="${user[0].lastname}" required>
+                    <input type="text" name="lastname" class="form-control need-custom-validate" value="${user.lastname}" required>
                     <div class="invalid-feedback">
                         กรุณากรอกนามสกุล
                     </div>
                 </div>
                 <div class="col-6">
                     <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
-                    <input type="text" name="username" class="form-control" value="${user[0].username}" required>
+                    <input type="text" name="username" class="form-control need-custom-validate" value="${user.username}" required>
                     <div class="invalid-feedback">
                         กรุณากรอกชื่อบัญชี
                     </div>
                 </div>
                 <div class="col-6">
                     <label for="email" class="col-form-label">อีเมล</label>
-                    <input type="text" name="email" class="form-control" value="${user[0].email}" required>
+                    <input type="text" name="email" class="form-control need-custom-validate" value="${user.email}" required>
                     <div class="invalid-feedback">
                         กรุณากรอกอีเมลล์
                     </div>
@@ -293,19 +291,19 @@
                 <div class="col-12">
                     <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
                     <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')">
-                        <option ${(user[0].privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
-                        <option ${(user[0].privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
-                        <option ${(user[0].privilage == 'faculty') ? 'selected':'' } value="faculty">คณะ</option>
-                        <option ${(user[0].privilage == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
-                        <option ${(user[0].privilage == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้</option>
+                        <option ${(user.privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
+                        <option ${(user.privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
+                        <option ${(user.privilage == 'faculty') ? 'selected':'' } value="faculty">คณะ</option>
+                        <option ${(user.privilage == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
+                        <option ${(user.privilage == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้</option>
                     </select>
                 </div>
                 <div class="col-6">
                     <label for="edit-faculty" class="col-form-label text-secondary">คณะ</label>
-                    <select id="edit-faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value,'edit-major')" ${(privilage == 'faculty' || privilage == 'teacher') ? '' : 'disabled'}>
+                    <select id="edit-faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value,'edit-major')" ${(user.privilage == 'teacher' || user.privilage == 'faculty') ? '' : 'disabled'}>
                         <option selected disabled value="">เลือกคณะ..</option>
                         ${faculties.map((faculty) => {
-                            return `<option value="${faculty.id}">${faculty.faculty_name}</option>`
+                            return `<option value="${faculty.id}" ${(user.faculty_id == faculty.id) ? 'selected' : '' } >${faculty.faculty_name}</option>`
                         }).join('')}
                     </select>
                     <div class="invalid-feedback">
@@ -314,8 +312,11 @@
                 </div>
                 <div class="col-6">
                     <label for="edit-major" class="col-form-label text-secondary">สาขา</label>
-                    <select id="edit-major" class="form-select" aria-label="Default select example" name="major" ${(privilage == 'teacher') ? '' : 'disabled'}>
+                    <select id="edit-major" class="form-select" aria-label="Default select example" name="major" ${(user.privilage == 'teacher') ? '' : 'disabled'}>
                         <option selected disabled value="">เลือกสาขา..</option>
+                        ${majors.map((major) => {
+                            return `<option value="${major.id}" ${(user.major_id == major.id)? 'selected' : '' } >${major.major_name}</option>`
+                        }).join('')}
                     </select>
                     <div class="invalid-feedback">
                         กรุณาเลือกสาขา
@@ -323,7 +324,7 @@
                 </div>
                 <div class="text-end mt-3">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary" submitForm('edit-user')>บันทึก</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm('edit-user')" >บันทึก</button>
                 </div>
             </form>
             `
@@ -336,7 +337,7 @@
         }
 
         function showUserModal(userid){
-            console.log(userid)
+            // console.log(userid)
             getUserById(userid);
             document.getElementById('button-showDataModal').click();
 
@@ -391,18 +392,20 @@
         }
         async function validateForm(formId){
             var form = document.getElementById(formId);
-            var inputText = form.querySelectorAll('input[type="text"]');
+            var inputText = form.querySelectorAll('input[type="text"].need-custom-validate');
             var inputSelect = form.querySelectorAll('select[required]');
-            var inputPassword = form.querySelector('input[type="password"]')
+            var inputPassword = form.querySelector('input[type="password"].need-custom-validate')
             var validator = true;
 
-            if(inputPassword.value == ""){
-                validator = false;
-                var invalid_element = inputPassword.nextElementSibling;
-                if(invalid_element)invalid_element.classList.add('d-inline');
-            }else{
-                var invalid_element = inputPassword.nextElementSibling;
-                if(invalid_element)invalid_element.classList.remove('d-inline');
+            if(inputPassword != null){
+                if(inputPassword.value == ""){
+                    validator = false;
+                    var invalid_element = inputPassword.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.add('d-inline');
+                }else{
+                    var invalid_element = inputPassword.nextElementSibling;
+                    if(invalid_element)invalid_element.classList.remove('d-inline');
+                }
             }
 
             await inputText.forEach((e) => {
@@ -438,9 +441,11 @@
                 majorSelectElement.required = true;
                 facultySelectElement.disabled = false;
                 facultySelectElement.required = true;
-
             }else if(privilageType == 'faculty'){
                 facultySelectElement.disabled = false;
+                facultySelectElement.required = true;
+                majorSelectElement.disabled = true;
+                majorSelectElement.required = false;
             }else{
                 majorSelectElement.disabled = true;
                 majorSelectElement.required = false;

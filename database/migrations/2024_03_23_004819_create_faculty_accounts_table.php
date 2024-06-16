@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id')->foreignIdFor(Users::class);
             $table->integer('faculty_id')->foreignIdFor(Faculties::class);
-            $table->boolean('isactive');
+            $table->boolean('isactive')->default(true);
         });
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Users;
 use App\HTTP\Requests\AdminMgeAccountRequest;
+use App\Models\Borrower;
 use App\Models\Faculties;
 use App\Models\FacultyAccounts;
 use App\Models\Majors;
@@ -29,11 +30,29 @@ class UsersController extends Controller
         return view('/admin/manage_account',compact('users','faculties'));
     }
 
-    function admin_getUserById($id){
-        // dd($id);
-        $user = Users::where('id',$id)->get();
-        // dd($user);
-        return json_encode($user);
+    function admin_get_user_by_id($user_id){
+        $user = Users::find($user_id);
+        $majors = [];
+        if($user->privilage == 'faculty'){
+            $faculty_id = FacultyAccounts::where('user_id',$user->id)->value('faculty_id');
+            $user->faculty_id = $faculty_id;
+        }else if($user->privilage == 'teacher'){
+            $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
+            $majors = Majors::where('faculty_id',$teacher_account->faculty_id)->get();
+            $user->faculty_id = $teacher_account->faculty_id;
+            $user->major_id = $teacher_account->major_id;
+
+        }else if($user->privilage == 'borrower'){
+            $borrower_account = Borrower::where('user_id',$user->id)->first();
+            $majors = Majors::where('faculty_id',$borrower_account->faculty_id)->get();
+            $user->faculty_id = $borrower_account->faculty_id;
+            $user->major_id = $borrower_account->major_id;
+        }
+
+        return response()->json([
+            'user' => $user,
+            'majors' => $majors,
+        ]);
     }
 
     function admin_deleteUser($id){
@@ -165,7 +184,7 @@ class UsersController extends Controller
             $data['password'] = Hash::make($request->password);
         }
 
-        $update_user = Users::where('id',$request->id)->update($data);
+        Users::where('id',$request->id)->update($data);
 
         if($request->privilage == 'faculty' || $request->privilage == 'teacher'){
             $request->validate(
@@ -190,19 +209,22 @@ class UsersController extends Controller
 
         if($user->privilage != $data['privilage']){
             if($user->privilage == 'faculty'){
-                $faculty_account = FacultyAccounts::find($user->id);
+                $faculty_account = FacultyAccounts::where('user_id',$user->id)->first();
                 $faculty_account->delete();
             }else if($user->privilage == 'teacher'){
-                $teacher_account = TeacherAccounts::find($user->id);
+                $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
                 $teacher_account->delete();
+            }else if($user->privilage == 'borrower'){
+                $borrower_account = Borrower::find($user->id);
+                $borrower_account->delete();
             }
 
-            if($update_user->privilage == 'faculty'){
+            if($data['privilage'] == 'faculty'){
                 $faculty_account = new FacultyAccounts();
                 $faculty_account->user_id = $user->id;
                 $faculty_account->faculty_id = $faculty;
                 $faculty_account->save();
-            }else if($update_user->privilage == 'teacher'){
+            }else if($data['privilage'] == 'teacher'){
                 $teacher_account = new TeacherAccounts();
                 $teacher_account->user_id = $user->id;
                 $teacher_account->faculty_id = $faculty;
@@ -211,11 +233,12 @@ class UsersController extends Controller
             }
         }else{
             if($user->privilage == 'faculty'){
-                $faculty_account = FacultyAccounts::find($user->id);
+                $faculty_account = FacultyAccounts::where('user_id',$user->id)->first();
                 $faculty_account->faculty_id = $faculty;
                 $faculty_account->save();
             }else if($user->privilage == 'teacher'){
-                $teacher_account = TeacherAccounts::find($user->id);
+                $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
+                dd($teacher_account);
                 $teacher_account->faculty_id = $faculty;
                 $teacher_account->major_id = $major;
                 $teacher_account->save();

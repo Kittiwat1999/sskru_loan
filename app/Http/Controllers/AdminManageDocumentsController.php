@@ -428,7 +428,6 @@ class AdminManageDocumentsController extends Controller
     }
 
     public function update_child_document_addon(Request $request,$child_document_id){
-        // dd($request,$child_document_id);
         $validate_request = $request->validate(
             [
                 'addons' => 'array',
