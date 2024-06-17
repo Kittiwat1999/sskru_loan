@@ -214,9 +214,6 @@ class UsersController extends Controller
             }else if($user->privilage == 'teacher'){
                 $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
                 $teacher_account->delete();
-            }else if($user->privilage == 'borrower'){
-                $borrower_account = Borrower::find($user->id);
-                $borrower_account->delete();
             }
 
             if($data['privilage'] == 'faculty'){

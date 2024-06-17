@@ -264,7 +264,6 @@ class AdminManageDocumentsController extends Controller
                 'title.string' => 'ชื่อเอกสารส่วนเสริมต้องเป็นตัวอักษร',
             ]
         );
-
         $add_on_document = AddOnDocument::find($addon_document_id);
         $add_on_document->title = $request->title;
         $add_on_document->for_minors = (isset($request->for_minors)) ? true : false ;
@@ -414,6 +413,7 @@ class AdminManageDocumentsController extends Controller
         $addon_documents = AddOnDocument::where('isactive',true)->get();
         $all_addon_id = AddOnDocument::where('isactive',true)->pluck('id')->toArray();
         $child_document_addons = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
+            ->where('addon_structures.child_document_id',$child_document_id)
             ->select('addon_documents.*')
             ->get();
         $child_document_addon_id = AddOnStructure::where('child_document_id',$child_document_id)->pluck('addon_document_id')->toArray();
@@ -450,7 +450,6 @@ class AdminManageDocumentsController extends Controller
         foreach($addon_to_delete as $addon_document_id){
             AddOnStructure::where('addon_document_id',$addon_document_id)->delete();
         }
-
         return redirect()->back()->with(['success'=>'แก้ใขข้อมูลเอกสารส่วนเสริมเรียบร้อยแลล้ว']);
     }
 }

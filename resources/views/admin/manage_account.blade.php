@@ -290,7 +290,7 @@
                 </div>
                 <div class="col-12">
                     <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                    <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')">
+                    <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')" ${(user.privilage == 'borrower') ? 'disabled' : '' }>
                         <option ${(user.privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
                         <option ${(user.privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
                         <option ${(user.privilage == 'faculty') ? 'selected':'' } value="faculty">คณะ</option>

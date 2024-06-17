@@ -66,30 +66,30 @@
             </div>
         </div>
     </div>
-
+    @foreach($child_documents as $child_document)
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">ส่งสำเนาบัตรประชาชน</h5>
+            <h5 class="card-title">{{$child_document->child_document_title}}</h5>
             <div class="row">
                 <div class="col-md-12 row my-2">
                     <label class="col-sm-2 col-form-label text-secondary" for="component-file">ไฟล์ประกอบไปด้วย</label>
                     <div class="col-sm-10">
                         <ul class="list-group list-borderless">
                             <li class="list-group-item">
-                                <i class="bi bi-dash"></i>
-                                สำเนาบัตรประชาชนผู้กู้พร้อมรับรองสำเนาถูกต้อง
+                                - {{$child_document->child_document_title}}
                             </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-dash"></i>
-                                สำเนาบัตรประชาชนผู้ผู้แทนโดยชอบธรรมพร้อมรับรองสำเนาถูกต้อง
-                            </li>
+                            @foreach($child_document->addon_documents as $addon_document)
+                                @if($addon_document->for_minors && $borrower_age < 20)
+                                    <li class="list-group-item">
+                                        - {{$addon_document->title}}
+                                    </li>
+                                @elseif(!$addon_document->for_minors)
+                                    <li class="list-group-item">
+                                        - {{$addon_document->title}}
+                                    </li>
+                                @endif
+                            @endforeach
                         </ul>
-                    </div>
-                </div>
-                <div class="col-md-12 row my-2">
-                    <label class="col-sm-2 col-form-label text-secondary" for="citizen_card_file">ตัวอย่างไฟล์</label>
-                    <div class="col-md-5 col-sm-12">
-                        <button type="button" class="btn btn-outline-primary w-100"><i class="bi bi-eye"></i> ดูตัวอย่างไฟล์</button>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                 <input type="hidden" name="year" value="" required>
                 <input type="hidden" name="term" value="" required>
                 <div class="col-md-12 row my-2">
-                    <label class="col-sm-2 col-form-label text-secondary" for="citizen_card_file" >เพิ่มไฟล์</label>
+                    <label class="col-sm-2 col-form-label text-secondary" for="citizen_card_file" >เลือกไฟล์</label>
                     <div class="col-sm-5">
                         <input class="form-control" type="file" name="citizen_card_file" id="citizen_card_file" accept=".jpg, .jpeg, .png, .pdf" required onchange="show_submit_button('citizen')">
                     </div>
@@ -122,6 +122,7 @@
             </form>
         </div>
     </div>
+    @endforeach
 </section>
 @endsection
 

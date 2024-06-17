@@ -294,7 +294,7 @@ Route::get('/login_teacher',function () {
 });
 
 Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
-Route::get('/borrower/upload_document/{document_id}',[SendDocumentController::class,'sendDocument'])->name('borrower.upload_document.id');
+Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'upload_document_page'])->name('borrower.upload.document.page');
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);

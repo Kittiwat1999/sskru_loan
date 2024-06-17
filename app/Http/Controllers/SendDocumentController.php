@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddOnStructure;
+use App\Models\Borrower;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -23,16 +25,19 @@ class SendDocumentController extends Controller
         return view('borrower.list_document',compact('documents'));
     }
 
-    public function sendDocument($document_id){
+    public function upload_document_page($document_id){
         // dd($document_id);
-        $current_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
+        $user_id = session()->get('user_id','1');
+        $budhist_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
         $document = Documents::find($document_id);
-
+        $borrower_birthday = Borrower::where('user_id',$user_id)->value('birthday');
+        $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
+        $borrower_age = $parse_birthday->age;
         if($document == null){
             return redirect()->back()->withErrors('ไม่น่ารักเลยนะ');
         }
 
-        if(Carbon::parse($document['end_date']) < $current_date || $current_date < Carbon::parse($document['start_date'])){
+        if(Carbon::parse($document['end_date']) < $budhist_date || $budhist_date < Carbon::parse($document['start_date'])){
             return redirect()->back()->withErrors('เอกสารดังกล่าวได้ปิดรับแล้ว');
         }
 
@@ -40,6 +45,13 @@ class SendDocumentController extends Controller
             ->where('doc_structures.document_id',$document_id)
             ->get();
 
-        return view('borrower.upload_document',compact('document','child_documents'));
+        foreach($child_documents as $child_document){
+            $child_document['addon_documents'] = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
+                ->where('addon_structures.child_document_id',$child_document['id'])
+                ->get();
+            // dd($child_document['addon_documents']);
+        }
+
+        return view('borrower.upload_document',compact('document','child_documents','borrower_age'));
     }
 }

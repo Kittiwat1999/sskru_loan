@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\BorrowerDocuments;
+use App\Models\BorrowerDocument;
 use App\Models\TeacherComments;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('teacher_comment_documents', function (Blueprint $table) {
             $table->id();
-            $table->integer('borrower_document_id')->foreignIdFor(BorrowerDocuments::class);
+            $table->integer('borrower_document_id')->foreignIdFor(BorrowerDocument::class);
             $table->integer('teacher_comment_id')->foreignIdFor(TeacherComments::class)->nullable();
             $table->string('custom_comment');
             $table->timestamps();

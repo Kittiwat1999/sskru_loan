@@ -28,7 +28,6 @@ class BorrowerController extends Controller
     private function convert_date($inputDate){
         $parsedDate = Carbon::createFromFormat('d-m-Y', $inputDate);
         $isoDate = $parsedDate->format('Y-m-d');
-
         return $isoDate;
 
     }

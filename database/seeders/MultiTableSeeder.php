@@ -32,6 +32,8 @@ class MultiTableSeeder extends Seeder
          $this->seedDocuments();
          $this->seedDocStructure();
          $this->seedAddOnDocument();
+         $this->seedAddonStructure();
+         $this->seedChildDocumentFiles();
 
     }
 
@@ -267,6 +269,20 @@ class MultiTableSeeder extends Seeder
             ['title'=>'สำเนาบัตรประจำตัวประชาชนผู้แทนโดยชอบธรรม','for_minors'=>true],
             ['title'=>'สำเนาบัตรประจำตัวเจ้าหน้าที่รัฐ','for_minors'=>false],
 
+        ]);
+    }
+
+    private function seedAddonStructure(){
+        DB::table('addon_structures')->insert([
+            ['child_document_id'=>'7','addon_document_id'=>1],
+            ['child_document_id'=>'7','addon_document_id'=>4],
+        ]);
+    }
+
+    private function seedChildDocumentFiles(){
+        DB::table('child_document_files')->insert([
+            ['child_document_id'=>'3','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
+            ['child_document_id'=>'1','original_name'=>'yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
         ]);
     }
 }

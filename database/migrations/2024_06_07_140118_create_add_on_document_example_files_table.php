@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('file_name');
             $table->string('file_type');
             $table->string('full_path');
-            $table->date('upload_date');
+            $table->date('upload_date')->default(now());
             $table->timestamps();
         });
     }
