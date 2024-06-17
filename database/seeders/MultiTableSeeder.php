@@ -22,7 +22,7 @@ class MultiTableSeeder extends Seeder
          $this->seedProperties();
          $this->seedDouTypes();
          $this->seedFaculties();
-         $this->seedBorrowers();
+        //  $this->seedBorrowers();
          $this->seedParents();
          $this->seedAddresses();
          $this->seedBorrowerNecessities();
@@ -228,7 +228,7 @@ class MultiTableSeeder extends Seeder
     private function seedChildDocuments(){
         DB::table('child_documents')->insert([
             ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้กู้'],
-            ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง'],
+            ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้แทนโดยชอบธรรม'],
             ['child_document_title'=>'หนังสือรับรองรายได้ครอบครัว'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืม (กยศ. 101)'],
             ['child_document_title'=>'ใบรายงานผลการเรียน'],
@@ -281,7 +281,7 @@ class MultiTableSeeder extends Seeder
 
     private function seedChildDocumentFiles(){
         DB::table('child_document_files')->insert([
-            ['child_document_id'=>'3','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
+            ['child_document_id'=>'5','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
             ['child_document_id'=>'1','original_name'=>'yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
         ]);
     }
