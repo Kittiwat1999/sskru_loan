@@ -8,6 +8,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 
 class MultiTableSeeder extends Seeder
 {
@@ -22,7 +23,7 @@ class MultiTableSeeder extends Seeder
          $this->seedProperties();
          $this->seedDouTypes();
          $this->seedFaculties();
-        //  $this->seedBorrowers();
+         $this->seedBorrowers();
          $this->seedParents();
          $this->seedAddresses();
          $this->seedBorrowerNecessities();
@@ -122,7 +123,7 @@ class MultiTableSeeder extends Seeder
                 'address_id' => 1,
                 'borrower_appearance_id' => 1,
                 'birthday' => '2542-04-26',
-                'citizen_id' => '1234567890123',
+                'citizen_id' => Crypt::encryptString('1-3304-00570-61-6'),
                 'student_id' => '1231231231',
                 'faculty_id' => 6,
                 'major_id' => 41,

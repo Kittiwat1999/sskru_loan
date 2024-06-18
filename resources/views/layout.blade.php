@@ -247,7 +247,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "admin";//admin,borrower,faculty,teacher,employee
+        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -353,7 +353,7 @@
 
             <li class="nav-heading text-secondary">กรอกข้อมูลผู้กู้</li>
             <li class="nav-item">
-                <a id="information" class="nav-link collapsed" href="{{url('/borrower/information')}}">
+                <a id="information_list" class="nav-link collapsed" href="{{url('/borrower/information_list')}}">
                 <i class="bi bi-pen"></i>
                 <span>กรอกข้อมูลผู้กู้</span>
                 </a>

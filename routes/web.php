@@ -10,6 +10,8 @@ use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\BorrowerInforamtionController;
+use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\OldLoanRequest;
 
 /*
@@ -261,9 +263,14 @@ Route::get('/borrower/index', function () {
     return view('/borrower/index');
 });
 
-Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
+Route::get('/borrower/information_list',[BorrowerInforamtionController::class,'index']);
+Route::get('/borrower/input/information',[BorrowerInforamtionController::class,'borrower_input_information'])->name('borrower.input.information');
+Route::get('/borrower/edit/information',[BorrowerInforamtionController::class,'borrower_edit_information_page'])->name('borrower.edit.information.page');
+Route::post('/borrower/edit/information/borrower',[BorrowerInforamtionController::class,'borrower_edit_information'])->name('borrower.edit.information');
+Route::post('/borrower/store/information/borrower',[BorrowerInforamtionController::class,'store_borrower_information'])->name('store.borrower.information');
+Route::get('/borrower/major_by_faculty/{faculty}',[BorrowerInforamtionController::class,'getMajorByFaculty']);
 
-Route::get('/borrower/major_by_faculty/{faculty}',[BorrowerController::class,'getMajorByFaculty']);
+Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 
 Route::get('/borrower/information/marital_img/{file_path}',[BorrowerController::class,'displayFile'])->name('marital.status.file');
 

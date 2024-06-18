@@ -32,6 +32,34 @@ class BorrowerController extends Controller
 
     }
 
+    public function index(){
+        return view('borrower.information_list');
+    }
+
+    public function borrower_input_information(){
+        $user_id = Session::get('user_id','1');
+        $borrower_id = Session::get('borrower_id','1');
+
+        $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
+            $join->on('users.id', '=', 'borrowers.user_id')
+                 ->where('borrowers.user_id', '=', $user_id);
+            })
+            ->first();
+
+        $faculties = Faculties::where('isactive',true)->get();
+        $majors = Majors::where('isactive',true)->get();
+        $borrower_apprearance_types = BorrowerApprearanceType::where('isactive',true)->get();
+        $nessessities = Nessessities::where('isactive',true)->get();
+        $properties = Properties::where('isactive',true)->get();
+
+        $user = Users::where('id',$user_id)->first();
+        // dd($user);
+        unset($borrower['password']);
+        unset($user['password']);
+
+        return view('borrower.information.borrower_information',compact('user','borrower_apprearance_types','nessessities','properties','faculties','majors'));
+    }
+
     public function getBorrowerInformation(){
 
         $user_id = Session::get('user_id','1');
