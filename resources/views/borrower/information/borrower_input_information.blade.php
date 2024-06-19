@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">กรอกข้อมูลผู้กู้</h5>
-            <form action="{{route('store.borrower.information')}}" id="borrower-information-form" class="row" method="post">
+            <form action="{{route('borrower.store.information')}}" id="borrower-information-form" class="row" method="post">
                 @csrf    
                 <div class="col-md-5">
                     <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
@@ -52,12 +52,12 @@
                 <div class="col-md-5 mb-3">
                     <label for="birthday" class="form-label text-secondary">เกิดเมื่อ</label>
                     <div class="input-group date" id="">
+                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                         <input type="text" name="birthday" id="borrower_birthday" class="form-control"
                         placeholder="วว/ดด/ปปปป" onchange="ageCal('borrower')"/>
                         <div class="invalid-feedback">
                             กรุณากรอกวันเกิด
                         </div>
-                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
@@ -294,26 +294,11 @@
                         
                     </div><!--end row-->
                 </div>
-                <div class="col-md-12 text-end">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#resetFormModal">ล้างฟอร์ม</button>
-                    <div class="modal fade" id="resetFormModal" tabindex="-1" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">ล้างฟอร์ม</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-start">
-                                ต้องการล้างฟอร์มหรือไม่
-                            </div>
-                            <div class="modal-footer">
-                                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" onclick="gotoTop()">ล้างฟอร์มนี้</button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    <button type="button" class="btn btn-primary" onclick="submitForm('borrower-information-form')">บันทึกข้อมูล</button>
+                <div class="col-12 row m-0 p-0">
+                    <div class="col-md-8 col-sm-12"></div>
+                    <div class="col-md-4 col-sm-12">
+                        <button type="button" class="btn btn-primary w-100" onclick="submitForm('borrower-information-form')">บันทึกข้อมูล</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -484,8 +469,8 @@
         var input_text = form.querySelectorAll('input[type="text"][required]');
         var input_select = form.querySelectorAll('select[required]');
         var input_textarea = form.querySelector('textarea[required]');
-        console.log(input_textarea);
         var validator = true;
+
         await input_text.forEach(input => {
             if(input.value == ''){
                 validator = false;

@@ -9,6 +9,7 @@
             <h5 class="card-title">แก้ใขข้อมูลผู้กู้</h5>
             <form action="{{route('borrower.edit.information')}}" id="borrower-information-form" class="row" method="post">
                 @csrf    
+                @method('PUT')
                 <div class="col-md-5">
                     <label for="borrower-type" class="col-form-label text-secondary">ลักษณะผู้กู้</label>
                     <select id="borrower-type" name="borrower_appearance" class="form-select" required>
@@ -293,26 +294,11 @@
                         
                     </div><!--end row-->
                 </div>
-                <div class="col-md-12 text-end">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#resetFormModal">ล้างฟอร์ม</button>
-                    <div class="modal fade" id="resetFormModal" tabindex="-1" aria-hidden="true" style="display: none;">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">ล้างฟอร์ม</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-start">
-                                ต้องการล้างฟอร์มหรือไม่
-                            </div>
-                            <div class="modal-footer">
-                                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" onclick="gotoTop()">ล้างฟอร์มนี้</button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    <button type="button" class="btn btn-primary" onclick="submitForm('borrower-information-form')">บันทึกข้อมูล</button>
+                <div class="col-12 row m-0 p-0">
+                    <div class="col-md-8 col-sm-12"></div>
+                    <div class="col-md-4 col-sm-12">
+                        <button type="button" class="btn btn-primary w-100" onclick="submitForm('borrower-information-form')">บันทึกข้อมูล</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -323,7 +309,7 @@
 @section('script')
 <script>
     var tambon = @json($address->tambon);
-    ageCalFromData('borrower');
+    ageCal('borrower');
     tambonFormPostcode('borrower',tambon);
 
     function ageCal(role) {
@@ -343,26 +329,6 @@
             document.getElementById(role + '_age').value = age;
         }
     }
-
-    function ageCalFromData(role){
-        var inputBirthday = document.getElementById(role + '_birthday');
-        var birthDate = inputBirthday.value;
-        var dateParts = birthDate.split('-');
-        var selectedDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // Month is 0-based
-        var currentDate = new Date();
-        var buddhistCurrentYear = currentDate.getFullYear() + 543;
-        var age = buddhistCurrentYear - (selectedDate.getFullYear());
-        if (currentDate.getMonth() < selectedDate.getMonth() || (currentDate.getMonth() === selectedDate.getMonth() && currentDate.getDate() < selectedDate.getDate())) {
-            age--;
-        }
-
-        if (age < 0) {
-            document.getElementById(role + '_age').value = "สวัสดีผู้มาจากอนาคต";
-        } else {
-            document.getElementById(role + '_age').value = age;
-        }
-    }
-
     
     const faculty = document.getElementById('faculty');
     faculty.addEventListener('change', async function() {

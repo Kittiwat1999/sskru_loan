@@ -18,7 +18,6 @@
                                 @endif
                             </span>
                             @if($borrower_id != null)
-                            
                                 <a href="{{route('borrower.edit.information.page')}}" class="btn btn-outline-primary">แก้ไขข้อมูล</a>
                             @else
                             <span>
@@ -26,9 +25,21 @@
                             </span>
                             @endif
                         </li>
-                        <li class="list-group-item list-group-item-secondary d-flex justify-content-between">
-                            <span>ข้อมูลผู้ปกครอง</span>
-                            <button type="button" class="btn btn-secondary" disabled>ไปหน้ากรอกข้อมูล</button>
+                        <li class="list-group-item list-group-item-{{$borrower_id != null ? '' : 'secondary' }} secondary d-flex justify-content-between">
+                            <span>
+                                <span>ข้อมูลผู้ปกครอง</span>
+                                    {{-- @if($borrower_id != null) --}}
+                                    {{-- <span class="text-success">: มีข้อมูล</span> --}}
+                                    {{-- @endif --}}
+                                </span>
+                            </span>
+                            @if($borrower_id != null)
+                            <a href="{{route('borrower.input.parent.information')}}" class="btn btn-primary">ไปหน้ากรอกข้อมูล</a>
+                            @else
+                            <span>
+                                <a href="" class="btn btn-secondary" disabled >ไปหน้ากรอกข้อมูล</a>
+                            </span>
+                            @endif
                         </li>
                         <li class="list-group-item list-group-item-secondary d-flex justify-content-between">
                             <span>ข้อมูลผู้แทนโดยชอบธรรม</span>

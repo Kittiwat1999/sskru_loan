@@ -286,7 +286,8 @@ class BorrowerController extends Controller
             
             // Check if validation fails
             if ($parent2_validator->fails()) {
-                return redirect('/borrower/information')
+                return redirect()
+                ->back()
                 ->withErrors($parent2_validator)
                 ->withInput();
             }
@@ -301,7 +302,8 @@ class BorrowerController extends Controller
 
                 // Check if validation fails
                 if ($parent1_nationality_validator->fails()) {
-                    return redirect('/borrower/information')
+                    return redirect()
+                    ->back()
                     ->withErrors($parent2_validator)
                     ->withInput();
                 }

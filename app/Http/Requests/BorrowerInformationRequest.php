@@ -43,7 +43,7 @@ class BorrowerInformationRequest extends FormRequest
             "province" => 'required|string|max:50',
             "aumphure" => 'required|string|max:50',
             "tambon" => 'required|string|max:50',
-            "email" =>'required|email|unique:users,email|max:255',
+            "email" =>'required|email|max:255',
             "phone" => 'required|string|max:50',
 
             "properties" => 'required',
@@ -96,7 +96,6 @@ class BorrowerInformationRequest extends FormRequest
             'email.required' => 'กรุณากรอก email',
             'email.email' => 'รูปแบบ email ไม่ถูกต้อง',
             'email.max' => 'ความยาวของ email ต้องไม่มากกว่า 255 ตัวอักษร',
-            'email.unique' => 'email นี้มีอยู่ในระบบแล้ว',
             "phone.required" => 'ต้องระบุเบอร์โทร',
             "phone.max" => 'เบอร์โทรศัพท์ต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
 

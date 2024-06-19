@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('income');
             $table->boolean('alive');
             $table->boolean('is_main_parent')->default(false);
+            $table->boolean('main_parent_only')->default(false);
             $table->timestamps();
         });
     }

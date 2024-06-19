@@ -24,7 +24,7 @@ class MultiTableSeeder extends Seeder
          $this->seedDouTypes();
          $this->seedFaculties();
          $this->seedBorrowers();
-         $this->seedParents();
+        //  $this->seedParents();
          $this->seedAddresses();
          $this->seedBorrowerNecessities();
          $this->seedBorrowerProperties();
@@ -247,6 +247,7 @@ class MultiTableSeeder extends Seeder
             ['variable'=>'child_document_example_files_path','value'=>'child_document_example_files'],
             ['variable'=>'addon_document_files_path','value'=>'add_on_document_files'],
             ['variable'=>'addon_document_example_files_path','value'=>'addon_document_example_files'],
+            ['variable'=>'marital_file_path','value'=>'app/public/marital'],
         ]);
     }
     private function seedDocuments(){ 

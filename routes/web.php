@@ -11,6 +11,7 @@ use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\BorrowerInforamtionController;
+use App\Http\Controllers\ParentInformationController;
 use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\OldLoanRequest;
 
@@ -263,12 +264,18 @@ Route::get('/borrower/index', function () {
     return view('/borrower/index');
 });
 
-Route::get('/borrower/information_list',[BorrowerInforamtionController::class,'index']);
+Route::get('/borrower/information/information_list',[BorrowerInforamtionController::class,'index']);
+
 Route::get('/borrower/input/information',[BorrowerInforamtionController::class,'borrower_input_information'])->name('borrower.input.information');
-Route::get('/borrower/edit/information',[BorrowerInforamtionController::class,'borrower_edit_information_page'])->name('borrower.edit.information.page');
-Route::post('/borrower/edit/information/borrower',[BorrowerInforamtionController::class,'borrower_edit_information'])->name('borrower.edit.information');
-Route::post('/borrower/store/information/borrower',[BorrowerInforamtionController::class,'store_borrower_information'])->name('store.borrower.information');
+Route::get('/borrower/edit/information/page',[BorrowerInforamtionController::class,'borrower_edit_information_page'])->name('borrower.edit.information.page');
+Route::put('/borrower/edit/information',[BorrowerInforamtionController::class,'borrower_edit_information'])->name('borrower.edit.information');
+Route::post('/borrower/store/information/borrower',[BorrowerInforamtionController::class,'borrower_store_information'])->name('borrower.store.information');
 Route::get('/borrower/major_by_faculty/{faculty}',[BorrowerInforamtionController::class,'getMajorByFaculty']);
+
+Route::get('/borrower/input/parent/information',[ParentInformationController::class,'borrower_input_parent_information'])->name('borrower.input.parent.information');
+Route::post('/borrower/store/parent/information',[ParentInformationController::class,'borrower_store_parent_information'])->name('borrower.store.parent.information');
+Route::get('/borrower/edit/parent/information/page',[ParentInformationController::class,'borrower_edit_parent_information_page'])->name('borrower.edit.parent.information.page');
+Route::put('/borrower/edit/parent/information',[ParentInformationController::class,'borrower_edit_parent_information'])->name('borrower.edit.parent.information');
 
 Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 

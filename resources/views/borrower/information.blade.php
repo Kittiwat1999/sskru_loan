@@ -233,7 +233,6 @@
             document.querySelector(`#${parentNo}_nationality`).disabled = true;
             document.querySelector(`#${parentNo}_nationality`).required = false;
         }
-
     }
 
     const MaritalStat = document.getElementById('maritalStatusId');

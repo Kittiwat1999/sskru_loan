@@ -53,14 +53,23 @@ class BorrowerInforamtionController extends Controller
         return view('borrower.information.borrower_input_information',compact('user','borrower_apprearance_types','nessessities','properties','faculties','majors'));
     }
 
-    public function store_borrower_information(BorrowerInformationRequest $request){
+    public function borrower_store_information(BorrowerInformationRequest $request){
         $user_id = Session::get('user_id','1');
 
         $user = Users::where('id',$user_id)->first();
         $user['prefix'] = $request->prefix;
         $user['firstname'] = $request->firstname;
         $user['lastname'] = $request->lastname;
-        $user['email'] = $request->email;
+        if($user['email'] == $request->email){
+            $user['email'] = $request->email;
+        }else{
+            $request->validate([
+                'email'=>'unique:users,email',
+                ],[
+                'email.unique' => 'อีเมลล์นี้มีอยุ่ในระบบแล้ว',
+                ]);
+            $user['email'] = $request->email;
+        }
         $user->save();
 
         $address = new Address();
@@ -102,7 +111,7 @@ class BorrowerInforamtionController extends Controller
             $nessessity['other'] = $request->necessMoreProp;
             $nessessity->save();
         }
-        return redirect('/borrower/information_list')->with(['success'=> 'บันทึกข้อมูลผู้กู้เรียบร้อยแล้ว']);
+        return redirect('/borrower/information/information_list')->with(['success'=> 'บันทึกข้อมูลผู้กู้เรียบร้อยแล้ว']);
     }
 
     public function borrower_edit_information_page(){
@@ -183,6 +192,6 @@ class BorrowerInforamtionController extends Controller
             $nessessity['other'] = $request->necessMoreProp;
             $nessessity->save();
         }
-        return redirect('/borrower/information_list')->with(['success'=> 'แก้ใขข้อมูลผู้กู้เรียบร้อยแล้ว']);
+        return redirect('/borrower/information/information_list')->with(['success'=> 'แก้ใขข้อมูลผู้กู้เรียบร้อยแล้ว']);
     }
 }

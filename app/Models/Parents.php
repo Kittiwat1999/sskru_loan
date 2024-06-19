@@ -25,6 +25,7 @@ class Parents extends Model
         'alive',
         'address_id',
         'is_main_parent',
+        'main_parent_only',
     ];
     public $timestamps = false;
 }

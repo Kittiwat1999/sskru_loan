@@ -56,8 +56,11 @@ class UsersController extends Controller
     }
 
     function admin_deleteUser($id){
-
-        Users::where('id',$id)->update(['isactive'=>false]);
+        $user = Users::find($id);
+        $user['email'] = '-';
+        $user['username'] = '-';
+        $user['isactive'] = false;
+        $user->save();
         return redirect('/admin/manage_account');
     }
 
