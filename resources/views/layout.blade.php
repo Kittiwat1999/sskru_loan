@@ -353,7 +353,7 @@
 
             <li class="nav-heading text-secondary">กรอกข้อมูลผู้กู้</li>
             <li class="nav-item">
-                <a id="information_list" class="nav-link collapsed" href="{{url('/borrower/information/information_list')}}">
+                <a id="information" class="nav-link collapsed" href="{{url('/borrower/information/information_list')}}">
                 <i class="bi bi-pen"></i>
                 <span>กรอกข้อมูลผู้กู้</span>
                 </a>

@@ -17,6 +17,7 @@ use App\Models\BorrowerProperties;
 use App\Models\Faculties;
 use App\Models\Majors;
 use App\Models\Nessessities;
+use App\Models\Parents;
 use App\Models\Properties;
 
 
@@ -36,8 +37,10 @@ class BorrowerInforamtionController extends Controller
 
     public function index(){
         $user_id = Session::get('user_id','1');
-        $borrower_id = Borrower::where('user_id',$user_id)->select('id')->first() ?? null;
-        return view('borrower.information_list',compact('borrower_id'));
+        $borrower_id = Borrower::where('user_id',$user_id)->value('id') ?? null;
+        $parent_count = Parents::where('borrower_id',$borrower_id)->count();
+        // dd($borrower_id,$parent_count);
+        return view('borrower.information_list',compact('borrower_id','parent_count'));
     }
 
     public function borrower_input_information(){

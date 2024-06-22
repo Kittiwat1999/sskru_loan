@@ -276,10 +276,10 @@ Route::get('/borrower/input/parent/information',[ParentInformationController::cl
 Route::post('/borrower/store/parent/information',[ParentInformationController::class,'borrower_store_parent_information'])->name('borrower.store.parent.information');
 Route::get('/borrower/edit/parent/information/page',[ParentInformationController::class,'borrower_edit_parent_information_page'])->name('borrower.edit.parent.information.page');
 Route::put('/borrower/edit/parent/information',[ParentInformationController::class,'borrower_edit_parent_information'])->name('borrower.edit.parent.information');
+Route::get('/borrower/information/marital_file/{student_id}/{file_name}',[ParentInformationController::class,'display_marital_status_file'])->name('marital.status.file');
 
 Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 
-Route::get('/borrower/information/marital_img/{file_path}',[BorrowerController::class,'displayFile'])->name('marital.status.file');
 
 
 Route::post('/store_information',[BorrowerController::class,'storeInformation']);
