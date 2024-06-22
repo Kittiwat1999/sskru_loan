@@ -24,7 +24,7 @@ class MultiTableSeeder extends Seeder
          $this->seedDouTypes();
          $this->seedFaculties();
          $this->seedBorrowers();
-        //  $this->seedParents();
+         $this->seedParents();
          $this->seedAddresses();
          $this->seedBorrowerNecessities();
          $this->seedBorrowerProperties();
@@ -129,7 +129,7 @@ class MultiTableSeeder extends Seeder
                 'major_id' => 41,
                 'grade' => 2,
                 'gpa' => 3.08,
-                // 'marital_status' => json_encode(["status"=>"อยู่ด้วยกัน","file_name"=>""]),
+                'marital_status' => json_encode(["status"=>"อยู่ด้วยกัน","file_name"=>""]),
                 'phone' => '+66931037881',
                 'created_at' => '2024-03-20 19:40:05',
                 'updated_at' => '2024-03-20 19:48:08',
@@ -196,7 +196,7 @@ class MultiTableSeeder extends Seeder
                 'place_of_work' => 'ที่ทำงาน',
                 'income' => '10,000',
                 'alive' => 1,
-                'is_main_parent' => 1,
+                'is_main_parent' => 0,
                 'created_at' => '2024-03-20 19:40:05',
                 'updated_at' => '2024-03-20 19:48:08'
             ],

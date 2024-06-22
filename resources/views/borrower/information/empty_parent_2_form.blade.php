@@ -20,7 +20,7 @@
     <div class="col-md-4">
         <input type="text" class="form-control" name="parent2_nationality" id="parent2_nationality" placeholder="กรอกสัญชาติ" disabled>
         <div class="invalid-feedback">
-            กรุณากรอก
+            กรุณากรอกกรอกสัญชาติ
         </div>
     </div>
     <div id="invalid-parent2_is_thai" class="invalid-feedback">

@@ -11,6 +11,7 @@ use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\BorrowerInforamtionController;
+use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\OldLoanRequest;
@@ -278,6 +279,10 @@ Route::get('/borrower/edit/parent/information/page',[ParentInformationController
 Route::put('/borrower/edit/parent/information',[ParentInformationController::class,'borrower_edit_parent_information'])->name('borrower.edit.parent.information');
 Route::get('/borrower/information/marital_file/{student_id}/{file_name}',[ParentInformationController::class,'display_marital_status_file'])->name('marital.status.file');
 
+Route::get('/borrower/input/main_parent/information',[MainParentInfomationController::class,'borrower_input_main_parent_information'])->name('borrower.input.main_parent.information');
+Route::post('/borrower/store/main_parent/information',[MainParentInfomationController::class,'borrower_store_main_parent_information'])->name('borrower.store.main_parent.information');
+Route::get('/borrower/edit/main_parent/information/page',[MainParentInfomationController::class,'borrower_edit_main_parent_information_page'])->name('borrower.edit.main_parent.information.page');
+Route::put('/borrower/edit/main_parent/information',[MainParentInfomationController::class,'borrower_edit_main_parent_information'])->name('borrower.edit.main_parent.information');
 Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
 
 

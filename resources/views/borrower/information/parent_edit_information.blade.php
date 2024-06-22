@@ -298,13 +298,13 @@
                 </fieldset>
 
                 {{-- <div class="col-md-10"></div> --}}
-            
+
                 <div class="col-md-2 mb-3">
                     <label for="parent2_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
                     <select id="parent2_prefix" name="parent2_prefix" class="form-select" aria-label="Default select example" required>
-                        <option value="นาย" @selected($parent[1]->preifix == 'นาย')>นาย</option>
-                        <option value="นาง" @selected($parent[1]->preifix == 'นาง')>นาง</option>
-                        <option value="นางสาว" @selected($parent[1]->preifix == 'นางสาว')>นางสาว</option>
+                        <option value="นาย" @selected($parent[1]->prefix == 'นาย')>นาย</option>
+                        <option value="นาง" @selected($parent[1]->prefix == 'นาง')>นาง</option>
+                        <option value="นางสาว" @selected($parent[1]->prefix == 'นางสาว')>นางสาว</option>
                     </select>
                     <div class="invalid-feedback">
                         กรุณาเลือกคำนำหน้าชื่อ
@@ -433,7 +433,7 @@
                                 @if($file_extension == 'pdf')
                                     <div class="row my-2 isdisplay">
                                         <div class="col-md-12">
-                                            <iframe src="{{route('marital.status.file',['student_id' => $student_id,'file_name'=>$marital_status->file_name])}}" frameborder="0" class="w-100" height="1200"></iframe>
+                                            <iframe src="{{route('marital.status.file',['student_id' => $student_id,'file_name'=>$marital_status->file_name])}}" frameborder="0" class="w-100" height="600"></iframe>
                                         </div>
                                     </div>
                                 @else

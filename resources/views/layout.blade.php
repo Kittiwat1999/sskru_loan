@@ -440,15 +440,6 @@
                     @endforeach
                 </ul>
             </div>
-            <script>
-                // Wait for 3000 milliseconds (3 seconds) and then remove the element
-                setTimeout(function() {
-                    const elementToRemove = document.getElementById('error-alert');
-                    if (elementToRemove) {
-                        elementToRemove.remove();
-                    }
-                }, 3000);
-            </script>
         @endif
 
         @if (!empty(session('success')))

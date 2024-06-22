@@ -371,7 +371,7 @@
             }
             // console.log(tambons);
             var selectElement = document.getElementById(`${caller}_tambon`);
-            selectElement.innerHTML+='<option disabled selected value="">เลือกตำบล</option>';
+            selectElement.innerHTML ='<option disabled selected value="">เลือกตำบล</option>';
             for(tb of tambons){
                 var newOption = document.createElement('option');
                 newOption.value = tb;

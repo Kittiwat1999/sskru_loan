@@ -50,7 +50,7 @@
                         <li class="list-group-item list-group-item-{{($borrower_id != null && $parent_count != 0) ? '' : 'secondary' }} d-flex justify-content-between">
                             <span>ข้อมูลผู้แทนโดยชอบธรรม</span>
                             @if($borrower_id != null && $parent_count != 0)
-                                <a type="button" class="btn btn-primary">กรอกข้อมูล</a>
+                                <a href="{{route('borrower.input.main_parent.information')}}" type="button" class="btn btn-primary">กรอกข้อมูล</a>
                             @else
                                 <button type="button" class="btn btn-secondary" disabled>กรอกข้อมูล</button>
                             @endif
