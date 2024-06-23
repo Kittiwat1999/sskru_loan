@@ -182,7 +182,7 @@ class MultiTableSeeder extends Seeder
             [
                 'id' => 2,
                 'borrower_id' => 1,
-                'address_id' => 1,
+                'address_id' => null,
                 'borrower_relational' => 'มารดา',
                 'nationality' => 'ไทย',
                 'prefix' => 'นางสาว',

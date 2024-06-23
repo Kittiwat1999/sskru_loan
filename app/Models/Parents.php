@@ -27,5 +27,5 @@ class Parents extends Model
         'is_main_parent',
         'main_parent_only',
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 }

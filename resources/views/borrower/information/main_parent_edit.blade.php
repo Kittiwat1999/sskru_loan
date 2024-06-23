@@ -7,8 +7,9 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">ข้อมูลผู้แทนโดยชอบธรรม</h5>
-            <form action="{{route('borrower.store.main_parent.information')}}" id="main-parent-form" class="row" method="POST">
+            <form action="{{route('borrower.edit.main_parent.information')}}" id="main-parent-form" class="row" method="POST">
                 @csrf
+                @method('PUT')
                 <fieldset class="row my-3">
                     <label class="form-label" for="main_parent">
                         <h6 class="text-primary">เลือกผู้แทนโดยชอบธรรม</h6>
@@ -16,7 +17,7 @@
                     @foreach($parents as $parent)
                     <div class="col-md-12 my-2">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="main_parent" id="parent{{ $loop->index }}_is_main_parent" value="{{$parent->id}}" required onchange="SelctMainParent(this.value)" >
+                            <input class="form-check-input" type="radio" name="main_parent" id="parent{{ $loop->index }}_is_main_parent" value="{{$parent->id}}" required onchange="SelctMainParent(this.value)" @checked($parent->is_main_parent)>
                             <label class="form-check-label" for="parent{{ $loop->index }}_is_main_parent" id="label_parent{{ $loop->index }}_is_main_parent">
                                 {{$parent->prefix}}{{$parent->firstname}} {{$parent->lastname}}
                             </label>
@@ -25,7 +26,7 @@
                     @endforeach
                     <div class="col-md-12 my-2">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="main_parent" id="parent3_is_main_parent" value="parent3" required onchange="SelctMainParent(this.value)">
+                            <input class="form-check-input" type="radio" name="main_parent" id="parent3_is_main_parent" value="parent3" required onchange="SelctMainParent(this.value)" @checked(isset($parent3))>
                             <label class="form-check-label" for="parent3_is_main_parent" id="label_parent3_is_main_parent">
                             อื่นๆ
                             </label>
@@ -49,14 +50,14 @@
                         <label class="form-check-label" for="address_currently_with_borrower">
                             ที่อยู่เดียวกันกับผู้กู้
                         </label>
-                        <input class="form-check-input" type="checkbox" id="address_currently_with_borrower" name="address_with_borrower" value="true" onchange="togetherAddress()">
+                        <input class="form-check-input" type="checkbox" id="address_currently_with_borrower" name="address_with_borrower" value="true" onchange="togetherAddress()" @checked($together_address)>
                   </div>
                 </div>
                 <div class="col-md-7"></div>
         
                 <div class="col-md-5 mb-3">
                     <label for="main_parent_village" class="form-label text-secondary">หมู่บ้าน</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_village" name="main_parent_village" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_village" name="main_parent_village" required value="{{$main_parent_address->village}}">
                     <div class="invalid-feedback">
                         กรุณากรอกหมู่บ้าน
                     </div>
@@ -64,7 +65,7 @@
         
                 <div class="col-md-3 mb-3">
                     <label for="main_parent_house_no" class="form-label text-secondary">บ้านเลขที่</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_house_no" name="main_parent_house_no" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_house_no" name="main_parent_house_no" required value="{{$main_parent_address->house_no}}">
                     <div class="invalid-feedback">
                         กรุณากรอกบ้านเลขที่
                     </div>
@@ -72,7 +73,7 @@
         
                 <div class="col-md-3 mb-3">
                     <label for="main_parent_village_no" class="form-label text-secondary">หมู่ที่</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_village_no" name="main_parent_village_no" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_village_no" name="main_parent_village_no" required value="{{$main_parent_address->village_no}}">
                     <div class="invalid-feedback">
                         กรุณากรอกหมู่ที่
                     </div>
@@ -80,7 +81,7 @@
         
                 <div class="col-md-5 mb-3">
                     <label for="main_parent_street" class="form-label text-secondary">ซอย</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_street" name="main_parent_street" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_street" name="main_parent_street" required value="{{$main_parent_address->street}}">
                     <div class="invalid-feedback">
                         กรุณากรอกซอย
                     </div>
@@ -88,7 +89,7 @@
         
                 <div class="col-md-5 mb-3">
                     <label for="main_parent_road" class="form-label text-secondary">ถนน</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_road" name="main_parent_road" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_road" name="main_parent_road" required value="{{$main_parent_address->road}}">
                     <div class="invalid-feedback">
                         กรุณากรอกถนน
                     </div>
@@ -96,7 +97,7 @@
         
                 <div class="col-md-3 mb-3">
                     <label for="main_parent_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_postcode" name="main_parent_postcode" onblur="addressWithZipcode(this.value,'main_parent')" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_postcode" name="main_parent_postcode" onblur="addressWithZipcode(this.value,'main_parent')" required value="{{$main_parent_address->postcode}}">
                     <div class="invalid-feedback">
                         กรุณากรอกรหัสไปรษณีย์
                     </div>
@@ -105,7 +106,7 @@
         
                 <div class="col-md-5 mb-3">
                     <label for="main_parent_province" class="form-label text-secondary">จังหวัด</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_province" name="main_parent_province" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_province" name="main_parent_province" required value="{{$main_parent_address->province}}">
                     <div class="invalid-feedback">
                         กรุณากรอกจังหวัด
                     </div>
@@ -113,7 +114,7 @@
         
                 <div class="col-md-5 mb-3">
                     <label for="main_parent_aumphure" class="form-label text-secondary">อำเภอ</label>
-                    <input type="text" class="form-control for-disabled" id="main_parent_aumphure" name="main_parent_aumphure" required>
+                    <input type="text" class="form-control for-disabled" id="main_parent_aumphure" name="main_parent_aumphure" required value="{{$main_parent_address->aumphure}}">
                     <div class="invalid-feedback">
                         กรุณากรอกอำเภอ
                     </div>
@@ -142,10 +143,17 @@
 @endsection
 @section('script')
 <script>
+    var isset_parent3 = @json($parent3 != null);
+    var together_address = @json($together_address);
+    if(isset_parent3)SelctMainParent('parent3');
+    if(together_address)togetherAddress();
+
+    var tambon = @json($main_parent_address->tambon);
+    tambonFormPostcode('main_parent',tambon);
+
     function togetherAddress() {
         address_currently_with_borrower = document.getElementById('address_currently_with_borrower');
         if (address_currently_with_borrower.checked) {
-            console.log('checked')
             const address_input = document.querySelectorAll('.for-disabled');
             address_input.forEach((e)=>{
                 e.disabled = true;
@@ -241,6 +249,36 @@
             .catch(error => {
                 console.error('Fetch error:', error);
             });
+    }
+
+    function tambonFormPostcode(caller,tambon_db){
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            
+            let getpostcodeforminput = document.querySelector(`#${caller}_postcode`).value;
+            let tambons = [];
+            for(tambon of data){
+                if(getpostcodeforminput == tambon.zip_code){
+                    // console.log(tambon.name_th)
+                    tambons.push(tambon.name_th.toString());
+                }
+            }
+            // console.log(tambons);
+            const selectElement = document.getElementById(`${caller}_tambon`);
+            for(tb of tambons){
+                selectElement.innerHTML += `<option ${ (tambon_db == tb) ? 'selected' : '' } value="${tb}">${tb}</option>`;
+            }
+
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
     }
 
     function enableInputCountry(parentNo,isthai){
@@ -404,7 +442,13 @@
     function SelctMainParent(main_parent){
         var parent3_area = document.getElementById('input-parent3-area');
         if(main_parent == 'parent3'){
-            parent3_area.innerHTML = input_parent3();
+            if(isset_parent3){
+                parent3_area.innerHTML = edit_parent3();
+                ageCal('parent3');
+
+            }else{
+                parent3_area.innerHTML = input_parent3();
+            }
             $("#parent3_birthday").datetimepicker({
                 disabled:false,
                 format: 'd-m-Y', 
@@ -604,11 +648,199 @@
                 กรุณากรอกรายได้ต่อปี
             </div>
         </div>
-
         `;
     }
 
-    
+    @if($parent3 != null)
+    function edit_parent3(){
+        return `
+        <label class="form-label" for="main_parent">
+            <h6 class="text-primary">กรอกข้อมูลผู้แทนโดยชอบธรรม</h6>
+        </label>
+        <fieldset class="row mb-3 mt-2">
+            <div class="col-md-3 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_is_thai" id="parent3_is_thai" value="ไทย" required onchange="enableInputCountry('parent3',this.value)" @checked($parent3->nationality == 'ไทย')>
+                    <label class="form-check-label" for="parent3_is_thai">
+                        สัญชาติไทย
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_is_thai" id="parent3_not_thai" value="parent3_not_thai" required onchange="enableInputCountry('parent3',this.value)"  @checked($parent3->nationality != 'ไทย')>
+                    <label class="form-check-label" for="parent3_not_thai">
+                        อื่นๆ
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="parent3_nationality" id="parent3_nationality" placeholder="กรอกสัญชาติ" @disabled($parent3->nationality == 'ไทย') value="{{($parent3->nationality != 'ไทย') ? $parent3->nationality : '' }}">
+                <div class="invalid-feedback">
+                    กรุณากรอกกรอกสัญชาติ
+                </div>
+            </div>
+            <div id="invalid-parent3_is_thai" class="invalid-feedback">
+                กรุณาเลือกสัญชาติ
+            </div>
+        </fieldset>
+        <fieldset class="row mb-3 mt-3" id="thaiperson">
+            <div class="col-md-3 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_alive" id="parent3_is_alive" value="true" required @checked($parent3->alive)>
+                    <label class="form-check-label" for="parent3_is_alive">
+                    ยังมีชีวิตอยู่
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_alive" id="parent3_no_alive" value="false" required @checked(!$parent3->alive)>
+                    <label class="form-check-label" for="parent3_no_alive">
+                    ถึงแก่กรรม
+                    </label>
+                </div>
+            </div>
+            <div id="invalid-parent3_alive" class="invalid-feedback">
+                กรุณาเลือกสถานภาพ
+            </div>
+        </fieldset>
+
+
+        <label for="parent3_relational" class="form-label text-secondary">เกี่ยวข้องกับผู้กู้โดยเป็น</label>
+        <fieldset class="row mb-3">
+            <div class="col-md-12 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_relational_option"  value="บิดา" onchange="parentRelational('parent3',this.value)" required  @checked($parent3->borrower_relational == 'บิดา')>
+                    <label class="form-check-label">
+                        บิดา
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_relational_option"  value="มารดา" onchange="parentRelational('parent3',this.value)" required @checked($parent3->borrower_relational == 'มารดา')>
+                    <label class="form-check-label">
+                        มารดา
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1 my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="parent3_relational_option" value="อื่นๆ" onchange="parentRelational('parent3',this.value)" required @checked($parent3->borrower_relational != 'มารดา' && $parent3->borrower_relational != 'บิดา')>
+                    <label class="form-check-label">
+                        อื่นๆ
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="parent3_custom_relational" onblur="setCustomRelational('parent3',this.value)"  @disabled($parent3->borrower_relational == 'มารดา' || $parent3->borrower_relational == 'บิดา') value="{{($parent3->borrower_relational != 'มารดา' && $parent3->borrower_relational != 'บิดา') ? $parent3->borrower_relational : ''}}">
+                <div class="invalid-feedback">
+                    กรุณากรอกความเกี่ยวข้องกับผู้กู้
+                </div>
+                <input type="hidden" id="parent3_relational" name="parent3_relational" required value="{{$parent3->borrower_relational}}">
+            </div>
+            <div id="invalid-parent3_relational_option" class="invalid-feedback">
+                กรุณาเลือกความเกี่ยวข้องกับผู้กู้
+            </div>
+        </fieldset>
+
+        {{-- <div class="col-md-10"></div> --}}
+
+        <div class="col-md-2 mb-3">
+            <label for="parent3_prefix" class="col-form-label text-secondary">คำนำหน้า</label>
+            <select id="parent3_prefix" name="parent3_prefix" class="form-select" aria-label="Default select example" required>
+                <option disabled selected  value="">เลือกคำนำหน้าชื่อ</option>
+                <option value="นาย" @selected($parent3->prefix == 'นาย')>นาย</option>
+                <option value="นาง" @selected($parent3->prefix == 'นาง')>นาง</option>
+                <option value="นางสาว" @selected($parent3->prefix == 'นางสาว')>นางสาว</option>
+            </select>
+            <div class="invalid-feedback">
+                กรุณาเลือกคำนำหน้าชื่อ
+            </div>
+        </div>
+        <div class="col-md-10"></div>
+
+        <div class="col-md-5 mb-3">
+            <label for="parent3_firstname" class="form-label text-secondary">ชื่อ</label>
+            <input type="text" class="form-control" id="parent3_firstname" name="parent3_firstname" required value="{{$parent3->firstname}}">
+            <div class="invalid-feedback">
+                กรุณากรอกชื่อ
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_lastname" class="form-label text-secondary">นามสกุล</label>
+            <input type="text" class="form-control" id="parent3_lastname" name="parent3_lastname" required value="{{$parent3->lastname}}">
+            <div class="invalid-feedback">
+                กรุณากรอกนามสกุล
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_birthday" class="form-label text-secondary">เกิดเมื่อ</label>
+            <div class="input-group date" id="">
+                <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                <input type="text" name="parent3_birthday" id="parent3_birthday" class="form-control"
+                    placeholder="วว/ดด/ปปปป" onchange="ageCal('parent3')" required value="{{ \Carbon\Carbon::createFromFormat('Y-m-d', $parent3->birthday)->format('d-m-Y')}}" />
+                <div class="invalid-feedback">
+                    กรุณากรอกวันเกิด
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="parent3_age" class="form-label text-secondary">อายุ</label>
+            <input type="text" class="form-control" id="parent3_age" name="parent3_age" required>
+            <div class="invalid-feedback">
+                กรุณากรอกอายุ
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_citizen_id" class="form-label text-secondary">เลขบัตรประชาชน 13 หลัก </label>
+            <div id="div_parent3_citizen_id">
+                <input type="text" class="form-control" id="parent3_citizen_id" name="parent3_citizen_id" maxlength="17" oninput="formatThaiID(this)" required value="{{$parent3->citizen_id}}">
+                <div class="invalid-feedback">
+                    กรุณากรอกเลขบัตรประชาชน 13 หลัก
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7"></div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_email" class="form-label text-secondary">อีเมลล์</label>
+            <input type="text" class="form-control" id="parent3_email" name="parent3_email" required value="{{$parent3->email}}">
+            <div class="invalid-feedback">
+                กรุณากรอกอีเมลล์
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_phone" class="form-label text-secondary">เบอร์โทรศัพท์</label>
+            <input type="text" class="form-control" id="parent3_phone" name="parent3_phone" required value="{{$parent3->phone}}">
+            <div class="invalid-feedback">
+                กรุณากรอกเบอร์โทรศัพท์
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_occupation" class="form-label text-secondary">อาชีพ</label>
+            <input type="text" class="form-control" id="parent3_occupation" name="parent3_occupation" required value="{{$parent3->occupation}}">
+            <div class="invalid-feedback">
+                กรุณากรอกอาชีพ
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_place_of_work" class="form-label text-secondary">สถานที่ทำงาน</label>
+            <input type="text" class="form-control" id="parent3_place_of_work" name="parent3_place_of_work" required value="{{$parent3->place_of_work}}">
+            <div class="invalid-feedback">
+                กรุณากรอกสถานที่ทำงาน
+            </div>
+        </div>
+        <div class="col-md-5 mb-3">
+            <label for="parent3_income" class="form-label text-secondary">รายได้ต่อปี</label>
+            <input type="text" class="form-control" id="parent3_income" name="parent3_income" oninput="formatIncome(this)" placeholder="1,000,000" required value="{{$parent3->income}}">
+            <div class="invalid-feedback">
+                กรุณากรอกรายได้ต่อปี
+            </div>
+        </div>
+        `;
+    }
+    @endif
 
 </script>
 @endsection

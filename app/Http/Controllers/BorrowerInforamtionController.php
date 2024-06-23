@@ -39,8 +39,9 @@ class BorrowerInforamtionController extends Controller
         $user_id = Session::get('user_id','1');
         $borrower_id = Borrower::where('user_id',$user_id)->value('id') ?? null;
         $parent_count = Parents::where('borrower_id',$borrower_id)->count();
+        $main_parent_id = Parents::where('borrower_id',$borrower_id)->where('is_main_parent',true)->value('id');
         // dd($borrower_id,$parent_count);
-        return view('borrower.information_list',compact('borrower_id','parent_count'));
+        return view('borrower.information_list',compact('borrower_id','parent_count','main_parent_id'));
     }
 
     public function borrower_input_information(){

@@ -381,35 +381,6 @@
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
             
-            
-            {{--<li class="nav-item">
-                <a id="loan_request" class="nav-link collapsed" href="{{url('/borrower/loan_request')}}">
-                    <i class="bi bi-file-arrow-up"></i>
-                    <span>ยื่นกู้รายเก่าเลื่อนชั้นปี</span>
-                </a>
-            </li><!-- End ยื่นกู้รายเก่าเลื่อนชั้นปี Page Nav -->
-            
-            <li class="nav-item">
-                <a id="loan_over_course" class="nav-link collapsed" href="{{url('/borrower/loan_over_course')}}">
-                    <i class="bi bi-file-earmark-diff"></i>
-                    <span>ยื่นกู้เกินหลักสูตร</span>
-                </a>
-            </li><!-- End Error 404 Page Nav -->
-            <li class="nav-heading text-secondary">ส่งเอกสาร</li>
-            <li class="nav-item">
-                <a id="send_contract" class="nav-link collapsed" href="{{url('/borrower/send_contract')}}">
-                <i class="bi bi-file-break"></i>
-                <span>ส่งสัญญาและแบบยืนยัน</span>
-                </a>
-            </li><!-- End ส่งสัญญาและแบบยืนยัน Page Nav -->
-
-            <li class="nav-item">
-                <a id="send_confirmation_form" class="nav-link collapsed" href="{{url('/borrower/send_confirmation_form')}}">
-                <i class="bi bi-file-check"></i>
-                <span>ส่งแบบยืนยัน</span>
-                </a>
-            </li> --}}
-
             <li class="nav-heading text-secondary">ขอแก้ใขข้อมูล</li>
             <li class="nav-item">
                 <a id="edit_borrower_information" class="nav-link collapsed" href="{{url('/borrower/edit_borrower_information')}}">

@@ -117,41 +117,62 @@ class ParentInformationController extends Controller
            $parent2_have_data = false;
 
        }else{
-           $parent2_validator = Validator::make($request->all(), [
-              "parent2_is_thai" => 'required|string|max:50',
-              "parent2_alive" => 'required|string|max:10',
-              "parent2_relational" => 'required|string|max:20',
-              "parent2_prefix" => 'required|string|max:50',
-              "parent2_firstname" => 'required|string|max:100',
-              "parent2_lastname" => 'required|string|max:100',
-              "parent2_birthday" => 'required|string|max:20',
-              "parent2_citizen_id" => 'required|string|max:50',
-              "parent2_phone" => 'required|string|max:50',
-              "parent2_email" => 'required|string|max:100',
-              "parent2_occupation" => 'required|string|max:100',
-              "parent2_place_of_work" => 'required|string|max:100',
-              "parent2_income" => 'required|string|max:50',
-           ]);
-
-            // Check if validation fails
-            if ($parent2_validator->fails()) {
-                return redirect()
-                ->back()
-                ->withErrors($parent2_validator);
-            }
+            $request->validate([
+                "parent2_is_thai" => 'required|string|max:50',
+                "parent2_nationality" => 'nullable|string|max:50',
+                "parent2_alive" => 'required|string|max:10',
+                "parent2_relational" => 'required|string|max:20',
+                "parent2_prefix" => 'required|string|max:50',
+                "parent2_firstname" => 'required|string|max:100',
+                "parent2_lastname" => 'required|string|max:100',
+                "parent2_birthday" => 'required|string|max:20',
+                "parent2_citizen_id" => 'required|string|max:50',
+                "parent2_phone" => 'required|string|max:50',
+                "parent2_email" => 'required|string|max:100',
+                "parent2_occupation" => 'required|string|max:100',
+                "parent2_place_of_work" => 'required|string|max:100',
+                "parent2_income" => 'required|string|max:50',
+            ],[
+                "parent2_is_thai.required" => 'ต้องระบุสัญชาติผู้ปกครอง',
+                "parent2_is_thai.max" => 'สัญชาติผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_nationnality.max" => 'สัญชาติผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_alive.required" => 'ต้องระบุว่าผู้ปกครองมีชีวิตอยู่หรือเสียชีวิต',
+                "parent2_alive.max" => 'สัญชาติผู้ปกครองต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
+                "parent2_relational.required" => 'ต้องระบุความสัมพันธ์ของผู้กู้กับผู้ปกครอง',
+                "parent2_relational.max" => 'ความสัมพันธ์ของผู้กู้กับผู้ปกครองต้องมีครวามยาวไม่เกิน 20 ตัวอักษร',
+                'parent2_prefix.required' => 'ต้องระบุคำนำหน้าชื่อผู้ปกครอง',
+                'parent2_prefix.max' => 'คำนำหน้าชื่อผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                'parent2_firstname.required' => 'ต้องกรอกชื่อจริงผู้ปกครอง',
+                'parent2_firstname.max' => 'ชื่อจริงผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                'parent2_lastname.required' => 'ต้องกรอกนามสกุลผู้ปกครอง',
+                'parent2_lastname.max' => 'นามสกุลผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                'parent2_birthday.required' => 'ต้องกรอกวันเกิดผู้ปกครอง',
+                'parent2_birthday.max' => 'วันเกิดผู้ปกครองไม่ถูกต้อง',
+                'parent2_citizen_id.required' => 'ต้องกรอกเลขบัตรประชาชนผู้ปกครอง',
+                'parent2_citizen_id.max' => 'เลขบัตรประชาชนผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_phone.required" => 'ต้องระบุเบอร์โทรผู้ปกครอง',
+                "parent2_phone.max" => 'เบอร์โทรศัพท์ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_email.required" => 'ต้องระบุอีเมลล์โทรผู้ปกครอง',
+                "parent2_email.max" => 'อีเมลล์ผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+                "parent2_occupation.required" => 'ต้องระบุอาชีพผู้ปกครอง',
+                "parent2_occupation.max" => 'อาชีพผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+                "parent2_place_of_work.required" => 'ต้องระบุสถานที่ทำงานผู้ปกครอง',
+                "parent2_place_of_work.max" => 'สถานที่ทำงานผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+                "parent2_income.required" => 'ต้องระบุรายได้ผู้ปกครอง',
+                "parent2_income.max" => 'รายได้ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+            ]);
             //check nationality of parent 2
             if($request->parent2_is_thai == "ไทย"){
                 $parent2_nationality = "ไทย";
             }else{
-                $parent1_nationality_validator = Validator::make($request->all(),[
-                    "parent2_nationality" => 'required|string|max:50',
-                ]);
-                // Check if validation fails
-                if ($parent1_nationality_validator->fails()) {
-                    return redirect()
-                    ->back()
-                    ->withErrors($parent2_validator);
-                }
+                 $request->validate([
+                     "parent2_nationality" => 'required|string|max:50',
+                 ],[
+                     "parent2_nationality.required" => 'ต้องระบุสัญชาตผู้ปกครอง',
+                     "parent2_nationality.string" => 'ประเภทข้อมูลไม่ถูกต้อง',
+                     "parent2_nationality.max" => 'สัญชาตผู้ปกครองงมีครวามยาวไม่เกิน :max ตัวอักษร',
+                 ]);
+ 
                 $parent2_nationality = $request->parent2_nationality;
             }
 
@@ -252,8 +273,9 @@ class ParentInformationController extends Controller
             }
             $parent2_have_data = false;
         }else{
-            $parent2_validator = Validator::make($request->all(), [
+            $request->validate([
                 "parent2_is_thai" => 'required|string|max:50',
+                "parent2_nationality" => 'nullable|string|max:50',
                 "parent2_alive" => 'required|string|max:10',
                 "parent2_relational" => 'required|string|max:20',
                 "parent2_prefix" => 'required|string|max:50',
@@ -266,29 +288,47 @@ class ParentInformationController extends Controller
                 "parent2_occupation" => 'required|string|max:100',
                 "parent2_place_of_work" => 'required|string|max:100',
                 "parent2_income" => 'required|string|max:50',
+            ],[
+                "parent2_is_thai.required" => 'ต้องระบุสัญชาติผู้ปกครอง',
+                "parent2_is_thai.max" => 'สัญชาติผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_nationnality.max" => 'สัญชาติผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_alive.required" => 'ต้องระบุว่าผู้ปกครองมีชีวิตอยู่หรือเสียชีวิต',
+                "parent2_alive.max" => 'สัญชาติผู้ปกครองต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
+                "parent2_relational.required" => 'ต้องระบุความสัมพันธ์ของผู้กู้กับผู้ปกครอง',
+                "parent2_relational.max" => 'ความสัมพันธ์ของผู้กู้กับผู้ปกครองต้องมีครวามยาวไม่เกิน 20 ตัวอักษร',
+                'parent2_prefix.required' => 'ต้องระบุคำนำหน้าชื่อผู้ปกครอง',
+                'parent2_prefix.max' => 'คำนำหน้าชื่อผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                'parent2_firstname.required' => 'ต้องกรอกชื่อจริงผู้ปกครอง',
+                'parent2_firstname.max' => 'ชื่อจริงผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                'parent2_lastname.required' => 'ต้องกรอกนามสกุลผู้ปกครอง',
+                'parent2_lastname.max' => 'นามสกุลผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                'parent2_birthday.required' => 'ต้องกรอกวันเกิดผู้ปกครอง',
+                'parent2_birthday.max' => 'วันเกิดผู้ปกครองไม่ถูกต้อง',
+                'parent2_citizen_id.required' => 'ต้องกรอกเลขบัตรประชาชนผู้ปกครอง',
+                'parent2_citizen_id.max' => 'เลขบัตรประชาชนผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_phone.required" => 'ต้องระบุเบอร์โทรผู้ปกครอง',
+                "parent2_phone.max" => 'เบอร์โทรศัพท์ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_email.required" => 'ต้องระบุอีเมลล์โทรผู้ปกครอง',
+                "parent2_email.max" => 'อีเมลล์ผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+                "parent2_occupation.required" => 'ต้องระบุอาชีพผู้ปกครอง',
+                "parent2_occupation.max" => 'อาชีพผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+                "parent2_place_of_work.required" => 'ต้องระบุสถานที่ทำงานผู้ปกครอง',
+                "parent2_place_of_work.max" => 'สถานที่ทำงานผู้ปกครองต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
+                "parent2_income.required" => 'ต้องระบุรายได้ผู้ปกครอง',
+                "parent2_income.max" => 'รายได้ผู้ปกครองต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
             ]);
-            
-            // Check if validation fails
-            if ($parent2_validator->fails()) {
-                return redirect()
-                ->back()
-                ->withErrors($parent2_validator);
-            }
             
             //check nationality of parent 2
            if($request->parent2_is_thai == "ไทย"){
                $parent2_nationality = "ไทย";
            }else{
-                $parent1_nationality_validator = Validator::make($request->all(),[
+                $request->validate([
                     "parent2_nationality" => 'required|string|max:50',
+                ],[
+                    "parent2_nationality.required" => 'ต้องระบุสัญชาตผู้ปกครอง',
+                    "parent2_nationality.string" => 'ประเภทข้อมูลไม่ถูกต้อง',
+                    "parent2_nationality.max" => 'สัญชาตผู้ปกครองงมีครวามยาวไม่เกิน :max ตัวอักษร',
                 ]);
-
-                // Check if validation fails
-                if ($parent1_nationality_validator->fails()) {
-                    return redirect()
-                    ->back()
-                    ->withErrors($parent2_validator);
-                }
 
                $parent2_nationality = $request->parent2_nationality;
            }
@@ -333,7 +373,7 @@ class ParentInformationController extends Controller
             if($request->file('devorce_file') != null){
                 $this->deleteFile($marital_status_path.'/'.$borrower->student_id, $marital_db->file_name);
             }
-
+            
             $file_validator = Validator::make($request->all(), [
                 "devorce_file" => 'required|file|max:2048|mimes:jpg,jpeg,png,pdf',
             ]);
