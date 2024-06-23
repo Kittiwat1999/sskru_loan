@@ -339,3 +339,7 @@ Route::put('/admin/manage_data/apprearancetype/edit/{apprearancetype_id}',[Admin
 Route::put('/admin/manage_data/property/edit/{property_id}',[AdminManageDataController::class,'edit_property'])->name('admin.manage.data.edit.property');
 Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}',[AdminManageDataController::class,'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
 Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController::class,'edit_major'])->name('admin.manage.data.edit.major');
+
+Route::get('/verify_email',function () {
+    return view('/verify_email');
+});

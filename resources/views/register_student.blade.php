@@ -210,22 +210,22 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  {{--  --}}
-  <script>
-    function validatePassword() {
-        var password = document.getElementById("password").value;
-        var confirm_password = document.getElementById("confirm_password").value;
-        var passwordError = document.getElementById("passwordError");
+    {{--  --}}
+    <script>
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirm_password = document.getElementById("confirm_password").value;
+            var passwordError = document.getElementById("passwordError");
 
-        if (password !== confirm_password) {
-            passwordError.innerHTML = "รหัสผ่านไม่ตรงกัน";
-            return false;
-        } else {
-            passwordError.innerHTML = "";
-            return true;
+            if (password !== confirm_password) {
+                passwordError.innerHTML = "รหัสผ่านไม่ตรงกัน";
+                return false;
+            } else {
+                passwordError.innerHTML = "";
+                return true;
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
 
