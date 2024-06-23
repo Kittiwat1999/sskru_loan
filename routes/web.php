@@ -13,6 +13,7 @@ use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\OldLoanRequest;
 
@@ -300,9 +301,8 @@ Route::get('/blank',function () {
     return view('/blank');
 });
 
-Route::get('/register_student',function () {
-    return view('/register_student');
-});
+Route::get('/register_student',[RegisterController::class,'index']);
+Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
 
 Route::get('/login_student',function () {
     return view('/login_student');
