@@ -58,21 +58,23 @@
                                     <h4>ยืนยันตัวตน</h4>
                                     <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล</p>
 
-                                    <div class="otp-field mb-4">
-                                        <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" />
-                                        <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" disabled />
-                                        <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" disabled />
-                                        <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" disabled />
-                                        <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" disabled />
-                                        <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" disabled />
-                                    </div>
+                                    <form action="">
+                                        <div class="otp-field mb-4">
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="otp_1" maxlength="1" required />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="otp_2" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="otp_3" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="otp_4" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="otp_5" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="otp_6" maxlength="1" disabled />
+                                        </div>
 
-                                    <button class="btn btn-primary mb-3">
-                                        ยืนยัน
-                                    </button>
+                                        <button type="submit" class="btn btn-primary mb-3">
+                                            ยืนยัน
+                                        </button>
+                                    </form>
 
                                     <p class="resend text-muted mb-0">
-                                        หากยังไม่ได้รับรหัส (OTP) ? <a href="">กดเพื่อขอรหัส (OTP) ใหม่อีกครั้ง</a>
+                                        หากยังไม่ได้รับรหัส (OTP ?) <a href="#" id="resend-otp-link">กดเพื่อขอรหัส (OTP) ใหม่อีกครั้ง</a> <span id="countdown-timer"></span>
                                     </p>
                                 </div>
                             </div>
@@ -99,10 +101,12 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
 
-    {{--  --}}
     <script>
         const inputs = document.querySelectorAll(".otp-field > input");
         const button = document.querySelector(".btn");
+        const resendLink = document.getElementById("resend-otp-link");
+        const countdownTimer = document.getElementById("countdown-timer");
+        let countdown;
 
         window.addEventListener("load", () => inputs[0].focus());
         button.setAttribute("disabled", "disabled");
@@ -117,12 +121,12 @@
 
             for (let i = 0; i < otpLength; i++) {
                 if (i < pastedValue.length) {
-                inputs[i].value = pastedValue[i];
-                inputs[i].removeAttribute("disabled");
-                inputs[i].focus;
+                    inputs[i].value = pastedValue[i];
+                    inputs[i].removeAttribute("disabled");
+                    inputs[i].focus();
                 } else {
-                inputs[i].value = ""; // Clear any remaining inputs
-                inputs[i].focus;
+                    inputs[i].value = ""; // Clear any remaining inputs
+                    inputs[i].focus();
                 }
             }
         });
@@ -169,6 +173,25 @@
                 }
             });
         });
+
+        resendLink.addEventListener("click", (event) => {
+            event.preventDefault();
+            startCountdown(60); // Start countdown from 60 seconds
+        });
+
+        function startCountdown(seconds) {
+            resendLink.style.display = "none";
+            countdownTimer.textContent = ` ${seconds} วินาที`;
+            countdown = setInterval(() => {
+                seconds--;
+                countdownTimer.textContent = ` ${seconds} วินาที`;
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    countdownTimer.textContent = "";
+                    resendLink.style.display = "inline";
+                }
+            }, 1000);
+        }
     </script>
 
 </body>
