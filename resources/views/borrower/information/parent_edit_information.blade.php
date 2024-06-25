@@ -188,9 +188,95 @@
                         กรุณากรอกรายได้ต่อปี
                     </div>
                 </div>
-                
                 <!-- end dad information -->
             
+                <label class="form-label mt-3" for="">
+                    <h6 class="text-primary">ข้อมูลที่อยู่ผู้ปกครอง</h6>
+                </label>
+                <div class="col-md-5 mt-3 mb-3">
+                  <div class="form-check">
+                        <label class="form-check-label" for="parent1_address_currently_with_borrower">
+                            ที่อยู่เดียวกันกับผู้กู้
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="parent1_address_currently_with_borrower" name="parent1_address_with_borrower" value="true" onchange="disableInputAddress('parent1')" @checked($parent1_address['with_borrower'])>
+                  </div>
+                </div>
+                <div class="col-md-7"></div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_village" class="form-label text-secondary">หมู่บ้าน</label>
+                    <input type="text" class="form-control" id="parent1_village" name="parent1_village" required value="{{$parent1_address['village']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกหมู่บ้าน
+                    </div>
+                </div>
+        
+                <div class="col-md-3 mb-3">
+                    <label for="parent1_house_no" class="form-label text-secondary">บ้านเลขที่</label>
+                    <input type="text" class="form-control" id="parent1_house_no" name="parent1_house_no" required value="{{$parent1_address['house_no']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกบ้านเลขที่
+                    </div>
+                </div>
+        
+                <div class="col-md-3 mb-3">
+                    <label for="parent1_village_no" class="form-label text-secondary">หมู่ที่</label>
+                    <input type="text" class="form-control" id="parent1_village_no" name="parent1_village_no" required value="{{$parent1_address['village_no']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกหมู่ที่
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_street" class="form-label text-secondary">ซอย</label>
+                    <input type="text" class="form-control" id="parent1_street" name="parent1_street" required value="{{$parent1_address['street']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกซอย
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_road" class="form-label text-secondary">ถนน</label>
+                    <input type="text" class="form-control" id="parent1_road" name="parent1_road" required value="{{$parent1_address['road']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกถนน
+                    </div>
+                </div>
+        
+                <div class="col-md-3 mb-3">
+                    <label for="parent1_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
+                    <input type="text" class="form-control" id="parent1_postcode" name="parent1_postcode" onblur="addressWithZipcode(this.value,'parent1')" required value="{{$parent1_address['postcode']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกรหัสไปรษณีย์
+                    </div>
+                </div>
+                <div class="col-md-9"></div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_province" class="form-label text-secondary">จังหวัด</label>
+                    <input type="text" class="form-control" id="parent1_province" name="parent1_province" required value="{{$parent1_address['province']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกจังหวัด
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_aumphure" class="form-label text-secondary">อำเภอ</label>
+                    <input type="text" class="form-control" id="parent1_aumphure" name="parent1_aumphure" required value="{{$parent1_address['aumphure']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกอำเภอ
+                    </div>
+                </div>
+                {{$parent1_address['tambon']}}
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
+                    <select id="parent1_tambon" name="parent1_tambon" class="form-select" aria-label="Default select example" required>
+                        <option disabled selected value="">เลือกตำบล</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        กรุณากรอกตำบล
+                    </div>
+                </div>
             
                 <!-- mom information -->
                 <div class="col-md-12 mb-2 mt-3">
@@ -389,6 +475,94 @@
                         กรุณากรอกรายได้ต่อปี
                     </div>
                 </div>
+                <label class="form-label mt-3" for="">
+                    <h6 class="text-primary">ข้อมูลที่อยู่คู่สมรสผู้ปกครอง</h6>
+                </label>
+                
+                <div class="col-md-5 mt-3 mb-3">
+                  <div class="form-check">
+                        <label class="form-check-label" for="parent2_address_currently_with_borrower">
+                            ที่อยู่เดียวกันกับผู้กู้
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="parent2_address_currently_with_borrower" name="parent2_address_with_borrower" value="true" onchange="disableInputAddress('parent2')" @checked($parent2_address['with_borrower'])>
+                  </div>
+                </div>
+                <div class="col-md-7"></div>
+                
+                <div class="col-md-5 mb-3">
+                    <label for="parent2_village" class="form-label text-secondary">หมู่บ้าน</label>
+                    <input type="text" class="form-control" id="parent2_village" name="parent2_village" required value="{{$parent2_address['village']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกหมู่บ้าน
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="parent2_house_no" class="form-label text-secondary">บ้านเลขที่</label>
+                    <input type="text" class="form-control" id="parent2_house_no" name="parent2_house_no" required value="{{$parent2_address['house_no']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกบ้านเลขที่
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="parent2_village_no" class="form-label text-secondary">หมู่ที่</label>
+                    <input type="text" class="form-control" id="parent2_village_no" name="parent2_village_no" required value="{{$parent2_address['village_no']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกหมู่ที่
+                    </div>
+                </div>
+                
+                <div class="col-md-5 mb-3">
+                    <label for="parent2_street" class="form-label text-secondary">ซอย</label>
+                    <input type="text" class="form-control" id="parent2_street" name="parent2_street" required value="{{$parent2_address['street']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกซอย
+                    </div>
+                </div>
+                
+                <div class="col-md-5 mb-3">
+                    <label for="parent2_road" class="form-label text-secondary">ถนน</label>
+                    <input type="text" class="form-control" id="parent2_road" name="parent2_road" required value="{{$parent2_address['road']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกถนน
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="parent2_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
+                    <input type="text" class="form-control" id="parent2_postcode" name="parent2_postcode" onblur="addressWithZipcode(this.value,'parent2')" required value="{{$parent2_address['postcode']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกรหัสไปรษณีย์
+                    </div>
+                </div>
+                <div class="col-md-9"></div>
+                
+                <div class="col-md-5 mb-3">
+                    <label for="parent2_province" class="form-label text-secondary">จังหวัด</label>
+                    <input type="text" class="form-control" id="parent2_province" name="parent2_province" required value="{{$parent2_address['province']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกจังหวัด
+                    </div>
+                </div>
+                
+                <div class="col-md-5 mb-3">
+                    <label for="parent2_aumphure" class="form-label text-secondary">อำเภอ</label>
+                    <input type="text" class="form-control" id="parent2_aumphure" name="parent2_aumphure" required value="{{$parent2_address['aumphure']}}">
+                    <div class="invalid-feedback">
+                        กรุณากรอกอำเภอ
+                    </div>
+                </div>
+                
+                <div class="col-md-5 mb-3">
+                    <label for="parent2_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
+                    <select id="parent2_tambon" name="parent2_tambon" class="form-select" aria-label="Default select example" required>
+                        <option disabled selected value="">เลือกตำบล</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        กรุณากรอกตำบล
+                    </div>
+                </div>
                 @endif
                  <!-- maritalStatus -->
                 <fieldset class="row my-4" id="maritalStatusId">
@@ -485,8 +659,18 @@
 
     ageCal('parent1');
     ageCal('parent2');
-    // parentRelational('parent1',parent1_relational);
-    // if(parent2_relational) parentRelational('parent2',parent2_relational);
+    
+    var parent1_address_with_borrower = @json($parent1_address['with_borrower']);
+    if(parent1_address_with_borrower)disableInputAddress('parent1');
+
+    var parent2_address_with_borrower = @json(($parent2_address['with_borrower'] != null) ? $parent2_address['with_borrower'] : null);
+    if(parent2_address_with_borrower != null)disableInputAddress('parent2');
+
+    var parent1_tambon = @json($parent1_address['tambon']);
+    if(parent1_tambon)tambonFormPostcode('parent1',parent1_tambon);
+
+    var parent2_tambon = @json(($parent2_address['tambon'] != null) ? $parent2_address['tambon'] : null);
+    if(parent2_tambon != null)tambonFormPostcode('parent2',parent2_tambon);
 
     function enableInputCountry(parentNo,isthai){
         if(isthai == `${parentNo}_not_thai`){
@@ -578,7 +762,16 @@
                                                 #parent2_occupation,
                                                 #parent2_place_of_work,
                                                 #parent2_income,
-                                                #parent2_is_main_parent
+                                                #parent2_address_currently_with_borrower,
+                                                #parent2_village,
+                                                #parent2_house_no,
+                                                #parent2_village_no,
+                                                #parent2_street,
+                                                #parent2_road,
+                                                #parent2_postcode,
+                                                #parent2_province,
+                                                #parent2_aumphure,
+                                                #parent2_tambon
                                                 `);
         var parent2_relation = document.querySelectorAll('input[name="parent2_relational_option"]');
         console.log(parent2_relation);
@@ -725,6 +918,143 @@
         } else {
             return false; // Allow form submission
         }
+    }
+
+    function disableInputAddress(owner){
+        const address_currently_with_borrower = document.getElementById(owner+'_address_currently_with_borrower');
+        var parent2_element = document.querySelectorAll(`
+                                                #${owner}_village,
+                                                #${owner}_house_no,
+                                                #${owner}_village_no,
+                                                #${owner}_street,
+                                                #${owner}_road,
+                                                #${owner}_postcode,
+                                                #${owner}_province,
+                                                #${owner}_aumphure,
+                                                #${owner}_tambon
+                                                `);
+        if(address_currently_with_borrower.checked){
+            parent2_element.forEach((e)=>{
+                e.disabled = true;
+                e.required = false;
+            });
+        }else{
+            parent2_element.forEach((e)=>{
+                e.disabled = false;
+                e.required = true;
+            });
+        }
+    }
+
+    function addressWithZipcode(zip_code_input, caller){
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data.length == 0){
+                console.log('no data');
+            }
+            var tambons = [];
+            var aumphureId = '';
+            for(tambon of data){
+                if(zip_code_input == tambon.zip_code){
+                    // console.log(tambon.name_th)
+                    tambons.push(tambon.name_th.toString());
+                    if(aumphureId == '')aumphureId = tambon.amphure_id;
+                }
+            }
+            // console.log(tambons);
+            var selectElement = document.getElementById(`${caller}_tambon`);
+            selectElement.innerHTML ='<option disabled selected value="">เลือกตำบล</option>';
+            for(tb of tambons){
+                var newOption = document.createElement('option');
+                newOption.value = tb;
+                newOption.text = tb;
+                selectElement.add(newOption);
+            }
+            getAumphure(aumphureId,caller)
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    }
+
+    function getAumphure(amphure_id,caller){
+        // console.log(amphure_id);
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(aumphures => {
+                var province_id = '';
+                for(aumphure of aumphures){
+                    if(amphure_id == aumphure.id){
+                    document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
+                    if(province_id == '')province_id = aumphure.province_id;
+                    }
+                }
+                getProvince(province_id,caller);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    function getProvince(province_id,caller){
+        // console.log(province_id);
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(provinces => {
+                for(province of provinces){
+                    if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
+                }
+                
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    function tambonFormPostcode(caller,tambon_db){
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            
+            let getpostcodeforminput = document.querySelector(`#${caller}_postcode`).value;
+            let tambons = [];
+            for(tambon of data){
+                if(getpostcodeforminput == tambon.zip_code){
+                    // console.log(tambon.name_th)
+                    tambons.push(tambon.name_th.toString());
+                }
+            }
+            // console.log(tambons);
+            const selectElement = document.getElementById(`${caller}_tambon`);
+            for(tb of tambons){
+                selectElement.innerHTML += `<option ${ (tambon_db == tb) ? 'selected' : '' } value="${tb}">${tb}</option>`;
+            }
+
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
     }
 
     $("#parent1_birthday").datetimepicker({

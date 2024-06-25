@@ -161,7 +161,7 @@ class MultiTableSeeder extends Seeder
             [
                 'id' => 1,
                 'borrower_id' => 1,
-                'address_id' => null,
+                'address_id' => 1,
                 'borrower_relational' => 'บิดา',
                 'nationality' => 'ไทย',
                 'prefix' => 'นาย',
@@ -182,7 +182,7 @@ class MultiTableSeeder extends Seeder
             [
                 'id' => 2,
                 'borrower_id' => 1,
-                'address_id' => null,
+                'address_id' => 1,
                 'borrower_relational' => 'มารดา',
                 'nationality' => 'ไทย',
                 'prefix' => 'นางสาว',
@@ -229,7 +229,7 @@ class MultiTableSeeder extends Seeder
     private function seedChildDocuments(){
         DB::table('child_documents')->insert([
             ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้กู้'],
-            ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้แทนโดยชอบธรรม'],
+            ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง,ผู้แทนโดยชอบธรรม'],
             ['child_document_title'=>'หนังสือรับรองรายได้ครอบครัว'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืม (กยศ. 101)'],
             ['child_document_title'=>'ใบรายงานผลการเรียน'],
@@ -283,8 +283,9 @@ class MultiTableSeeder extends Seeder
 
     private function seedChildDocumentFiles(){
         DB::table('child_document_files')->insert([
-            ['child_document_id'=>'5','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
+            ['child_document_id'=>'3','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
             ['child_document_id'=>'1','original_name'=>'yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
+            ['child_document_id'=>'2','original_name'=>'parent-yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'parent-yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
         ]);
     }
 }

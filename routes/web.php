@@ -9,8 +9,8 @@ use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
-use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\BorrowerInforamtionController;
+use App\Http\Controllers\GenerateFile;
 use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Controllers\RegisterController;
@@ -316,11 +316,12 @@ Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
 Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'upload_document_page'])->name('borrower.upload.document.page');
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
+Route::get('/borrower/download_document/{document_id}',[DownloadDocumentController::class,'download_file'])->name('borrower.download.document');
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
 
-Route::get('/generate_rabrongraidai',[ExampleController::class,'generate_rabrongraidai']);
-Route::get('/generate_yinyorm',[ExampleController::class,'generate_yinyorm']);
-Route::get('/teachers_comment',[ExampleController::class,'teachers_comment']);
+Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraidai']);
+Route::get('/generate_yinyorm',[GenerateFile::class,'generate_yinyorm_student']);
+Route::get('/teachers_comment',[GenerateFile::class,'teachers_comment']);
 
 Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
 Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');

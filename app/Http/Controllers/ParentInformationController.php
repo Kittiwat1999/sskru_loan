@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ParentInformationRequest;
+use App\Models\Address;
 use App\Models\Borrower;
 use App\Models\Config;
 use App\Models\Parents;
@@ -64,7 +65,7 @@ class ParentInformationController extends Controller
 
     public function borrower_edit_parent_information_page(){
         $user_id = Session::get('user_id','1');
-        $borrower = Borrower::where('user_id',$user_id)->select('id','marital_status','student_id')->first();
+        $borrower = Borrower::where('user_id',$user_id)->select('id','marital_status','student_id','address_id')->first();
         $parent = Parents::where('borrower_id',$borrower['id'])->where('main_parent_only',false)->get();
         $borrower_id = $borrower['id'];
         $student_id = $borrower['student_id'];
@@ -72,23 +73,76 @@ class ParentInformationController extends Controller
         $marital_status = json_decode($borrower['marital_status']);
         $parent_count = count($parent);
 
-        if($parent_count > 1){
-            $parent2_dont_have_data = false;
-        }else{
-            $parent2_dont_have_data = true;
+        $parent1_address = Address::find($parent[0]['address_id']);
+        $parent1_address['with_borrower'] = ($borrower['address_id'] == $parent[0]['address_id']) ? true : false ;
+        $parent2_dont_have_data = ($parent_count > 1) ? false : true ;
+        if(!$parent2_dont_have_data){
+            $parent2_address = Address::find($parent[1]['address_id']);
+            $parent2_address['with_borrower']  = ($borrower['address_id'] == $parent[1]['address_id']) ? true : false ;
         }
+
         foreach($parent as $feild){
             $feild['citizen_id'] = Crypt::decryptString($feild['citizen_id']);
         }
 
-        return view('borrower.information.parent_edit_information',compact('parent','parent2_dont_have_data','marital_status','student_id'));
+        return view('borrower.information.parent_edit_information',compact('parent','parent2_dont_have_data','marital_status','student_id','parent1_address','parent2_address',));
     }
 
     public function borrower_store_parent_information(ParentInformationRequest $request){
-
+        // dd($request);
         date_default_timezone_set("Asia/Bangkok");
         $user_id = Session::get('user_id','1');
         $borrower = Borrower::where('user_id',$user_id)->first();
+
+        //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย
+        if(isset($request->parent1_address_with_borrower)){
+            $parent1_address_id = $borrower->address_id;
+        }else{
+
+            $request->validate([
+                "parent1_village" => 'required|string|max:50',
+                "parent1_house_no" => 'required|string|max:20',
+                "parent1_village_no" => 'required|string|max:20',
+                "parent1_street" => 'required|string|max:100',
+                "parent1_road" => 'required|string|max:100',
+                "parent1_postcode" => 'required|string|max:10',
+                "parent1_province" => 'required|string|max:50',
+                "parent1_aumphure" => 'required|string|max:50',
+                "parent1_tambon" => 'required|string|max:50',
+            ],[
+                
+                "parent1_village.required" => 'ต้องกรอกชื่อหมู่บ้าน',
+                "parent1_village.max" => 'ชื่อหมู่บ้านต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent1_house_no.required" => 'ต้องกรอกบ้านเลขที่',
+                "parent1_house_no.max" => 'บ้านเลขที่ต้องไม่เกิน 20 ตัวอักษร',
+                "parent1_village_no.required" => 'ต้องกรอกเลขหมู่บ้าน',
+                "parent1_village_no.max" => 'เลขหมู่บ้านต้องไม่เกิน 20 ตัวอักษร',
+                "parent1_street.max" => 'ซอยต้องไม่เกิน 100 ตัวอักษร',
+                "parent1_road.max" => 'ถนนต้องไม่เกิน 100 ตัวอักษร',
+                "parent1_postcode.required" => 'ต้องระบุเลขไปรษณีย์',
+                "parent1_postcode.max" => 'เลขไปรษณีย์ต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
+                "parent1_province.required" => 'ต้องระบุจังหวัด',
+                "parent1_aumphure.max" => 'จังหวัดต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent1_aumphure.required" => 'ต้องระบุอำเภอ',
+                "parent1_aumphure.max" => 'อำเภอต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent1_tambon.required" => 'ต้องระบุตำบล',
+                "parent1_tambon.max" => 'ตำบลต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+            ]);
+
+            $parent1_address = new Address();
+            $parent1_address['village'] = $request->parent1_village;
+            $parent1_address['house_no']=$request->parent1_house_no;
+            $parent1_address['village_no']=$request->parent1_village_no;
+            $parent1_address['street']=$request->parent1_street;
+            $parent1_address['road']=$request->parent1_road;
+            $parent1_address['postcode']=$request->parent1_postcode;
+            $parent1_address['province']=$request->parent1_province;
+            $parent1_address['aumphure']=$request->parent1_aumphure;
+            $parent1_address['tambon']=$request->parent1_tambon;
+            $parent1_address->save();
+            $parent1_address_id = $parent1_address['id'];
+        }
+
         //check nationality of parent 1
         if($request->parent1_is_thai == "ไทย"){
             $parent1_nationality = "ไทย";
@@ -99,6 +153,7 @@ class ParentInformationController extends Controller
         $parent1 = new Parents();
         $parent1['borrower_id'] = $borrower['id'];
         $parent1['borrower_relational'] = $request->parent1_relational;
+        $parent1['address_id'] = $parent1_address_id;
         $parent1['nationality'] = $parent1_nationality;
         $parent1['prefix'] = $request->parent1_prefix;
         $parent1['firstname'] = $request->parent1_firstname;
@@ -111,6 +166,55 @@ class ParentInformationController extends Controller
         $parent1['place_of_work'] = $request->parent1_place_of_work;
         $parent1['income'] = $request->parent1_income;
         $parent1['alive'] = filter_var($request->parent1_alive, FILTER_VALIDATE_BOOLEAN);
+
+        //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย
+        if(isset($request->parent2_address_with_borrower)){
+            $parent2_address_id = $borrower->address_id;
+        }else{
+
+            $request->validate([
+                "parent2_village" => 'required|string|max:50',
+                "parent2_house_no" => 'required|string|max:20',
+                "parent2_village_no" => 'required|string|max:20',
+                "parent2_street" => 'required|string|max:100',
+                "parent2_road" => 'required|string|max:100',
+                "parent2_postcode" => 'required|string|max:10',
+                "parent2_province" => 'required|string|max:50',
+                "parent2_aumphure" => 'required|string|max:50',
+                "parent2_tambon" => 'required|string|max:50',
+            ],[
+                
+                "parent2_village.required" => 'ต้องกรอกชื่อหมู่บ้าน',
+                "parent2_village.max" => 'ชื่อหมู่บ้านต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_house_no.required" => 'ต้องกรอกบ้านเลขที่',
+                "parent2_house_no.max" => 'บ้านเลขที่ต้องไม่เกิน 20 ตัวอักษร',
+                "parent2_village_no.required" => 'ต้องกรอกเลขหมู่บ้าน',
+                "parent2_village_no.max" => 'เลขหมู่บ้านต้องไม่เกิน 20 ตัวอักษร',
+                "parent2_street.max" => 'ซอยต้องไม่เกิน 100 ตัวอักษร',
+                "parent2_road.max" => 'ถนนต้องไม่เกิน 100 ตัวอักษร',
+                "parent2_postcode.required" => 'ต้องระบุเลขไปรษณีย์',
+                "parent2_postcode.max" => 'เลขไปรษณีย์ต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
+                "parent2_province.required" => 'ต้องระบุจังหวัด',
+                "parent2_aumphure.max" => 'จังหวัดต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_aumphure.required" => 'ต้องระบุอำเภอ',
+                "parent2_aumphure.max" => 'อำเภอต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent2_tambon.required" => 'ต้องระบุตำบล',
+                "parent2_tambon.max" => 'ตำบลต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+            ]);
+
+            $parent2_address = new Address();
+            $parent2_address['village'] = $request->parent2_village;
+            $parent2_address['house_no']=$request->parent2_house_no;
+            $parent2_address['village_no']=$request->parent2_village_no;
+            $parent2_address['street']=$request->parent2_street;
+            $parent2_address['road']=$request->parent2_road;
+            $parent2_address['postcode']=$request->parent2_postcode;
+            $parent2_address['province']=$request->parent2_province;
+            $parent2_address['aumphure']=$request->parent2_aumphure;
+            $parent2_address['tambon']=$request->parent2_tambon;
+            $parent2_address->save();
+            $parent2_address_id = $parent2_address['id'];
+        }
        //parent 2 have data
 
        if(filter_var($request->parent2_no_data, FILTER_VALIDATE_BOOLEAN)){
@@ -179,12 +283,13 @@ class ParentInformationController extends Controller
             $parent2 = new Parents();
             $parent2['borrower_id'] = $borrower['id'];
             $parent2['borrower_relational'] = $request->parent2_relational;
+            $parent2['address_id'] = $parent2_address_id;
             $parent2['nationality'] = $parent2_nationality;
             $parent2['prefix'] = $request->parent2_prefix;
             $parent2['firstname'] = $request->parent2_firstname;
             $parent2['lastname'] = $request->parent2_lastname;
             $parent2['birthday'] = $this->convert_date($request->parent2_birthday);
-            $parent2['citizen_id'] = Crypt::encryptString($request->parent1_citizen_id);
+            $parent2['citizen_id'] = Crypt::encryptString($request->parent2_citizen_id);
             $parent2['phone'] = $request->parent2_phone;
             $parent2['email'] = $request->parent2_email;
             $parent2['occupation'] = $request->parent2_occupation;
@@ -242,6 +347,69 @@ class ParentInformationController extends Controller
         $marital_db = json_decode($borrower->marital_status);
         $marital_status_path = Config::where('variable','marital_file_path')->value('value');
 
+        //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย (ที่ติ๊กมา)
+        if(isset($request->parent1_address_with_borrower)){
+            //ถ้าเปลี่ยนจากไม่อยู่เป็นอยู่
+            if($parents_db[0]['address_id'] != $borrower->address_id){ //ถ้าเดิมไม่อยู่ด้วยกัน(ใน db)
+                $parent1_address = Address::find($parents_db[0]['address_id']);
+                if ($parent1_address) {
+                    $parent1_address->delete();
+                }
+            }
+            $parent1_address_id = $borrower->address_id;
+        }else{
+
+            $request->validate([
+                "parent1_village" => 'required|string|max:50',
+                "parent1_house_no" => 'required|string|max:20',
+                "parent1_village_no" => 'required|string|max:20',
+                "parent1_street" => 'required|string|max:100',
+                "parent1_road" => 'required|string|max:100',
+                "parent1_postcode" => 'required|string|max:10',
+                "parent1_province" => 'required|string|max:50',
+                "parent1_aumphure" => 'required|string|max:50',
+                "parent1_tambon" => 'required|string|max:50',
+            ],[
+                
+                "parent1_village.required" => 'ต้องกรอกชื่อหมู่บ้าน',
+                "parent1_village.max" => 'ชื่อหมู่บ้านต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent1_house_no.required" => 'ต้องกรอกบ้านเลขที่',
+                "parent1_house_no.max" => 'บ้านเลขที่ต้องไม่เกิน 20 ตัวอักษร',
+                "parent1_village_no.required" => 'ต้องกรอกเลขหมู่บ้าน',
+                "parent1_village_no.max" => 'เลขหมู่บ้านต้องไม่เกิน 20 ตัวอักษร',
+                "parent1_street.max" => 'ซอยต้องไม่เกิน 100 ตัวอักษร',
+                "parent1_road.max" => 'ถนนต้องไม่เกิน 100 ตัวอักษร',
+                "parent1_postcode.required" => 'ต้องระบุเลขไปรษณีย์',
+                "parent1_postcode.max" => 'เลขไปรษณีย์ต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
+                "parent1_province.required" => 'ต้องระบุจังหวัด',
+                "parent1_aumphure.max" => 'จังหวัดต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent1_aumphure.required" => 'ต้องระบุอำเภอ',
+                "parent1_aumphure.max" => 'อำเภอต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                "parent1_tambon.required" => 'ต้องระบุตำบล',
+                "parent1_tambon.max" => 'ตำบลต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+            ]);
+
+            // เปลี่ยนจากอยู่ด้วยเป็นไม่อยู่
+            if($parents_db[0]['address_id'] == $borrower->address_id){ //ถ้าเดิมคืออยู่ด้วยกันเพิ่มที่อยู่ใหม่
+                $parent1_address = new Address();
+            }else{ //ถ้าเดิมไท่ได้อยู่ด้วยกันอยู่แล้วเข้าไปแก้ที่อยู่เดิม
+                $parent1_address =  Address::find($parents_db[0]['address_id']);
+            }
+
+            $parent1_address = new Address();
+            $parent1_address['village'] = $request->parent1_village;
+            $parent1_address['house_no']=$request->parent1_house_no;
+            $parent1_address['village_no']=$request->parent1_village_no;
+            $parent1_address['street']=$request->parent1_street;
+            $parent1_address['road']=$request->parent1_road;
+            $parent1_address['postcode']=$request->parent1_postcode;
+            $parent1_address['province']=$request->parent1_province;
+            $parent1_address['aumphure']=$request->parent1_aumphure;
+            $parent1_address['tambon']=$request->parent1_tambon;
+            $parent1_address->save();
+            $parent1_address_id = $parent1_address['id'];
+        }
+
         //check nationality of parent 1
         if($request->parent1_is_thai == "ไทย"){
             $parent1_nationality = "ไทย";
@@ -251,6 +419,7 @@ class ParentInformationController extends Controller
         $parent1 = $parents_db[0];
         $parent1['borrower_id'] = $borrower['id'];
         $parent1['borrower_relational'] = $request->parent1_relational;
+        $parent1['address_id'] = $parent1_address_id;
         $parent1['nationality'] = $parent1_nationality;
         $parent1['prefix'] = $request->parent1_prefix;
         $parent1['firstname'] = $request->parent1_firstname;
@@ -264,6 +433,70 @@ class ParentInformationController extends Controller
         $parent1['income'] = $request->parent1_income;
         $parent1['alive'] = filter_var($request->parent1_alive, FILTER_VALIDATE_BOOLEAN);
 
+        if(isset($parents_db[1])){
+            //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย (ที่ติ๊กมา)
+            if(isset($request->parent2_address_with_borrower)){
+                //ถ้าเปลี่ยนจากไม่อยู่เป็นอยู่
+                if($parents_db[1]['address_id'] != $borrower->address_id){ //ถ้าเดิมไม่อยู่ด้วยกัน(ใน db)
+                    $parent2_address = Address::find($parents_db[1]['address_id']);
+                    if ($parent2_address) {
+                        $parent2_address->delete();
+                    }
+                }
+                $parent2_address_id = $borrower->address_id;
+            }else{
+    
+                $request->validate([
+                    "parent2_village" => 'required|string|max:50',
+                    "parent2_house_no" => 'required|string|max:20',
+                    "parent2_village_no" => 'required|string|max:20',
+                    "parent2_street" => 'required|string|max:100',
+                    "parent2_road" => 'required|string|max:100',
+                    "parent2_postcode" => 'required|string|max:10',
+                    "parent2_province" => 'required|string|max:50',
+                    "parent2_aumphure" => 'required|string|max:50',
+                    "parent2_tambon" => 'required|string|max:50',
+                ],[
+                    
+                    "parent2_village.required" => 'ต้องกรอกชื่อหมู่บ้าน',
+                    "parent2_village.max" => 'ชื่อหมู่บ้านต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                    "parent2_house_no.required" => 'ต้องกรอกบ้านเลขที่',
+                    "parent2_house_no.max" => 'บ้านเลขที่ต้องไม่เกิน 20 ตัวอักษร',
+                    "parent2_village_no.required" => 'ต้องกรอกเลขหมู่บ้าน',
+                    "parent2_village_no.max" => 'เลขหมู่บ้านต้องไม่เกิน 20 ตัวอักษร',
+                    "parent2_street.max" => 'ซอยต้องไม่เกิน 100 ตัวอักษร',
+                    "parent2_road.max" => 'ถนนต้องไม่เกิน 100 ตัวอักษร',
+                    "parent2_postcode.required" => 'ต้องระบุเลขไปรษณีย์',
+                    "parent2_postcode.max" => 'เลขไปรษณีย์ต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
+                    "parent2_province.required" => 'ต้องระบุจังหวัด',
+                    "parent2_aumphure.max" => 'จังหวัดต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                    "parent2_aumphure.required" => 'ต้องระบุอำเภอ',
+                    "parent2_aumphure.max" => 'อำเภอต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                    "parent2_tambon.required" => 'ต้องระบุตำบล',
+                    "parent2_tambon.max" => 'ตำบลต้องมีครวามยาวไม่เกิน 50 ตัวอักษร',
+                ]);
+    
+                // เปลี่ยนจากอยู่ด้วยเป็นไม่อยู่
+                if($parents_db[1]['address_id'] == $borrower->address_id){ //ถ้าเดิมคืออยู่ด้วยกันเพิ่มที่อยู่ใหม่
+                    $parent2_address = new Address();
+                }else{ //ถ้าเดิมไท่ได้อยู่ด้วยกันอยู่แล้วเข้าไปแก้ที่อยู่เดิม
+                    $parent2_address =  Address::find($parents_db[1]['address_id']);
+                }
+    
+                $parent2_address = new Address();
+                $parent2_address['village'] = $request->parent2_village;
+                $parent2_address['house_no']=$request->parent2_house_no;
+                $parent2_address['village_no']=$request->parent2_village_no;
+                $parent2_address['street']=$request->parent2_street;
+                $parent2_address['road']=$request->parent2_road;
+                $parent2_address['postcode']=$request->parent2_postcode;
+                $parent2_address['province']=$request->parent2_province;
+                $parent2_address['aumphure']=$request->parent2_aumphure;
+                $parent2_address['tambon']=$request->parent2_tambon;
+                $parent2_address->save();
+                $parent2_address_id = $parent2_address['id'];
+            }
+        }
 
         if(filter_var($request->parent2_no_data, FILTER_VALIDATE_BOOLEAN)){   
             //if change from have data to no data
@@ -341,6 +574,7 @@ class ParentInformationController extends Controller
            }
             $parent2['borrower_id'] = $borrower['id'];
             $parent2['borrower_relational'] = $request->parent2_relational;
+            $parent2['address_id'] = $parent2_address_id;
             $parent2['nationality'] = $parent2_nationality;
             $parent2['prefix'] = $request->parent2_prefix;
             $parent2['firstname'] = $request->parent2_firstname;

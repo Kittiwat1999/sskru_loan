@@ -189,6 +189,95 @@
                         กรุณากรอกรายได้ต่อปี
                     </div>
                 </div>
+
+                <label class="form-label mt-3" for="">
+                    <h6 class="text-primary">ข้อมูลที่อยู่ผู้ปกครอง</h6>
+                </label>
+        
+                <div class="col-md-5 mt-3 mb-3">
+                  <div class="form-check">
+                        <label class="form-check-label" for="parent1_address_currently_with_borrower">
+                            ที่อยู่เดียวกันกับผู้กู้
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="parent1_address_currently_with_borrower" name="parent1_address_with_borrower" value="true" onchange="disableInputAddress('parent1')">
+                  </div>
+                </div>
+                <div class="col-md-7"></div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_village" class="form-label text-secondary">หมู่บ้าน</label>
+                    <input type="text" class="form-control" id="parent1_village" name="parent1_village" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกหมู่บ้าน
+                    </div>
+                </div>
+        
+                <div class="col-md-3 mb-3">
+                    <label for="parent1_house_no" class="form-label text-secondary">บ้านเลขที่</label>
+                    <input type="text" class="form-control" id="parent1_house_no" name="parent1_house_no" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกบ้านเลขที่
+                    </div>
+                </div>
+        
+                <div class="col-md-3 mb-3">
+                    <label for="parent1_village_no" class="form-label text-secondary">หมู่ที่</label>
+                    <input type="text" class="form-control" id="parent1_village_no" name="parent1_village_no" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกหมู่ที่
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_street" class="form-label text-secondary">ซอย</label>
+                    <input type="text" class="form-control" id="parent1_street" name="parent1_street" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกซอย
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_road" class="form-label text-secondary">ถนน</label>
+                    <input type="text" class="form-control" id="parent1_road" name="parent1_road" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกถนน
+                    </div>
+                </div>
+        
+                <div class="col-md-3 mb-3">
+                    <label for="parent1_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
+                    <input type="text" class="form-control" id="parent1_postcode" name="parent1_postcode" onblur="addressWithZipcode(this.value,'parent1')" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกรหัสไปรษณีย์
+                    </div>
+                </div>
+                <div class="col-md-9"></div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_province" class="form-label text-secondary">จังหวัด</label>
+                    <input type="text" class="form-control" id="parent1_province" name="parent1_province" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกจังหวัด
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_aumphure" class="form-label text-secondary">อำเภอ</label>
+                    <input type="text" class="form-control" id="parent1_aumphure" name="parent1_aumphure" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกอำเภอ
+                    </div>
+                </div>
+        
+                <div class="col-md-5 mb-3">
+                    <label for="parent1_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
+                    <select id="parent1_tambon" name="parent1_tambon" class="form-select" aria-label="Default select example" required>
+                        <option disabled selected value="">เลือกตำบล</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        กรุณากรอกตำบล
+                    </div>
+                </div>
                 
                 <!-- end dad information -->
             
@@ -366,10 +455,18 @@
                                                 #parent2_occupation,
                                                 #parent2_place_of_work,
                                                 #parent2_income,
-                                                #parent2_is_main_parent
+                                                #parent2_address_currently_with_borrower,
+                                                #parent2_village,
+                                                #parent2_house_no,
+                                                #parent2_village_no,
+                                                #parent2_street,
+                                                #parent2_road,
+                                                #parent2_postcode,
+                                                #parent2_province,
+                                                #parent2_aumphure,
+                                                #parent2_tambon
                                                 `);
         var parent2_relation = document.querySelectorAll('input[name="parent2_relational_option"]');
-        console.log(parent2_relation);
         // disable of required
         if(parent2_no_data.checked){
             parent2_element.forEach((e)=>{
@@ -513,6 +610,113 @@
         } else {
             return false; // Allow form submission
         }
+    }
+
+    function disableInputAddress(owner){
+        const address_currently_with_borrower = document.getElementById(owner+'_address_currently_with_borrower');
+        var parent2_element = document.querySelectorAll(`
+                                                #${owner}_village,
+                                                #${owner}_house_no,
+                                                #${owner}_village_no,
+                                                #${owner}_street,
+                                                #${owner}_road,
+                                                #${owner}_postcode,
+                                                #${owner}_province,
+                                                #${owner}_aumphure,
+                                                #${owner}_tambon
+                                                `);
+        if(address_currently_with_borrower.checked){
+            parent2_element.forEach((e)=>{
+                e.disabled = true;
+                e.required = false;
+            });
+        }else{
+            parent2_element.forEach((e)=>{
+                e.disabled = false;
+                e.required = true;
+            });
+        }
+    }
+
+    function addressWithZipcode(zip_code_input, caller){
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data.length == 0){
+                console.log('no data');
+            }
+            var tambons = [];
+            var aumphureId = '';
+            for(tambon of data){
+                if(zip_code_input == tambon.zip_code){
+                    // console.log(tambon.name_th)
+                    tambons.push(tambon.name_th.toString());
+                    if(aumphureId == '')aumphureId = tambon.amphure_id;
+                }
+            }
+            // console.log(tambons);
+            var selectElement = document.getElementById(`${caller}_tambon`);
+            selectElement.innerHTML ='<option disabled selected value="">เลือกตำบล</option>';
+            for(tb of tambons){
+                var newOption = document.createElement('option');
+                newOption.value = tb;
+                newOption.text = tb;
+                selectElement.add(newOption);
+            }
+            getAumphure(aumphureId,caller)
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    }
+
+    function getAumphure(amphure_id,caller){
+        // console.log(amphure_id);
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(aumphures => {
+                var province_id = '';
+                for(aumphure of aumphures){
+                    if(amphure_id == aumphure.id){
+                    document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
+                    if(province_id == '')province_id = aumphure.province_id;
+                    }
+                }
+                getProvince(province_id,caller);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    function getProvince(province_id,caller){
+        // console.log(province_id);
+        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(provinces => {
+                for(province of provinces){
+                    if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
+                }
+                
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
     }
 
     $("#parent1_birthday").datetimepicker({

@@ -181,3 +181,91 @@
         กรุณากรอกรายได้ต่อปี
     </div>
 </div>
+<label class="form-label mt-3" for="">
+    <h6 class="text-primary">ข้อมูลที่อยู่ผู้ปกครอง</h6>
+</label>
+
+<div class="col-md-5 mt-3 mb-3">
+  <div class="form-check">
+        <label class="form-check-label" for="parent2_address_currently_with_borrower">
+            ที่อยู่เดียวกันกับผู้กู้
+        </label>
+        <input class="form-check-input" type="checkbox" id="parent2_address_currently_with_borrower" name="parent2_address_with_borrower" value="true" onchange="disableInputAddress('parent2')">
+  </div>
+</div>
+<div class="col-md-7"></div>
+
+<div class="col-md-5 mb-3">
+    <label for="parent2_village" class="form-label text-secondary">หมู่บ้าน</label>
+    <input type="text" class="form-control" id="parent2_village" name="parent2_village" required>
+    <div class="invalid-feedback">
+        กรุณากรอกหมู่บ้าน
+    </div>
+</div>
+
+<div class="col-md-3 mb-3">
+    <label for="parent2_house_no" class="form-label text-secondary">บ้านเลขที่</label>
+    <input type="text" class="form-control" id="parent2_house_no" name="parent2_house_no" required>
+    <div class="invalid-feedback">
+        กรุณากรอกบ้านเลขที่
+    </div>
+</div>
+
+<div class="col-md-3 mb-3">
+    <label for="parent2_village_no" class="form-label text-secondary">หมู่ที่</label>
+    <input type="text" class="form-control" id="parent2_village_no" name="parent2_village_no" required>
+    <div class="invalid-feedback">
+        กรุณากรอกหมู่ที่
+    </div>
+</div>
+
+<div class="col-md-5 mb-3">
+    <label for="parent2_street" class="form-label text-secondary">ซอย</label>
+    <input type="text" class="form-control" id="parent2_street" name="parent2_street" required>
+    <div class="invalid-feedback">
+        กรุณากรอกซอย
+    </div>
+</div>
+
+<div class="col-md-5 mb-3">
+    <label for="parent2_road" class="form-label text-secondary">ถนน</label>
+    <input type="text" class="form-control" id="parent2_road" name="parent2_road" required>
+    <div class="invalid-feedback">
+        กรุณากรอกถนน
+    </div>
+</div>
+
+<div class="col-md-3 mb-3">
+    <label for="parent2_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
+    <input type="text" class="form-control" id="parent2_postcode" name="parent2_postcode" onblur="addressWithZipcode(this.value,'parent2')" required>
+    <div class="invalid-feedback">
+        กรุณากรอกรหัสไปรษณีย์
+    </div>
+</div>
+<div class="col-md-9"></div>
+
+<div class="col-md-5 mb-3">
+    <label for="parent2_province" class="form-label text-secondary">จังหวัด</label>
+    <input type="text" class="form-control" id="parent2_province" name="parent2_province" required>
+    <div class="invalid-feedback">
+        กรุณากรอกจังหวัด
+    </div>
+</div>
+
+<div class="col-md-5 mb-3">
+    <label for="parent2_aumphure" class="form-label text-secondary">อำเภอ</label>
+    <input type="text" class="form-control" id="parent2_aumphure" name="parent2_aumphure" required>
+    <div class="invalid-feedback">
+        กรุณากรอกอำเภอ
+    </div>
+</div>
+
+<div class="col-md-5 mb-3">
+    <label for="parent2_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
+    <select id="parent2_tambon" name="parent2_tambon" class="form-select" aria-label="Default select example" required>
+        <option disabled selected value="">เลือกตำบล</option>
+    </select>
+    <div class="invalid-feedback">
+        กรุณากรอกตำบล
+    </div>
+</div>
