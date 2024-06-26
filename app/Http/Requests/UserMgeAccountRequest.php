@@ -19,7 +19,7 @@ class UserMgeAccountRequest extends FormRequest
             'lastname' => 'required|string|max:50',
             'username' => 'required|string|unique:users,username|max:255',
             'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|string|min:8', // Add more complex rules as needed
+            'password' => 'required|string|min:8|confirmed', // Add more complex rules as needed
         ];
     }
 
@@ -38,12 +38,13 @@ class UserMgeAccountRequest extends FormRequest
             'username.unique' => 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว',
             'username.max' => 'กรุณากรอกชื่อผู้ใช้ไม่เกิน :max ตัวอักษร',
             'email.required' => 'กรุณากรอกอีเมล',
-            'email.email' => 'กรุณากรอกอีเมลเป็นข้อความ',
+            'email.email' => 'กรุณากรอกรูปแบบอีเมลที่ถูกต้อง',
             'email.unique' => 'อีเมลนี้มีอยู่ในระบบแล้ว',
             'email.max' => 'กรุณากรอกอีเมลไม่เกิน :max ตัวอักษร',
             'password.required' => 'กรุณากรอกรหัสผ่าน',
             'password.string' => 'กรุณากรอกรหัสผ่านเป็นข้อความ',
             'password.min' => 'กรุณากรอกรหัสผ่านอย่างน้อย :min ตัวอักษร',
+            'password.confirmed' => 'รหัสผ่านไม่ตรงกัน',
         ];
     }
 }

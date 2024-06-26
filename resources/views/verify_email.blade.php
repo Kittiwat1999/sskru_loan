@@ -41,6 +41,39 @@
 <body>
 
     <main>
+        @if($errors->any())
+            <div class="alert alert-danger" id="error-alert">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li class="text-danger">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            <script>
+                // Wait for 3000 milliseconds (3 seconds) and then remove the element
+                setTimeout(function() {
+                    const elementToRemove = document.getElementById('error-alert');
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }, 3000);
+            </script>
+        @endif
+
+        @if (!empty(session('success')))
+            <div class="alert alert-success" id="success-alert">
+                {{ session('success') }}
+            </div>
+            <script>
+                // Wait for 3000 milliseconds (3 seconds) and then remove the element
+                setTimeout(function() {
+                    const elementToRemove = document.getElementById('success-alert');
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }, 3000);
+            </script>
+        @endif
         <div class="container">
             <div class="row justify-content-center">
                 <section class="container-fluid bg-body-tertiary d-block min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">

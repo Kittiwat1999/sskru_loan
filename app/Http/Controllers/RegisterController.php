@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserMgeAccountRequest;
 use App\Models\Users;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -24,6 +23,6 @@ class RegisterController extends Controller
         $student->password = Hash::make($request->password);
         $student->privilage = 'borrower';
         $student->save();
-        return redirect()->back()->with(['success'=>'เพิ่มบัญชี '.$student->prefix.$student->firstname.' '.$student->lastname.' เรียบร้อยแล้ว']);
+        return redirect()->to('/verify_email')->with(['success'=>'เพิ่มบัญชี '.$student->prefix.$student->firstname.' '.$student->lastname.' เรียบร้อยแล้ว']);
     }
 }

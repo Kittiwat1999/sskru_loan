@@ -15,7 +15,7 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -87,7 +87,7 @@
                             </a>
                         </div><!-- End Logo -->
 
-                        <div class="card mb-3">
+                        <div class="card mb-3 col-md-6">
 
                             <div class="card-body">
 
@@ -100,7 +100,7 @@
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
                                         <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
                                             <option class="text-center" selected></option>
@@ -112,8 +112,9 @@
                                             กรุณาเลือกคำนำหน้า!
                                         </div>
                                     </div>
+                                    <div class="col-md-9"></div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-12">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
                                         <input type="text" name="firstname" class="form-control" id="firstname" required>
                                         <div class="invalid-feedback">
@@ -121,7 +122,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
                                         <input type="text" name="lastname" class="form-control" id="lastname" required>
                                         <div class="invalid-feedback">
@@ -129,7 +130,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="username" class="col-form-label text-secondary">ชื่อผู้ใช้</label>
                                         <div class="input-group has-validation">
                                             <input type="text" name="username" class="form-control" id="username" required>
@@ -139,7 +140,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="email" class="col-form-label text-secondary">อีเมล</label>
                                         <input type="email" name="email" class="form-control" id="email" required>
                                         <div class="invalid-feedback">
@@ -147,34 +148,30 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
-                                        <input type="password" name="password" class="form-control" id="password" required>
+                                        <input type="password" name="password" class="form-control" id="password" required oninput="checkPasswordFilled()">
                                         <div class="invalid-feedback">
                                             กรุณากรอกรหัสผ่าน!
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 pb-3">
-                                        <label for="confirm_password" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
-                                        <input type="password" name="confirm_password" class="form-control" id="confirm_password" required>
+                                    <div class="col-md-12 pb-3">
+                                        <label for="password_confirmation" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
+                                        <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
                                         <span id="passwordError" class="text-danger"></span>
                                         <div class="invalid-feedback">
                                             กรุณายืนยันรหัสผ่าน!
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4"></div>
-                                    <div class="col-md-4">
-                                        <button class="btn btn-primary w-100" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
+                                    <div class="col-md-12 text-center">
+                                        <a href="{{ url('/login_student') }}" class="btn btn-secondary w-75 s-3" style="color: white;">ล็อกอิน</a>
                                     </div>
-                                    <div class="col-md-4"></div>
 
-                                    <div class="col-md-4"></div>
-                                    <div class="col-md-4 text-center">
-                                        <p class="small mb-0">มีบัญชีแล้ว? <a href="{{url('/login_student')}}">ล็อกอิน</a></p>
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-primary w-75" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
                                     </div>
-                                    <div class="col-md-4"></div>
 
                                 </form>
                             </div>
@@ -214,15 +211,33 @@
     <script>
         function validatePassword() {
             var password = document.getElementById("password").value;
-            var confirm_password = document.getElementById("confirm_password").value;
+            var confirm_password = document.getElementById("password_confirmation").value;
             var passwordError = document.getElementById("passwordError");
 
-            if (password !== confirm_password) {
+            if (password === "") {
+                passwordError.innerHTML = "กรุณากรอกข้อมูลรหัสผ่านก่อน";
+                return false;
+            } else if (password === "" || confirm_password === "") {
+                passwordError.innerHTML = "กรุณายืนยันรหัสผ่าน";
+                return false;
+            } else if (password !== confirm_password) {
                 passwordError.innerHTML = "รหัสผ่านไม่ตรงกัน";
                 return false;
             } else {
                 passwordError.innerHTML = "";
                 return true;
+            }
+        }
+
+
+        function checkPasswordFilled() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("password_confirmation");
+
+            if (password !== "") {
+                confirmPassword.removeAttribute("disabled");
+            } else {
+                confirmPassword.setAttribute("disabled", true);
             }
         }
     </script>

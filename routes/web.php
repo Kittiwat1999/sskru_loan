@@ -11,9 +11,11 @@ use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\GenerateFile;
+use App\Http\Controllers\GenerateDocController;
 use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\UsersProfileController;
 use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\OldLoanRequest;
 
@@ -323,6 +325,9 @@ Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraida
 Route::get('/generate_yinyorm',[GenerateFile::class,'generate_yinyorm_student']);
 Route::get('/teachers_comment',[GenerateFile::class,'teachers_comment']);
 
+Route::get('/borrower_101_page_1',[GenerateDocController::class,'borrower_101_page_1']);
+Route::get('/borrower_101_page_2',[GenerateDocController::class,'borrower_101_page_2']);
+
 Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
 Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
 Route::delete('/admin/manage_data/faculty/delete/{faculty_id}',[AdminManageDataController::class,'delete_faculty'])->name('admin.manage.data.delete.faculty');
@@ -344,3 +349,7 @@ Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController
 Route::get('/verify_email',function () {
     return view('/verify_email');
 });
+
+Route::get('/users_profile',[UsersProfileController::class,'index']);
+Route::put('/users_profile/edit/{user_id}',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');
+Route::post('/users_profile/password/change/{user_id}', [UsersProfileController::class, 'change_password'])->name('users.password.change');
