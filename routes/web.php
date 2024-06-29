@@ -319,6 +319,7 @@ Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentControlle
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 Route::get('/borrower/download_document/{document_id}',[DownloadDocumentController::class,'download_file'])->name('borrower.download.document');
+Route::get('/borrower/download_document/parent/{parent_id}',[DownloadDocumentController::class,'download_parent_file'])->name('borrower.download.parent.document');
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
 
 Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraidai']);

@@ -6,9 +6,24 @@ use setasign\Fpdi\Fpdi;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
+
 
 class GenerateDocController extends Controller
 {
+    function calculateAge($birthday) {
+        list($year, $month, $day) = explode("-", $birthday);
+        $gregorianYear = $year - 543;
+        
+        // Create Carbon instances for the birth date and the current date
+        $birthDate = Carbon::create($gregorianYear, $month, $day);
+        $currentDate = Carbon::now();
+        
+        // Calculate the age
+        $age = $currentDate->diffInYears($birthDate);
+        
+        return $age;
+    }
     function getThaiMonthName($monthNumber) {
         $thaiMonthNames = [
             1 => 'มกราคม',
@@ -307,56 +322,22 @@ class GenerateDocController extends Controller
             //tick mark
             $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 119, 49, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 120, 65, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 135, 129, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 161, 129, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 135, 144, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 161, 144, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 33, 167, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 77, 167, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 141, 167, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 33, 175, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 33, 219, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 128, 219, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 33, 226, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 128, 226, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 33, 233, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 128, 233, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 33, 240, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 128, 240, 4, 4);
 
             $pdf->Output();
@@ -491,44 +472,18 @@ class GenerateDocController extends Controller
             //tick mark
             $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 117, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 124, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 131, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 137, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 144, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 51, 150, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 51, 157, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 164, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 170, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 177, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 184, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 39, 190, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 81, 228, 4, 4);
-
-            $tick_alp = public_path('icon_png/tick.png');
             $pdf->Image($tick_alp, 103, 228, 4, 4);
 
             $pdf->Output();

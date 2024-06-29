@@ -16,6 +16,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($parents as $parent)
+                        <tr>
+                            <td>
+                                หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง {{$parent->prefix}}{{$parent->firstname}} {{$parent->lastname}}
+                            </td>
+                            <td>
+                                <a href="{{route('borrower.download.parent.document',['parent_id' => $parent->id])}}" class="btn btn-danger" target="_blank">ดาวน์โหลด</a>
+                            </td>
+                        </tr>
+                        @endforeach
                         @foreach($documents as $document)
                         <tr>
                             <td>
