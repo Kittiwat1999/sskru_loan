@@ -15,7 +15,8 @@ class UsersProfileController extends Controller
         return view('users_profile',compact('user'));
     }
 
-    public function edit_profile(Request $request,$user_id){
+    public function edit_profile(Request $request){
+        $user_id = Session::get('user_id','1');
         $request->validate([
             'prefix' => 'required|string|max:30',
             'firstname' => 'required|string|max:50',
@@ -63,8 +64,8 @@ class UsersProfileController extends Controller
         return redirect()->back()->with(['success'=>'แก้ไขบัญชีเรียบร้อยแล้ว']);
     }
 
-    public function change_password(Request $request,$user_id)
-    {
+    public function change_password(Request $request){
+        $user_id = Session::get('user_id','1');
         // ตรวจสอบข้อมูลที่ส่งมา
         $request->validate([
             'current_password' => 'required|string',
