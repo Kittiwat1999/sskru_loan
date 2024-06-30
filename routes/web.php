@@ -352,5 +352,5 @@ Route::get('/verify_email',function () {
 });
 
 Route::get('/users_profile',[UsersProfileController::class,'index']);
-Route::put('/users_profile/edit/{user_id}',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');
-Route::post('/users_profile/password/change/{user_id}', [UsersProfileController::class, 'change_password'])->name('users.password.change');
+Route::put('/users_profile/edit',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');
+Route::post('/users_profile/password/change', [UsersProfileController::class, 'change_password'])->name('users.password.change');
