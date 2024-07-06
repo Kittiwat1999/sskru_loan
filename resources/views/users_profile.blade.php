@@ -62,7 +62,7 @@
                                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                                     <!-- Profile Edit Form -->
-                                        <form action="{{route('users.profile.edit',['user_id' => $user->id])}}" method="post">
+                                        <form action="{{ route('users.profile.edit') }}" method="post">
                                             @csrf
 
                                             <div class="row mb-3">
@@ -119,7 +119,7 @@
 
                                 <div class="tab-pane fade pt-3" id="profile-change-password">
                                     <!-- Change Password Form -->
-                                    <form method="POST" action="{{ route('users.password.change', $user->id) }}">
+                                    <form method="POST" action="{{ route('users.password.change') }}">
                                         @csrf
                                         <div class="row mb-3">
                                             <label for="current_password" class="col-md-4 col-lg-3 col-form-label">รหัสผ่านปัจจุบัน</label>
