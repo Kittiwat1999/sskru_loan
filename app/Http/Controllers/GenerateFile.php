@@ -47,7 +47,7 @@ class GenerateFile extends Controller
         return $age;
     }
 
-    public function generate_rabrongraidai($user_id){
+    public function generate_rabrongraidai($user_id, $document){
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
             ->select('users.prefix','users.firstname','users.lastname','borrowers.birthday','borrowers.id')
@@ -55,6 +55,7 @@ class GenerateFile extends Controller
         $father = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','บิดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive')->first();
         $mother = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','มารดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive')->first();
         $parent = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','!=','มารดา')->where('borrower_relational','!=','บิดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive','borrower_relational')->first();
+
 
         $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
         $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
@@ -93,13 +94,13 @@ class GenerateFile extends Controller
         }
 
         // Create a StreamedResponse
-        $response = new StreamedResponse(function () use ($borrower,$father,$mother,$parent) {
+        $response = new StreamedResponse(function () use ($borrower, $father, $mother, $parent, $document) {
             // Initialize the PDF
             $pdf = new Fpdi();
             
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path('child_document_files/rabrongraidai.pdf')); // Import an existing PDF form
+            $pdf->setSourceFile(public_path($document['file_path'].'/'.$document['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -250,7 +251,7 @@ class GenerateFile extends Controller
         return $response;
     }
 
-    public function generate_yinyorm_student($user_id){
+    public function generate_yinyorm_student($user_id, $document){
 
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
@@ -275,13 +276,13 @@ class GenerateFile extends Controller
         $address['post_code'] = iconv('UTF-8', 'cp874', $address['post_code']);
 
         // Create a StreamedResponse
-        $response =  new StreamedResponse(function () use ($borrower, $address) {
+        $response =  new StreamedResponse(function () use ($borrower, $address, $document) {
             // Initialize the PDF
             $pdf = new Fpdi();
             
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path('child_document_files/yinyorm.pdf')); // Import an existing PDF form
+            $pdf->setSourceFile(public_path($document['file_path'].'/'.$document['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -379,7 +380,7 @@ class GenerateFile extends Controller
         return $response;
     }
 
-    public function generate_yinyorm_parent($parent_id,$user_id){
+    public function generate_yinyorm_parent($parent_id, $user_id, $document){
         $parent = Parents::where('id',$parent_id)
             ->select('prefix','firstname','lastname','email','birthday','citizen_id','phone','address_id','borrower_id')
             ->first();
@@ -411,13 +412,13 @@ class GenerateFile extends Controller
         $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
 
         // Create a StreamedResponse
-        $response =  new StreamedResponse(function () use ($parent, $address, $borrower ){
+        $response =  new StreamedResponse(function () use ($parent, $address, $borrower, $document){
             // Initialize the PDF
             $pdf = new Fpdi();
             
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path('child_document_files/yinyorm.pdf')); // Import an existing PDF form
+            $pdf->setSourceFile(public_path($document['file_path'].'/'.$document['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 

@@ -67,11 +67,11 @@ class DownloadDocumentController extends Controller
 
             switch ($document['id']) {
                 case '1':
-                    $response = $generate->generate_yinyorm_student($user_id);
+                    $response = $generate->generate_yinyorm_student($user_id,$document);
                     return $response;
                     break;
                 case '3':
-                    $response = $generate->generate_rabrongraidai($user_id);
+                    $response = $generate->generate_rabrongraidai($user_id,$document);
                     return $response;
                     break;
                 default:
@@ -118,7 +118,7 @@ class DownloadDocumentController extends Controller
 
         if($document['generate_file']){
             $generate = new GenerateFile();
-            $response = $generate->generate_yinyorm_parent($parent_id, $user_id);
+            $response = $generate->generate_yinyorm_parent($parent_id, $user_id, $document);
                 return $response;
 
         }else{
