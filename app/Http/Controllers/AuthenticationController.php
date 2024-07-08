@@ -61,4 +61,6 @@ class AuthenticationController extends Controller
 
         Mail::to($email)->send(new SendVerificationMail($details, $code));
     }
+
+
 }

@@ -209,6 +209,10 @@
         });
 
         resendLink.addEventListener("click", (event) => {
+            const xhttpr = new XMLHttpRequest();
+            xhttpr.open('GET', "{{url('/send_email')}}", true);
+            xhttpr.send();
+            // xhttpr.abort();
             event.preventDefault();
             startCountdown(60); // Start countdown from 60 seconds
         });

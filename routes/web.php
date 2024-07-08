@@ -356,7 +356,7 @@ Route::get('/verify_email',function () {
 });
 
 Route::post('/verify_email/post',[RegisterController::class,'email_confirm'])->name('verify.email.post');
-Route::post('/send_email',[RegisterController::class,'send_eamil_again'])->name('send.email');
+Route::get('/send_email',[AuthenticationController::class,'send_mail'])->name('send.email');
 
 Route::get('/users_profile',[UsersProfileController::class,'index']);
 Route::put('/users_profile/edit',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');
