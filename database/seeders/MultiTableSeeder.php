@@ -17,17 +17,17 @@ class MultiTableSeeder extends Seeder
      */
     public function run():void
     {
-         $this->seedUsers();
-         $this->seedBorrowerApprearanceTypes();
+        //  $this->seedUsers();
+        //  $this->seedBorrowerApprearanceTypes();
          $this->seedNeesessities();
          $this->seedProperties();
          $this->seedDouTypes();
          $this->seedFaculties();
-         $this->seedBorrowers();
-         $this->seedParents();
-         $this->seedAddresses();
-         $this->seedBorrowerNecessities();
-         $this->seedBorrowerProperties();
+        //  $this->seedBorrowers();
+        //  $this->seedParents();
+        //  $this->seedAddresses();
+        //  $this->seedBorrowerNecessities();
+        //  $this->seedBorrowerProperties();
          $this->seedChildDocuments();
          $this->seedConfig();
          $this->seedDocuments();

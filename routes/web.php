@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\OldLoanRequestController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\AdminManageDataController;
+use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\BorrowerInforamtionController;
@@ -306,9 +307,12 @@ Route::get('/blank',function () {
 Route::get('/register_student',[RegisterController::class,'index']);
 Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
 
-Route::get('/login_student',function () {
-    return view('/login_student');
-});
+Route::get('/',[AuthenticationController::class,'index']);
+Route::post('/login',[AuthenticationController::class,'authenticate'])->name('post.login');
+
+Route::get('/register-success', function () {
+    return view('register-success');
+})->name('register.success');
 
 Route::get('/login_teacher',function () {
     return view('/login_teacher');
@@ -350,6 +354,9 @@ Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController
 Route::get('/verify_email',function () {
     return view('/verify_email');
 });
+
+Route::post('/verify_email/post',[RegisterController::class,'email_confirm'])->name('verify.email.post');
+Route::post('/send_email',[RegisterController::class,'send_eamil_again'])->name('send.email');
 
 Route::get('/users_profile',[UsersProfileController::class,'index']);
 Route::put('/users_profile/edit',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');

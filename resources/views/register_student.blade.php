@@ -166,7 +166,7 @@
                                     </div>
 
                                     <div class="col-md-12 text-center">
-                                        <a href="{{ url('/login_student') }}" class="btn btn-secondary w-75 s-3" style="color: white;">ล็อกอิน</a>
+                                        <a href="{{ url('/') }}" class="btn btn-secondary w-75 s-3" style="color: white;">ล็อกอิน</a>
                                     </div>
 
                                     <div class="col-md-12 text-center">
