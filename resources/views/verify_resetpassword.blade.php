@@ -91,7 +91,9 @@
                                     <h4>ยืนยันตัวตน</h4>
                                     <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล</p>
 
-                                    <form action="">
+                                    <form action="{{route('verify.resetpassword.student')}}" method="post">
+                                        @csrf
+                                        @method('PUT')
                                         <div class="otp-field mb-4">
                                             <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_1" maxlength="1" required />
                                             <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_2" maxlength="1" disabled />
