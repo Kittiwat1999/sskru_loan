@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title','manage data')
+@section('title','users profile')
 @section('content')
     <section class="section profile">
         <div class="row">

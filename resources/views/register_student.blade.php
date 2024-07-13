@@ -87,7 +87,7 @@
                             </a>
                         </div><!-- End Logo -->
 
-                        <div class="card mb-3 col-md-6">
+                        <div class="card mb-3 col-md-12">
 
                             <div class="card-body">
 
@@ -100,7 +100,7 @@
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
                                         <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
                                             <option class="text-center" selected></option>
@@ -112,9 +112,9 @@
                                             กรุณาเลือกคำนำหน้า!
                                         </div>
                                     </div>
-                                    <div class="col-md-9"></div>
+                                    
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-5">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
                                         <input type="text" name="firstname" class="form-control" id="firstname" required>
                                         <div class="invalid-feedback">
@@ -122,7 +122,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-5">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
                                         <input type="text" name="lastname" class="form-control" id="lastname" required>
                                         <div class="invalid-feedback">
@@ -148,7 +148,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-7">
                                         <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                                         <input type="password" name="password" class="form-control" id="password" required oninput="checkPasswordFilled()">
                                         <div class="invalid-feedback">
@@ -156,7 +156,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 pb-3">
+                                    <div class="col-md-7 pb-3">
                                         <label for="password_confirmation" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
                                         <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
                                         <span id="passwordError" class="text-danger"></span>
@@ -165,12 +165,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 text-center">
-                                        <a href="{{ url('/') }}" class="btn btn-secondary w-75 s-3" style="color: white;">ล็อกอิน</a>
-                                    </div>
-
-                                    <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary w-75" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{{ url('/login_student') }}" class="btn btn-secondary w-25 me-2" style="color: white;">ล็อกอิน</a>
+                                        <button class="btn btn-primary w-25" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
                                     </div>
 
                                 </form>

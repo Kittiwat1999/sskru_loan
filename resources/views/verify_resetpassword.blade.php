@@ -89,9 +89,11 @@
                             <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
                                 <div class="card-body p-5 text-center">
                                     <h4>ยืนยันตัวตน</h4>
-                                    <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล {{session('email')}}</p>
+                                    <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล</p>
 
-                                    <form action="">
+                                    <form action="{{route('verify.resetpassword.student')}}" method="post">
+                                        @csrf
+                                        @method('PUT')
                                         <div class="otp-field mb-4">
                                             <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_1" maxlength="1" required />
                                             <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_2" maxlength="1" disabled />

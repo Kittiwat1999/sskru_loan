@@ -168,17 +168,17 @@ class GenerateDocController extends Controller
 
             // Set the font and add text at specific locations
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
-            $pdf->SetFont('THSarabunNew', '', 12);
+            $pdf->SetFont('THSarabunNew', '', 14);
 
             //BorrowerSession
             $pdf->Text(176, 60, $decrypData['borrower_session']);
 
             //SchoolYear
-            $pdf->Text(150, 85, $decrypData['school_year']);
+            $pdf->Text(149, 85, $decrypData['school_year']);
 
             $borrower_name_input = 60;//lenght of input (name>..................<)
             $fullname_borrower_lenght = strlen($decrypData['borrower_prefix'].$decrypData['borrower_firstname'].'   '.$decrypData['borrower_lastname']);//lenght of string(prefix,firstname,lastname)
-            $borrower_name_x = 52+($borrower_name_input/2 - $fullname_borrower_lenght/2)-6; // x position in tamplate = first_x_position_of_input_line(name.......... , first "." is value of this) + (lenght_of_input/2 - lenght_of_string/2) - be_incorrect
+            $borrower_name_x = 52+($borrower_name_input/2 - $fullname_borrower_lenght/2)-3; // x position in tamplate = first_x_position_of_input_line(name.......... , first "." is value of this) + (lenght_of_input/2 - lenght_of_string/2) - be_incorrect
             $pdf->Text($borrower_name_x, 101,$decrypData['borrower_prefix'].$decrypData['borrower_firstname'].'   '.$decrypData['borrower_lastname']);
 
             $borrower_student_id_input = 31;
@@ -195,10 +195,10 @@ class GenerateDocController extends Controller
 
             $borrower_faculty_input = 37;
             $faculty_borrower_lenght = strlen($decrypData['borrower_faculty']);
-            $borrower_faculty_x = 109+($borrower_faculty_input/2 - $faculty_borrower_lenght/2)-3;
+            $borrower_faculty_x = 106+($borrower_faculty_input/2 - $faculty_borrower_lenght/2)-3;
             $pdf->Text($borrower_faculty_x, 109,$decrypData['borrower_faculty']);
 
-            $pdf->Text(177, 109, $decrypData['borrower_gpa']);
+            $pdf->Text(176, 109, $decrypData['borrower_gpa']);
 
             $borrower_home_id_input = 24;
             $home_id_borrower_lenght = strlen($decrypData['borrower_home_id']);
@@ -229,7 +229,7 @@ class GenerateDocController extends Controller
 
             $borrower_phone_input = 42;
             $phone_borrower_lenght = strlen($decrypData['borrower_phone']);
-            $borrower_phone_x = 141+($borrower_phone_input/2 - $phone_borrower_lenght/2)-2;
+            $borrower_phone_x = 141+($borrower_phone_input/2 - $phone_borrower_lenght/2)-3;
             $pdf->Text($borrower_phone_x, 124,$decrypData['borrower_phone']);
 
             $dad_name_input = 73;
@@ -244,7 +244,7 @@ class GenerateDocController extends Controller
 
             $dad_phone_input = 28;
             $phone_dad_lenght = strlen($decrypData['dad_phone']);
-            $dad_phone_x = 103+($dad_phone_input/2 - $phone_dad_lenght/2)-2;
+            $dad_phone_x = 103+($dad_phone_input/2 - $phone_dad_lenght/2)-3;
             $pdf->Text($dad_phone_x, 139,$decrypData['dad_phone']);
 
             $dad_earnings_input = 24;
@@ -264,7 +264,7 @@ class GenerateDocController extends Controller
 
             $mom_phone_input = 28;
             $phone_mom_lenght = strlen($decrypData['mom_phone']);
-            $mom_phone_x = 103+($mom_phone_input/2 - $phone_mom_lenght/2)-2;
+            $mom_phone_x = 103+($mom_phone_input/2 - $phone_mom_lenght/2)-3;
             $pdf->Text($mom_phone_x, 154,$decrypData['mom_phone']);
 
             $mom_earnings_input = 24;
@@ -274,7 +274,7 @@ class GenerateDocController extends Controller
 
             $other_input = 130;
             $other_lenght = strlen($decrypData['other']);
-            $other_x = 53+($other_input/2 - $other_lenght/2)-3;
+            $other_x = 53+($other_input/2 - $other_lenght/2)-6;
             $pdf->Text($other_x, 177,$decrypData['other']);
 
             $parent_name_input = 88;
@@ -289,7 +289,7 @@ class GenerateDocController extends Controller
 
             $parent_phone_input = 29;
             $phone_parent_lenght = strlen($decrypData['parent_phone']);
-            $parent_phone_x = 102+($parent_phone_input/2 - $phone_parent_lenght/2)-2;
+            $parent_phone_x = 102+($parent_phone_input/2 - $phone_parent_lenght/2)-3;
             $pdf->Text($parent_phone_x, 192,$decrypData['parent_phone']);
 
             $parent_earnings_input = 24;
@@ -309,7 +309,7 @@ class GenerateDocController extends Controller
 
             $spouse_parents_phone_input = 29;
             $phone_spouse_parents_lenght = strlen($decrypData['spouse_parents_phone']);
-            $spouse_parents_phone_x = 102+($spouse_parents_phone_input/2 - $phone_spouse_parents_lenght/2)-2;
+            $spouse_parents_phone_x = 102+($spouse_parents_phone_input/2 - $phone_spouse_parents_lenght/2)-3;
             $pdf->Text($spouse_parents_phone_x, 207,$decrypData['spouse_parents_phone']);
 
             $spouse_parents_earnings_input = 24;
@@ -418,7 +418,7 @@ class GenerateDocController extends Controller
             //signature borrower
             $borrower_firstname_input = 48;
             $firstname_borrower_lenght = strlen($decrypData['borrower_firstname']);
-            $borrower_firstname_x = 35+($borrower_firstname_input/2 - $firstname_borrower_lenght/2)-2;
+            $borrower_firstname_x = 35+($borrower_firstname_input/2 - $firstname_borrower_lenght/2)-3;
             $pdf->Text($borrower_firstname_x, 204,$decrypData['borrower_firstname']);
 
             $borrower_name_input = 60;
@@ -426,10 +426,8 @@ class GenerateDocController extends Controller
             $borrower_name_x = 27+($borrower_name_input/2 - $borrower_lenght/2)-3;
             $pdf->Text($borrower_name_x, 211,$decrypData['borrower_prefix'].$decrypData['borrower_firstname'].'   '.$decrypData['borrower_lastname']);
 
-            $pdf->Text(48, 219,$gregorianDate->day);
             $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(54, 219,$month);
-            $pdf->Text(66, 219,$buddhistYear);
+            $pdf->Text(47, 219,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
 
             //signature official
             $official_firstname_input = 37;
@@ -439,13 +437,11 @@ class GenerateDocController extends Controller
 
             $official_name_input = 61;
             $official_lenght = strlen($decrypData['official_prefix'].$decrypData['official_firstname'].'   '.$decrypData['official_lastname']);
-            $official_name_x = 115+($official_name_input/2 - $official_lenght/2)-3;
+            $official_name_x = 115+($official_name_input/2 - $official_lenght/2)-5;
             $pdf->Text($official_name_x, 211,$decrypData['official_prefix'].$decrypData['official_firstname'].'   '.$decrypData['official_lastname']);
 
-            $pdf->Text(138, 219,$gregorianDate->day);
             $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(144, 219,$month);
-            $pdf->Text(157, 219,$buddhistYear);
+            $pdf->Text(135, 219,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
 
             //not approved
             $not_approved_input = 43;
@@ -456,7 +452,7 @@ class GenerateDocController extends Controller
             //signature teachers
             $teachers_firstname_input = 67;
             $firstname_teachers_lenght = strlen($decrypData['teachers_firstname']);
-            $teachers_firstname_x = 85+($teachers_firstname_input/2 - $firstname_teachers_lenght/2)-2;
+            $teachers_firstname_x = 85+($teachers_firstname_input/2 - $firstname_teachers_lenght/2)-3;
             $pdf->Text($teachers_firstname_x, 246,$decrypData['teachers_firstname']);
 
             $teachers_name_input = 77;
@@ -464,10 +460,8 @@ class GenerateDocController extends Controller
             $teachers_name_x = 78+($teachers_name_input/2 - $teachers_lenght/2)-3;
             $pdf->Text($teachers_name_x, 253,$decrypData['teachers_prefix'].$decrypData['teachers_firstname'].'   '.$decrypData['teachers_lastname']);
 
-            $pdf->Text(105, 261,$gregorianDate->day);
             $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(112, 261,$month);
-            $pdf->Text(126, 261,$buddhistYear);
+            $pdf->Text(105, 261,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
 
             //tick mark
             $tick_alp = public_path('icon_png/tick.png');
