@@ -4,6 +4,25 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <style>
+    .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay .spinner {
+            color: #fff;
+            font-size: 2rem;
+        }
+  </style>
 
   <title>ล็อกอินนักศึกษา</title>
   <meta content="" name="description">
@@ -41,10 +60,32 @@
 </head>
 
 <body>
+  <div id="loading-overlay" class="loading-overlay">
+      <div class="spinner">
+          <i class="fas fa-spinner fa-spin"></i> Loading...
+      </div>
+  </div>
 
   <main>
     <div class="container">
-
+      @if($errors->any())
+            <div class="alert alert-danger" id="error-alert">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li class="text-danger">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            <script>
+                // Wait for 3000 milliseconds (3 seconds) and then remove the element
+                setTimeout(function() {
+                    const elementToRemove = document.getElementById('error-alert');
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }, 3000);
+            </script>
+        @endif
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
@@ -66,7 +107,7 @@
                     <!-- <p class="text-center small">Enter your username & password to login</p> -->
                   </div>
 
-                  <form action="{{route('post.login')}}" class="row g-3 needs-validation" novalidate method="POST">
+                  <form action="{{route('post.login')}}" class="row g-3 needs-validation" novalidate method="POST" id="login-form">
                     @csrf
                     <div class="col-12">
                       <label for="username" class="col-form-label text-secondary">ชื่อผู้ใช้</label>
@@ -175,6 +216,11 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        });
+  </script>
 
 </body>
 

@@ -307,8 +307,8 @@ Route::get('/blank',function () {
 Route::get('/register_student',[RegisterController::class,'index']);
 Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
 
-Route::get('/',[AuthenticationController::class,'index']);
-Route::post('/login',[AuthenticationController::class,'authenticate'])->name('post.login');
+Route::get('/login',[AuthenticationController::class,'index']);
+Route::post('/post/login',[AuthenticationController::class,'authenticate'])->name('post.login');
 
 Route::get('/register-success', function () {
     return view('register-success');
@@ -355,7 +355,7 @@ Route::get('/verify_email',function () {
     return view('/verify_email');
 });
 
-Route::post('/verify_email/post',[RegisterController::class,'email_confirm'])->name('verify.email.post');
+Route::post('/verify_email/post',[AuthenticationController::class,'email_confirm'])->name('verify.email.post');
 Route::get('/send_email',[AuthenticationController::class,'send_mail'])->name('send.email');
 
 Route::get('/users_profile',[UsersProfileController::class,'index']);
