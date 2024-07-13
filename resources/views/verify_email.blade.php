@@ -91,14 +91,15 @@
                                     <h4>ยืนยันตัวตน</h4>
                                     <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล {{session('email')}}</p>
 
-                                    <form action="">
+                                    <form action="{{route('verify.email.post')}}" method="POST">
+                                        @csrf
                                         <div class="otp-field mb-4">
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_1" maxlength="1" required />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_2" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_3" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_4" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_5" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_6" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" required />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mb-3">
@@ -107,7 +108,7 @@
                                     </form>
 
                                     <p class="resend text-muted mb-0">
-                                        หากยังไม่ได้รับรหัส (OTP ?) <a href="#" id="resend-otp-link">กดเพื่อขอรหัส (OTP) ใหม่อีกครั้ง</a> <span id="countdown-timer"></span>
+                                        หากยังไม่ได้รับรหัส (OTP ?) <a href="{{route('send.email')}}" id="resend-otp-link">กดเพื่อขอรหัส (OTP) ใหม่อีกครั้ง</a> <span id="countdown-timer"></span>
                                     </p>
                                 </div>
                             </div>
@@ -208,6 +209,10 @@
         });
 
         resendLink.addEventListener("click", (event) => {
+            const xhttpr = new XMLHttpRequest();
+            xhttpr.open('GET', "{{url('/send_email')}}", true);
+            xhttpr.send();
+            // xhttpr.abort();
             event.preventDefault();
             startCountdown(60); // Start countdown from 60 seconds
         });
