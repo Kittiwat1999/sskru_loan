@@ -89,7 +89,7 @@
                             <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
                                 <div class="card-body p-5 text-center">
                                     <h4>ยืนยันตัวตน</h4>
-                                    <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล</p>
+                                    <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล {{session('email')}}</p>
 
                                     <form action="{{route('verify.email.post')}}" method="POST">
                                         @csrf
