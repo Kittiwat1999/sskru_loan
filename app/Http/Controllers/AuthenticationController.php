@@ -11,38 +11,31 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendVerificationMail;
+use App\Http\Requests\AuthenticationRequest;
 
 class AuthenticationController extends Controller
 {
     public function index(){
+
         return view('login');
     }
 
-    public function authenticate(Request $request)
+    public function login(AuthenticationRequest $request)
     {
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->only('email', 'password');
+        $user = Users::where('email',$request->email)->first();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            $request->session()->put('user_id',$user['id']);
+            $request->session()->put('email',$user['email']);
 
-        $user = Users::where('username',$request->username)->first();
-        if($user == null){
-            return back()->withErrors('The provided credentials do not match our records.');
-        }
-
-        if($user['activated']){
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
-     
+            if($user['activated']){
                 return redirect()->intended('/borrower/information/information_list');
+            }else{
+                $this->send_mail();
+                return view('verify_email');
             }
-        }else{
-            Session::put('user_id',$user['id']);
-            Session::put('email',$user['email']);
-            $this->send_mail();
-            return redirect('/verify_email');
         }
- 
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
@@ -81,30 +74,23 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function login_after_email_comfirmation($user){
-        $custom_request = new Request();
-        $custom_request->merge([
-            'username' => $user['username'],
-            'password' => $user['password'],
-        ]);
-
-        $this->authenticate($custom_request);
-    }
-
-    public function register_success_page(){
+    public function go_to_home_page(){
         $user_id = Session::get('user_id');
         $user = Users::find($user_id);
         if($user != null){
             if($user['activated']){
-                $this->login_after_email_comfirmation($user);
+                //auto login
+                return redirect()->intended('/borrower/information/information_list');
             }else{
+                //go verify email page
                 Session::regenerate();
                 Session::put('user_id',$user['id']);
                 Session::put('email',$user['email']);
                 $this->send_mail();
-                return redirect('/verify_email');
+                return view('verify_email');
             }
         }else{
+            //go login
             $this->index();
         }
     }

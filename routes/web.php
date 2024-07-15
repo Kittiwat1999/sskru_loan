@@ -309,11 +309,13 @@ Route::get('/register_student',[RegisterController::class,'index']);
 Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
 
 Route::get('/login',[AuthenticationController::class,'index']);
-Route::post('/post/login',[AuthenticationController::class,'authenticate'])->name('post.login');
+Route::post('/post/login',[AuthenticationController::class,'login'])->name('post.login');
 
 Route::get('/register-success', function () {
     return view('register-success');
 })->name('register.success');
+
+Route::get('/homepage',[AuthenticationController::class,'go_to_home_page']);
 
 Route::get('/login_student',[ResetpasswordController::class,'index']);
 Route::put('/login_student/student/send_otp_email',[ResetpasswordController::class,'send_otp_email'])->name('send.otp.email.student');
@@ -361,9 +363,9 @@ Route::put('/admin/manage_data/property/edit/{property_id}',[AdminManageDataCont
 Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}',[AdminManageDataController::class,'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
 Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController::class,'edit_major'])->name('admin.manage.data.edit.major');
 
-Route::get('/verify_email',function () {
-    return view('/verify_email');
-});
+// Route::get('/verify_email',function () {
+//     return view('/verify_email');
+// });
 
 Route::post('/verify_email/post',[AuthenticationController::class,'email_confirm'])->name('verify.email.post');
 Route::get('/send_email',[AuthenticationController::class,'send_mail'])->name('send.email');

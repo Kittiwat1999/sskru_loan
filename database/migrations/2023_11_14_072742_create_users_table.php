@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('prefix');
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('username');
             $table->string('password');
             $table->boolean('activated')->default(false);
             $table->boolean('isactive')->default(true);

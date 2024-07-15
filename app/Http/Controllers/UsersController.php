@@ -17,7 +17,7 @@ class UsersController extends Controller
 {
     function index(Request $request){
         $select_privilage = $request->session()->get('select_privilage','employee');
-        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','username','email','firstname','lastname','privilage','created_at','updated_at']);
+        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
         $request->session()->put('select_privilage', $select_privilage);
         $faculties = Faculties::where('isactive',true)->get();
         return view('/admin/manage_account',compact('users','faculties'));
@@ -25,7 +25,7 @@ class UsersController extends Controller
 
     function admin_getUsersDataByPrivilage(Request $request, $select_privilage){
         $request->session()->put('select_privilage', $select_privilage);
-        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','username','email','firstname','lastname','privilage','created_at','updated_at']);
+        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
         $faculties = Faculties::where('isactive',true)->get();
         return view('/admin/manage_account',compact('users','faculties'));
     }
@@ -58,7 +58,6 @@ class UsersController extends Controller
     function admin_deleteUser($id){
         $user = Users::find($id);
         $user['email'] = '-';
-        $user['username'] = '-';
         $user['isactive'] = false;
         $user->save();
         return redirect('/admin/manage_account');
@@ -71,7 +70,6 @@ class UsersController extends Controller
             'prefix'=>$request->prefix,
             'firstname'=>$request->firstname,
             'lastname'=>$request->lastname,
-            'username'=>$request->username,
             'password'=>Hash::make($request->password),
             'privilage'=>$request->privilage,
             'email'=>$request->email,
@@ -148,18 +146,6 @@ class UsersController extends Controller
             'privilage'=>$request->privilage,
             'updated_at'=>date('Y-m-d H:i:s')
         ];
-        if($request->username != $user->username){
-            $request->validate(
-                ['username' => 'required|string|unique:users,username|max:255'],
-                [
-                    'required' => 'กรุณากรอก :attribute',
-                    'string' => 'กรุณากรอก :attribute เป็นข้อความ',
-                    'max' => 'กรุณากรอก :attribute ไม่เกิน :max ตัวอักษร',
-                    'unique' => ':attribute นี้มีอยู่ในระบบแล้ว',
-                ]
-            );
-            $data['username'] = $request->username;
-        }
         if($request->email != $user->email){
             $request->validate(
                 ['email' => 'required|string|unique:users,email|max:255'],

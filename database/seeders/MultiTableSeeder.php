@@ -17,17 +17,17 @@ class MultiTableSeeder extends Seeder
      */
     public function run():void
     {
-        //  $this->seedUsers();
-        //  $this->seedBorrowerApprearanceTypes();
+         $this->seedUsers();
+         $this->seedBorrowerApprearanceTypes();
          $this->seedNeesessities();
          $this->seedProperties();
          $this->seedDouTypes();
          $this->seedFaculties();
-        //  $this->seedBorrowers();
-        //  $this->seedParents();
-        //  $this->seedAddresses();
-        //  $this->seedBorrowerNecessities();
-        //  $this->seedBorrowerProperties();
+         $this->seedBorrowers();
+         $this->seedParents();
+         $this->seedAddresses();
+         $this->seedBorrowerNecessities();
+         $this->seedBorrowerProperties();
          $this->seedChildDocuments();
          $this->seedConfig();
          $this->seedDocuments();
@@ -45,8 +45,7 @@ class MultiTableSeeder extends Seeder
                 'prefix' => 'นาย',
                 'firstname' => 'กิตติวัฒน์',
                 'lastname' => 'เทียนเพ็ชร',
-                'username'=>'th.kittiwat1999',
-                'email'=>'th.kittiwat1999@gmai.com',
+                'email'=>'th.kittiwat1999@gmail.com',
                 'password'=>Hash::make('1234567890'),
                 'privilage' =>'borrower',
                 'isactive'=>true,

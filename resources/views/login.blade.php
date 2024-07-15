@@ -24,7 +24,7 @@
         }
   </style>
 
-  <title>ล็อกอินนักศึกษา</title>
+  <title>เข้าสู่ระบบ</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -103,17 +103,17 @@
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">ล็อกอิน</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">เข้าสู่ระบบ</h5>
                     <!-- <p class="text-center small">Enter your username & password to login</p> -->
                   </div>
 
                   <form action="{{route('post.login')}}" class="row g-3 needs-validation" novalidate method="POST" id="login-form">
                     @csrf
                     <div class="col-12">
-                      <label for="username" class="col-form-label text-secondary">ชื่อผู้ใช้</label>
+                      <label for="email" class="col-form-label text-secondary">อีเมลล์</label>
                       <div class="input-group has-validation">
-                        <input type="text" name="username" class="form-control" id="username" required>
-                        <div class="invalid-feedback">กรุณากรอกชื่อผู้ใช้!</div>
+                        <input type="text" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback">กรุณากรอกอีเมลล์!</div>
                       </div>
                     </div>
 
@@ -125,7 +125,7 @@
 
                     <div align="right">
                       <div class="container">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#chagepassword">ลืมรหัสผ่าน</a>
+                        <a href="{{url('/send_otp_email')}}">ลืมรหัสผ่าน</a>
                       </div>
                     </div>
 
@@ -148,35 +148,6 @@
                     <div class="col-12">
                       <p class="small mb-0" align="center">ล็อกอิน&nbsp;<a
                           href="{{url('/login_teacher')}}">สำหรับอาจารย์ที่ปรึกษา</a>&nbsp;</p>
-                    </div>
-
-                    <div class="modal fade" id="chagepassword" tabindex="-1">
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title">กู้คืนรหัสผ่าน</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <form>
-                              <div class="row">
-                                <div class="col-sm">
-                                  <label for="email" class="col-form-label text-secondary text-secondary">อีเมล</label>
-                                </div>
-                                <div>
-                                  <div div class="col-sm-10">
-                                    <input name="email" type="email" class="form-control" id="email">
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                            <button type="submit" class="btn btn-primary">ยืนยัน</button>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                   </form>
