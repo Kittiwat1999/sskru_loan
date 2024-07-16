@@ -36,7 +36,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form class="row" action="{{route('admin.manage.documents.editdoctype',['doc_type_id' => $doc_type->id])}}" method="post" id="editDocTypeForm{{$doc_type->id}}">
+                                                    <form class="row" action="{{route('admin.edit.document',['doc_type_id' => $doc_type->id])}}" method="post" id="editDocTypeForm{{$doc_type->id}}">
                                                         @csrf
                                                         <div class="col-12">
                                                             <label for="doctype_title" class="form-label">ชื่อหนังสือ</label>
@@ -64,7 +64,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form class="row" action="{{route('admin.manage.documents.deletedoctype',['doc_type_id' => $doc_type->id])}}" method="post" id="deleteDocTypeForm">
+                                                    <form class="row" action="{{route('admin.delete.document',['doc_type_id' => $doc_type->id])}}" method="post" id="deleteDocTypeForm">
                                                         @csrf
                                                         @method('DELETE')
 
@@ -105,7 +105,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="row" action="{{route('admin.manage.documents.storedoctype')}}" method="post" id="addDocTypeForm">
+                                    <form class="row" action="{{route('admin.store.document')}}" method="post" id="addDocTypeForm">
                                         @csrf
                                         @method('PUT')
                                         <div class="col-12">
@@ -190,7 +190,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form class="row" action="{{route('admin.manage.documents.deletedocument',['child_document_id' => $child_document->id])}}" method="post" id="addDocTypeForm">
+                                                        <form class="row" action="{{route('admin.delete.child_document',['child_document_id' => $child_document->id])}}" method="post" id="addDocTypeForm">
                                                             @csrf
                                                             @method('DELETE')
                                                                 <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$child_document->child_document_title}}</span> หรือไม่</label>
@@ -230,7 +230,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="addChildDocForm"  class="row" action="{{route('admin.manage.documents.storedocument')}}" method="POST" enctype="multipart/form-data">
+                                        <form id="addChildDocForm"  class="row" action="{{route('admin.store.child_document')}}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
                                             <div class="col-12 mb-3">
@@ -249,6 +249,17 @@
                                                 </select>
                                                 <div id="need_loan_balance_invalid" class="invalid-feedback">
                                                     กรุณาเลือก ข้อมูลยอดเงิน
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="isrequired" class="form-label">ตัวเลือกการส่งเอกสาร</label>
+                                                <select id="isrequired" class="form-select need-custom-validate" name="isrequired">
+                                                    <option selected disabled value="" >เลือก...</option>
+                                                    <option value="true">ต้องมี</option>
+                                                    <option value="false">มีหรือไม่มีก็ได้</option>
+                                                </select>
+                                                <div id="required_invalid" class="invalid-feedback">
+                                                    กรุณาเลือก ตัวเลือกการส่งเอกสาร
                                                 </div>
                                             </div>
                                         </form>  
@@ -271,7 +282,7 @@
         {{-- add-on document --}}
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">รายการเอกสารส่วนเสริม</h5>
+                <h5 class="card-title">รายการเอกสารแนบ</h5>
                 
                 <div class="table-responsive mb-3">
                     <table class="table datatable table-striped table-bordered">
@@ -309,7 +320,7 @@
                                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">แก้ใขเอกสาร</h5>
+                                                        <h5 class="modal-title">แก้ใขเอกสารแนบ</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body" id="edit-addon-document-modal-body">
@@ -332,7 +343,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form class="row" action="{{route('admin.manage.documents.delete.addon_document',['addon_document_id' => $addon_document->id])}}" method="post" id="addDocTypeForm">
+                                                        <form class="row" action="{{route('admin.delete.addon_document',['addon_document_id' => $addon_document->id])}}" method="post" id="addDocTypeForm">
                                                             @csrf
                                                             @method('DELETE')
                                                                 <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$addon_document->title}}</span> หรือไม่</label>
@@ -372,7 +383,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="addAddonDocumentForm"  class="row" action="{{route('admin.manage.documents.store.addon_document')}}" method="POST">
+                                        <form id="addAddonDocumentForm"  class="row" action="{{route('admin.store.addon_document')}}" method="POST">
                                             @csrf
                                             <div class="col-12 mb-3">
                                                 <label for="title" class="form-label">เอกสาร</label>
@@ -411,7 +422,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">แก้ไขชั่วโมงกิจกรรมจิตอาสา</h5>
-                    <form class="row" action="{{route('admin.manage.documents.update.useful.hour')}}" method="post" id="useful_activity_hour_form">
+                    <form class="row" action="{{route('admin.update.useful.hour')}}" method="post" id="useful_activity_hour_form">
                         @csrf
                         <label for="inputEmail3" class="col-md-2 col-form-label">ชั่วโมงกิจกรรมจิตอาสา</label>
                         <div class="col-md-6">
@@ -499,7 +510,7 @@
         async function validateAddChildDocForm(formId){
             var form = document.getElementById(formId);
             var inputs = form.querySelectorAll('input[type="text"].need-custom-validate');
-            var select = form.querySelector('select.need-custom-validate');
+            var select = form.querySelectorAll('select.need-custom-validate');
             var validate = true;
 
             await inputs.forEach((input) => {
@@ -514,14 +525,17 @@
 
             });
 
-            if(select.value == ''){
+            await select.forEach((e)=>{
+                if(e.value == ''){
                 validate = false;
-                var invalid_element = select.nextElementSibling;
+                var invalid_element = e.nextElementSibling;
                 if(invalid_element)invalid_element.classList.add('d-inline');
             }else{
-                var invalid_element = select.nextElementSibling;
+                var invalid_element = e.nextElementSibling;
                 if(invalid_element)invalid_element.classList.remove('d-inline');
             }
+
+            });
 
             return validate;
         }
@@ -532,7 +546,7 @@
 
             editModalBody.innerHTML = '';
             editModalBody.innerHTML = `
-                <form class="row" action="{{route('admin.manage.documents.editdocument',['child_document_id' => 'PLACEHOLDER_CHILD_DOCUMENT_ID'])}}" method="post" id="eidtChildDocForm" enctype="multipart/form-data">
+                <form class="row" action="{{route('admin.edit.child_document',['child_document_id' => 'PLACEHOLDER_CHILD_DOCUMENT_ID'])}}" method="post" id="eidtChildDocForm" enctype="multipart/form-data">
                     @csrf
                     <div class="col-12 mb-3">
                         <label for="child_doc_title" class="form-label">เอกสาร</label>
@@ -546,6 +560,13 @@
                         <select class="form-select" name="need_loan_balance" required>
                             <option ${child_document.need_loan_balance ? 'selected' : '' } value="true">ต้องการ</option>
                             <option ${!child_document.need_loan_balance ? 'selected' : '' } value="false">ไม่ต้องการ</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="isrequired" class="form-label">ตัวเลือกการส่งเอกสาร</label>
+                        <select class="form-select" name="isrequired" required>
+                            <option ${child_document.isrequired ? 'selected' : '' } value="true">ต้องมี</option>
+                            <option ${!child_document.isrequired ? 'selected' : '' } value="false">มีหรือไม่มีก็ได้</option>
                         </select>
                     </div>
                 </form> 
@@ -589,7 +610,7 @@
 
             editModalBody.innerHTML = '';
             editModalBody.innerHTML = `
-                <form id="editAddOnDocumentForm"  class="row" action="{{route('admin.manage.documents.edit.addon_document',['addon_document_id' => 'PLACEHOLDER_ADDON_DOCUMENT_ID'])}}" method="POST">
+                <form id="editAddOnDocumentForm"  class="row" action="{{route('admin.edit.addon_document',['addon_document_id' => 'PLACEHOLDER_ADDON_DOCUMENT_ID'])}}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="col-12 mb-3">

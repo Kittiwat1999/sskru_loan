@@ -1,13 +1,13 @@
 @extends('layout')
 @section('title')
-จัดการเอกสารส่วนเสริม
+จัดการเอกสารแนบ
 @endsection
 @section('content')
 <div class="main-content">
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">จัดการไฟล์ส่วนเสริม <u>{{$addon_document->title}}</u></h5>
+            <h5 class="card-title">จัดการไฟล์แนบ <u>{{$addon_document->title}}</u></h5>
             {{-- ไฟล์สำหรับดาวน์โหลด --}}
             <section class="border-bottom border-1 border-secondary p-2 mb-4">
                 <h6 class="fw-bold mb-3">ไฟล์สำหรับให้ผู้กู้ยืมดาวน์โหลด</h6>

@@ -56,6 +56,12 @@ admin document scheduler
                                 <div class="form-check">
                                     <label class="form-check-label" for="document{{$child_document->id}}">
                                         {{$child_document->child_document_title}}
+                                        @if($child_document->need_loan_balance)
+                                            <span class="text-secondary">(ต้องการยอดเงินกู้)</span>
+                                        @endif
+                                        @if(!$child_document->isrequired)
+                                            <span class="text-secondary">(ส่งหรือไม่ก็ได้)</span>
+                                        @endif
                                     </label>
                                     <input class="form-check-input need-custom-validate" type="checkbox" id="document{{$child_document->id}}" name="child_documents[]" value="{{$child_document->id}}">
                                 </div>

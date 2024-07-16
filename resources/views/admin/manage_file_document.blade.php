@@ -9,7 +9,7 @@
         <div class="card-body">
             <h5 class="card-title">จัดการไฟล์ <u>{{$child_document->child_document_title}}</u></h5>
             {{-- ไฟล์สำหรับดาวน์โหลด --}}
-            <section class="border-bottom border-1 border-secondary p-2 mb-4">
+            <section class="border border-secondary rounded p-2 mb-4">
                 <h6 class="fw-bold mb-3">ไฟล์สำหรับให้ผู้กู้ยืมดาวน์โหลด</h6>
                 @if(isset($child_document_file))
                     <div class="my2">
@@ -95,7 +95,7 @@
             {{-- end ไฟล์สำหรับดาวน์โหลด --}}
 
             {{-- ไฟล์ตัวอย่าง --}}
-            <section class="border-bottom border-1 border-secondary p-2 mb-4">
+            <section class="border border-secondary rounded p-2 mb-4">
                 <h6 class="fw-bold mb-3">ไฟล์ตัวอย่าง</h6>
                 @if(count($example_files) != 0)
                     <ul class="list-group mb-4">
@@ -163,7 +163,7 @@
             </section>
             {{-- end ไฟล์ตัวอย่าง --}}
             {{-- ตัวอย่างคนอายุไม่ถึง 20 --}}
-            <section class="p-2">
+            <section class="border border-secondary rounded p-2">
                 <h6 class="fw-bold mb-3">ไฟล์ตัวอย่างสำหรับผู้มีอายุต่ำกว่า 20 ปี</h6>
                 @if(count($minors_example_files) != 0)
                     <ul class="list-group mb-4">
@@ -236,7 +236,7 @@
     
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">เลือกเอกสารส่วนเสริม</h5>
+            <h5 class="card-title">เลือกเอกสารแนบ</h5>
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="list-group">
@@ -245,13 +245,13 @@
                         @endforeach
                     </ul>
                     <button type="button" class="btn btn-outline-primary  w-100" data-bs-toggle="modal" data-bs-target="#largeModal">
-                        + เพิ่ม/แก้ใขเอกสารส่วนเสริม
+                        + เพิ่ม/แก้ใขเอกสารแนบ
                     </button>
                     <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true" style="display: none;">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">เพิ่ม/แก้ใขเอกสารส่วนเสริม</h5>
+                                    <h5 class="modal-title">เพิ่ม/แก้ใขเอกสารแนบ</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <form action="{{route('admim.child.document.update.addon',['child_document_id' => $child_document->id])}}" method="post">

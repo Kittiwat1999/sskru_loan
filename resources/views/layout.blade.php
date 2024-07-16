@@ -460,7 +460,7 @@
     <script src="{{asset('assets/js/main.js')}}"></script>
 
     <script>
-        const hostName = "http://127.0.0.1:8000";
+        // const hostName = "http://127.0.0.1:8000";
 
         function activeSidebar(paths){
             path.forEach(paths => {

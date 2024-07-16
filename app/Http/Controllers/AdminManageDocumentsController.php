@@ -34,50 +34,59 @@ class AdminManageDocumentsController extends Controller
         return view('admin.manage_document_file',compact('child_document'));
     }
 
-    public function store_child_document(Request $request){
+    public function storeChildDocument(Request $request){
         // dd($request);
         $rules = [
             'child_document_title' => 'required|string|max:100',
             'need_loan_balance' => 'required|string',
+            'isrequired' => 'required|string',
         ];
         $messages = [
             'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
-            'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
+            'child_document_title.string' => 'ชื่อเอกสาร มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
             'need_loan_balance.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
-            'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการต้องเป็นข้อความ',
+            'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
+            'isrequired.required' => 'กรุณาระบุว่าต้องการเอกสารหรือไม่',
+            'isrequired.string' => 'เอกสารที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
         ];
         $request->validate($rules,$messages);
         $child_document = new ChildDocuments();
         $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
+        $child_document['isrequired'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
         $child_document['isactive'] = true;
         $child_document->save();
         return redirect()->back()->with(['success'=>'เพิ่มข้อมูลเอกสารเรียบร้อยแล้ว']);
     }
 
-    public function edit_child_document(Request $request,$child_document_id){
+    public function editChildDocument(Request $request,$child_document_id){
         // dd($request);
         $rules = [
             'child_document_title' => 'required|string|max:100',
             'need_loan_balance' => 'required|string',
+            'isrequired' => 'required|string',
         ];
         
         $messages = [
             'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
-            'child_document_title.string' => 'ชื่อเอกสารต้องเป็นข้อความ',
+            'child_document_title.string' => 'ชื่อเอกสาร มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
-            'need_loan_balance.required' => 'กรุณากรอกยอดเงินกู้ที่ต้องการ',
+            'need_loan_balance.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
+            'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
+            'isrequired.required' => 'กรุณาระบุว่าต้องการเอกสารหรือไม่',
+            'isrequired.string' => 'เอกสารที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
         ];
         $request->validate($rules,$messages);
         $child_document = ChildDocuments::find($child_document_id);
         $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
+        $child_document['isrequired'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
         $child_document->save();
         return redirect()->back()->with(['success'=>'แก้ใขข้อมูลเอกสาร'.$child_document['child_document_title'].'เรียบร้อยแล้ว']);
     }
 
-    public function DeleteChildDoc($child_document_id){
+    public function deleteChildDocument($child_document_id){
         $child_document = ChildDocuments::find($child_document_id);
         $child_document['isactive'] = false;
         $child_document->save();
@@ -204,7 +213,7 @@ class AdminManageDocumentsController extends Controller
 
 
 
-    public function sotoreDocType(Request $request){
+    public function sotoreDocument(Request $request){
         $request->validate(
             ['doctype_title' => 'required|string'],
             [
@@ -218,7 +227,7 @@ class AdminManageDocumentsController extends Controller
         return redirect()->back()->with(['success'=>'เพิ่มหนังสือ '.$doc_type['doctype_title'].' เรียบร้อยแล้ว']);
     }
 
-    public function editDocType(Request $request,$doc_type_id){
+    public function editDocument(Request $request,$doc_type_id){
         $request->validate(
             ['doctype_title' => 'required|string'],
             [
@@ -233,7 +242,7 @@ class AdminManageDocumentsController extends Controller
         return redirect()->back()->with(['success'=>'แก้ใขหนังสือจาก '.$old_doc_type_title.' เป็น '.$request->doctype_title.' เรียบร้อยแล้ว']);
     }
 
-    public function deleteDocType($doc_type_id){
+    public function deleteDocument($doc_type_id){
         $doc_type = DocTypes::find($doc_type_id);
         $doc_type['isactive'] = false;
         $doc_type->save();
