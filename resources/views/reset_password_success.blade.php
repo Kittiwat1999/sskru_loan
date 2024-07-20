@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>กู้คืนรหัสผ่าน</title>
+  <title>success</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -80,47 +80,24 @@
             <div class="container">
                 <div class="row justify-content-center">
 
-                    <div class="d-flex justify-content-center py-4">
-                        <a href="index.html" class="logo d-flex align-items-center w-auto">
-                        <img src="assets/img/logo.png" alt="">
-                        <span class="d-none d-lg-block">SSKRU Loan</span>
-                        </a>
-                    </div><!-- End Logo -->
-
                     <div class="card mb-3 col-md-6">
 
                         <div class="card-body">
 
-                            <div class="pt-4 pb-2">
-                                <h5 class="card-title text-center pb-0 fs-4">กู้คืนรหัสผ่าน</h5>
-                                <p class="text-center small">กรุณากรอกอีเมล</p>
+                            <div class="d-flex justify-content-center">
+                                <lottie-player src="https://lottie.host/6c0153c3-7f1e-4ba7-9a17-c4da425371cd/SyqM5lEOZ9.json" background="##ffffff" speed="1" style="width: 200px; height: 200px" autoplay direction="1" mode="normal"></lottie-player>
                             </div>
 
-                                <form action="{{route('send.otp.email.student')}}" method="post">
-                                    @csrf
-                                    @method('PUT')
-                                            <div class="row mb-3">
-                                                <label for="email" class="col-md-4 col-lg-2 col-form-label">อีเมล</label>
-                                                <div class="col-md-8 col-lg-10">
-                                                    <input name="email" type="email" class="form-control" id="email" required>
-                                                </div>
-                                                <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
-                                            </div>
-                                    <div class="d-flex justify-content-end">
-                                        <a href="{{url('/login_student')}}" class="text-light btn btn-secondary me-2">ยกเลิก</a>
-                                        <button type="submit" class="btn btn-primary">ยืนยัน</button>
-                                    </div>
-                                </form>
+                            <span class="d-flex justify-content-center pb-4 display-6">เปลี่ยนรหัสผ่านสำเร็จ</span>
+
+                            <div class="d-flex justify-content-center pt-2">
+                                <a href="{{url('/login')}}" class="text-light btn btn-primary">ล็อกอิน</a>
+                            </div>
+
                         </div>
+
                     </div>
 
-                    <div class="credits" align="center">
-                        <!-- All the links in the footer should remain intact. -->
-                        <!-- You can delete the links only if you purchased the pro version. -->
-                        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-                    </div>
                 </div>
             </div>
 
@@ -144,6 +121,7 @@
 
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 </body>
 

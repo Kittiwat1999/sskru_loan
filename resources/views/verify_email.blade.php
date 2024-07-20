@@ -107,7 +107,7 @@
                                     </form>
 
                                     <p class="resend text-muted mb-0">
-                                        หากยังไม่ได้รับรหัส (OTP ?) <a href="{{route('send.email')}}" id="resend-otp-link">กดเพื่อขอรหัส (OTP) ใหม่อีกครั้ง</a> <span id="countdown-timer"></span>
+                                        หากยังไม่ได้รับรหัส (OTP ?) <a href="#" id="resend-otp-link">กดเพื่อขอรหัส (OTP) ใหม่อีกครั้ง</a> <span id="countdown-timer"></span>
                                     </p>
                                 </div>
                             </div>

@@ -20,8 +20,14 @@ class AuthenticationController extends Controller
         return view('login');
     }
 
+    public function signout(){
+        Session::regenerate();
+        return redirect('/login');
+    }
+
     public function login(AuthenticationRequest $request)
     {
+        // dd($request);
         $credentials = $request->only('email', 'password');
         $user = Users::where('email',$request->email)->first();
         if (Auth::attempt($credentials)) {
@@ -32,16 +38,16 @@ class AuthenticationController extends Controller
             if($user['activated']){
                 return redirect()->intended('/borrower/information/information_list');
             }else{
-                $this->send_mail();
+                $this->send_email();
                 return view('verify_email');
             }
         }
         return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
+            'username' => 'อีเมลล์หรือรหัสผ่านไม่ถูกต้อง',
         ])->onlyInput('username');
     }
 
-    public function send_mail(){
+    public function send_email(){
         $user_id = Session::get('user_id');
         $user = Users::find($user_id);
         $code = rand(100000, 999999);
@@ -57,6 +63,18 @@ class AuthenticationController extends Controller
     }
 
     public function email_confirm(Request $request){
+        $request->validate(
+            [
+                'code' => 'required|array',
+                'code.*' => 'required|string|max:1',
+            ],[
+                'code.required' => 'กรุณากรอกรหัสยืนยันตัวตน',
+                'code.array' => 'รูปแบบข้อมูลไม่ถูกต้อง',
+                'code.*.required' => 'กรุณากรอกรหัสยืนยันตัวตน',
+                'code.*.string' => 'รูปแบบข้อมูลไม่ถูกต้อง',
+                'code.*.max' => 'รหัสแต่ละช่องต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            ]
+        );
         $code = implode('', $request->code);
         $now = Carbon::now();
         $user_id = Session::get('user_id');
@@ -66,7 +84,6 @@ class AuthenticationController extends Controller
             $student_registering = Users::where('email',$user['email'])->first();
             $student_registering['activated'] = true;
             $student_registering->save();
-            $register_token->delete();
 
             return redirect('/register-success');
         }else{
@@ -86,7 +103,7 @@ class AuthenticationController extends Controller
                 Session::regenerate();
                 Session::put('user_id',$user['id']);
                 Session::put('email',$user['email']);
-                $this->send_mail();
+                $this->send_email();
                 return view('verify_email');
             }
         }else{

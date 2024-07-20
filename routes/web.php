@@ -310,6 +310,7 @@ Route::put('/register_student/student/register/',[RegisterController::class,'reg
 
 Route::get('/login',[AuthenticationController::class,'index']);
 Route::post('/post/login',[AuthenticationController::class,'login'])->name('post.login');
+Route::get('/signout',[AuthenticationController::class,'signout']);
 
 Route::get('/register-success', function () {
     return view('register-success');
@@ -317,14 +318,15 @@ Route::get('/register-success', function () {
 
 Route::get('/homepage',[AuthenticationController::class,'go_to_home_page']);
 
-Route::get('/login_student',[ResetpasswordController::class,'index']);
-Route::put('/login_student/student/send_otp_email',[ResetpasswordController::class,'send_otp_email'])->name('send.otp.email.student');
-Route::get('/send_otp_email',function () {return view('/send_otp_email');});
-Route::put('/login_student/student/verify_resetpassword',[ResetpasswordController::class,'verify_resetpassword'])->name('verify.resetpassword.student');
-Route::get('/verify_resetpassword',function () {return view('/verify_resetpassword');});
-Route::post('/login_student/student/change_password',[ResetpasswordController::class,'change_password'])->name('change.password.student');
-Route::get('/change_password',function () {return view('/change_password');});
-Route::get('/success_page',function () {return view('/success_page');});
+// Route::get('/login_student',[ResetpasswordController::class,'index']);
+Route::get('/reset_password/email',function () {return view('/input_email_reset_password');});
+Route::post('/check_email',[ResetpasswordController::class,'check_email'])->name('check_email.reset_password');
+Route::get('/verify_reset_password',function () {return view('verify_reset_password');});
+Route::post('/verify_reset_password/post',[ResetpasswordController::class,'email_confirm'])->name('verify.reset_password');
+Route::get('/send_email/reset_password',[ResetpasswordController::class,'send_email'])->name('send.email.reset_password');
+Route::put('/change_password',[ResetpasswordController::class,'change_password'])->name('change.password');
+// Route::get('/change_password',function () {return view('/change_password');});
+Route::get('/reset_password_success',function () {return view('/reset_password_success');});
 
 Route::get('/login_teacher',function () {
     return view('/login_teacher');
@@ -368,7 +370,7 @@ Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController
 // });
 
 Route::post('/verify_email/post',[AuthenticationController::class,'email_confirm'])->name('verify.email.post');
-Route::get('/send_email',[AuthenticationController::class,'send_mail'])->name('send.email');
+Route::get('/send_email',[AuthenticationController::class,'send_email'])->name('send.email');
 
 Route::get('/users_profile',[UsersProfileController::class,'index']);
 Route::put('/users_profile/edit',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');

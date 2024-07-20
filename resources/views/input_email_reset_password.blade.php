@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>เปลี่ยนรหัสผ่าน</title>
+  <title>กู้คืนรหัสผ่าน</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -92,35 +92,24 @@
                         <div class="card-body">
 
                             <div class="pt-4 pb-2">
-                                <h5 class="card-title text-center pb-0 fs-4">เปลี่ยนรหัสผ่าน</h5>
-                                <p class="text-center small">กรุณากรอกรหัสผ่าน</p>
+                                <h5 class="card-title text-center pb-0 fs-4">กู้คืนรหัสผ่าน</h5>
+                                <p class="text-center small">กรุณากรอกอีเมล</p>
                             </div>
 
-                                    <!-- Change Password Form -->
-                                    <form method="POST" action="{{ route('change.password') }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="row mb-3">
-                                            <label for="new_password" class="col-md-4 col-lg-3 col-form-label">รหัสผ่านใหม่</label>
-                                            <div class="col-md-8 col-lg-9">
-                                                <input name="new_password" type="password" class="form-control" id="new_password" required>
+                                <form action="{{route('check_email.reset_password')}}" method="POST">
+                                    @csrf
+                                            <div class="row mb-3">
+                                                <label for="email" class="col-md-4 col-lg-2 col-form-label">อีเมล</label>
+                                                <div class="col-md-8 col-lg-10">
+                                                    <input name="email" type="email" class="form-control" id="email" required>
+                                                </div>
+                                                <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
                                             </div>
-                                            <div class="invalid-feedback">กรุณากรอกรหัสผ่านใหม่</div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label for="new_password_confirmation" class="col-md-4 col-lg-3 col-form-label">ยืนยันรหัสผ่าน</label>
-                                            <div class="col-md-8 col-lg-9">
-                                                <input name="new_password_confirmation" type="password" class="form-control" id="new_password_confirmation" required>
-                                                <span id="passwordError" class="text-danger"></span>
-                                            </div>
-                                            <div class="invalid-feedback">กรุณายืนยันรหัสผ่าน</div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary" onclick="return validatePassword()">บันทึก</button>
-                                        </div>
-                                    </form><!-- End Change Password Form -->
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{{url('/login_student')}}" class="text-light btn btn-secondary me-2">ยกเลิก</a>
+                                        <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                                    </div>
+                                </form>
                         </div>
                     </div>
 
@@ -139,7 +128,8 @@
     </div>
   </main><!-- End #main -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
@@ -153,27 +143,6 @@
 
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
-  <script>
-        function validatePassword() {
-            var password = document.getElementById("new_password").value;
-            var confirm_password = document.getElementById("new_password_confirmation").value;
-            var passwordError = document.getElementById("passwordError");
-
-            if (password === "") {
-                passwordError.innerHTML = "กรุณากรอกข้อมูลรหัสผ่านก่อน";
-                return false;
-            } else if (password === "" || confirm_password === "") {
-                passwordError.innerHTML = "กรุณายืนยันรหัสผ่าน";
-                return false;
-            } else if (password !== confirm_password) {
-                passwordError.innerHTML = "รหัสผ่านไม่ตรงกัน";
-                return false;
-            } else {
-                passwordError.innerHTML = "";
-                return true;
-            }
-        }
-  </script>
 
 </body>
 

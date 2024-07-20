@@ -4,25 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <style>
-    .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .loading-overlay .spinner {
-            color: #fff;
-            font-size: 2rem;
-        }
-  </style>
 
   <title>เข้าสู่ระบบ</title>
   <meta content="" name="description">
@@ -58,11 +39,6 @@
 </head>
 
 <body>
-  <div id="loading-overlay" class="loading-overlay">
-      <div class="spinner">
-          <i class="fas fa-spinner fa-spin"></i> Loading...
-      </div>
-  </div>
 
   <main>
     <div class="container">
@@ -76,12 +52,12 @@
             </div>
             <script>
                 // Wait for 3000 milliseconds (3 seconds) and then remove the element
-                setTimeout(function() {
-                    const elementToRemove = document.getElementById('error-alert');
-                    if (elementToRemove) {
-                        elementToRemove.remove();
-                    }
-                }, 3000);
+                // setTimeout(function() {
+                //     const elementToRemove = document.getElementById('error-alert');
+                //     if (elementToRemove) {
+                //         elementToRemove.remove();
+                //     }
+                // }, 3000);
             </script>
         @endif
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -123,7 +99,7 @@
 
                     <div align="right">
                       <div class="container">
-                        <a href="{{url('/send_otp_email')}}">ลืมรหัสผ่าน</a>
+                        <a href="{{url('/reset_password/email')}}">ลืมรหัสผ่าน</a>
                       </div>
                     </div>
 
@@ -185,11 +161,6 @@
 
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
-  <script>
-    document.getElementById('login-form').addEventListener('submit', function() {
-            document.getElementById('loading-overlay').style.display = 'flex';
-        });
-  </script>
 
 </body>
 

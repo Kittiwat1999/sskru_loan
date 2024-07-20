@@ -91,16 +91,15 @@
                                     <h4>ยืนยันตัวตน</h4>
                                     <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล</p>
 
-                                    <form action="{{route('verify.resetpassword.student')}}" method="post">
+                                    <form action="{{route('verify.reset_password')}}" method="POST">
                                         @csrf
-                                        @method('PUT')
                                         <div class="otp-field mb-4">
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_1" maxlength="1" required />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_2" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_3" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_4" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_5" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="otp_6" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="code[]" maxlength="1" required />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 1 2px;" name="code[]" maxlength="1" disabled />
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mb-3">
@@ -208,7 +207,11 @@
             });
         });
 
-        resendLink.addEventListener("click", (event) => {
+        resendLink.addEventListener("click", async (event) => {
+            const xhttpr = new XMLHttpRequest();
+            xhttpr.open('GET', "{{url('/send_email/reset_password')}}", true);
+            xhttpr.send();
+            // xhttpr.abort();
             event.preventDefault();
             startCountdown(60); // Start countdown from 60 seconds
         });
@@ -226,6 +229,7 @@
                 }
             }, 1000);
         }
+
   </script>
 
 </body>
