@@ -27,7 +27,6 @@ class AuthenticationController extends Controller
 
     public function login(AuthenticationRequest $request)
     {
-        // dd($request);
         $credentials = $request->only('email', 'password');
         $user = Users::where('email',$request->email)->first();
         if (Auth::attempt($credentials)) {

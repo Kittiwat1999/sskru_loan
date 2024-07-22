@@ -22,7 +22,7 @@
                                 หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง {{$parent->prefix}}{{$parent->firstname}} {{$parent->lastname}}
                             </td>
                             <td>
-                                <a href="{{route('borrower.download.parent.document',['parent_id' => $parent->id])}}" class="btn btn-danger" target="_blank">ดาวน์โหลด</a>
+                                <a href="{{route('borrower.recheck.parent.document',['parent_id' => $parent->id])}}" class="btn btn-primary">ตรวจสอบเอกสาร</a>
                             </td>
                         </tr>
                         @endforeach
@@ -32,7 +32,7 @@
                                 {{$document->child_document_title}}
                             </td>
                             <td>
-                                <a href="{{route('borrower.download.document',['document_id' => $document->id])}}" class="btn btn-danger" target="_blank">ดาวน์โหลด</a>
+                                <a href="{{route('borrower.recheck.document',['document_id' => $document->id])}}" class="btn btn-primary">ตรวจสอบเอกสาร</a>
                             </td>
                         </tr>
                         @endforeach

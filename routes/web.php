@@ -336,8 +336,12 @@ Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
 Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'upload_document_page'])->name('borrower.upload.document.page');
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
-Route::get('/borrower/download_document/{document_id}',[DownloadDocumentController::class,'download_file'])->name('borrower.download.document');
-Route::get('/borrower/download_document/parent/{parent_id}',[DownloadDocumentController::class,'download_parent_file'])->name('borrower.download.parent.document');
+
+Route::get('/borrower/download_document/recheck_document/{document_id}',[DownloadDocumentController::class,'recheck_document'])->name('borrower.recheck.document');
+Route::get('/borrower/download_document/response_document/{document_id}/{request_type}',[DownloadDocumentController::class,'response_file'])->name('borrower.response.document');
+
+Route::get('/borrower/download_document/recheck_document/parent/{parent_id}',[DownloadDocumentController::class,'recheck_parent_document'])->name('borrower.recheck.parent.document');
+Route::get('/borrower/download_document/response_document/parent/{parent_id}/{request_type}',[DownloadDocumentController::class,'response_parent_file'])->name('borrower.response.parent.document');
 Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
 
 Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraidai']);

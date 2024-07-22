@@ -48,9 +48,7 @@ class ResetpasswordController extends Controller
         ]);
 
         $user = Users::find($user_id);
-
-        // อัพเดตรหัสผ่านใหม่
-        $user->password = Hash::make($request->new_password);
+        $user['password'] = Hash::make($request->new_password);
         $user->save();
 
         return view('reset_password_success')->with(['success'=>'รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว']);
@@ -93,7 +91,6 @@ class ResetpasswordController extends Controller
             $student_registering = Users::where('email',$user['email'])->first();
             $student_registering['activated'] = true;
             $student_registering->save();
-
             return view('change_password');
         }else{
             return back()->withErrors('รหัสยืนยันตัวตนไม่ถูกต้อง หรือรหัสอาจหมดอายุไปแล้ว');
