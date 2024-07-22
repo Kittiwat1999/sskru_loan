@@ -47,7 +47,7 @@ class GenerateFile extends Controller
         return $age;
     }
 
-    public function generate_rabrongraidai($user_id, $document, $request_type){
+    public function generate_rabrongraidai($user_id, $document){
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
             ->select('users.prefix','users.firstname','users.lastname','borrowers.birthday','borrowers.id')
@@ -94,7 +94,7 @@ class GenerateFile extends Controller
         }
 
         // Create a StreamedResponse
-        return new StreamedResponse(function () use ($borrower, $father, $mother, $parent, $document, $request_type) {
+        return new StreamedResponse(function () use ($borrower, $father, $mother, $parent, $document) {
             // Initialize the PDF
             $pdf = new Fpdi();
             
@@ -243,18 +243,14 @@ class GenerateFile extends Controller
             $filename = 'หนังสือรับรองรายได้ครอบครัว.pdf';
             // Encode the filename
             $encodedFilename = rawurlencode($filename);
-            if($request_type == "download"){
-                $pdf->Output('D', $encodedFilename);
-            }else{
-                $pdf->Output('I', $encodedFilename);
-            }
+            $pdf->Output('I', $encodedFilename);
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="generated_form.pdf"',
         ]);
     }
 
-    public function generate_yinyorm_student($user_id, $document, $request_type){
+    public function generate_yinyorm_student($user_id, $document){
 
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
@@ -279,7 +275,7 @@ class GenerateFile extends Controller
         $address['post_code'] = iconv('UTF-8', 'cp874', $address['post_code']);
 
         // Create a StreamedResponse
-        return new StreamedResponse(function () use ($borrower, $address, $document, $request_type) {
+        return new StreamedResponse(function () use ($borrower, $address, $document) {
             // Initialize the PDF
             $pdf = new Fpdi();
             
@@ -375,18 +371,16 @@ class GenerateFile extends Controller
             $filename = 'หนังสือยินยอมให้เปิดเผยข้อมูลผู้กู้.pdf';
             // Encode the filename
             $encodedFilename = rawurlencode($filename);
-            if($request_type == "download"){
-                $pdf->Output('D', $encodedFilename);
-            }else{
-                $pdf->Output('I', $encodedFilename);
-            }
+            
+            $pdf->Output('I', $encodedFilename);
+
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="generated_form.pdf"',
         ]);
     }
 
-    public function generate_yinyorm_parent($parent_id, $user_id, $document, $request_type){
+    public function generate_yinyorm_parent($parent_id, $user_id, $document){
         $parent = Parents::where('id',$parent_id)
             ->select('prefix','firstname','lastname','email','birthday','citizen_id','phone','address_id','borrower_id')
             ->first();
@@ -418,7 +412,7 @@ class GenerateFile extends Controller
         $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
 
         // Create a StreamedResponse
-        return new StreamedResponse(function () use ($parent, $address, $borrower, $document, $request_type){
+        return new StreamedResponse(function () use ($parent, $address, $borrower, $document){
             // Initialize the PDF
             $pdf = new Fpdi();
             
@@ -520,11 +514,8 @@ class GenerateFile extends Controller
             $filename = 'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง'.'.pdf';
             // Encode the filename
             $encodedFilename = rawurlencode($filename);
-            if($request_type == "download"){
-                $pdf->Output('D', $encodedFilename);
-            }else{
-                $pdf->Output('I', $encodedFilename);
-            }
+            $pdf->Output('I', $encodedFilename);
+
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="generated_form.pdf"',

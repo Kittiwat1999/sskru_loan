@@ -58,7 +58,7 @@ class DownloadDocumentController extends Controller
         return view('borrower.recheck_document',compact('document'));
     }
 
-    public function response_file($document_id,$request_type){
+    public function response_file($document_id){
         $user_id = Session::get('user_id','1');
         $borrower_id = Session::get('borrower_id','1');
         $document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
@@ -72,11 +72,11 @@ class DownloadDocumentController extends Controller
 
             switch ($document['id']) {
                 case '1':
-                    $response = $generate->generate_yinyorm_student($user_id, $document, $request_type);
+                    $response = $generate->generate_yinyorm_student($user_id, $document);
                     return $response;
                     break;
                 case '3':
-                    $response = $generate->generate_rabrongraidai($user_id, $document, $request_type);
+                    $response = $generate->generate_rabrongraidai($user_id, $document);
                     return $response;
                     break;
                 default:
@@ -87,18 +87,9 @@ class DownloadDocumentController extends Controller
             
                     $fileContent = File::get($filePath);
                     $mimeType = File::mimeType($filePath);
-            
-                    if($request_type == 'download'){
-                        // Create a response with the file's content and set the appropriate headers
-                        return Response::make($fileContent, 200, [
-                            'Content-Type' => $mimeType,
-                            'Content-Disposition' => 'attachment; filename="' . $document['child_document_title'] .'.'. $document['file_type'] . '"',
-                        ]);
-                    }else{
-                        $response = Response::make($fileContent, 200);
-                        $response->header("Content-Type", $mimeType);
-                        return $response;
-                    }
+                    $response = Response::make($fileContent, 200);
+                    $response->header("Content-Type", $mimeType);
+                    return $response;
             }
 
         }else{
@@ -109,18 +100,9 @@ class DownloadDocumentController extends Controller
     
             $fileContent = File::get($filePath);
             $mimeType = File::mimeType($filePath);
-            if($request_type == 'download'){
-                // Create a response with the file's content and set the appropriate headers
-                return Response::make($fileContent, 200, [
-                    'Content-Type' => $mimeType,
-                    'Content-Disposition' => 'attachment; filename="' . $document['child_document_title'] .'.'. $document['file_type'] . '"',
-                ]);
-            }else{
-                $response = Response::make($fileContent, 200);
-                $response->header("Content-Type", $mimeType);
-                return $response;
-            }
-    
+            $response = Response::make($fileContent, 200);
+            $response->header("Content-Type", $mimeType);
+            return $response;    
         }
     }
 
@@ -130,7 +112,7 @@ class DownloadDocumentController extends Controller
         return view('borrower.recheck_parent_document',compact('document','parent_id'));
     }
 
-    public function response_parent_file($parent_id, $request_type){
+    public function response_parent_file($parent_id){
         $user_id = Session::get('user_id','1');
         $document_id = 2; //id ของหนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง
         $document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
@@ -141,7 +123,7 @@ class DownloadDocumentController extends Controller
 
         if($document['generate_file']){
             $generate = new GenerateFile();
-            $response = $generate->generate_yinyorm_parent($parent_id, $user_id, $document, $request_type);
+            $response = $generate->generate_yinyorm_parent($parent_id, $user_id, $document);
                 return $response;
 
         }else{
@@ -152,17 +134,9 @@ class DownloadDocumentController extends Controller
     
             $fileContent = File::get($filePath);
             $mimeType = File::mimeType($filePath);
-            if($request_type == 'download'){
-                // Create a response with the file's content and set the appropriate headers
-                return Response::make($fileContent, 200, [
-                    'Content-Type' => $mimeType,
-                    'Content-Disposition' => 'attachment; filename="' . $document['child_document_title'] .'.'. $document['file_type'] . '"',
-                ]);
-            }else{
-                $response = Response::make($fileContent, 200);
-                $response->header("Content-Type", $mimeType);
-                return $response;
-            }
+            $response = Response::make($fileContent, 200);
+            $response->header("Content-Type", $mimeType);
+            return $response;
         }
     }
 }
