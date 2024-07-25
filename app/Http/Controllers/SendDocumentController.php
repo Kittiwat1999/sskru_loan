@@ -13,6 +13,8 @@ use iio\libmergepdf\Pages;
 use App\Models\Documents;
 use App\Models\DocStructure;
 use App\Models\ChildDocuments;
+use App\Models\Config;
+use App\Models\UsefulActivity;
 
 class SendDocumentController extends Controller
 {
@@ -36,6 +38,9 @@ class SendDocumentController extends Controller
         $borrower_birthday = Borrower::where('user_id',$user_id)->value('birthday');
         $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
         $borrower_age = $parse_birthday->age;
+        $useful_activities = UsefulActivity::where('user_id',$user_id)->get();
+        $useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
+        $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
         if($document == null){
             return redirect()->back()->withErrors('ไม่น่ารักเลยนะ');
         }
@@ -55,7 +60,7 @@ class SendDocumentController extends Controller
             // dd($child_document['addon_documents']);
         }
 
-        return view('borrower.upload_document',compact('document','child_documents','borrower_age'));
+        return view('borrower.upload_document',compact('document','child_documents','borrower_age','useful_activities','useful_activities_hours_sum','useful_activities_hours'));
     }
 
     public function mergeExampleFile($child_document_id, $isminors){

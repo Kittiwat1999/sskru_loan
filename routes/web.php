@@ -337,7 +337,10 @@ Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
 Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'upload_document_page'])->name('borrower.upload.document.page');
 
 Route::get('/borrower/usefulactivities/get/{document_id}',[UsefulActivityController::class,'getUsefulActivities']);
-
+Route::post('/borrower/usefulactivity/store/{document_id}',[UsefulActivityController::class,'storeUsefulActivity'])->name('borrower.store.usefulactivity');
+Route::put('/borrower/usefulactivity/edit/{useful_activity_id}',[UsefulActivityController::class,'editUsefulActivity'])->name('borrower.edit.usefulactivity');
+Route::delete('/borrower/usefulactivity/delete/{useful_activity_id}',[UsefulActivityController::class,'deleteUsefulActivity'])->name('borrower.delete.usefulactivity');
+Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}/{document_id}',[UsefulActivityController::class,'showUsefulActivityFile'])->name('borrower.show.usefulactivity.file');
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 

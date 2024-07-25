@@ -150,19 +150,18 @@
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        @php
-                            $i = 1;
-                            $hour_count = 0;
-                        @endphp
+                            @foreach ($useful_activities as $useful_activity)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="text-center"></td>
-                                <td></td>
+                                <td>{{$useful_activity->activity_name}}</td>
+                                <td>{{$useful_activity->activity_location}}</td>
+                                <td>
+                                    {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $useful_activity->start_date)->format('d-m-Y H:i')}} <br>
+                                    {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $useful_activity->end_date)->format('d-m-Y H:i')}}
+                                </td>
+                                <td class="text-center">{{$useful_activity->hour_count}}</td>
+                                <td>{{$useful_activity->description}} </td>
                                 <td class="text-center">
-                                    {{-- <a class="btn btn-danger" href="{{url('/borrower/show_actv_file',['filepath' => $activity->display_path])}}" rel="noopener noreferrer"><i class="bi bi-filetype-pdf" ></i></a> --}}
-                                    <button  class="btn btn-success" onclick="openFile('')"><i class="bi bi-journal-bookmark"></i></button>
+                                    <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $document->id])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                 </td>
                                 <td class="text-center">
                                     <div class="dropdown">
@@ -171,8 +170,8 @@
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
-                                                <button type="button" class="dropdown-item text-warning" onclick="fetchActivitiesData()">
-                                                แก้ใข <i class="bi bi-pencil"></i>
+                                                <button type="button" class="dropdown-item text-warning" onclick="openEditUsefulActivityModal({{$useful_activity}})">
+                                                    แก้ใข <i class="bi bi-pencil"></i>
                                                 </button>
                                             </li>
                                             <li>
@@ -192,14 +191,14 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                คุณต้องการลบ <span class="text-danger"></span> หรือไม่
+                                                คุณต้องการลบ <span class="text-danger">{{$useful_activity->activity_name}}</span> หรือไม่
                                             </div>
                                             <div class="modal-footer">
-                                                <form action="" method="post">
+                                                <form action="{{route('borrower.delete.usefulactivity',['useful_activity_id' => $useful_activity->id])}}" method="post">
                                                     @csrf
-                                                    <input type="hidden" name="activity_id" value="">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ไม่</button>
-                                                    <button type="submit" class="btn btn-danger">ลบกิจกรรมนี้</button>
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-light">ลบกิจกรรมนี้</button>
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ไม่ลบ</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -208,9 +207,7 @@
                                 </td>
                                 
                             </tr>
-                            {{-- @php --}}
-                                {{-- $hour_count += (int)$activity->hour_count --}}
-                            {{-- @endphp --}}
+                            @endforeach
                     </tbody>
 
                     <tfoot>
@@ -223,7 +220,7 @@
                                     </button>
                                 </div>
                             </td>
-                            <td class="text-center"></td>
+                            <td class="text-center">{{$useful_activities_hours_sum}}/{{$useful_activities_hours}}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -233,23 +230,23 @@
             </div>
              <!-- add activitiy Modal -->
             <div class="modal fade" id="add-activitiy-modal" tabindex="-1" aria-labelledby="add-activitiy-modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                     <h5 class="modal-title" id="add-activitiy-modalLabel">เพิ่มข้อมูลกิจกรรม</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="post" class="row" enctype="multipart/form-data">
+                        <form action="{{route('borrower.store.usefulactivity',['document_id' => $document->id])}}" method="post" class="row" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="year" value="" required>
+
                             <div class="col-sm-12 mb-3">
-                                <label class="form-label" for="project_name">ชื่อโครงการ/ กิจกรรมที่เป็นประโยชน์ต่อสังคมหรือสาธารณะ</label>
-                                <input class="form-control" type="text" name="project_name" id="project_name">
+                                <label class="form-label" for="activity_name">ชื่อโครงการ/ กิจกรรมที่เป็นประโยชน์ต่อสังคมหรือสาธารณะ</label>
+                                <input class="form-control" type="text" name="activity_name" id="activity_name">
                             </div>
                             <div class="col-sm-12 mb-3">
-                                <label class="form-label" for="project_location">สถานที่ดำเนินโครงการ</label>
-                                <input class="form-control" type="text" name="project_location" id="project_location">
+                                <label class="form-label" for="activity_location">สถานที่ดำเนินโครงการ</label>
+                                <input class="form-control" type="text" name="activity_location" id="activity_location">
                             </div>
                             <div class="row col-sm-12 mb-3">
                                 <div class="col-md-6 mb-3">
@@ -284,8 +281,8 @@
                                 <input class="form-control" type="text" name="description" id="description">
                             </div>
                             <div class="col-sm-12 mb-3">
-                                <label class="form-label" for="file">แนบไฟล์หลักฐาน</label>
-                                <input class="form-control" type="file" name="file" id="file" accept=".png, .jpg, .jpeg, .pdf">
+                                <label class="form-label" for="useful_activity_file">แนบไฟล์หลักฐาน</label>
+                                <input class="form-control" type="file" name="useful_activity_file" id="useful_activity_file" accept=".png, .jpg, .jpeg, .pdf">
                             </div>
                         {{-- </form> ควรจะปิดตรงนี้แต่อยากได้ button modal footer เป็น submit เลยเอาไปไว้ข้างล่าง--}}
                     </div>
@@ -298,6 +295,16 @@
                 </div>
             </div>
             {{-- end add activitiy Modal --}}
+
+            {{-- edit useful activity modal --}}
+            <div class="modal fade" id="editUsefulActivity" tabindex="-1" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                    <div class="modal-content" id="editUsefulActivityContent">
+                        
+                    </div>
+                </div>
+            </div>
+            {{-- end edit useful activity modal --}}
         </div>
     </div>
     @endif
@@ -307,6 +314,91 @@
 
 @section('script')
 <script>
+    var document_id = @json($document->id);
+    function openEditUsefulActivityModal(useful_activity){
+        const modal = new bootstrap.Modal(document.getElementById('editUsefulActivity'));
+        // console.log(useful_activity);
+        const modalcontent = document.getElementById('editUsefulActivityContent');
+        modalcontent.innerHTML = '';
+        modalcontent.innerHTML = `
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add-activitiy-modalLabel">แก้ใขข้อมูลกิจกรรม ${useful_activity.activity_name}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-useful-activity" action="{{route('borrower.edit.usefulactivity',['useful_activity_id' => 'PLACEHOLDER_USEFUL_ACTIVITY_ID'])}}" method="post" class="row" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="col-sm-12 mb-3">
+                            <label class="form-label" for="edit_activity_name">ชื่อโครงการ/ กิจกรรมที่เป็นประโยชน์ต่อสังคมหรือสาธารณะ</label>
+                            <input class="form-control" type="text" name="activity_name" id="edit_activity_name" value="${useful_activity.activity_name}">
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label class="form-label" for="edit_activity_location">สถานที่ดำเนินโครงการ</label>
+                            <input class="form-control" type="text" name="activity_location" id="edit_activity_location" value="${useful_activity.activity_location}">
+                        </div>
+                        <div class="row col-sm-12 mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="start-date" class="form-label text-secondary">วันที่เริ่ม</label>
+                                <div class="input-group date" id="">
+                                    <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                    <input type="text" name="start_date" id="edit-start-date" class="form-control" value="${convertIsoToCustomFormat(useful_activity.start_date)}"
+                                    placeholder="วว/ดด/ปปปป ชม"/>
+                                    <div class="invalid-feedback">
+                                        กรุณากรอกวันเกิด
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="end-date" class="form-label text-secondary">ถึงวันที่</label>
+                                <div class="input-group date" id="">
+                                    <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                    <input type="text" name="end_date" id="edit-end-date" class="form-control" value="${convertIsoToCustomFormat(useful_activity.end_date)}"
+                                    placeholder="วว/ดด/ปปปป ชม"/>
+                                    <div class="invalid-feedback">
+                                        กรุณากรอกวันเกิด
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label class="form-label" for="edit_hour_count">จำนวนชั่วโมงรวม</label>
+                            <input class="form-control" type="number" name="hour_count" id="edit_hour_count" value="${useful_activity.hour_count}">
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label class="form-label" for="edit_description">ลักษณะของกิจกรรม</label>
+                            <input class="form-control" type="text" name="description" id="edit_description" value="${useful_activity.description}">
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label class="form-label" for="edit_useful_activity_file">แนบไฟล์หลักฐาน</label>
+                            <input class="form-control" type="file" name="useful_activity_file" id="edit_useful_activity_file" accept=".png, .jpg, .jpeg, .pdf">
+                        </div>
+                    </form> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm('edit-useful-activity')">บันทึก</button>
+                </div>
+   
+        `;
+        modalcontent.innerHTML = modalcontent.innerHTML.replace('PLACEHOLDER_USEFUL_ACTIVITY_ID', useful_activity.id);;
+        modal.show();
+
+        $("#edit-start-date").datetimepicker({
+            format: 'd-m-Y H:i', 
+            timepicker: true, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+
+        $("#edit-end-date").datetimepicker({
+            format: 'd-m-Y H:i', 
+            timepicker: true, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+    }
+
     $("#start-date").datetimepicker({
         format: 'd-m-Y H:i', 
         timepicker: true, 
@@ -321,5 +413,20 @@
         closeOnDateSelect: true,
     });
 
+    function convertIsoToCustomFormat(isoDate) {
+        const date = new Date(isoDate);
+        
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${day}-${month}-${year} ${hours}:${minutes}`;
+    }
+
+    function submitForm(form_id){
+        document.getElementById(form_id).submit();
+    }
 </script>
 @endsection

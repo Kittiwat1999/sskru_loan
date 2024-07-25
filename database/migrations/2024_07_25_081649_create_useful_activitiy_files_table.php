@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\UsefulActivities;
+use App\Models\UsefulActivity;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,9 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('useful_activitiy_files', function (Blueprint $table) {
+        Schema::create('useful_activity_files', function (Blueprint $table) {
             $table->id();
-            $table->integer('addon_document_id')->foreignIdFor(UsefulActivities::class);
+            $table->integer('useful_activity_id')->foreignIdFor(UsefulActivity::class);
             $table->string('description')->default('-');
             $table->string('original_name');
             $table->string('file_path');

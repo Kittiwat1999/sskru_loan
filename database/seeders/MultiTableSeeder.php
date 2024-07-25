@@ -247,7 +247,7 @@ class MultiTableSeeder extends Seeder
             ['variable'=>'addon_document_files_path','value'=>'add_on_document_files'],
             ['variable'=>'addon_document_example_files_path','value'=>'addon_document_example_files'],
             ['variable'=>'useful_activity_file_path','value'=>'useful_activitiy_files'],
-            ['variable'=>'marital_file_path','value'=>'app/public/marital'],
+            ['variable'=>'marital_file_path','value'=>'marital'],
         ]);
     }
     private function seedDocuments(){ 
