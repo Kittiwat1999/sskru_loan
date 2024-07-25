@@ -603,17 +603,17 @@
                                 @php 
                                     $file_extension = last(explode('.',$marital_status->file_name));
                                 @endphp
-                                <a class="my-2" href="{{route('marital.status.file',['student_id' => $student_id,'file_name'=>$marital_status->file_name])}}" target="_blank">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
+                                <a class="my-2" href="{{route('marital.status.file',['file_name'=>$marital_status->file_name])}}" target="_blank">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
                                 @if($file_extension == 'pdf')
                                     <div class="row my-2 isdisplay">
                                         <div class="col-md-12">
-                                            <iframe src="{{route('marital.status.file',['student_id' => $student_id,'file_name'=>$marital_status->file_name])}}" frameborder="0" class="w-100" height="600"></iframe>
+                                            <iframe src="{{route('marital.status.file',['file_name'=>$marital_status->file_name])}}" frameborder="0" class="w-100" height="600"></iframe>
                                         </div>
                                     </div>
                                 @else
                                     <div class="row my-2 isdisplay">
                                         <div class="col-md-12">
-                                            <img src="{{route('marital.status.file',['student_id' => $student_id,'file_name'=>$marital_status->file_name])}}" alt="" class="w-100">
+                                            <img src="{{route('marital.status.file',['file_name'=>$marital_status->file_name])}}" alt="" class="w-100">
                                         </div>
                                     </div>    
                                 @endif

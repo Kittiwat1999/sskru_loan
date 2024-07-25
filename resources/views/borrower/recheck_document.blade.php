@@ -23,39 +23,21 @@ preview document
 @section('script')
 <script>
     function downloadPDF() {
-        // Get the iframe element
         var iframe = document.getElementById('pdfIframe');
-        
-        // Get the src attribute (the PDF file URL)
         var pdfURL = iframe.src;
-        
-        // Create an anchor element
         var downloadLink = document.createElement('a');
-        
-        // Set the href to the PDF URL
+
         downloadLink.href = pdfURL;
-        
-        // Set the download attribute to suggest a filename
         downloadLink.download = 'downloaded_file.pdf';
-        
-        // Append the anchor to the body
         document.body.appendChild(downloadLink);
-        
-        // Programmatically click the anchor
         downloadLink.click();
-        
-        // Remove the anchor from the document
         document.body.removeChild(downloadLink);
     }
 
     function openPDFInNewTab() {
-        // Get the iframe element
         var iframe = document.getElementById('pdfIframe');
-        
-        // Get the src attribute (the PDF file URL)
         var pdfURL = iframe.src;
         
-        // Open the PDF URL in a new tab
         window.open(pdfURL, '_blank');
     }
 </script>

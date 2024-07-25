@@ -246,12 +246,13 @@ class MultiTableSeeder extends Seeder
             ['variable'=>'child_document_example_files_path','value'=>'child_document_example_files'],
             ['variable'=>'addon_document_files_path','value'=>'add_on_document_files'],
             ['variable'=>'addon_document_example_files_path','value'=>'addon_document_example_files'],
+            ['variable'=>'useful_activity_file_path','value'=>'useful_activitiy_files'],
             ['variable'=>'marital_file_path','value'=>'app/public/marital'],
         ]);
     }
     private function seedDocuments(){ 
         DB::table('documents')->insert([
-            ['doctype_id'=>'2','last_access'=>'1','year'=>'2566','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'0','start_date'=>'2567-02-19','end_date'=>'2567-03-01'],
+            ['doctype_id'=>'2','last_access'=>'1','year'=>'2566','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'0','start_date'=>'2567-02-19','end_date'=>'2567-09-01'],
         ]);
     }
 

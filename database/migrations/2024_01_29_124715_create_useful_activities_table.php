@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Borrower;
 use App\Models\Documents;
+use App\Models\Users;
 
 return new class extends Migration
 {
@@ -15,18 +15,14 @@ return new class extends Migration
     {
         Schema::create('useful_activities', function (Blueprint $table) {
             $table->id();
-            $table->integer('borrower_id')->foreignIdFor(Borrower::class);
+            $table->integer('user_id')->foreignIdFor(Users::class);
             $table->integer('document_id')->foreignIdFor(Documents::class);
             $table->string('activity_name');
             $table->string('activity_location');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->string('time');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->string('hour_count');
             $table->string('description');
-            $table->string('file_path');
-            $table->string('file_name');
-            $table->string('file_type');
             $table->timestamps();
         });
     }

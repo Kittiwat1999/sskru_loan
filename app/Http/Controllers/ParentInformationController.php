@@ -53,9 +53,10 @@ class ParentInformationController extends Controller
         return $response;
     }
 
-    public function display_marital_status_file($student_id,$file_name){
+    public function display_marital_status_file($file_name){
+        $user_id = Session::get('user_id','1');
         $marital_status_path = Config::where('variable','marital_file_path')->value('value');
-        $reqsonse = $this->displayFile($marital_status_path.'/'.$student_id,$file_name);
+        $reqsonse = $this->displayFile($marital_status_path.'/'.$user_id,$file_name);
         return $reqsonse;
     }
 
@@ -327,7 +328,7 @@ class ParentInformationController extends Controller
                 $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .jpg .png .pdf เท่านั้น'];
                 return $error;
             }
-            $new_file_name = $this->storeFile($marital_status_path.'/'.$borrower['student_id'],$file);
+            $new_file_name = $this->storeFile($marital_status_path.'/'.$user_id,$file);
             $marital_status = ['status'=>'หย่า','file_name'=>$new_file_name,];
         }
 
@@ -592,7 +593,7 @@ class ParentInformationController extends Controller
 
         //check old status is not equal new status and old is หย่า
         if($request->marital_status != $marital_db->status && ($marital_db->status == "หย่า")){
-            $this->deleteFile($marital_status_path.'/'.$borrower->student_id, $marital_db->file_name);
+            $this->deleteFile($marital_status_path.'/'.$user_id, $marital_db->file_name);
         }
         //marital status
         if($request->marital_status == "อยู่ด้วยกัน"){
@@ -605,7 +606,7 @@ class ParentInformationController extends Controller
 
             //check if have new file delete old file
             if($request->file('devorce_file') != null){
-                $this->deleteFile($marital_status_path.'/'.$borrower->student_id, $marital_db->file_name);
+                $this->deleteFile($marital_status_path.'/'.$user_id, $marital_db->file_name);
             }
             
             $file_validator = Validator::make($request->all(), [
@@ -629,7 +630,7 @@ class ParentInformationController extends Controller
                 return $error;
             }
 
-            $file_name = $this->storeFile($marital_status_path.'/'.$borrower->student_id, $file);
+            $file_name = $this->storeFile($marital_status_path.'/'.$user_id, $file);
             $marital_status = ['status'=>'หย่า','file_name'=>$file_name];
         }
         $parent1->save();

@@ -129,9 +129,197 @@
         </div>
     </div>
     @endforeach
+
+    {{-- กิจกรรมจิตอาสา --}}
+    @if($document->need_useful_activity)
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">กิจกรรมจิตอาสา</h5>
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col-2">ชื่อโครงการ</th>
+                            <th scope="col-2">สถานที่</th>
+                            <th scope="col-2">วัน/เดือน/ปี</th>
+                            <th scope="col-2">จำนวนชั่วโมง</th>
+                            <th scope="col-2">ลักษณะกิจกรรม</th>
+                            <th scope="col-2">ไฟล์หลักฐาน</th>
+                            <th scope="col-2" class="text-center">แก้ใข/ลบ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        @php
+                            $i = 1;
+                            $hour_count = 0;
+                        @endphp
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center">
+                                    {{-- <a class="btn btn-danger" href="{{url('/borrower/show_actv_file',['filepath' => $activity->display_path])}}" rel="noopener noreferrer"><i class="bi bi-filetype-pdf" ></i></a> --}}
+                                    <button  class="btn btn-success" onclick="openFile('')"><i class="bi bi-journal-bookmark"></i></button>
+                                </td>
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <a class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li>
+                                                <button type="button" class="dropdown-item text-warning" onclick="fetchActivitiesData()">
+                                                แก้ใข <i class="bi bi-pencil"></i>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                                                    ลบ <i class="bi bi-trash"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="delete-modalLabel">ลบกิจกรรม</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                คุณต้องการลบ <span class="text-danger"></span> หรือไม่
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="" method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="activity_id" value="">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ไม่</button>
+                                                    <button type="submit" class="btn btn-danger">ลบกิจกรรมนี้</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                            {{-- @php --}}
+                                {{-- $hour_count += (int)$activity->hour_count --}}
+                            {{-- @endphp --}}
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <div>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-activitiy-modal">
+                                        <i class="bi bi-plus"></i> เพิ่มข้อมูล
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-center"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+             <!-- add activitiy Modal -->
+            <div class="modal fade" id="add-activitiy-modal" tabindex="-1" aria-labelledby="add-activitiy-modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="add-activitiy-modalLabel">เพิ่มข้อมูลกิจกรรม</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" class="row" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="year" value="" required>
+                            <div class="col-sm-12 mb-3">
+                                <label class="form-label" for="project_name">ชื่อโครงการ/ กิจกรรมที่เป็นประโยชน์ต่อสังคมหรือสาธารณะ</label>
+                                <input class="form-control" type="text" name="project_name" id="project_name">
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label class="form-label" for="project_location">สถานที่ดำเนินโครงการ</label>
+                                <input class="form-control" type="text" name="project_location" id="project_location">
+                            </div>
+                            <div class="row col-sm-12 mb-3">
+                                <div class="col-md-6 mb-3">
+                                    <label for="start-date" class="form-label text-secondary">วันที่เริ่ม</label>
+                                    <div class="input-group date" id="">
+                                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                        <input type="text" name="start_date" id="start-date" class="form-control"
+                                        placeholder="วว/ดด/ปปปป ชม"/>
+                                        <div class="invalid-feedback">
+                                            กรุณากรอกวันเกิด
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="end-date" class="form-label text-secondary">ถึงวันที่</label>
+                                    <div class="input-group date" id="">
+                                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                        <input type="text" name="end_date" id="end-date" class="form-control"
+                                        placeholder="วว/ดด/ปปปป ชม"/>
+                                        <div class="invalid-feedback">
+                                            กรุณากรอกวันเกิด
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label class="form-label" for="hour_count">จำนวนชั่วโมงรวม</label>
+                                <input class="form-control" type="number" name="hour_count" id="hour_count">
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label class="form-label" for="description">ลักษณะของกิจกรรม</label>
+                                <input class="form-control" type="text" name="description" id="description">
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label class="form-label" for="file">แนบไฟล์หลักฐาน</label>
+                                <input class="form-control" type="file" name="file" id="file" accept=".png, .jpg, .jpeg, .pdf">
+                            </div>
+                        {{-- </form> ควรจะปิดตรงนี้แต่อยากได้ button modal footer เป็น submit เลยเอาไปไว้ข้างล่าง--}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                    </div>
+                        </form> 
+                </div>
+                </div>
+            </div>
+            {{-- end add activitiy Modal --}}
+        </div>
+    </div>
+    @endif
+    {{-- end กิจกรรมจิตอาสา --}}
 </section>
 @endsection
 
 @section('script')
-<script></script>
+<script>
+    $("#start-date").datetimepicker({
+        format: 'd-m-Y H:i', 
+        timepicker: true, 
+        yearOffset: 543, 
+        closeOnDateSelect: true,
+    });
+
+    $("#end-date").datetimepicker({
+        format: 'd-m-Y H:i', 
+        timepicker: true, 
+        yearOffset: 543, 
+        closeOnDateSelect: true,
+    });
+
+</script>
 @endsection

@@ -17,6 +17,7 @@ use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetpasswordController;
+use App\Http\Controllers\UsefulActivityController;
 use App\Http\Controllers\UsersProfileController;
 use App\Http\Requests\borrowerInformationValidationRequest;
 use App\Models\OldLoanRequest;
@@ -282,7 +283,7 @@ Route::get('/borrower/input/parent/information',[ParentInformationController::cl
 Route::post('/borrower/store/parent/information',[ParentInformationController::class,'borrower_store_parent_information'])->name('borrower.store.parent.information');
 Route::get('/borrower/edit/parent/information/page',[ParentInformationController::class,'borrower_edit_parent_information_page'])->name('borrower.edit.parent.information.page');
 Route::put('/borrower/edit/parent/information',[ParentInformationController::class,'borrower_edit_parent_information'])->name('borrower.edit.parent.information');
-Route::get('/borrower/information/marital_file/{student_id}/{file_name}',[ParentInformationController::class,'display_marital_status_file'])->name('marital.status.file');
+Route::get('/borrower/information/marital_file/{file_name}',[ParentInformationController::class,'display_marital_status_file'])->name('marital.status.file');
 
 Route::get('/borrower/input/main_parent/information',[MainParentInfomationController::class,'borrower_input_main_parent_information'])->name('borrower.input.main_parent.information');
 Route::post('/borrower/store/main_parent/information',[MainParentInfomationController::class,'borrower_store_main_parent_information'])->name('borrower.store.main_parent.information');
@@ -334,6 +335,9 @@ Route::get('/login_teacher',function () {
 
 Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
 Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'upload_document_page'])->name('borrower.upload.document.page');
+
+Route::get('/borrower/usefulactivities/get/{document_id}',[UsefulActivityController::class,'getUsefulActivities']);
+
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 
