@@ -95,7 +95,7 @@
                 <div class="col-md-12 row my-2">
                     <label class="col-sm-2 col-form-label text-secondary" for="component-file">ตัวอย่างเอกสาร</label>
                     <div class="col-sm-10">
-                        <a href="http://" target="_blank" rel="noopener noreferrer" class="btn btn-outline-danger w-100">คลิกเพื่อดูไฟล์ตัวอย่าง</a>
+                        <a href="{{route('borrower.get.examplefile',['child_document_id' => $child_document->id, 'file_for' => $borrower_age > 20 ? 'everyone' : 'minors' ])}}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-danger w-100">คลิกเพื่อดูไฟล์ตัวอย่าง</a>
                     </div>
                 </div>
             </div>

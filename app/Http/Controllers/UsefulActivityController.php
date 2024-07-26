@@ -55,13 +55,6 @@ class UsefulActivityController extends Controller
         $reqsonse = $this->displayFile($useful_activity_file_path .'/'.$document_id. '/' . $user_id, $useful_activity_file->file_name);
         return $reqsonse;
     }
-    // public function getUsefulActivities($document_id){
-    //     $user_id = Session::get('user_id','1');
-    //     $useful_activities = UsefulActivity::join('useful_activity_files')
-    //     where('user_id',$user_id)->where('document_id',$document_id)->get();
-    //     $useful_activities_hour_count = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->count('hour_count') ?? 0;
-    //     return json_encode($useful_activities_hour_count);
-    // }
 
     public function storeUsefulActivity($document_id, UsefulActivityRequest $request){
         $user_id = Session::get('user_id','1');
@@ -137,7 +130,7 @@ class UsefulActivityController extends Controller
             $useful_activity_file['file_path'] = $useful_activity_file_path;
             $useful_activity_file['file_name'] = $file_name;
             $useful_activity_file['file_type'] = last(explode('.', $file_name));
-            $useful_activity_file['full_path'] = $useful_activity_file_path .'/'.$useful_activity['document_id']. '/' . $user_id.'/'.$file_name;
+            $useful_activity_file['full_path'] = $useful_activity_file_path .'/'. $useful_activity['document_id']. '/' . $user_id.'/'.$file_name;
             $useful_activity_file['upload_date'] = date('Y-m-d');
             $useful_activity_file->save();
     
@@ -154,7 +147,7 @@ class UsefulActivityController extends Controller
         $useful_activity_name = $useful_activity['activity_name'];
         $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
         $useful_activity_file_path = Config::where('variable','useful_activity_file_path')->value('value');
-        $this->deleteFile($useful_activity_file_path .'/'.$useful_activity['document_id']. '/' . $user_id, $useful_activity_file['file_name']);
+        $this->deleteFile($useful_activity_file_path .'/'. $useful_activity['document_id']. '/' . $user_id, $useful_activity_file['file_name']);
         $useful_activity_file->delete();
         $useful_activity->delete();
 

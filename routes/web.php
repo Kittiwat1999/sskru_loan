@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\BorrowerController;
 use App\Http\Controllers\AdminManageDocumentsController;
-use App\Http\Controllers\OldLoanRequestController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\AuthenticationController;
@@ -272,30 +270,23 @@ Route::get('/borrower/index', function () {
 });
 
 Route::get('/borrower/information/information_list',[BorrowerInforamtionController::class,'index']);
-
+//borrower information
 Route::get('/borrower/input/information',[BorrowerInforamtionController::class,'borrower_input_information'])->name('borrower.input.information');
 Route::get('/borrower/edit/information/page',[BorrowerInforamtionController::class,'borrower_edit_information_page'])->name('borrower.edit.information.page');
 Route::put('/borrower/edit/information',[BorrowerInforamtionController::class,'borrower_edit_information'])->name('borrower.edit.information');
 Route::post('/borrower/store/information/borrower',[BorrowerInforamtionController::class,'borrower_store_information'])->name('borrower.store.information');
 Route::get('/borrower/major_by_faculty/{faculty}',[BorrowerInforamtionController::class,'getMajorByFaculty']);
-
+//parent information
 Route::get('/borrower/input/parent/information',[ParentInformationController::class,'borrower_input_parent_information'])->name('borrower.input.parent.information');
 Route::post('/borrower/store/parent/information',[ParentInformationController::class,'borrower_store_parent_information'])->name('borrower.store.parent.information');
 Route::get('/borrower/edit/parent/information/page',[ParentInformationController::class,'borrower_edit_parent_information_page'])->name('borrower.edit.parent.information.page');
 Route::put('/borrower/edit/parent/information',[ParentInformationController::class,'borrower_edit_parent_information'])->name('borrower.edit.parent.information');
 Route::get('/borrower/information/marital_file/{file_name}',[ParentInformationController::class,'display_marital_status_file'])->name('marital.status.file');
-
+//3nd parent or select main parent
 Route::get('/borrower/input/main_parent/information',[MainParentInfomationController::class,'borrower_input_main_parent_information'])->name('borrower.input.main_parent.information');
 Route::post('/borrower/store/main_parent/information',[MainParentInfomationController::class,'borrower_store_main_parent_information'])->name('borrower.store.main_parent.information');
 Route::get('/borrower/edit/main_parent/information/page',[MainParentInfomationController::class,'borrower_edit_main_parent_information_page'])->name('borrower.edit.main_parent.information.page');
 Route::put('/borrower/edit/main_parent/information',[MainParentInfomationController::class,'borrower_edit_main_parent_information'])->name('borrower.edit.main_parent.information');
-Route::get('/borrower/information',[BorrowerController::class,'getBorrowerInformation']);
-
-
-
-Route::post('/store_information',[BorrowerController::class,'storeInformation']);
-
-Route::post('/borrower/edit_data',[BorrowerController::class,'borrowerEditdata']);
 
 
 Route::get('/borrower/edit_borrower_information',function () {
@@ -335,8 +326,9 @@ Route::get('/login_teacher',function () {
 
 Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
 Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'upload_document_page'])->name('borrower.upload.document.page');
+Route::get('/borrower/upload_document/get_examplefile/{child_document_id}/{file_for}',[SendDocumentController::class,'mergeExampleFile'])->name('borrower.get.examplefile');
 
-Route::get('/borrower/usefulactivities/get/{document_id}',[UsefulActivityController::class,'getUsefulActivities']);
+//useful activity
 Route::post('/borrower/usefulactivity/store/{document_id}',[UsefulActivityController::class,'storeUsefulActivity'])->name('borrower.store.usefulactivity');
 Route::put('/borrower/usefulactivity/edit/{useful_activity_id}',[UsefulActivityController::class,'editUsefulActivity'])->name('borrower.edit.usefulactivity');
 Route::delete('/borrower/usefulactivity/delete/{useful_activity_id}',[UsefulActivityController::class,'deleteUsefulActivity'])->name('borrower.delete.usefulactivity');
@@ -349,7 +341,6 @@ Route::get('/borrower/download_document/response_document/{document_id}',[Downlo
 
 Route::get('/borrower/download_document/recheck_document/parent/{parent_id}',[DownloadDocumentController::class,'recheck_parent_document'])->name('borrower.recheck.parent.document');
 Route::get('/borrower/download_document/response_document/parent/{parent_id}',[DownloadDocumentController::class,'response_parent_file'])->name('borrower.response.parent.document');
-Route::get('/testGetdata',[BorrowerController::class,'testGetdata']);
 
 Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraidai']);
 Route::get('/generate_yinyorm',[GenerateFile::class,'generate_yinyorm_student']);

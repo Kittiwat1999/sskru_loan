@@ -15,9 +15,39 @@ use App\Models\DocStructure;
 use App\Models\ChildDocuments;
 use App\Models\Config;
 use App\Models\UsefulActivity;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 class SendDocumentController extends Controller
 {
+
+    public function deleteFile($file_path,$file_name){
+        $path = public_path($file_path.'/'.$file_name);
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+    }
+
+    private function storeFile($file_path,$file){
+        $path = public_path($file_path);
+        !file_exists($path) && mkdir($path, 0777, true);
+        $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
+        $file->move($path, $name);
+        return $name;
+    }
+
+    public function displayFile($file_path,$file_name){
+        $path = public_path($file_path.'/'.$file_name);
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    }
+
     public function index(){
         $current_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
         $documents = Documents::join('doc_types','doc_types.id','=','documents.doctype_id')
@@ -63,21 +93,35 @@ class SendDocumentController extends Controller
         return view('borrower.upload_document',compact('document','child_documents','borrower_age','useful_activities','useful_activities_hours_sum','useful_activities_hours'));
     }
 
-    public function mergeExampleFile($child_document_id, $isminors){
-        $child_document_example_files = ChildDocumentExampleFiles::where('child_document_id',$child_document_id)->get();
-        $addon_document_example_files = AddOnDocumentExampleFile::where('child_document_id',$child_document_id)->get();
-        $pdf1 = public_path('pdf/file1.pdf');
-        $pdf2 = public_path('pdf/file2.pdf');
+    public function mergeExampleFile($child_document_id, $file_for){
+        $child_document_example_files = ChildDocumentExampleFiles::where('child_document_id',$child_document_id)->where('file_for', $file_for)->get();
+        $addon_document_example_files = AddOnStructure::join('addon_documents', 'addon_structures.addon_document_id' ,'=', 'addon_documents.id')
+            ->join('addon_document_example_files', 'addon_structures.addon_document_id' ,'=', 'addon_document_example_files.addon_document_id')
+            ->where('addon_structures.child_document_id', $child_document_id)
+            ->select('addon_documents.for_minors','addon_document_example_files.file_name')
+            ->get();
+        
+        $child_document_example_files_path = Config::where('variable','child_document_example_files_path')->value('value');
+        $addon_document_example_files_path = Config::where('variable','addon_document_example_files_path')->value('value');
 
         $merger = new Merger();
-        $merger->addFile($pdf1);
-        $merger->addFile($pdf2);
+
+        foreach ($child_document_example_files as $child_document_example){
+            $file_path = public_path($child_document_example_files_path . '/' .$child_document_example['file_name']);
+            $merger->addFile($file_path);
+        }
+
+        foreach ($addon_document_example_files as $addon_document_example){
+            if($addon_document_example['for_minors'] == ($file_for == 'minors' ? true : false)) continue ;
+            $file_path = public_path($addon_document_example_files_path . '/' .$addon_document_example['file_name']);
+            $merger->addFile($file_path);
+        }
 
         $createdPdf = $merger->merge();
 
-        $outputPath = public_path('pdf/merged.pdf');
-        file_put_contents($outputPath, $createdPdf);
-
-        return response()->download($outputPath);
+        return response($createdPdf, 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="ตัวอย่าง.pdf"')
+                ->header('note', 'Files have been merged');
     }
 }
