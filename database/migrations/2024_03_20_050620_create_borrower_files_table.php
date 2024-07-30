@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Borrower;
+use App\Models\Users;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('borrower_files', function (Blueprint $table) {
             $table->id();
-            $table->integer('borrower_id')->foreignIdFor(Borrower::class);
+            $table->integer('user_id')->foreignIdFor(Users::class);
             $table->string('description');
             $table->string('original_name');
             $table->string('file_path');

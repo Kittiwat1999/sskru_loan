@@ -18,12 +18,13 @@ return new class extends Migration
     {
         Schema::create('borrower_child_documents', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->foreignIdFor(Users::class);
             $table->integer('document_id')->foreignIdFor(Documents::class);
-            $table->integer('child_documnet_id')->foreignIdFor(ChildDocuments::class);
+            $table->integer('child_document_id')->foreignIdFor(ChildDocuments::class);
             $table->integer('borrower_file_id')->foreignIdFor(BorrowerFiles::class);
             $table->integer('checker_id')->foreignIdFor(Users::class)->nullable();
-            $table->integer('education_fee');
-            $table->integer('living_exprenses');
+            $table->integer('education_fee')->default(0);
+            $table->integer('living_exprenses')->default(0);
             $table->string('status');
             $table->timestamps();
         });

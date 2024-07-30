@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use App\Models\Borrower;
 use App\Models\Documents;
-
+use App\Models\Users;
 
 return new class extends Migration
 {
@@ -18,7 +17,7 @@ return new class extends Migration
         Schema::create('borrower_documents', function (Blueprint $table) {
             $table->id();
             $table->integer('document_id')->foreignIdFor(Documents::class);
-            $table->integer('borrower_id')->foreignIdFor(Borrower::class);
+            $table->integer('user_id')->foreignIdFor(Users::class);
             $table->string('status');
             $table->timestamps();
         });

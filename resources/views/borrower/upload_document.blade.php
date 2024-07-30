@@ -5,35 +5,18 @@
 
 @section('content')
 <section>
-    <div class="card">
+    <div class="card mb-3 bg-success">
         <div class="card-body">
             <div class="row mt-3">
-                <div class="col-md-3 mt-2 text-center">
-                    <span class="fw-bold text-dark">คำขอกู้ยืมรายเก่าเลื่อนชั้นปี</span>
+                <div class="col-md-3 mt-2">
+                    <h5 class="fw-bold text-light">{{$document->doctype_title}}</h5>
+                </div>
+                <div class="col-5"></div>
+                <div class="col-md-2 mt-2">
+                    <span class="text-light">ภาคเรียนที่:</span> <span class="text-light fw-bold">{{$document->term}}</span>
                 </div>
                 <div class="col-md-2 mt-2">
-                    <span class="text-secondary">ปีการศึกษา:</span> <span class="text-dark">year</span>
-                </div>
-                <div class="col-md-2 mt-2">
-                    <span class="text-secondary">ภาคเรียนที่:</span> <span class="text-dark">term</span>
-                </div>
-                <div class="col-md-4 mt-2">
-                    <span class="text-secondary">สถานะ: </span>
-                    {{-- @if($loanRequestDocument->status == "nonsend")
-                        <span class="text-warning">รอดำเนินการ....</span>
-                    @elseif($loanRequestDocument->status == "send")
-                        <span class="text-success"><i class="bi bi-check2-circle"></i> ส่งแล้ว </span> <span class="text-warning"> <i class="bi bi-exclamation-triangle-fill text-warning"></i> รอฝ่ายทุนอนุมัติ....</span>
-                    @elseif($loanRequestDocument->status == "approve")
-                        <span class="text-success"><i class="bi bi-check2-circle"></i> ฝ่ายทุนอนุมัติแล้ว</span>
-                    @endif --}}
-                </div>
-                <div class="col-md-3 col-sm-12 mt-2">
-                    <button type="button" class="btn btn-success w-100" id="sendDocBtn" data-bs-toggle="modal" data-bs-target="#sendDocModal" disabled>
-                        ส่งเอกสาร <i class="bi bi-box-arrow-up"></i>
-                      </button>
-                </div>
-                <div class="col-md-9 col-sm-12 mt-3" id="explanation">
-                    
+                    <span class="text-light">ปีการศึกษา:</span> <span class="text-light fw-bold">{{$document->year}}</span>
                 </div>
                 {{-- modal --}}
                 <div>
@@ -67,11 +50,11 @@
         </div>
     </div>
     @foreach($child_documents as $child_document)
-    <div class="card">
+    <div class="card mb-3 {{ !empty($child_document['borrower_child_document']) ? 'border border-2 border-success' : '' }}">
         <div class="card-body">
             <h5 class="card-title">{{$child_document->child_document_title}}</h5>
             <div class="row">
-                <div class="col-md-12 row my-2">
+                <div class="col-md-12 row mb-3 mx-0">
                     <label class="col-sm-2 col-form-label text-secondary" for="component-file">ไฟล์ประกอบไปด้วย</label>
                     <div class="col-sm-10">
                         <ul class="list-group list-borderless">
@@ -92,40 +75,137 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-12 row my-2">
+                <div class="col-md-12 row mb-3 mx-0">
                     <label class="col-sm-2 col-form-label text-secondary" for="component-file">ตัวอย่างเอกสาร</label>
                     <div class="col-sm-10">
-                        <a href="{{route('borrower.get.examplefile',['child_document_id' => $child_document->id, 'file_for' => $borrower_age > 20 ? 'everyone' : 'minors' ])}}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-danger w-100">คลิกเพื่อดูไฟล์ตัวอย่าง</a>
+                        <a href="{{route('borrower.get.examplefile',['child_document_id' => $child_document->id, 'file_for' => $borrower_age > 20 ? 'everyone' : 'minors' ])}}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark w-100">คลิกเพื่อดูไฟล์ตัวอย่าง</a>
                     </div>
                 </div>
             </div>
-            <form action="" method="POST" enctype="multipart/form-data" class="row">
+            <form action="{{route('borrower.upload.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
                 @csrf
-                <input type="hidden" name="year" value="" required>
-                <input type="hidden" name="term" value="" required>
-                <div class="col-md-12 row my-2">
-                    <label class="col-sm-2 col-form-label text-secondary" for="citizen_card_file" >เลือกไฟล์</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" type="file" name="citizen_card_file" id="citizen_card_file" accept=".jpg, .jpeg, .png, .pdf" required onchange="show_submit_button('citizen')">
+                @if($child_document->need_loan_balance)
+                    @if(!isset($child_document->borrower_child_document))
+                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                            <label for="education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)">
+                            </div>
+                        </div>
+                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                            <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพ</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)">
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                            <label for="education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)" 
+                                    @required($child_document->need_loan_balance) 
+                                    @disabled(true)
+                                    value="{{number_format($child_document->borrower_child_document->education_fee)}}">
+                            </div>
+                        </div>
+                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                            <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" 
+                                    @required($child_document->need_loan_balance) 
+                                    @disabled(true)
+                                    value="{{number_format($child_document->borrower_child_document->living_exprenses)}}">
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                @if(empty($child_document['borrower_child_document']))
+                    <div class="col-md-12 row mx-0 px-0">
+                        <label class="col-sm-2 col-form-label text-secondary" for="file-{{$child_document->id}}" >เลือกไฟล์</label>
+                        <div class="col-sm-7 mb-3">
+                            <input class="form-control" type="file" name="document_file" id="file-{{$child_document->id}}" accept=".pdf" required>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <button type="submit" class="btn btn-primary w-100" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
+                        </div>
                     </div>
-                </div>
-                <div class="row col-md-12 mt-4">
-                    <div class="col-md-8">
-                        @if(isset($citizencardfile))
-                        <i class="bi bi-check2-circle text-success fw-bold"></i>
-                        <span class=" text-success fw-bold">อัพโหลดไฟล์แล้ว </span> &emsp; 
-                        <span>
-                            <a href="" target="_blank" rel="ดูไฟล์">
-                                คลิกเพื่อดูไฟล์...
-                            </a>
-                        </span>
-                        @endif
+                @else
+                    <div class="row col-md-12 mx-0 px-0">
+                        <label class="col-sm-2 col-form-label text-success fw-bold" for="component-file">อัพโหลดไฟล์แล้ว</label>
+                        <div class="col-sm-8 mb-3">
+                            <a href="{{route('borrower.upload.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}" target="_blank" rel="noopener noreferrer" class="btn btn-success w-100">คลิกเพื่อดูไฟล์ที่อัพโหลด</a>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <button type="button" class="btn btn-outline-dark w-100" data-bs-toggle="modal" data-bs-target="#editModal-{{$child_document->id}}" ><i class="bi bi-pencil"></i> แก้ไข</button>
+                        </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
-                        <button type="submit" class="btn btn-primary w-100" id="citizen-submit-button" ><i class="bi bi-save"></i> บันทึก</button>
-                    </div>
-                </div>
+                @endif
             </form>
+
+
+            <div class="modal fade" id="editModal-{{$child_document->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">แก้ไขไฟล์ {{$child_document->child_document_title}}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{route('borrower.edit.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
+                                @csrf
+                                @method('PUT')
+                                @if($child_document->need_loan_balance)
+                                    @if(!isset($child_document->borrower_child_document))
+                                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                                            <label for="edit-education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="edit-education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                                            <label for="edit-living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)">
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                                            <label for="edit-education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="edit-education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)" 
+                                                    @required($child_document->need_loan_balance) 
+                                                    value="{{number_format($child_document->borrower_child_document->education_fee)}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 row mb-3 mx-0 px-0">
+                                            <label for="edit-living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" 
+                                                    @required($child_document->need_loan_balance) 
+                                                    value="{{number_format($child_document->borrower_child_document->living_exprenses)}}">
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
+                                <div class="col-md-12 row mx-0 px-0">
+                                    <label class="col-sm-2 col-form-label text-secondary" for="edit-file-{{$child_document->id}}" >เลือกไฟล์</label>
+                                    <div class="col-sm-7 mb-3">
+                                        <input class="form-control" type="file" name="document_file" id="edit-file-{{$child_document->id}}" accept=".pdf">
+                                    </div>
+                                    <div class="col-md-3 col-sm-12">
+                                        <button type="submit" class="btn btn-primary w-100" ><i class="bi bi-arrow-down"></i> บันทึก</button>
+                                    </div>
+                                </div>
+                                @if($child_document->need_loan_balance)
+                                    <div class="col-md-12 mx-0 px-0">
+                                        <span class="text-warning"> หากแก้ไขเฉพาะค่าเล่าเรียนหรือค่าครองชีพไม่ต้องอัพโหลดไฟล์</span>
+                                    </div>
+                                @endif
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     @endforeach
@@ -427,6 +507,18 @@
 
     function submitForm(form_id){
         document.getElementById(form_id).submit();
+    }
+
+    function formatNumber(input) {
+        // ลบตัวอักษรที่ไม่ใช่ตัวเลขและคอมมา
+        const digits = input.value.replace(/[^\d]/g, '');
+
+        // แบ่งกลุ่มตัวเลขเป็นสามหลักจากขวาไปซ้ายและใส่คอมมา
+        const formatted = digits.replace(
+            /\B(?=(\d{3})+(?!\d))/g,
+            ','
+        );
+        input.value = formatted;
     }
 </script>
 @endsection

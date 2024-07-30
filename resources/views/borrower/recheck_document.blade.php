@@ -1,6 +1,6 @@
 @extends('layout')
-preview document
 @section('title')
+preview document
 @endsection
 @section('content')
     <section class="main-content">

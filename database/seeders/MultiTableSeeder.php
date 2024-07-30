@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Address;
 use App\Models\Parents;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,8 @@ class MultiTableSeeder extends Seeder
          $this->seedAddOnDocument();
          $this->seedAddonStructure();
          $this->seedChildDocumentFiles();
+         $this->seedAddOnDocumentExampleFiles();
+         $this->seedChildDocumentExampleFiles();
 
     }
 
@@ -235,7 +238,7 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'สัญญากู้ยืม'],
             ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืมเกินหลักสูตร'],
-            ['child_document_title'=>'สำเนาบัตรประชาชนผผู้กู้'],
+            ['child_document_title'=>'สำเนาบัตรประชาชนผู้กู้'],
         ]);
     }
 
@@ -286,6 +289,119 @@ class MultiTableSeeder extends Seeder
             ['child_document_id'=>'3','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
             ['child_document_id'=>'1','original_name'=>'yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
             ['child_document_id'=>'2','original_name'=>'parent-yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'parent-yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
+        ]);
+    }
+
+    private function seedAddOnDocumentExampleFiles(){
+        DB::table('addon_document_example_files')->insert([
+            [
+                'addon_document_id' => 1,
+                'description' => '-',
+                'original_name' => 'samnao bat.pdf',
+                'file_path' => 'addon_document_example_files',
+                'file_name' => '2024-07-26_07-06-44_samnao bat.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'addon_document_example_files/2024-07-26_07-06-44_samnao bat.pdf',
+                'upload_date' => '2024-07-26',
+                'created_at' => Carbon::parse('2024-07-26 00:06:44'),
+                'updated_at' => Carbon::parse('2024-07-26 00:06:44'),
+            ],
+            [
+                'addon_document_id' => 4,
+                'description' => '-',
+                'original_name' => 'smanao.pdf',
+                'file_path' => 'addon_document_example_files',
+                'file_name' => '2024-07-29_07-04-32_smanao.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'addon_document_example_files/2024-07-29_07-04-32_smanao.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 00:04:32'),
+                'updated_at' => Carbon::parse('2024-07-29 00:04:32'),
+            ],
+        ]);
+    }
+
+    private function seedChildDocumentExampleFiles()
+    {
+        DB::table('child_document_example_files')->insert([
+            [
+                'child_document_id' => 9,
+                'description' => '..',
+                'file_for' => 'everyone',
+                'original_name' => 'samnao bat.pdf',
+                'file_path' => 'child_document_example_files',
+                'file_name' => '2024-07-29_08-05-21_samnao bat.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'child_document_example_files/2024-07-29_08-05-21_samnao bat.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 01:05:21'),
+                'updated_at' => Carbon::parse('2024-07-29 01:05:21'),
+            ],
+            [
+                'child_document_id' => 9,
+                'description' => '..',
+                'file_for' => 'minors',
+                'original_name' => 'samnao bat.pdf',
+                'file_path' => 'child_document_example_files',
+                'file_name' => '2024-07-29_08-05-36_samnao bat.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'child_document_example_files/2024-07-29_08-05-36_samnao bat.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 01:05:36'),
+                'updated_at' => Carbon::parse('2024-07-29 01:05:36'),
+            ],
+            [
+                'child_document_id' => 5,
+                'description' => '-',
+                'file_for' => 'everyone',
+                'original_name' => 'gradePDF.pdf',
+                'file_path' => 'child_document_example_files',
+                'file_name' => '2024-07-29_08-08-48_gradePDF.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'child_document_example_files/2024-07-29_08-08-48_gradePDF.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 01:08:48'),
+                'updated_at' => Carbon::parse('2024-07-29 01:08:48'),
+            ],
+            [
+                'child_document_id' => 5,
+                'description' => '-',
+                'file_for' => 'minors',
+                'original_name' => 'gradePDF.pdf',
+                'file_path' => 'child_document_example_files',
+                'file_name' => '2024-07-29_08-08-56_gradePDF.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'child_document_example_files/2024-07-29_08-08-56_gradePDF.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 01:08:56'),
+                'updated_at' => Carbon::parse('2024-07-29 01:08:56'),
+            ],
+            [
+                'child_document_id' => 7,
+                'description' => '-',
+                'file_for' => 'everyone',
+                'original_name' => 'babyenyan.pdf',
+                'file_path' => 'child_document_example_files',
+                'file_name' => '2024-07-29_09-56-05_babyenyan.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'child_document_example_files/2024-07-29_09-56-05_babyenyan.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 02:56:05'),
+                'updated_at' => Carbon::parse('2024-07-29 02:56:05'),
+            ],
+            [
+                'child_document_id' => 7,
+                'description' => '-',
+                'file_for' => 'minors',
+                'original_name' => 'babyenyan-20.pdf',
+                'file_path' => 'child_document_example_files',
+                'file_name' => '2024-07-29_09-56-15_babyenyan-20.pdf',
+                'file_type' => 'pdf',
+                'full_path' => 'child_document_example_files/2024-07-29_09-56-15_babyenyan-20.pdf',
+                'upload_date' => '2024-07-29',
+                'created_at' => Carbon::parse('2024-07-29 02:56:15'),
+                'updated_at' => Carbon::parse('2024-07-29 02:56:15'),
+            ],
         ]);
     }
 }
