@@ -80,7 +80,7 @@ class SendDocumentController extends Controller
         $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
         $borrower_age = $parse_birthday->age;
         $useful_activities = UsefulActivity::where('user_id',$user_id)->get();
-        $useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
 
         if($document == null){
@@ -107,7 +107,7 @@ class SendDocumentController extends Controller
 
         }
 
-        return view('borrower.upload_document',compact('document','child_documents','borrower_age','useful_activities','useful_activities_hours_sum','useful_activities_hours'));
+        return view('borrower.upload_document',compact('document','child_documents','borrower_age','useful_activities','borrower_useful_activities_hours_sum','useful_activities_hours'));
     }
 
     public function mergeExampleFile($child_document_id, $file_for){
@@ -172,7 +172,7 @@ class SendDocumentController extends Controller
         $borrower_document['status'] = 'sending';
         $borrower_document->save();
 
-        $borrower_child_document = BorrowerChildDocument::where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
+        $borrower_child_document = BorrowerChildDocument::where('document_id', $document_id)->where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document_id;
         $borrower_child_document['child_document_id'] = $child_document_id;
@@ -195,7 +195,7 @@ class SendDocumentController extends Controller
         $borrower_child_document['borrower_file_id'] = $borrower_file['id'];
         $borrower_child_document->save();
 
-        return redirect()->back()->with(['success'=>'อัพโหลดไฟล์'. $child_document_title . 'เสร็จสิ้น']);
+        return redirect()->back()->with(['success'=>'อัพโหลดไฟล์ '. $child_document_title . ' เสร็จสิ้น']);
 
     }
 
@@ -231,7 +231,7 @@ class SendDocumentController extends Controller
         $borrower_document['status'] = 'sending';
         $borrower_document->save();
 
-        $borrower_child_document = BorrowerChildDocument::where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
+        $borrower_child_document = BorrowerChildDocument::where('document_id', $document_id)->where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document_id;
         $borrower_child_document['child_document_id'] = $child_document_id;
@@ -258,7 +258,7 @@ class SendDocumentController extends Controller
         }
         $borrower_child_document->save();
 
-        return redirect()->back()->with(['success'=>'แก้ไขไฟล์'. $child_document_title . 'เสร็จสิ้น']);
+        return redirect()->back()->with(['success'=>'แก้ไขไฟล์ '. $child_document_title . ' เสร็จสิ้น']);
     }
 
     public function previewBorrowerFile($borrower_child_document_id){

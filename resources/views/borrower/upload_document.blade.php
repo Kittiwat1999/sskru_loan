@@ -82,20 +82,26 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('borrower.upload.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
+            <form id="store-form-{{$child_document->id}}" action="{{route('borrower.upload.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
                 @csrf
                 @if($child_document->need_loan_balance)
                     @if(!isset($child_document->borrower_child_document))
                         <div class="col-md-12 row mb-3 mx-0 px-0">
                             <label for="education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)">
+                                <input type="text" class="form-control" id="education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)" required>
+                                <div class="invalid-feedback">
+                                    กรุณากรอกค่าเล่าเรียน
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12 row mb-3 mx-0 px-0">
                             <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพ</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)">
+                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" required>
+                                <div class="invalid-feedback">
+                                    กรุณากรอกค่าครองชีพรวม
+                                </div>
                             </div>
                         </div>
                     @else
@@ -106,6 +112,9 @@
                                     @required($child_document->need_loan_balance) 
                                     @disabled(true)
                                     value="{{number_format($child_document->borrower_child_document->education_fee)}}">
+                                <div class="invalid-feedback">
+                                    กรุณากรอกค่าเล่าเรียน
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12 row mb-3 mx-0 px-0">
@@ -115,6 +124,9 @@
                                     @required($child_document->need_loan_balance) 
                                     @disabled(true)
                                     value="{{number_format($child_document->borrower_child_document->living_exprenses)}}">
+                                <div class="invalid-feedback">
+                                    กรุณากรอกค่าครองชีพรวม
+                                </div>
                             </div>
                         </div>
                     @endif
@@ -124,9 +136,12 @@
                         <label class="col-sm-2 col-form-label text-secondary" for="file-{{$child_document->id}}" >เลือกไฟล์</label>
                         <div class="col-sm-7 mb-3">
                             <input class="form-control" type="file" name="document_file" id="file-{{$child_document->id}}" accept=".pdf" required>
+                            <div class="invalid-feedback">
+                                กรุณาเลือกไฟล์
+                            </div>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <button type="submit" class="btn btn-primary w-100" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
+                            <button type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}')" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
                         </div>
                     </div>
                 @else
@@ -142,7 +157,7 @@
                 @endif
             </form>
 
-
+            {{-- edit modal --}}
             <div class="modal fade" id="editModal-{{$child_document->id}}" tabindex="-1" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -151,7 +166,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{route('borrower.edit.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
+                            <form id="edit-form-{{$child_document->id}}" action="{{route('borrower.edit.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
                                 @csrf
                                 @method('PUT')
                                 @if($child_document->need_loan_balance)
@@ -160,12 +175,18 @@
                                             <label for="edit-education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="edit-education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)">
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกค่าเล่าเรียน
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12 row mb-3 mx-0 px-0">
                                             <label for="edit-living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)">
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกค่าครองชีพรวม
+                                                </div>
                                             </div>
                                         </div>
                                     @else
@@ -175,6 +196,9 @@
                                                 <input type="text" class="form-control" id="edit-education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)" 
                                                     @required($child_document->need_loan_balance) 
                                                     value="{{number_format($child_document->borrower_child_document->education_fee)}}">
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกค่าเล่าเรียน
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12 row mb-3 mx-0 px-0">
@@ -183,6 +207,9 @@
                                                 <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" 
                                                     @required($child_document->need_loan_balance) 
                                                     value="{{number_format($child_document->borrower_child_document->living_exprenses)}}">
+                                                <div class="invalid-feedback">
+                                                    กรุณากรอกค่าครองชีพรวม
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
@@ -191,9 +218,12 @@
                                     <label class="col-sm-2 col-form-label text-secondary" for="edit-file-{{$child_document->id}}" >เลือกไฟล์</label>
                                     <div class="col-sm-7 mb-3">
                                         <input class="form-control" type="file" name="document_file" id="edit-file-{{$child_document->id}}" accept=".pdf">
+                                        <div class="invalid-feedback">
+                                            กรุณาเลือกไฟล์
+                                        </div>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <button type="submit" class="btn btn-primary w-100" ><i class="bi bi-arrow-down"></i> บันทึก</button>
+                                        <button type="button" class="btn btn-primary w-100" onclick="formValidate('edit-form-{{$child_document->id}}')" ><i class="bi bi-arrow-down"></i> บันทึก</button>
                                     </div>
                                 </div>
                                 @if($child_document->need_loan_balance)
@@ -206,15 +236,17 @@
                     </div>
                 </div>
             </div>
+            {{-- end edit smodal --}}
+    
         </div>
     </div>
     @endforeach
 
     {{-- กิจกรรมจิตอาสา --}}
     @if($document->need_useful_activity)
-    <div class="card">
+    <div class="card {{ (int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours ? 'border border-2 border-success' : '' }}">
         <div class="card-body">
-            <h5 class="card-title">กิจกรรมจิตอาสา</h5>
+            <h5 class="card-title">กิจกรรมจิตอาสา {{$useful_activities_hours}} ชั่วโมง</h5> 
             <div class="table-responsive">
 
                 <table class="table table-bordered">
@@ -298,15 +330,21 @@
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-activitiy-modal">
                                         <i class="bi bi-plus"></i> เพิ่มข้อมูล
                                     </button>
+
                                 </div>
                             </td>
-                            <td class="text-center">{{$useful_activities_hours_sum}}/{{$useful_activities_hours}}</td>
+                            <td class="text-center">{{$borrower_useful_activities_hours_sum}}/{{$useful_activities_hours}}</td>
                             <td></td>
                             <td></td>
                             <td></td>
                         </tr>
                     </tfoot>
                 </table>
+                @if ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours)
+                    <span class="badge bg-success">จำนวนชั่วโมงกิจกรรมจิตอาสาครบถ้วนตามที่กำหนด</span>
+                @else 
+                    <span class="badge bg-danger">จำนวนชั่วโมงกิจกรรมจิตอาสาไม่ครบตามที่กำหนด</span>
+                @endif
             </div>
              <!-- add activitiy Modal -->
             <div class="modal fade" id="add-activitiy-modal" tabindex="-1" aria-labelledby="add-activitiy-modalLabel" aria-hidden="true">
@@ -317,16 +355,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{route('borrower.store.usefulactivity',['document_id' => $document->id])}}" method="post" class="row" enctype="multipart/form-data">
+                        <form id="add-useful-activity-form" action="{{route('borrower.store.usefulactivity',['document_id' => $document->id])}}" method="post" class="row" enctype="multipart/form-data">
                             @csrf
 
                             <div class="col-sm-12 mb-3">
                                 <label class="form-label" for="activity_name">ชื่อโครงการ/ กิจกรรมที่เป็นประโยชน์ต่อสังคมหรือสาธารณะ</label>
-                                <input class="form-control" type="text" name="activity_name" id="activity_name">
+                                <input class="form-control" type="text" name="activity_name" id="activity_name"  required >
+                                <div class="invalid-feedback">
+                                    กรุณากรอกชื่อโครงการ
+                                </div>
                             </div>
                             <div class="col-sm-12 mb-3">
                                 <label class="form-label" for="activity_location">สถานที่ดำเนินโครงการ</label>
-                                <input class="form-control" type="text" name="activity_location" id="activity_location">
+                                <input class="form-control" type="text" name="activity_location" id="activity_location" required >
+                                <div class="invalid-feedback">
+                                    กรุณากรอกสถานที่ดำเนินโครงการ
+                                </div>
                             </div>
                             <div class="row col-sm-12 mb-3">
                                 <div class="col-md-6 mb-3">
@@ -334,9 +378,9 @@
                                     <div class="input-group date" id="">
                                         <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                                         <input type="text" name="start_date" id="start-date" class="form-control"
-                                        placeholder="วว/ดด/ปปปป ชม"/>
+                                        placeholder="วว/ดด/ปปปป ชม" required />
                                         <div class="invalid-feedback">
-                                            กรุณากรอกวันเกิด
+                                            กรุณากรอกวันที่เริ่ม
                                         </div>
                                     </div>
                                 </div>
@@ -345,32 +389,40 @@
                                     <div class="input-group date" id="">
                                         <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                                         <input type="text" name="end_date" id="end-date" class="form-control"
-                                        placeholder="วว/ดด/ปปปป ชม"/>
+                                        placeholder="วว/ดด/ปปปป ชม" required />
                                         <div class="invalid-feedback">
-                                            กรุณากรอกวันเกิด
+                                            กรุณากรอกถึงวันที่
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12 mb-3">
                                 <label class="form-label" for="hour_count">จำนวนชั่วโมงรวม</label>
-                                <input class="form-control" type="number" name="hour_count" id="hour_count">
+                                <input class="form-control" type="number" name="hour_count" id="hour_count" required>
+                                <div class="invalid-feedback">
+                                    กรุณากรอกจำนวนชั่วโมงรวม
+                                </div>
                             </div>
                             <div class="col-sm-12 mb-3">
                                 <label class="form-label" for="description">ลักษณะของกิจกรรม</label>
-                                <input class="form-control" type="text" name="description" id="description">
+                                <input class="form-control" type="text" name="description" id="description" required>
+                                <div class="invalid-feedback">
+                                    กรุณากรอกลักษณะของกิจกรรม
+                                </div>
                             </div>
                             <div class="col-sm-12 mb-3">
                                 <label class="form-label" for="useful_activity_file">แนบไฟล์หลักฐาน</label>
-                                <input class="form-control" type="file" name="useful_activity_file" id="useful_activity_file" accept=".png, .jpg, .jpeg, .pdf">
+                                <input class="form-control" type="file" name="useful_activity_file" id="useful_activity_file" accept=".png, .jpg, .jpeg, .pdf" required>
+                                <div class="invalid-feedback">
+                                    กรุณาแนบไฟล์หลักฐาน
+                                </div>
                             </div>
-                        {{-- </form> ควรจะปิดตรงนี้แต่อยากได้ button modal footer เป็น submit เลยเอาไปไว้ข้างล่าง--}}
+                        </form> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        <button type="button" class="btn btn-primary" onclick="formValidate('add-useful-activity-form')">บันทึก</button>
                     </div>
-                        </form> 
                 </div>
                 </div>
             </div>
@@ -411,11 +463,11 @@
                         @method('PUT')
                         <div class="col-sm-12 mb-3">
                             <label class="form-label" for="edit_activity_name">ชื่อโครงการ/ กิจกรรมที่เป็นประโยชน์ต่อสังคมหรือสาธารณะ</label>
-                            <input class="form-control" type="text" name="activity_name" id="edit_activity_name" value="${useful_activity.activity_name}">
+                            <input class="form-control" type="text" name="activity_name" id="edit_activity_name" value="${useful_activity.activity_name}" required>
                         </div>
                         <div class="col-sm-12 mb-3">
                             <label class="form-label" for="edit_activity_location">สถานที่ดำเนินโครงการ</label>
-                            <input class="form-control" type="text" name="activity_location" id="edit_activity_location" value="${useful_activity.activity_location}">
+                            <input class="form-control" type="text" name="activity_location" id="edit_activity_location" value="${useful_activity.activity_location}" required>
                         </div>
                         <div class="row col-sm-12 mb-3">
                             <div class="col-md-6 mb-3">
@@ -423,7 +475,7 @@
                                 <div class="input-group date" id="">
                                     <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                                     <input type="text" name="start_date" id="edit-start-date" class="form-control" value="${convertIsoToCustomFormat(useful_activity.start_date)}"
-                                    placeholder="วว/ดด/ปปปป ชม"/>
+                                    placeholder="วว/ดด/ปปปป ชม" required />
                                     <div class="invalid-feedback">
                                         กรุณากรอกวันเกิด
                                     </div>
@@ -434,7 +486,7 @@
                                 <div class="input-group date" id="">
                                     <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
                                     <input type="text" name="end_date" id="edit-end-date" class="form-control" value="${convertIsoToCustomFormat(useful_activity.end_date)}"
-                                    placeholder="วว/ดด/ปปปป ชม"/>
+                                    placeholder="วว/ดด/ปปปป ชม" required />
                                     <div class="invalid-feedback">
                                         กรุณากรอกวันเกิด
                                     </div>
@@ -443,11 +495,11 @@
                         </div>
                         <div class="col-sm-12 mb-3">
                             <label class="form-label" for="edit_hour_count">จำนวนชั่วโมงรวม</label>
-                            <input class="form-control" type="number" name="hour_count" id="edit_hour_count" value="${useful_activity.hour_count}">
+                            <input class="form-control" type="number" name="hour_count" id="edit_hour_count" value="${useful_activity.hour_count}" required>
                         </div>
                         <div class="col-sm-12 mb-3">
                             <label class="form-label" for="edit_description">ลักษณะของกิจกรรม</label>
-                            <input class="form-control" type="text" name="description" id="edit_description" value="${useful_activity.description}">
+                            <input class="form-control" type="text" name="description" id="edit_description" value="${useful_activity.description}" required>
                         </div>
                         <div class="col-sm-12 mb-3">
                             <label class="form-label" for="edit_useful_activity_file">แนบไฟล์หลักฐาน</label>
@@ -457,7 +509,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary" onclick="submitForm('edit-useful-activity')">บันทึก</button>
+                    <button type="button" class="btn btn-primary" onclick="formValidate('edit-useful-activity')">บันทึก</button>
                 </div>
    
         `;
@@ -505,10 +557,6 @@
         return `${day}-${month}-${year} ${hours}:${minutes}`;
     }
 
-    function submitForm(form_id){
-        document.getElementById(form_id).submit();
-    }
-
     function formatNumber(input) {
         // ลบตัวอักษรที่ไม่ใช่ตัวเลขและคอมมา
         const digits = input.value.replace(/[^\d]/g, '');
@@ -519,6 +567,56 @@
             ','
         );
         input.value = formatted;
+    }
+
+    async function formValidate(form_id){
+        var validate = await validateData(form_id);
+        if(validate){
+            var form = document.getElementById(form_id);
+            form.submit();
+        }
+    }
+
+    async function validateData(form_id){
+        var form = document.getElementById(form_id);
+        var inputs = form.querySelectorAll('input[type="text"][required]');
+        var numbers = form.querySelectorAll('input[type="number"][required]');
+        var inputFile = form.querySelector('input[type="file"][required]');
+        var validator = true;
+        await inputs.forEach(input => {
+            if(input.value == ''){
+                validator = false;
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = input.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+        });
+
+        await numbers.forEach(number => {
+            if(number.value == ''){
+                validator = false;
+                var invalid_element = number.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = number.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+        });
+
+        if(inputFile){
+            if(inputFile.files.length == 0){
+                validator = false;
+                var invalid_element = inputFile.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = inputFile.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+        }
+
+        return validator;
     }
 </script>
 @endsection

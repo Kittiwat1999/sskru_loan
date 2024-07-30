@@ -259,6 +259,9 @@ admin document scheduler
         if(form_validated){
             const form = document.getElementById(formId);
             form.submit();
+        }else{
+            alert('ดูเหมือนว่าท่านยังกรอกข้อมูลไม่ครบ! กรุณาตรวจสอบอีกครั้ง');
+            window.scrollTo(0,0);
         }
     }
 
