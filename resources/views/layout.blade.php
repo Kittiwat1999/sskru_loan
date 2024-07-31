@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    
+
     <title>
         @yield('title')
     </title>
     <style>
         .icon-46 {
             color: #FAA4A4;
-            font-size: 300%; 
+            font-size: 300%;
         }
         .button-46 {
             position: relative;
@@ -41,7 +41,7 @@
 
         .icon-45 {
             color: #31708F;
-            font-size: 300%; 
+            font-size: 300%;
         }
         .button-45 {
             position: relative;
@@ -259,7 +259,7 @@
                 </a>
             </li><!-- End สรุปข้อมูล Page Nav -->
 
-            
+
             <!-- End คำร้องขอแก้ใขเอกสาร Page Nav -->
             <li class="nav-heading text-secondary">admin menu</li>
             <li class="nav-item">
@@ -275,14 +275,14 @@
                 <span>จัดการเอกสาร</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
                 <a id="document_scheduler" class="nav-link collapsed" href="{{url('/admin/document_scheduler')}}">
                     <i class="bi bi-calendar-date"></i>
                     <span>กำหนดการส่งเอกสาร</span>
                 </a>
             </li><!-- End กำหนดระยะเวลา Page Nav -->
-            
+
             <li class="nav-item">
                 <a id="edit_informaion_request" class="nav-link collapsed" href="{{url('/admin/edit_informaion_request')}}">
                 <i class="bi bi-pencil-square"></i>
@@ -309,7 +309,7 @@
         @endif
 
         @if($privilage == 'admin' || $privilage == "employee")
-        
+
         <li class="nav-item">
             <a id="loan_submission" class="nav-link collapsed" href="{{url('loan_submission')}}">
             <i class="bi bi-file-earmark-person"></i>
@@ -354,6 +354,12 @@
                 <i class="bi bi-pen"></i>
                 <span>กรอกข้อมูลผู้กู้</span>
                 </a>
+            </li>
+            <li class="nav-item">
+                <a id="borrower_register_index" class="nav-link collapsed" href="{{url('/borrower/borrower_register_index')}}">
+                <i class="bi bi-pass"></i>
+                <span>ลงทะเบียนผู้กู้</span>
+                </a>
             </li><!-- End กรอกข้อมูลผู้กู้ Page Nav -->
 
             <li class="nav-heading text-secondary">เอกสาร</li>
@@ -370,14 +376,14 @@
                 <span>ส่งเอกสาร</span>
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
-            
+
             <li class="nav-item">
                 <a id="download_document" class="nav-link collapsed" href="{{url('/borrower/download_document')}}">
                 <i class="bi bi-file-earmark-arrow-down"></i>
                 <span>ดาวน์โหลดเอกสาร</span>
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
-            
+
             <li class="nav-heading text-secondary">ขอแก้ใขข้อมูล</li>
             <li class="nav-item">
                 <a id="edit_borrower_information" class="nav-link collapsed" href="{{url('/borrower/edit_borrower_information')}}">
@@ -426,7 +432,7 @@
         @endif
 
         @yield('content')
-        
+
     </main>
     <footer id="footer" class="footer">
         <div class="copyright">
@@ -475,7 +481,7 @@
         var path = window.location.pathname; //get path name
         path = path.split('/');             //split path with '/'
         activeSidebar(path);          // call active sidebar function
-           
+
         </script>
         @yield('script')
 </body>

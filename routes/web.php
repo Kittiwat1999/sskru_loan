@@ -380,3 +380,17 @@ Route::get('/send_email',[AuthenticationController::class,'send_email'])->name('
 Route::get('/users_profile',[UsersProfileController::class,'index']);
 Route::put('/users_profile/edit',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');
 Route::post('/users_profile/password/change', [UsersProfileController::class, 'change_password'])->name('users.password.change');
+
+Route::get('/borrower/check_documents',function () {
+    return view('/borrower/check_documents');
+});
+Route::get('/borrower/document_submission',function () {
+    return view('/borrower/document_submission');
+});
+
+Route::get('/borrower/borrower_register_index',function () {
+    return view('/borrower/borrower_register_index');
+});
+Route::get('/borrower/borrower_register',function () {
+    return view('/borrower/borrower_register');
+});
