@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-สรุปการส่งเอกสาร
+ลงทะเบียนผู้กู้
 @endsection
 <style>
     .card-body {
