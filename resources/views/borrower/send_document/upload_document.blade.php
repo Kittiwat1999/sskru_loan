@@ -18,37 +18,10 @@
                 <div class="col-md-2 mt-2">
                     <span class="text-light">ปีการศึกษา:</span> <span class="text-light fw-bold">{{$document->year}}</span>
                 </div>
-                {{-- modal --}}
-                <div>
-                    <div class="modal fade" id="sendDocModal" tabindex="-1" aria-labelledby="sendDocModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="sendDocModalLabel">ส่งเอกสารผู้กู้รายเก่า</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                เมื่อท่านส่งเอกสารแล้วฝ่ายทุนการศึกษาฯ จะตรวจสอบและอนุมัติคำขอของท่านต่อไป<br>
-                                ยืนยันการส่งเอกสารหรือไม่??
-                            </div>
-                            <div class="modal-footer">
-                                <form action="" method="post">
-                                    @csrf 
-                                    <input type="hidden" name="doc_id" value="">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ไม่</button>
-                                    <button type="submit" class="btn btn-success">ส่งเอกสาร <i class="bi bi-box-arrow-up"></i></button>
-                                </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                </div>
-                {{--end modal --}}
-
-
             </div>
         </div>
     </div>
+
     @foreach($child_documents as $child_document)
     <div class="card mb-3 {{ !empty($child_document['borrower_child_document']) ? 'border border-2 border-success' : '' }}">
         <div class="card-body">
@@ -244,7 +217,7 @@
 
     {{-- กิจกรรมจิตอาสา --}}
     @if($document->need_useful_activity)
-    <div class="card {{ (int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours ? 'border border-2 border-success' : '' }}">
+    <div class="card {{ (int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours ? 'border border-2 border-success' : '' }} mb-3">
         <div class="card-body">
             <h5 class="card-title">กิจกรรมจิตอาสา {{$useful_activities_hours}} ชั่วโมง</h5> 
             <div class="table-responsive">
@@ -327,7 +300,7 @@
                             <td colspan="3">
                                 <div>
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-activitiy-modal">
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#add-activitiy-modal">
                                         <i class="bi bi-plus"></i> เพิ่มข้อมูล
                                     </button>
 
@@ -441,6 +414,40 @@
     </div>
     @endif
     {{-- end กิจกรรมจิตอาสา --}}
+
+    <div class="card">
+        <div class="card-body row mx-0 mt-3">
+            <div class="col-md-4 mb-2 pt-2 fs-6 fw-bold">
+                จำนวนเอกสารที่ต้องส่ง 
+                @if ((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count)
+                    <span class="badge rounded-pill bg-success text-light">{{$borrower_child_document_delivered_count}}/{{$child_document_required_count}}</span>
+                @else
+                    <span class="badge rounded-pill bg-danger text-light">{{$borrower_child_document_delivered_count}}/{{$child_document_required_count}}</span>
+                @endif
+            </div>
+            <div class="col-md-5 mb-2 pt-2 fs-6 fw-bold">
+                @if($document->need_useful_activity)
+                    จำนวนชั่วโมงกิจกรรมจิตอาสา 
+                    @if ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours)
+                        <span class="badge rounded-pill bg-success text-light">{{$borrower_useful_activities_hours_sum}}/{{$useful_activities_hours}}</span>
+                    @else 
+                        <span class="badge rounded-pill bg-danger text-light">{{$borrower_useful_activities_hours_sum}}/{{$useful_activities_hours}}</span>
+                    @endif
+                    
+                @endif
+            </div>
+            <div class="col-md-3 col-sm-12">
+                @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
+                    <a href="{{route('borrower.upload.document.resault.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
+                @elseif(!$document->need_useful_activity)
+                    <a href="{{route('borrower.upload.document.resault.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></butaton>
+                @else
+                    <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
+                @endif
+            </div>
+        </div>
+    </div>
+
 </section>
 @endsection
 

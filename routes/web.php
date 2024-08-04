@@ -330,6 +330,9 @@ Route::get('/borrower/upload_document/get_examplefile/{child_document_id}/{file_
 Route::post('/borrower/upload_document/upload_file/{document_id}/{child_document_id}',[SendDocumentController::class,'uploadDocument'])->name('borrower.upload.document');
 Route::put('/borrower/upload_document/edit_file/{document_id}/{child_document_id}',[SendDocumentController::class,'editDocument'])->name('borrower.edit.document');
 Route::get('/borrower/upload_document/previe/borrower_file/{borrower_child_document_id}',[SendDocumentController::class, 'previewBorrowerFile'])->name('borrower.upload.document.preview.file');
+Route::get('/borrower/upload_document/resault/{document_id}',[SendDocumentController::class,'resault'])->name('borrower.upload.document.resault.page');
+
+
 
 //useful activity
 Route::post('/borrower/usefulactivity/store/{document_id}',[UsefulActivityController::class,'storeUsefulActivity'])->name('borrower.store.usefulactivity');

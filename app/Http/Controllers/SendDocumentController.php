@@ -62,7 +62,7 @@ class SendDocumentController extends Controller
             ->select('documents.*', 'doc_types.doctype_title')
             ->get();
         // dd($documents);
-        return view('borrower.list_document',compact('documents'));
+        return view('borrower.send_document.list_document',compact('documents'));
     }
 
     public function uploadDocumentPage($document_id){
@@ -75,14 +75,6 @@ class SendDocumentController extends Controller
             ->where('documents.start_date', '<=', $current_date)
             ->where('documents.end_date', '>=', $current_date)
             ->first();
-        
-        $borrower_birthday = Borrower::where('user_id',$user_id)->value('birthday');
-        $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
-        $borrower_age = $parse_birthday->age;
-        $useful_activities = UsefulActivity::where('user_id',$user_id)->get();
-        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
-        $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
-
         if($document == null){
             return redirect()->back()->withErrors('ไม่น่ารักเลยนะ');
         }
@@ -91,10 +83,17 @@ class SendDocumentController extends Controller
             return redirect()->back()->withErrors('เอกสารดังกล่าวได้ปิดรับแล้ว');
         }
 
+        $borrower_birthday = Borrower::where('user_id',$user_id)->value('birthday');
+        $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
+        $borrower_age = $parse_birthday->age;
+        $useful_activities = UsefulActivity::where('user_id',$user_id)->get();
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
+        $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
+        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
         $child_documents = DocStructure::join('child_documents','doc_structures.child_document_id','=','child_documents.id')
             ->where('doc_structures.document_id',$document_id)
             ->get();
-
+        $child_document_required_count = 0;
         foreach($child_documents as $child_document){
             $child_document['addon_documents'] = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
                 ->where('addon_structures.child_document_id',$child_document['id'])
@@ -104,10 +103,20 @@ class SendDocumentController extends Controller
                 ->where('borrower_child_documents.child_document_id', $child_document['id'])
                 ->where('borrower_child_documents.user_id', $user_id)
                 ->first();
-
+            if($child_document['isrequired']) $child_document_required_count += 1;
         }
 
-        return view('borrower.upload_document',compact('document','child_documents','borrower_age','useful_activities','borrower_useful_activities_hours_sum','useful_activities_hours'));
+        return view('borrower.send_document.upload_document',
+            compact(
+                'document',
+                'child_documents',
+                'borrower_age',
+                'useful_activities',
+                'borrower_useful_activities_hours_sum',
+                'useful_activities_hours',
+                'child_document_required_count',
+                'borrower_child_document_delivered_count',
+            ));
     }
 
     public function mergeExampleFile($child_document_id, $file_for){
@@ -143,7 +152,6 @@ class SendDocumentController extends Controller
     }
 
     public function uploadDocument($document_id, $child_document_id, Request $request){
-        // dd($request);
 
         $rules = [
             'document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
@@ -178,7 +186,7 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'sent';
+        $borrower_child_document['status'] = 'sending';
         //file
         $input_file = $request->file('document_file');
         $file_name = $this->storeFile($document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id, $input_file);
@@ -275,5 +283,9 @@ class SendDocumentController extends Controller
         , $borrower_file['file_name']);
 
         return $response;
+    }
+
+    public function resault(){
+        return view('borrower.send_document.document_submission_test');
     }
 }
