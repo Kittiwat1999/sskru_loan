@@ -438,9 +438,9 @@
             </div>
             <div class="col-md-3 col-sm-12">
                 @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
-                    <a href="{{route('borrower.upload.document.resault.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
+                    <a href="{{route('borrower.upload.document.result.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
                 @elseif(!$document->need_useful_activity)
-                    <a href="{{route('borrower.upload.document.resault.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></butaton>
+                    <a href="{{route('borrower.upload.document.result.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></butaton>
                 @else
                     <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
                 @endif

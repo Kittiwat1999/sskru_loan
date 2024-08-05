@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('major_id')->foreignIdFor(Majors::class);
             $table->integer('grade');
             $table->string('gpa');
-            $table->json('marital_status')->default(json_encode(["status"=>"","file_name"=>""]));
+            $table->json('marital_status');
             $table->string('phone');
             $table->timestamps();
         });

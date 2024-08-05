@@ -30,63 +30,56 @@
 @section('content')
 <section class="section Editing">
     <div class="card">
-        <div class="card-body pt-3">
-            <h5 class="py-2 fs-5">ตรวจเอกสาร</h5>
-            <div class="accordionContainer">
-                <div class="accordionItem">
-                  <div class="accordionHeader">
-                    <span class="row">
-                        <div class="d-flex justify-content-start col-md-6">สำเนาบัตรประชาชน</div>
-                        <div class="d-flex justify-content-end col-md-6 text-success">
-                            ตรวจแล้ว &nbsp;
-                            <img src="{{ asset('assets/img/doc/pngwing.com.png') }}" alt="" height="20px">
-                        </div>
-                    </span>
-                  </div>
-                  <div class="accordionContent">
-                    <div class="accordionContentInner">
+        <div class="card-body">
+            <h5 class="card-title">ตรวจเอกสาร</h5>
+
+            <!-- Default Accordion -->
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <span class="col-md-3 col-7">สำเนาบัตรประชาชน</span>
+                        <span class="badge rounded-pill bg-success mx-3">ตรวจแล้ว</span>
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                    <div class="accordion-body">
                         <iframe src="{{asset("assets/pdf/บัตรประชาชนผู้กู้.pdf")}}" frameborder="0" class="w-100" height="600"></iframe>
                     </div>
-                  </div>
                 </div>
-
-                <div class="accordionItem">
-                  <div class="accordionHeader">
-                    <span class="row">
-                        <div class="d-flex justify-content-start col-md-6">รายงานผลการเรียน</div>
-                        <div class="d-flex justify-content-end col-md-6 text-success">
-                            ตรวจแล้ว &nbsp;
-                            <img src="{{ asset('assets/img/doc/pngwing.com.png') }}" alt="" height="20px">
-                        </div>
-                    </span>
-                  </div>
-                  <div class="accordionContent">
-                    <div class="accordionContentInner">
+                </div>
+                <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <span class="col-md-3 col-7">รายงานผลการเรียน</span>
+                        <span class="badge rounded-pill bg-success mx-3">ตรวจแล้ว</span>
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
                         <iframe src="{{asset("assets/pdf/รายงานผลการเรียนผู้กู้.pdf")}}" frameborder="0" class="w-100" height="600"></iframe>
                     </div>
-                  </div>
                 </div>
-
-                <div class="accordionItem">
-                  <div class="accordionHeader">
-                    <span class="row">
-                        <div class="d-flex justify-content-start col-md-6">แบบยืนยันเบิกเงินกู้ยืม</div>
-                        <div class="d-flex justify-content-end col-md-6 text-success">
-                            ตรวจแล้ว &nbsp;
-                            <img src="{{ asset('assets/img/doc/pngwing.com.png') }}" alt="" height="20px">
-                        </div>
-                    </span>
-                  </div>
-                  <div class="accordionContent">
-                    <div class="accordionContentInner">
+                </div>
+                <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <span class="col-md-3 col-7">แบบยืนยันเบิกเงินกู้ยืม</span>
+                        <span class="badge rounded-pill bg-success mx-3">ตรวจแล้ว</span>
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
                         <iframe src="{{asset("assets/pdf/แบบยืนยัน(อย่างเดียว).pdf")}}" frameborder="0" class="w-100" height="600"></iframe>
                     </div>
-                  </div>
                 </div>
-              </div>
-            <div class="text-end">
+                </div>
+            </div>
+            <!-- End Default Accordion Example -->
+            <div class="text-end pt-3">
                 <a href="{{url('/borrower/document_submission')}}" class="btn btn-primary">ถัดไป</a>
             </div>
+
         </div>
     </div>
 </section>

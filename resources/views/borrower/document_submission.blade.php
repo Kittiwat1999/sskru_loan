@@ -26,7 +26,7 @@
                         <div class="col-md-4 text-success">ตรวจแล้ว &nbsp; <img src="{{ asset('assets/img/doc/pngwing.com.png') }}" alt="" height="20px"></div>
                     </span>
             </div>
-            <div align="right">
+            <div class="text-end pt-3">
                 <button type="button" class="btn btn-primary">ถัดไป</button>
             </div>
         </div>
