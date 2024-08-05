@@ -16,29 +16,29 @@
         color: white !important;
     }
 
-    .status{
+    /* .status{
         min-width: 100px; 
         width: 100px; 
         height: 20px; 
         border-radius: 10px !important;
-    }
+    } */
 </style>
 @section('content')
 <section >
     <div class="card mb-3">
         <div class="card-body pb-0 mb-0">
-            <ul class="nav row mx-0 my-0" id="myTab" role="tablist">
-                <li class="nav-item col-md-3 m-0 py-2" role="presentation">
-                    <a class="nav-link active text-dark text-center" id="borrower-type-tab" data-bs-toggle="tab" href="#borrower-type" role="tab" aria-controls="borrower-type" aria-selected="true">ประเภทผู้กู้ยืม</a>
+            <ul class="nav row mx-0 my-2" id="myTab" role="tablist">
+                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
+                    <a class="nav-link text-dark text-center m-0 active" id="borrower-type-tab" data-bs-toggle="tab" href="#borrower-type" role="tab" aria-controls="borrower-type" aria-selected="true">ประเภทผู้กู้ยืม</a>
                 </li>
-                <li class="nav-item col-md-3 m-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center" id="send-documents-tab" data-bs-toggle="tab" href="#send-documents" role="tab" aria-controls="send-documents" aria-selected="false">ส่งเอกสาร</a>
+                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
+                    <a class="nav-link text-dark text-center m-0" id="send-documents-tab" data-bs-toggle="tab" href="#send-documents" role="tab" aria-controls="send-documents" aria-selected="false">ส่งเอกสาร</a>
                 </li>
-                <li class="nav-item col-md-3 m-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center" id="check-documents-tab" data-bs-toggle="tab" href="#check-documents" role="tab" aria-controls="check-documents" aria-selected="false">ตรวจสอบเอกสาร</a>
+                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
+                    <a class="nav-link text-dark text-center m-0" id="check-documents-tab" data-bs-toggle="tab" href="#check-documents" role="tab" aria-controls="check-documents" aria-selected="false">ตรวจสอบเอกสาร</a>
                 </li>
-                <li class="nav-item col-md-3 m-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center" id="request-status-tab" data-bs-toggle="tab" href="#request-status" role="tab" aria-controls="request-status" aria-selected="false">สถานะคำร้อง</a>
+                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
+                    <a class="nav-link text-dark text-center m-0" id="request-status-tab" data-bs-toggle="tab" href="#request-status" role="tab" aria-controls="request-status" aria-selected="false">สถานะคำร้อง</a>
                 </li>
             </ul>
         </div>
@@ -236,26 +236,16 @@
 
         <div class="tab-pane fade d-flex flex-column align-items-center" id="request-status" role="tabpanel" aria-labelledby="request-status-tab">
 
-            <div class="card section dashboard pt-3 col-md-6">
-                <div class="filter">
-                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li class="dropdown-header text-start">
-                        <h6>Filter</h6>
-                        </li>
-
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
-                </div>
+            <div class="card section dashboard col-md-6">
 
                 <div class="card-body">
                     <h5 class="card-title">สถานะการยื่นกู้</h5>
                     <div class="activity">
 
                         <div class="activity-item d-flex">
-                            <span class="badge bg-success status">เสร็จสิ้น</span>
+                            <div class="col-2 pt-1">
+                                <span class="badge bg-success w-100">เสร็จสิ้น</span>
+                            </div>
                             <div class="activite-label"></div>
                             <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                             <div class="activity-content">
@@ -264,8 +254,10 @@
                         </div><!-- End activity item-->
 
                         <div class="activity-item d-flex">
-                            <span class="badge bg-warning status">รอดำเนินการ</span>
-                            <div class="activite-label col-1"></div>
+                            <div class="col-2 pt-1">
+                                <span class="badge bg-warning w-100">รอดำเนินการ</span>
+                            </div>
+                            <div class="activite-label"></div>
                             <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
                             <div class="activity-content">
                                 อาจารย์ที่ปรึกษาให้ความเห็น
@@ -273,8 +265,10 @@
                         </div><!-- End activity item-->
 
                         <div class="activity-item d-flex">
-                            <span class="badge bg-warning status">รอดำเนินการ</span>
-                            <div class="activite-label col-1"></div>
+                            <div class="col-2 pt-1">
+                                <span class="badge bg-warning w-100">รอดำเนินการ</span>
+                            </div>
+                            <div class="activite-label"></div>
                             <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
                             <div class="activity-content">
                                 ฝ่ายทุนตรวจเอกสาร
@@ -282,8 +276,10 @@
                         </div><!-- End activity item-->
 
                         <div class="activity-item d-flex">
-                            <span class="badge bg-warning status">รอดำเนินการ</span>
-                            <div class="activite-label col-1"></div>
+                            <div class="col-2 pt-1">
+                                <span class="badge bg-warning w-100">รอดำเนินการ</span>
+                            </div>
+                            <div class="activite-label"></div>
                             <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
                             <div class="activity-content">
                                 ยื่นกู้เสร็จสิ้น
