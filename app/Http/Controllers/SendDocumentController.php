@@ -86,6 +86,7 @@ class SendDocumentController extends Controller
         $borrower_birthday = Borrower::where('user_id',$user_id)->value('birthday');
         $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
         $borrower_age = $parse_birthday->age;
+
         $useful_activities = UsefulActivity::where('user_id',$user_id)->get();
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
@@ -94,6 +95,7 @@ class SendDocumentController extends Controller
             ->where('doc_structures.document_id',$document_id)
             ->get();
         $child_document_required_count = 0;
+
         foreach($child_documents as $child_document){
             $child_document['addon_documents'] = AddOnStructure::join('addon_documents','addon_structures.addon_document_id','=','addon_documents.id')
                 ->where('addon_structures.child_document_id',$child_document['id'])
@@ -186,7 +188,7 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'sending';
+        $borrower_child_document['status'] = 'delivered';
         //file
         $input_file = $request->file('document_file');
         $file_name = $this->storeFile($document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id, $input_file);
@@ -231,8 +233,7 @@ class SendDocumentController extends Controller
             ->where('documents.id', $document_id)
             ->first();
         $child_document_title = ChildDocuments::where('id', $child_document_id)->value('child_document_title');
-        
-        
+
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first() ?? new BorrowerDocument();
         $borrower_document['user_id'] = $user_id;
         $borrower_document['document_id'] = $document_id;
@@ -245,7 +246,7 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'sent';
+        $borrower_child_document['status'] = 'delivered';
         //file
         if($request->file('document_file') != null){
             $input_file = $request->file('document_file');
@@ -285,7 +286,44 @@ class SendDocumentController extends Controller
         return $response;
     }
 
-    public function resault(){
-        return view('borrower.send_document.document_submission_test');
+    public function result($document_id){
+        $user_id = Session::get('user_id','1');
+        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')->where('documents.id', $document_id)->first();
+        $child_documents = DocStructure::join('child_documents','doc_structures.child_document_id','=','child_documents.id')->where('doc_structures.document_id',$document_id)->get();
+        $child_document_required_count = 0;
+
+        foreach($child_documents as $child_document){
+            $child_document['borrower_child_document'] =  BorrowerChildDocument::where('borrower_child_documents.document_id', $document['id'])
+                                                                ->where('borrower_child_documents.child_document_id', $child_document['id'])
+                                                                ->where('borrower_child_documents.user_id', $user_id)
+                                                                ->first() ?? null;
+
+            if($child_document['isrequired']) $child_document_required_count += 1;
+        }
+
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id',$document_id)->sum('hour_count') ?? 0 ;
+        $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
+        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
+
+        return view('borrower.send_document.document_result',
+            compact(
+                'document',
+                'child_documents',
+                'child_document_required_count',
+                'borrower_useful_activities_hours_sum',
+                'useful_activities_hours',
+                'borrower_child_document_delivered_count'
+            )
+        );
     }
+
+    public function submitDocument($document_id){
+        $user_id = Session::get('user_id','1');
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
+        $borrower_document['status'] = 'delivered';
+        $borrower_document->save();
+
+        return view('borrower.index');
+    }
+
 }
