@@ -124,7 +124,7 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table datatable table-striped table-borderless">
+                    <table class="table table-striped table-bordered" id="users-table">
                         <thead>
                             <tr>
                                 <th scope="col">id</th>
@@ -132,73 +132,26 @@
                                 <th scope="col">อีเมล</th>
                                 <th scope="col">สิทธ์การใช้งาน</th>
                                 <th scope="col">created_at</th>
-                                <th scope="col">update-at</th>
-                                <th scope="col"></th>
+                                <th scope="col">updated-at</th>
+                                <th scope="col">action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php
-                            $i = 1;
-                            gettype($users)
-                            ?>
-                            @foreach($users as $user)
-                            <tr>
-                                <td>{{$user->id}}</td>
-                                <td class="text-dark fw-light">{{$user->prefix}} {{$user->firstname}} {{$user->lastname}}</td>
-                                <td>{{$user->email}}</td>
-                                <td>
-                                    @if($user->privilage == "admin")
-                                        แอดมิน
-                                    @elseif($user->privilage == "employee")
-                                        พนักงานทุนฯ
-                                    @elseif($user->privilage == "faculty")
-                                        คณะ
-                                    @elseif($user->privilage == "teacher")
-                                        อาจารย์ที่ปรึกษา
-                                    @elseif($user->privilage == "borrower")
-                                        ผู้กู้
-                                    @endif
-                                </td>
-                                <td>{{$user->created_at}}</td>
-                                <td>{{$user->updated_at}}</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showUserModal({{$user->id}})" ><i class="bi bi-search"></i></button>
-                                    <div class="mt-2"></div>
-                                    <button id="button-delete-modal" type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#deleteUserModal-{{$user->id}}">
-                                        <i class="bi bi-trash"></i>
-                                    </button> 
-
-                                    <!-- delete user Modal-->
-                                    <div class="modal fade" id="deleteUserModal-{{$user->id}}" tabindex="-1">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">ลบบัญชีผู้ใช้</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div id="delete-modal-content" class="modal-body">
-                                                ต้องการลบข้อมูลของผู้ใช้ {{$user->firstname}}
-                                            </div>
-                                            <div id="delete-button-area" class="modal-footer">
-                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
-                                                <a class="btn btn-secondary" href="{{route('admin.deleteUser', ['id' => $user->id])}}">ลบบัญชีผู้ใช้</a>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- End delete user Modal-->
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </section>
 
-    <button id="button-showDataModal" class="d-none" type="button" data-bs-toggle="modal" data-bs-target="#showDataModal">
-    </button>
+    <!-- delete user Modal-->
+    <div class="modal fade" id="deleteUserModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" id="deleteUserModalContent">
+                
+            </div>
+        </div>
+    </div>
+    <!-- End delete user Modal-->
+
     <!-- show user data Modal-->
     <div class="modal fade" id="showDataModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -218,114 +171,133 @@
     <script>
         var faculties = @json($faculties);
 
-        function getUserById(userid) {
-        fetch(`{{url('admin/get_user_by_id/${userid}')}}`)
-            .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-            })
-            .then(data => {
-            // console.log(data);
-            var user = data.user;
-            var majors = data.majors;
-            const modalContent = document.getElementById('showDataModal-content');
-            modalContent.innerHTML = `
-            <form class="row" action="{{route('admin.editAccount')}}" method="POST" id="edit-user">
-                @csrf
-                <input type="hidden" name="id" class="form-control" value="${user.id}" required>
-                <div class="col-6">
-                    <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
-                    <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
-                        <option >เลือกคำนำหน้าชื่อ</option>
-                        <option ${(user.prefix == 'นาย')? 'selected': ''} value="นาย">นาย</option>
-                        <option ${(user.prefix == 'นาง')? 'selected': ''} value="นาง">นาง</option>
-                        <option ${(user.prefix == 'นางสาว')? 'selected': ''} value="นางสาว">นางสาว</option>
-                    </select>
-                </div>
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <label for="firstname" class="col-form-label">ชื่อ</label>
-                    <input type="text" name="firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
-                    <div class="invalid-feedback">
-                        กรุณากรอกชื่อ
-                    </div>
-                </div>
-                <div class="col-6">
-                    <label for="lastname" class="col-form-label">นามสกุล</label>
-                    <input type="text" name="lastname" class="form-control need-custom-validate" value="${user.lastname}" required>
-                    <div class="invalid-feedback">
-                        กรุณากรอกนามสกุล
-                    </div>
-                </div>
-                <div class="col-6">
-                    <label for="email" class="col-form-label">อีเมล</label>
-                    <input type="text" name="email" class="form-control need-custom-validate" value="${user.email}" required>
-                    <div class="invalid-feedback">
-                        กรุณากรอกอีเมลล์
-                    </div>
-                </div>
-                <div class="col-6">
-                    <label for="password" class="col-form-label">รหัสผ่าน</label>
-                    <input id="input-password" type="password" name="password" class="form-control" value="">
-                    <div class="invalid-feedback">
-                        กรุณากรอกรหัสผ่าน
-                    </div>
-                </div>
-                <div class="col-12">
-                    <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                    <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')" ${(user.privilage == 'borrower') ? 'disabled' : '' }>
-                        <option ${(user.privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
-                        <option ${(user.privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
-                        <option ${(user.privilage == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
-                        <option ${(user.privilage == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้</option>
-                    </select>
-                </div>
-                <div class="col-6">
-                    <label for="edit-faculty" class="col-form-label text-secondary">คณะ</label>
-                    <select id="edit-faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value,'edit-major')" ${(user.privilage == 'teacher' || user.privilage == 'faculty') ? '' : 'disabled'}>
-                        <option selected disabled value="">เลือกคณะ..</option>
-                        ${faculties.map((faculty) => {
-                            return `<option value="${faculty.id}" ${(user.faculty_id == faculty.id) ? 'selected' : '' } >${faculty.faculty_name}</option>`
-                        }).join('')}
-                    </select>
-                    <div class="invalid-feedback">
-                        กรุณาเลือกคณะ
-                    </div>
-                </div>
-                <div class="col-6">
-                    <label for="edit-major" class="col-form-label text-secondary">สาขา</label>
-                    <select id="edit-major" class="form-select" aria-label="Default select example" name="major" ${(user.privilage == 'teacher') ? '' : 'disabled'}>
-                        <option selected disabled value="">เลือกสาขา..</option>
-                        ${majors.map((major) => {
-                            return `<option value="${major.id}" ${(user.major_id == major.id)? 'selected' : '' } >${major.major_name}</option>`
-                        }).join('')}
-                    </select>
-                    <div class="invalid-feedback">
-                        กรุณาเลือกสาขา
-                    </div>
-                </div>
-                <div class="text-end mt-3">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary" onclick="submitForm('edit-user')" >บันทึก</button>
-                </div>
-            </form>
-            `
-            // console.log('User by ID:', user);
-            })
-            .catch(error => {
-            // Handle errors
-            console.error('Error fetching user:', error);
-            });
-        }
-
         function showUserModal(userid){
-            // console.log(userid)
             getUserById(userid);
-            document.getElementById('button-showDataModal').click();
-
         }
+
+        function getUserById(userid) {
+        const modal = new bootstrap.Modal(document.getElementById('showDataModal'));
+        const modalContent = document.getElementById('showDataModal-content');
+            fetch(`{{url('admin/get_user_by_id/${userid}')}}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                return response.json();
+                }).then(data => {
+                    var user = data.user;
+                    var majors = data.majors;
+                    modalContent.innerHTML = `
+                    <form class="row" action="{{route('admin.editAccount')}}" method="POST" id="edit-user">
+                        @csrf
+                        <input type="hidden" name="id" class="form-control" value="${user.id}" required>
+                        <div class="col-6">
+                            <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
+                            <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
+                                <option >เลือกคำนำหน้าชื่อ</option>
+                                <option ${(user.prefix == 'นาย')? 'selected': ''} value="นาย">นาย</option>
+                                <option ${(user.prefix == 'นาง')? 'selected': ''} value="นาง">นาง</option>
+                                <option ${(user.prefix == 'นางสาว')? 'selected': ''} value="นางสาว">นางสาว</option>
+                            </select>
+                        </div>
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <label for="firstname" class="col-form-label">ชื่อ</label>
+                            <input type="text" name="firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
+                            <div class="invalid-feedback">
+                                กรุณากรอกชื่อ
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="lastname" class="col-form-label">นามสกุล</label>
+                            <input type="text" name="lastname" class="form-control need-custom-validate" value="${user.lastname}" required>
+                            <div class="invalid-feedback">
+                                กรุณากรอกนามสกุล
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="email" class="col-form-label">อีเมล</label>
+                            <input type="text" name="email" class="form-control need-custom-validate" value="${user.email}" required>
+                            <div class="invalid-feedback">
+                                กรุณากรอกอีเมลล์
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="password" class="col-form-label">รหัสผ่าน</label>
+                            <input id="input-password" type="password" name="password" class="form-control" value="">
+                            <div class="invalid-feedback">
+                                กรุณากรอกรหัสผ่าน
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
+                            <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')" ${(user.privilage == 'borrower') ? 'disabled' : '' }>
+                                <option ${(user.privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
+                                <option ${(user.privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
+                                <option ${(user.privilage == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
+                                <option ${(user.privilage == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="edit-faculty" class="col-form-label text-secondary">คณะ</label>
+                            <select id="edit-faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value,'edit-major')" ${(user.privilage == 'teacher' || user.privilage == 'faculty') ? '' : 'disabled'}>
+                                <option selected disabled value="">เลือกคณะ..</option>
+                                ${faculties.map((faculty) => {
+                                    return `<option value="${faculty.id}" ${(user.faculty_id == faculty.id) ? 'selected' : '' } >${faculty.faculty_name}</option>`
+                                }).join('')}
+                            </select>
+                            <div class="invalid-feedback">
+                                กรุณาเลือกคณะ
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="edit-major" class="col-form-label text-secondary">สาขา</label>
+                            <select id="edit-major" class="form-select" aria-label="Default select example" name="major" ${(user.privilage == 'teacher') ? '' : 'disabled'}>
+                                <option selected disabled value="">เลือกสาขา..</option>
+                                ${majors.map((major) => {
+                                    return `<option value="${major.id}" ${(user.major_id == major.id)? 'selected' : '' } >${major.major_name}</option>`
+                                }).join('')}
+                            </select>
+                            <div class="invalid-feedback">
+                                กรุณาเลือกสาขา
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                            <button type="button" class="btn btn-primary" onclick="submitForm('edit-user')" >บันทึก</button>
+                        </div>
+                    </form>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error fetching user:', error);
+                }
+            );
+
+            modal.show();
+        }
+
+        function showDeleteModal(id, firstname, lastname){
+            const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+            const modal_content = document.getElementById('deleteUserModalContent');
+            modal_content.innerHTML = ''; //reset modal content
+            modal_content.innerHTML = `
+                <div class="modal-header">
+                    <h5 class="modal-title">ลบบัญชีผู้ใช้</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="delete-modal-content" class="modal-body">
+                    ต้องการลบข้อมูลของผู้ใช้ <span class="text-danger">${firstname} ${lastname}</span>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-light" href="{{route('admin.deleteUser', ['id' => 'PLACEHOLDER_USER_ID' ])}}">ลบบัญชีผู้ใช้</a>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ยกเลิก</button>
+                </div>
+            `;
+            modal_content.innerHTML = modal_content.innerHTML.replace('PLACEHOLDER_USER_ID', id);
+            modal.show();
+        }
+
 
         function showPassword(inputId) {
         var passwordInput = document.getElementById(inputId);
@@ -431,5 +403,42 @@
                 facultySelectElement.required = false;
             }
         }
+
+        $(document).ready(function() {
+            $('#users-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url:"{{ route('admin.get.users') }}",
+                    type:'GET',
+                },
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'fullname', name: 'fullname' },
+                    { data: 'email', name: 'email' },
+                    { data: 'thai-privilage', name: 'thai-privilage' },
+                    { data: 'created_at', name: 'created_at' },
+                    { data: 'updated_at', name: 'updated_at' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
+                buttons: [],
+                responsive: true,
+                language: {
+                    "sProcessing": "กำลังประมวลผล...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
+                    "sSearch": "ค้นหา:",
+                    "oPaginate": {
+                        "sFirst": "แรก",
+                        "sPrevious": "ก่อนหน้า",
+                        "sNext": "ถัดไป",
+                        "sLast": "สุดท้าย"
+                    }
+                }
+            });
+        });
     </script>
 @endsection

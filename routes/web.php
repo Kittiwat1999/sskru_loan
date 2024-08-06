@@ -67,7 +67,8 @@ Route::delete('/admin/document_scheduler/deletedata/{document_id}',[AdminDocumen
 
 
 Route::get('/admin/manage_account',[UsersController::class,'index'])->name('admin_manage_account');
-Route::get('/admin/manage_account/{select_privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
+Route::get('/admin/manage_account/select_privilage/{select_privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
+Route::get('/admin/manage_account/get-users',[UsersController::class,'getUsers'])->name('admin.get.users');
 
 Route::get('/admin/get_user_by_id/{user_id}',[UsersController::class,'admin_get_user_by_id'])->name('admin.get_ser_by_id');
 

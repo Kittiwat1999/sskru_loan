@@ -498,7 +498,7 @@ admin document scheduler
 
     $(document).ready(function() {
             $('#documant-sheduler-table').DataTable({
-                "language": {
+                language: {
                     "sProcessing": "กำลังประมวลผล...",
                     "sLengthMenu": "แสดง _MENU_ รายการ",
                     "sZeroRecords": "ไม่พบข้อมูล",
@@ -512,7 +512,7 @@ admin document scheduler
                         "sNext": "ถัดไป",
                         "sLast": "สุดท้าย"
                     }
-                }
+                },
             });
         });
 </script>

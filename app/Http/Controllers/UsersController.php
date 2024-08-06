@@ -7,7 +7,7 @@ use App\Models\Users;
 use App\HTTP\Requests\AdminMgeAccountRequest;
 use App\Models\Borrower;
 use App\Models\Faculties;
-use App\Models\FacultyAccounts;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\Majors;
 use App\Models\TeacherAccounts;
 use Illuminate\Contracts\Session\Session;
@@ -15,19 +15,45 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
+    protected $privilage = [
+        'admin' => 'แอดมิน',
+        'employee' => 'พนักงานทุนฯ',
+        'teacher' => 'อาจารย์ที่ปรึกษา',
+        'borrower' => 'ผู้กู้',
+    ];
+
     function index(Request $request){
         $select_privilage = $request->session()->get('select_privilage','employee');
         $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
-        $request->session()->put('select_privilage', $select_privilage);
         $faculties = Faculties::where('isactive',true)->get();
         return view('/admin/manage_account',compact('users','faculties'));
     }
 
     function admin_getUsersDataByPrivilage(Request $request, $select_privilage){
         $request->session()->put('select_privilage', $select_privilage);
-        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
-        $faculties = Faculties::where('isactive',true)->get();
-        return view('/admin/manage_account',compact('users','faculties'));
+        return redirect('/admin/manage_account');
+    }
+
+    function getUsers(Request $request){
+        $select_privilage = $request->session()->get('select_privilage','employee');
+        if ($request->ajax()) {
+            $data = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('thai-privilage', function($row){
+                    return $this->privilage[$row->privilage];
+                })
+                ->addColumn('fullname', function($row){
+                    return $row->prefix . $row->firstname . $row->lastname;
+                })
+                ->addColumn('action', function($row){
+                    $editBtn = '<button type="button" class="btn btn-sm btn-primary" onclick="showUserModal('.$row->id.')" ><i class="bi bi-search"></i></button>';
+                    $deleteBtn = '<button id="button-delete-modal" type="button" class="btn btn-sm btn-secondary" onclick="showDeleteModal( \''.$row->id.'\',\''.$row->firstname.'\',\''.$row->lastname.'\' )"><i class="bi bi-trash"></i></button> ';
+                    return $editBtn . ' <div class="mt-2"></div> ' . $deleteBtn;
+                })
+                ->rawColumns(['thai-privilage','fullname','action'])
+                ->make(true);
+        }
     }
 
     function admin_get_user_by_id($user_id){
