@@ -244,7 +244,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
+        $privilage = "admin";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -293,7 +293,7 @@
             <li class="nav-item">
                 <a id="manage_data" class="nav-link collapsed" href="{{url('/admin/manage_data')}}">
                 <i class="bi bi-box-seam"></i>
-                <span>แก้ไขเอกสาร</span>
+                <span>แก้ไขข้อมูล</span>
                 </a>
             </li><!-- End แก้ไขเอกสาร Page Nav -->
         @endif

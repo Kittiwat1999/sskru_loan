@@ -16,7 +16,6 @@
                         <select id="select-level-show" class="form-select" aria-label="Default select example" name="privilage" required onchange="getUsersByPrivilage(this.value)">
                             <option {{($select_privilage == "admin") ? 'selected' : '' }} value="admin">แอดมิน</option>
                             <option {{($select_privilage == "employee") ? 'selected' : '' }} value="employee">พนักงานทุนฯ</option>
-                            <option {{($select_privilage == "faculty") ? 'selected' : '' }} value="faculty">คณะ</option>
                             <option {{($select_privilage == "teacher") ? 'selected' : '' }} value="teacher">อาจารย์ที่ปรึกษา</option>
                             <option {{($select_privilage == "borrower") ? 'selected' : '' }} value="borrower">ผู้กู้</option>
                         </select>
@@ -63,13 +62,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <label for="username" class="col-form-label">ชื่อบัญชี</label>
-                                                <input type="text" name="username" class="form-control" required>
-                                                <div class="invalid-feedback">
-                                                    กรุณากรอกชื่อบัญชี
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
                                                 <label for="email" class="col-form-label">อีเมล์</label>
                                                 <input type="text" name="email" class="form-control" required>
                                                 <div class="invalid-feedback">
@@ -90,7 +82,6 @@
                                                     <option selected disabled value="">เลือกประเภทผู้ใช้..</option>
                                                     <option value="admin">แอดมิน</option>
                                                     <option value="employee">พนักงานทุนฯ</option>
-                                                    <option value="faculty">คณะ</option>
                                                     <option value="teacher">อาจารย์ที่ปรึกษา</option>
                                                     <option value="borrower">ผู้กู้</option>
                                                 </select>
@@ -136,9 +127,9 @@
                     <table class="table datatable table-striped table-borderless">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">id</th>
                                 <th scope="col">ชื่อ-สกุล</th>
-                                <th scope="col">username</th>
+                                <th scope="col">อีเมล</th>
                                 <th scope="col">สิทธ์การใช้งาน</th>
                                 <th scope="col">created_at</th>
                                 <th scope="col">update-at</th>
@@ -152,9 +143,9 @@
                             ?>
                             @foreach($users as $user)
                             <tr>
-                                <td>{{$i++}}</td>
+                                <td>{{$user->id}}</td>
                                 <td class="text-dark fw-light">{{$user->prefix}} {{$user->firstname}} {{$user->lastname}}</td>
-                                <td>{{$user->username}}</td>
+                                <td>{{$user->email}}</td>
                                 <td>
                                     @if($user->privilage == "admin")
                                         แอดมิน
@@ -226,6 +217,7 @@
 
     <script>
         var faculties = @json($faculties);
+
         function getUserById(userid) {
         fetch(`{{url('admin/get_user_by_id/${userid}')}}`)
             .then(response => {
@@ -268,20 +260,13 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <label for="username" class="col-form-label">ชื่อผู้ใช้</label>
-                    <input type="text" name="username" class="form-control need-custom-validate" value="${user.username}" required>
-                    <div class="invalid-feedback">
-                        กรุณากรอกชื่อบัญชี
-                    </div>
-                </div>
-                <div class="col-6">
                     <label for="email" class="col-form-label">อีเมล</label>
                     <input type="text" name="email" class="form-control need-custom-validate" value="${user.email}" required>
                     <div class="invalid-feedback">
                         กรุณากรอกอีเมลล์
                     </div>
                 </div>
-                <div class="col-ุ">
+                <div class="col-6">
                     <label for="password" class="col-form-label">รหัสผ่าน</label>
                     <input id="input-password" type="password" name="password" class="form-control" value="">
                     <div class="invalid-feedback">
@@ -293,7 +278,6 @@
                     <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')" ${(user.privilage == 'borrower') ? 'disabled' : '' }>
                         <option ${(user.privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
                         <option ${(user.privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
-                        <option ${(user.privilage == 'faculty') ? 'selected':'' } value="faculty">คณะ</option>
                         <option ${(user.privilage == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
                         <option ${(user.privilage == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้</option>
                     </select>
@@ -356,7 +340,6 @@
         }
 
         function getUsersByPrivilage(select_privilage){
-            // console.log(privilage);
             window.location.href = '{{ route('admin.manageaccount.privilage', ['select_privilage' => ':select_privilage']) }}'.replace(':select_privilage', select_privilage);
         }
 
@@ -441,11 +424,6 @@
                 majorSelectElement.required = true;
                 facultySelectElement.disabled = false;
                 facultySelectElement.required = true;
-            }else if(privilageType == 'faculty'){
-                facultySelectElement.disabled = false;
-                facultySelectElement.required = true;
-                majorSelectElement.disabled = true;
-                majorSelectElement.required = false;
             }else{
                 majorSelectElement.disabled = true;
                 majorSelectElement.required = false;

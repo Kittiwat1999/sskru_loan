@@ -142,7 +142,7 @@ admin document scheduler
             <div class="card-body">
                 <h5 class="card-title">รายการกำหนดการ</h5>
                 <div class="table-responsive">
-                    <table class="table datatable table-striped">
+                    <table class="table table-striped" id="documant-sheduler-table">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -495,5 +495,25 @@ admin document scheduler
 
         return formattedDate;
     }
+
+    $(document).ready(function() {
+            $('#documant-sheduler-table').DataTable({
+                "language": {
+                    "sProcessing": "กำลังประมวลผล...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
+                    "sSearch": "ค้นหา:",
+                    "oPaginate": {
+                        "sFirst": "แรก",
+                        "sPrevious": "ก่อนหน้า",
+                        "sNext": "ถัดไป",
+                        "sLast": "สุดท้าย"
+                    }
+                }
+            });
+        });
 </script>
 @endsection

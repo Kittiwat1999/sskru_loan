@@ -28,7 +28,7 @@ class AdminDocumentSchedulerController extends Controller
         $doc_types = DocTypes::where('isactive',true)->get();
         $child_documents = ChildDocuments::where('isactive',true)->get();
         $useful_activity_hour = Config::where('variable','useful_activity_hour')->value('value');
-        $documents = Documents::where('isactive',true)->get();
+        $documents = Documents::where('isactive',true)->orderBy('created_at', 'desc')->get();
 
         foreach($documents as $document){
             $document['last_access'] = Users::where('id',$document['last_access'])->value('firstname');

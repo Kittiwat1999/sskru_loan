@@ -8,7 +8,7 @@
             <div class="card-body">
                 <h5 class="card-title">รายการหนังสือ</h5>
                 <div class="table-responsive mb-3">
-                    <table class="table datatable table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="doctype-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
@@ -132,7 +132,7 @@
                 <h5 class="card-title">รายการเอกสาร</h5>
                 
                 <div class="table-responsive mb-3">
-                    <table class="table datatable table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="child-document-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
@@ -285,7 +285,7 @@
                 <h5 class="card-title">รายการเอกสารแนบ</h5>
                 
                 <div class="table-responsive mb-3">
-                    <table class="table datatable table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="addon-document-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
@@ -662,5 +662,65 @@
             });
             return validate;
         }
+
+        $(document).ready(function() {
+            $('#doctype-table').DataTable({
+                "language": {
+                    "sProcessing": "กำลังประมวลผล...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
+                    "sSearch": "ค้นหา:",
+                    "oPaginate": {
+                        "sFirst": "แรก",
+                        "sPrevious": "ก่อนหน้า",
+                        "sNext": "ถัดไป",
+                        "sLast": "สุดท้าย"
+                    }
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('#child-document-table').DataTable({
+                "language": {
+                    "sProcessing": "กำลังประมวลผล...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
+                    "sSearch": "ค้นหา:",
+                    "oPaginate": {
+                        "sFirst": "แรก",
+                        "sPrevious": "ก่อนหน้า",
+                        "sNext": "ถัดไป",
+                        "sLast": "สุดท้าย"
+                    }
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('#addon-document-table').DataTable({
+                "language": {
+                    "sProcessing": "กำลังประมวลผล...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
+                    "sSearch": "ค้นหา:",
+                    "oPaginate": {
+                        "sFirst": "แรก",
+                        "sPrevious": "ก่อนหน้า",
+                        "sNext": "ถัดไป",
+                        "sLast": "สุดท้าย"
+                    }
+                }
+            });
+        });
     </script>
 @endsection

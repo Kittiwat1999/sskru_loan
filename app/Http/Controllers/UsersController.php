@@ -33,10 +33,7 @@ class UsersController extends Controller
     function admin_get_user_by_id($user_id){
         $user = Users::find($user_id);
         $majors = [];
-        if($user->privilage == 'faculty'){
-            $faculty_id = FacultyAccounts::where('user_id',$user->id)->value('faculty_id');
-            $user->faculty_id = $faculty_id;
-        }else if($user->privilage == 'teacher'){
+        if($user->privilage == 'teacher'){
             $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
             $majors = Majors::where('faculty_id',$teacher_account->faculty_id)->get();
             $user->faculty_id = $teacher_account->faculty_id;
@@ -66,29 +63,16 @@ class UsersController extends Controller
     function admin_createUser(AdminMgeAccountRequest $request){
         date_default_timezone_set("Asia/Bangkok");
         // dd($request);
-        $data = [
-            'prefix'=>$request->prefix,
-            'firstname'=>$request->firstname,
-            'lastname'=>$request->lastname,
-            'password'=>Hash::make($request->password),
-            'privilage'=>$request->privilage,
-            'email'=>$request->email,
-            'created_at'=>date('Y-m-d H:i:s'),
-            'updated_at'=>date('Y-m-d H:i:s')
-        ];
-        // dd($data);
-        $create_user = Users::create($data);
+        $user = new Users();
+        $user['prefix'] = $request->prefix;
+        $user['firstname'] = $request->firstname;
+        $user['lastname'] = $request->lastname;
+        $user['email'] = $request->email;
+        $user['password'] = Hash::make($request->password);
+        $user['privilage'] = $request->privilage;
+        $user['activated'] = true;
+        $user->save();
 
-        if($request->privilage == 'faculty'){
-            $request->validate(
-                ['faculty'=>'required|string'],
-                [
-                    'faculty.required' => 'บัญชีคณะต้องระบุคณะที่สังกัด',
-                    'faculty.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
-                ]
-                );
-            $faculty = $request->faculty;
-        }
         if($request->privilage == 'teacher'){
             $request->validate(
                 [   
@@ -104,23 +88,15 @@ class UsersController extends Controller
                 );
             $major = $request->major;
             $faculty = $request->faculty;
-
-        }
-
-        if($create_user->privilage == 'faculty'){
-            $faculty_account = new FacultyAccounts();
-            $faculty_account->user_id = $create_user->id;
-            $faculty_account->faculty_id = $faculty;
-            $faculty_account->save();
-        }else if($create_user->privilage == 'teacher'){
             $teacher_account = new TeacherAccounts();
-            $teacher_account->user_id = $create_user->id;
+            $teacher_account->user_id = $user['id'];
             $teacher_account->faculty_id = $faculty;
             $teacher_account->major_id = $major;
             $teacher_account->save();
+
         }
 
-        return redirect()->back()->with(['success'=>'เพิ่มข้อมูลผู้ใช้ user_id:'.$create_user->username.'แล้ว']);
+        return redirect()->back()->with(['success'=>'เพิ่มข้อมูลผู้ใช้ '. $user['firstname'] . ' '. $user['lastname'] . ' แล้ว']);
     }
 
     function admin_editAccount(Request $request){
@@ -174,17 +150,6 @@ class UsersController extends Controller
         }
 
         Users::where('id',$request->id)->update($data);
-
-        if($request->privilage == 'faculty' || $request->privilage == 'teacher'){
-            $request->validate(
-                ['faculty'=>'required|string'],
-                [
-                    'faculty.required' => 'บัญชีคณะต้องระบุคณะที่สังกัด',
-                    'faculty.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
-                ]
-                );
-            $faculty = $request->faculty;
-        }
         if($request->privilage == 'teacher'){
             $request->validate(
                 ['major'=>'required|string'],
@@ -194,42 +159,9 @@ class UsersController extends Controller
                 ]
                 );
             $major = $request->major;
+            $faculty = $request->faculty;
         }
 
-        if($user->privilage != $data['privilage']){
-            if($user->privilage == 'faculty'){
-                $faculty_account = FacultyAccounts::where('user_id',$user->id)->first();
-                $faculty_account->delete();
-            }else if($user->privilage == 'teacher'){
-                $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
-                $teacher_account->delete();
-            }
-
-            if($data['privilage'] == 'faculty'){
-                $faculty_account = new FacultyAccounts();
-                $faculty_account->user_id = $user->id;
-                $faculty_account->faculty_id = $faculty;
-                $faculty_account->save();
-            }else if($data['privilage'] == 'teacher'){
-                $teacher_account = new TeacherAccounts();
-                $teacher_account->user_id = $user->id;
-                $teacher_account->faculty_id = $faculty;
-                $teacher_account->major_id = $major;
-                $teacher_account->save();
-            }
-        }else{
-            if($user->privilage == 'faculty'){
-                $faculty_account = FacultyAccounts::where('user_id',$user->id)->first();
-                $faculty_account->faculty_id = $faculty;
-                $faculty_account->save();
-            }else if($user->privilage == 'teacher'){
-                $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
-                dd($teacher_account);
-                $teacher_account->faculty_id = $faculty;
-                $teacher_account->major_id = $major;
-                $teacher_account->save();
-            }
-        }
         return redirect()->back()->with(['success'=>'แก้ใขข้อมูลผู้ใช้เสร็จสิ้น']);
     }
 
