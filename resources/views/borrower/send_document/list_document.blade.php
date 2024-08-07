@@ -7,8 +7,8 @@
             <div class="card mb-3">
               <div class="row">
                 <div class="col-sm-4">
-                  <button class="button-46">
-                    <i class="bi bi-exclamation-square icon-46"></i>
+                  <button class="button-missing">
+                    <i class="bi bi-exclamation-square icon-missing"></i>
                   </button>
                 </div>
                 <div class="col-sm-8">
@@ -22,24 +22,44 @@
           </div>
           @endif
           @foreach ($documents as $document)
-            <div class="col-md-4 col-sm-12">
-              <div class="card mb-3 card-menu" onclick="gotoSendDoumnetPage('{{$document->id}}')">
-                <div class="row">
-                  <div class="col-sm-4">
-                    <button class="button-45">
-                      <i class="bi bi-file-earmark-text icon-45"></i>
-                    </button>
-                  </div>
-                  <div class="col-sm-8">
-                    <div class="card-body">
-                      <h5 class="card-title">{{$document->doctype_title}}</h5>
-                      <p><span class="text-secondary">ส่งได้ถึงวันที่:</span> {{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->end_date)->format('d-m-Y')}}</p>
+            @if ($document->borrower_status == 'sending')
+              <div class="col-md-4 col-sm-12">
+                <div class="card mb-3 card-menu-opening" onclick="gotoSendDoumnetPage('{{$document->id}}')">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <button class="button-opening">
+                        <i class="bi bi-file-earmark-text icon-opening"></i>
+                      </button>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{{$document->doctype_title}}</h5>
+                        <p><span class="text-secondary">ส่งได้ถึงวันที่:</span> {{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->end_date)->format('d-m-Y')}}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <a href="{{route('borrower.upload.document.page',['document_id'=>$document->id])}}" id="a-{{$document->id}}" class="d-none"></a>
+              <a href="{{route('borrower.upload.document.page',['document_id'=>$document->id])}}" id="a-{{$document->id}}" class="d-none"></a>
+            @else
+              <div class="col-md-4 col-sm-12">
+                <div class="card mb-3 card-menu-success">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <button class="button-success">
+                        <i class="bi bi-file-earmark-text icon-success"></i>
+                      </button>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="card-body">
+                        <h5 class="card-title">{{$document->doctype_title}}</h5>
+                        <p><span class="text-success">ส่งเอกสารแล้ว</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endif
           @endforeach
         </div>
     </section>

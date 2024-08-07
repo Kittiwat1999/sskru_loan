@@ -24,9 +24,8 @@ class UsersController extends Controller
 
     function index(Request $request){
         $select_privilage = $request->session()->get('select_privilage','employee');
-        $users = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
         $faculties = Faculties::where('isactive',true)->get();
-        return view('/admin/manage_account',compact('users','faculties'));
+        return view('/admin/manage_account',compact('faculties'));
     }
 
     function admin_getUsersDataByPrivilage(Request $request, $select_privilage){

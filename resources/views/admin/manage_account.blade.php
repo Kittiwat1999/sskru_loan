@@ -131,7 +131,7 @@
                                 <th scope="col">ชื่อ-สกุล</th>
                                 <th scope="col">อีเมล</th>
                                 <th scope="col">สิทธ์การใช้งาน</th>
-                                <th scope="col">created_at</th>
+                                {{-- <th scope="col">created_at</th> --}}
                                 <th scope="col">updated-at</th>
                                 <th scope="col">action</th>
                             </tr>
@@ -417,7 +417,7 @@
                     { data: 'fullname', name: 'fullname' },
                     { data: 'email', name: 'email' },
                     { data: 'thai-privilage', name: 'thai-privilage' },
-                    { data: 'created_at', name: 'created_at' },
+                    // { data: 'created_at', name: 'created_at' },
                     { data: 'updated_at', name: 'updated_at' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],

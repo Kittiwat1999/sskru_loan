@@ -1287,3 +1287,102 @@ h6{
   cursor: pointer;
   text-decoration: underline;
 }
+
+.icon-missing {
+  color: #FAA4A4;
+  font-size: 300%;
+}
+.button-missing {
+  position: relative;
+  width: 100%; /* Adjust as needed */
+  height: 100%;
+  background-color: #FFE7E7;
+  border:none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-missing:active,
+.button-missing:hover,
+.button-missing:focus {
+outline: 0;
+}
+
+.icon-opening {
+  color: #31708F;
+  font-size: 300%;
+}
+.button-opening {
+  position: relative;
+  width: 100%; /* Adjust as needed */
+  height: 100%;
+  background-color: #D9EDF7; /* Light blue background color */
+  border: 0.2rem solid #BCE8F1; /* Light blue border color */
+  /* border-radius: 12%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-opening:active,
+.button-opening:hover,
+.button-opening:focus {
+outline: 0;
+}
+
+.card-menu-opening:hover {
+  cursor: pointer;
+}
+
+.icon-success {
+  color: #fff;
+  font-size: 300%;
+}
+.button-success {
+  position: relative;
+  width: 100%; /* Adjust as needed */
+  height: 100%;
+  background-color: #20C97A; /* Light blue background color */
+  border: 0.2rem solid #349F6D; /* Light blue border color */
+  /* border-radius: 12%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-success:active,
+.button-success:hover,
+.button-success:focus {
+outline: 0;
+}

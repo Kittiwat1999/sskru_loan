@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\BorrowerDocumentController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\BorrowerInforamtionController;
@@ -266,9 +267,8 @@ Route::get('/teacher_index',function () {
 })->name('teacher_index');
 
 
-Route::get('/borrower/index', function () {
-    return view('/borrower/index');
-});
+Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
+Route::get('/borrower/borrower_document/document/{document_id}', [BorrowerDocumentController::class,'DocumentPage'])->name('borrower.document.page');
 
 Route::get('/borrower/information/information_list',[BorrowerInforamtionController::class,'index']);
 //borrower information

@@ -7,74 +7,6 @@
     <title>
         @yield('title')
     </title>
-    <style>
-        .icon-46 {
-            color: #FAA4A4;
-            font-size: 300%;
-        }
-        .button-46 {
-            position: relative;
-            width: 100%; /* Adjust as needed */
-            height: 100%;
-            background-color: #FFE7E7;
-            border:none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1rem;
-            font-weight: 700;
-            padding: 0;
-            text-align: center;
-            text-decoration: none;
-            transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            white-space: nowrap;
-        }
-
-        .button-46:active,
-        .button-46:hover,
-        .button-46:focus {
-        outline: 0;
-        }
-
-        .icon-45 {
-            color: #31708F;
-            font-size: 300%;
-        }
-        .button-45 {
-            position: relative;
-            width: 100%; /* Adjust as needed */
-            height: 100%;
-            background-color: #D9EDF7; /* Light blue background color */
-            border: 0.2rem solid #BCE8F1; /* Light blue border color */
-            /* border-radius: 12%; */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1rem;
-            font-weight: 700;
-            padding: 0;
-            text-align: center;
-            text-decoration: none;
-            transition: border .2s ease-in-out, box-shadow .2s ease-in-out;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            white-space: nowrap;
-        }
-
-        .button-45:active,
-        .button-45:hover,
-        .button-45:focus {
-        outline: 0;
-        }
-
-        .card-menu:hover {
-            cursor: pointer;
-        }
-    </style>
 
     <title>Dashboard - NiceAdmin Bootstrap Template</title>
     <meta content="" name="description">
@@ -244,7 +176,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "admin";//admin,borrower,faculty,teacher,employee
+        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -364,7 +296,7 @@
 
             <li class="nav-heading text-secondary">เอกสาร</li>
             <li class="nav-item">
-                <a id="index" class="nav-link collapsed" href="{{url('/borrower/index')}}">
+                <a id="borrower_document" class="nav-link collapsed" href="{{url('/borrower/borrower_document/index')}}">
                     <i class="bi bi-file-earmark-check"></i>
                 <span>เอกสารที่ส่งแล้ว</span>
                 </a>

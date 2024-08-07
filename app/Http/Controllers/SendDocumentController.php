@@ -53,7 +53,14 @@ class SendDocumentController extends Controller
         return $response;
     }
 
+    function convertToBuddhistDateTime(){
+        $currentDateTime = Carbon::now();
+        $buddhistDateTime = $currentDateTime->addYears(543);
+        return $buddhistDateTime->format('Y-m-d H:i:s');
+    }
+
     public function index(){
+        $user_id = Session::get('user_id','1');
         $current_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
         $documents = DocTypes::join('documents','doc_types.id','=','documents.doctype_id')
             ->where('documents.isactive',true)
@@ -61,7 +68,9 @@ class SendDocumentController extends Controller
             ->where('documents.end_date', '>=', $current_date)
             ->select('documents.*', 'doc_types.doctype_title')
             ->get();
-        // dd($documents);
+        foreach($documents as $document){
+            $document['borrower_status'] = BorrowerDocument::where('user_id',$user_id)->value('status') ?? 'sending';
+        }
         return view('borrower.send_document.list_document',compact('documents'));
     }
 
@@ -321,9 +330,10 @@ class SendDocumentController extends Controller
         $user_id = Session::get('user_id','1');
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
         $borrower_document['status'] = 'delivered';
+        $borrower_document['delivered_date'] = $this->convertToBuddhistDateTime();
         $borrower_document->save();
 
-        return view('borrower.index');
+        return redirect('/borrower/borrower_document/index');
     }
 
 }
