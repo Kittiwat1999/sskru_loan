@@ -18,26 +18,28 @@ class MultiTableSeeder extends Seeder
      */
     public function run():void
     {
-         $this->seedUsers();
-         $this->seedBorrowerApprearanceTypes();
-         $this->seedNeesessities();
-         $this->seedProperties();
-         $this->seedDouTypes();
-         $this->seedFaculties();
-         $this->seedBorrowers();
-         $this->seedParents();
-         $this->seedAddresses();
-         $this->seedBorrowerNecessities();
-         $this->seedBorrowerProperties();
-         $this->seedChildDocuments();
-         $this->seedConfig();
-         $this->seedDocuments();
-         $this->seedDocStructure();
-         $this->seedAddOnDocument();
-         $this->seedAddonStructure();
-         $this->seedChildDocumentFiles();
-         $this->seedAddOnDocumentExampleFiles();
-         $this->seedChildDocumentExampleFiles();
+        $this->seedUsers();
+        $this->seedBorrowerApprearanceTypes();
+        $this->seedNeesessities();
+        $this->seedProperties();
+        $this->seedDouTypes();
+        $this->seedFaculties();
+        $this->seedBorrowers();
+        $this->seedParents();
+        $this->seedAddresses();
+        $this->seedBorrowerNecessities();
+        $this->seedBorrowerProperties();
+        $this->seedChildDocuments();
+        $this->seedConfig();
+        $this->seedDocuments();
+        $this->seedDocStructure();
+        $this->seedAddOnDocument();
+        $this->seedAddonStructure();
+        $this->seedChildDocumentFiles();
+        $this->seedAddOnDocumentExampleFiles();
+        $this->seedChildDocumentExampleFiles();
+        $this->seedRegisterDocuments();
+        $this->seedRegisterTypes();
 
     }
 
@@ -402,6 +404,30 @@ class MultiTableSeeder extends Seeder
                 'created_at' => Carbon::parse('2024-07-29 02:56:15'),
                 'updated_at' => Carbon::parse('2024-07-29 02:56:15'),
             ],
+        ]);
+    }
+
+    private function seedRegisterDocuments(){
+        DB::table('register_documents')->insert([
+            ['title'=>'1. สำเนาบัตรประชาชนของนักศึกษา รับรองสำเนาถูกต้อง เฉพาะหน้าบัตร'],
+            ['title'=>'2. หนังสือให้ความยินยอมในการเปิดเผยข้อมูลของนักศึกษา'],
+            ['title'=>'3. สำเนาบัตรประชาชนของบิดา มารดา ผู้แทนโดยชอบธรรม รับรองสำเนาถูกต้อง เฉพาะหน้าบัตร'],
+            ['title'=>'4. หนังสือให้ความยินยอมในการเปิดเผยข้อมูลของบิดา มารดา ผู้แทนโดยชอบธรรม'],
+            ['title'=>'5.1 มีรายได้ประจำ แนบหนังสือรับรองเงินเดือน/สลิปเงินเดือน'],
+            ['title'=>'5.2 ไม่มีรายได้ประจำ (แบบกยศ.102 แนบสำเนาบัตรเจ้าหน้าที่ของรัฐ รับรองสำเนาถูกต้อง)'],
+            ['title'=>'6. หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)'],
+            ['title'=>'7. รูปถ่ายบ้านที่อยู่อาศัยของผู้ปกครองและนักศึกษา'],
+            ['title'=>'8. สำเนาใบรายงานผลการเรียน/สำเร็จการศึกษาในปีการศึกษาที่ผ่านมา'],
+            ['title'=>'9. บันทึกกิจกรรมจิตอาสา'],
+            ['title'=>'10. อื่นๆ (ถ้ามี) เช่น สำเนาบัตรสวัสดิการแห่งรัฐ/สำเนาใบเปลี่ยนชื่อ-สกุล/ใบมรณบัตร/ใบหย่า....'],
+        ]);
+    }
+
+    private function seedRegisterTypes(){
+        DB::table('register_types')->insert([
+            ['title'=>'เป็นผู้กู้ยืมรายใหม่'],
+            ['title'=>'เป็นผู้กู้ยืมรายเก่า'],
+
         ]);
     }
 }

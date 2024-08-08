@@ -61,6 +61,9 @@ class SendDocumentController extends Controller
 
     public function index(){
         $user_id = Session::get('user_id','1');
+        if(!CheckBorrowerInformation::check($user_id)){
+            return view('borrower/borrower_information_not_complete');
+        }
         $current_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
         $documents = DocTypes::join('documents','doc_types.id','=','documents.doctype_id')
             ->where('documents.isactive',true)
@@ -272,7 +275,6 @@ class SendDocumentController extends Controller
             $borrower_file['upload_date'] = date('Y-m-d');
             $borrower_file->save(); 
             $borrower_child_document['borrower_file_id'] = $borrower_file['id'];
-
         }
         $borrower_child_document->save();
 
@@ -303,9 +305,9 @@ class SendDocumentController extends Controller
 
         foreach($child_documents as $child_document){
             $child_document['borrower_child_document'] =  BorrowerChildDocument::where('borrower_child_documents.document_id', $document['id'])
-                                                                ->where('borrower_child_documents.child_document_id', $child_document['id'])
-                                                                ->where('borrower_child_documents.user_id', $user_id)
-                                                                ->first() ?? null;
+                ->where('borrower_child_documents.child_document_id', $child_document['id'])
+                ->where('borrower_child_documents.user_id', $user_id)
+                ->first() ?? null;
 
             if($child_document['isrequired']) $child_document_required_count += 1;
         }

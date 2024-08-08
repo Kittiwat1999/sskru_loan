@@ -42,6 +42,10 @@ class DownloadDocumentController extends Controller
 
     public function index(){
         $user_id = Session::get('user_id','1');
+
+        if(!CheckBorrowerInformation::check($user_id)){
+            return view('borrower/borrower_information_not_complete');
+        }
         $borrower_id = Session::get('borrower_id','1');
         $documents = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
             ->where('child_documents.isactive',true)

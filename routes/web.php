@@ -10,6 +10,8 @@ use App\Http\Controllers\BorrowerDocumentController;
 use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\BorrowerInforamtionController;
+use App\Http\Controllers\BorrowerRegister;
+use App\Http\Controllers\CheckBorrowerInformation;
 use App\Http\Controllers\GenerateFile;
 use App\Http\Controllers\GenerateDocController;
 use App\Http\Controllers\MainParentInfomationController;
@@ -393,9 +395,8 @@ Route::get('/borrower/document_submission',function () {
     return view('/borrower/document_submission');
 });
 
-Route::get('/borrower/borrower_register_index',function () {
-    return view('/borrower/borrower_register_index');
-});
-Route::get('/borrower/borrower_register',function () {
-    return view('/borrower/borrower_register');
-});
+Route::get('/borrower/borrower_register',[BorrowerRegister::class, 'index'])->name('borrower.register');
+Route::post('/borrower/borrower_register/regeister_type/submit',[BorrowerRegister::class, 'storeRegisterType'])->name('borrower.register.store.type');
+Route::get('/borrower/borrower_register/upload_document',[BorrowerRegister::class, 'uploadDocument'])->name('borrower.register.upload_document');
+Route::get('/borrower/borrower_register/result',[BorrowerRegister::class, 'result'])->name('borrower.register.result');
+Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');

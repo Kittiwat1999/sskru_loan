@@ -288,9 +288,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a id="borrower_register_index" class="nav-link collapsed" href="{{url('/borrower/borrower_register_index')}}">
+                <a id="borrower_register" class="nav-link collapsed" href="{{url('/borrower/borrower_register')}}">
                 <i class="bi bi-pass"></i>
-                <span>ยื่นกู้</span>
+                <span>ยื่นกู้รายใหม่</span>
                 </a>
             </li><!-- End กรอกข้อมูลผู้กู้ Page Nav -->
 
