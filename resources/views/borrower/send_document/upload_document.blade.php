@@ -25,7 +25,11 @@
     @foreach($child_documents as $child_document)
     <div class="card mb-3 {{ !empty($child_document['borrower_child_document']) ? 'border border-2 border-success' : '' }}">
         <div class="card-body">
-            <h5 class="card-title">{{$child_document->child_document_title}}</h5>
+            <h5 class="card-title">{{$child_document->child_document_title}} 
+                @if(!$child_document['isrequired'])
+                    <span class="text-warning">กรณีไม่มีให้ข้ามการอัพโหลดนี้</span>
+                @endif
+            </h5>
             <div class="row">
                 <div class="col-md-12 row mb-3 mx-0">
                     <label class="col-sm-2 col-form-label text-secondary" for="component-file">ไฟล์ประกอบไปด้วย</label>

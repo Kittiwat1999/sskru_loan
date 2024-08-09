@@ -397,6 +397,12 @@ Route::get('/borrower/document_submission',function () {
 
 Route::get('/borrower/borrower_register',[BorrowerRegister::class, 'index'])->name('borrower.register');
 Route::post('/borrower/borrower_register/regeister_type/submit',[BorrowerRegister::class, 'storeRegisterType'])->name('borrower.register.store.type');
-Route::get('/borrower/borrower_register/upload_document',[BorrowerRegister::class, 'uploadDocument'])->name('borrower.register.upload_document');
-Route::get('/borrower/borrower_register/result',[BorrowerRegister::class, 'result'])->name('borrower.register.result');
+
+Route::get('/borrower/borrower_register/upload_document',[BorrowerRegister::class, 'uploadDocumentPage'])->name('borrower.register.upload_document');
+Route::get('/borrower/borrower_register/get_examplefile/{child_document_id}/{file_for}',[SendDocumentController::class,'mergeExampleFile'])->name('borrower.register.get.examplefile');
+Route::post('/borrower/borrower_register/upload_file/{document_id}/{child_document_id}',[SendDocumentController::class,'uploadDocument'])->name('borrower.register.upload.document');
+Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}',[SendDocumentController::class,'editDocument'])->name('borrower.register.edit.document');
+Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}',[SendDocumentController::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
+
+Route::get('/borrower/borrower_register/result/page',[BorrowerRegister::class, 'result'])->name('borrower.register.result');
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');

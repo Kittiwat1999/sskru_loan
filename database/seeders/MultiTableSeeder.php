@@ -240,7 +240,8 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'สัญญากู้ยืม'],
             ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืมเกินหลักสูตร'],
-            ['child_document_title'=>'สำเนาบัตรประชาชนผู้กู้'],
+            ['child_document_title'=>'รูปถ่ายบ้านที่อยู่อาศัยของผู้ปกครองและนักศึกษา'],
+            ['child_document_title'=>'อื่นๆ (ถ้ามี) เช่น สำเนาบัตรสวัสดิการแห่งรัฐ/สำเนาใบเปลี่ยนชื่อ-สกุล/ใบมรณบัตร'],
         ]);
     }
 
@@ -257,13 +258,16 @@ class MultiTableSeeder extends Seeder
     }
     private function seedDocuments(){ 
         DB::table('documents')->insert([
-            ['doctype_id'=>'2','last_access'=>'1','year'=>'2566','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'0','start_date'=>'2567-02-19','end_date'=>'2567-09-01'],
+            ['doctype_id'=>'1','last_access'=>'1','year'=>'2566','term'=>'1','need_useful_activity'=>'1','need_teacher_comment'=>'1','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
         ]);
     }
 
     private function seedDocStructure(){
         DB::table('doc_structures')->insert([
-            ['document_id'=>'1','child_document_id'=>'9'],
+            ['document_id'=>'1','child_document_id'=>'1'],
+            ['document_id'=>'1','child_document_id'=>'2'],
+            ['document_id'=>'1','child_document_id'=>'3'],
+            ['document_id'=>'1','child_document_id'=>'4'],
             ['document_id'=>'1','child_document_id'=>'5'],
         ]);
     }
@@ -271,8 +275,7 @@ class MultiTableSeeder extends Seeder
     private function seedAddOnDocument(){
         DB::table('addon_documents')->insert([
             ['title'=>'สำเนาบัตรประจำตัวประชาชนผู้กู้','for_minors'=>false],
-            ['title'=>'สำเนาบัตรประจำตัวประชาชนบิดา','for_minors'=>false],
-            ['title'=>'สำเนาบัตรประจำตัวประชาชนมารดา','for_minors'=>false],
+            ['title'=>'สำเนาบัตรประจำตัวประชาชนผู้ปกครอง บิดา มารดา ผู้แทนโดยชอบธรรม','for_minors'=>false],
             ['title'=>'สำเนาบัตรประจำตัวประชาชนผู้แทนโดยชอบธรรม','for_minors'=>true],
             ['title'=>'สำเนาบัตรประจำตัวเจ้าหน้าที่รัฐ','for_minors'=>false],
 
@@ -281,6 +284,8 @@ class MultiTableSeeder extends Seeder
 
     private function seedAddonStructure(){
         DB::table('addon_structures')->insert([
+            ['child_document_id'=>'1','addon_document_id'=>1],
+            ['child_document_id'=>'2','addon_document_id'=>2],
             ['child_document_id'=>'7','addon_document_id'=>1],
             ['child_document_id'=>'7','addon_document_id'=>4],
         ]);

@@ -54,12 +54,12 @@ class DownloadDocumentController extends Controller
             ->get();
         // dd($documents);
         $parents = Parents::where('borrower_id',$borrower_id)->get();
-        return view('borrower.download_document',compact('documents','parents'));
+        return view('borrower.download_document.download_document',compact('documents','parents'));
     }
 
     public function recheck_document($document_id){
         $document = ChildDocuments::find($document_id);
-        return view('borrower.recheck_document',compact('document'));
+        return view('borrower.download_document.recheck_document',compact('document'));
     }
 
     public function response_file($document_id){
@@ -113,7 +113,7 @@ class DownloadDocumentController extends Controller
     public function recheck_parent_document($parent_id){
         $document_id = 2;
         $document = ChildDocuments::find($document_id);
-        return view('borrower.recheck_parent_document',compact('document','parent_id'));
+        return view('borrower.download_document.recheck_parent_document',compact('document','parent_id'));
     }
 
     public function response_parent_file($parent_id){

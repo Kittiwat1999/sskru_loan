@@ -4,224 +4,218 @@ admin document scheduler
 @endsection
 @section('content')
 <section class="section dashboard">
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">เพิ่มรายการส่งเอกสารสำหรับผู้กู้</h5>
-                <form class="row" action="{{route('admin.doc.scheduler.putdata')}}" method="post" id="document-scheduler-put-form">
-                    @csrf
-                    @method('PUT')
-                    <div class="col-md-3">
-                        <label for="term" class="col-form-label text-secondary">เลือกปีการศึกษา</label>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">เพิ่มรายการส่งเอกสารสำหรับผู้กู้</h5>
+            <form class="row" action="{{route('admin.doc.scheduler.putdata')}}" method="post" id="document-scheduler-put-form">
+                @csrf
+                @method('PUT')
+                <div class="col-md-3">
+                    <label for="term" class="col-form-label text-secondary">เลือกปีการศึกษา</label>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="term" id="term" class="form-control need-custom-validate">
+                    <div class="invalid-feedback">
+                        กรุณากรอกภาคเรียน
                     </div>
-                    <div class="col-md-2">
-                        <input type="text" name="term" id="term" class="form-control need-custom-validate">
-                        <div class="invalid-feedback">
-                            กรุณากรอกภาคเรียน
-                        </div>
+                </div>
+                <div class="col-md-1">
+                    <label for="yaer" class="col-form-label text-secondary">/</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="year" id="year" class="form-control need-custom-validate">
+                    <div class="invalid-feedback">
+                        กรุณากรอกปีการศึกษา
                     </div>
-                    <div class="col-md-1">
-                        <label for="yaer" class="col-form-label text-secondary">/</label>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3 mt-3">
+                    <label for="doctype_id" class="col-form-label text-secondary">เลือกหนังสือ</label>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <select id="add-doctype-id" name="doctype_id" class="form-select need-custom-validate" aria-label="Default select example" onchange="doctypeSelected(this.value,'add')">
+                        <option selected disabled value="" >เลือกหนังสือ...</option>
+                        @foreach($doc_types as $doc_type)
+                        <option value="{{$doc_type->id}}">{{$doc_type->doctype_title}}</option>
+                        @endforeach
+                    </select>
+                    <div class="invalid-feedback">
+                        กรุณาเลือกหนังสือ
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" name="year" id="year" class="form-control need-custom-validate">
-                        <div class="invalid-feedback">
-                            กรุณากรอกปีการศึกษา
-                        </div>
-                    </div>
-                    <div class="col-md-3"></div>
-                    <div class="col-md-3 mt-3">
-                        <label for="doctype_id" class="col-form-label text-secondary">เลือกหนังสือ</label>
-                    </div>
-                    <div class="col-md-6 mt-3">
-                        <select id="doctype_id" name="doctype_id" class="form-select need-custom-validate" aria-label="Default select example">
-                            <option selected disabled value="" >เลือกหนังสือ...</option>
-                            @foreach($doc_types as $doc_type)
-                            <option value="{{$doc_type->id}}">{{$doc_type->doctype_title}}</option>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3 mt-3">
+                    <label for="start-date" class="col-form-label text-secondary">เลือกเอกสาร</label>
+                </div>
+                <div class="col-md-9 mt-3">
+                    <div class="list-group">
+                        @foreach($child_documents as $child_document)
+                        <div class="list-group-item">
+                            <div class="form-check">
+                                <label class="form-check-label" for="add-document-{{$child_document->id}}">
+                                    {{$child_document->child_document_title}}
+                                    @if($child_document->need_loan_balance)
+                                        <span class="text-secondary">(ต้องการยอดเงินกู้)</span>
+                                    @endif
+                                    @if(!$child_document->isrequired)
+                                        <span class="text-secondary">(ส่งหรือไม่ก็ได้)</span>
+                                    @endif
+                                </label>
+                                <input class="form-check-input need-custom-validate" type="checkbox" id="add-document-{{$child_document->id}}" name="child_documents[]" value="{{$child_document->id}}">
+                            </div>
+                            @foreach($child_document->addon_documents as $addon_document)
+                                <small>+ {{$addon_document->title}} {{($addon_document->for_minors) ? '(สำหรับผู้กู้อายุต่ำว่า 20 ปี)' : '' }}</small><br>
                             @endforeach
-                        </select>
-                        <div class="invalid-feedback">
-                            กรุณาเลือกหนังสือ
+                        </div>
+                        @endforeach
+                        <div class="list-group-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="add-teacher-comment" name="need_teacher_comment" value="true">
+                                <label class="form-check-label" for="add-teacher-comment">
+                                    หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
+                                <label class="form-check-label" for="useful-act">
+                                    กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-3"></div>
-                    <div class="col-md-3 mt-3">
-                        <label for="start-date" class="col-form-label text-secondary">เลือกเอกสาร</label>
+                    <div id="checkbox-invalid-document-scheduler-put-form" class="invalid-feedback">
+                        กรุณาเลือกเอกสาร
                     </div>
-                    <div class="col-md-9 mt-3">
-                        <div class="list-group">
-                            @foreach($child_documents as $child_document)
-                            <div class="list-group-item">
-                                <div class="form-check">
-                                    <label class="form-check-label" for="document{{$child_document->id}}">
-                                        {{$child_document->child_document_title}}
-                                        @if($child_document->need_loan_balance)
-                                            <span class="text-secondary">(ต้องการยอดเงินกู้)</span>
-                                        @endif
-                                        @if(!$child_document->isrequired)
-                                            <span class="text-secondary">(ส่งหรือไม่ก็ได้)</span>
-                                        @endif
-                                    </label>
-                                    <input class="form-check-input need-custom-validate" type="checkbox" id="document{{$child_document->id}}" name="child_documents[]" value="{{$child_document->id}}">
-                                </div>
-                                @foreach($child_document->addon_documents as $addon_document)
-                                    <small>+ {{$addon_document->title}} {{($addon_document->for_minors) ? '(สำหรับผู้กู้อายุต่ำว่า 20 ปี)' : '' }}</small><br>
-                                @endforeach
-                            </div>
-                            @endforeach
-                            <div class="list-group-item">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true">
-                                    <label class="form-check-label" for="teacher-comment">
-                                        หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="list-group-item">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
-                                    <label class="form-check-label" for="useful-act">
-                                        กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="checkbox-invalid-document-scheduler-put-form" class="invalid-feedback">
-                            กรุณาเลือกเอกสาร
-                        </div>
 
-                        
-                    </div>
-                    <div class="col-sm-3 mt-3">
-                        <label for="start_date" class="col-form-label text-secondary">วันที่เริ่มต้น</label>
-                    </div>
-                    <div class="col-sm-5 mt-3">
-                        <div class="input-group date" id="">
-                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                            <input type="text" name="start_date" id="start_date" class="form-control need-custom-validate"
-                                placeholder="วว/ดด/ปปปป" required />
-                            <div class="invalid-feedback">
-                                กรุณากรอกวันที่เริ่มต้นการส่งเอกสาร
-                            </div>
+                    
+                </div>
+                <div class="col-sm-3 mt-3">
+                    <label for="start_date" class="col-form-label text-secondary">วันที่เริ่มต้น</label>
+                </div>
+                <div class="col-sm-5 mt-3">
+                    <div class="input-group date" id="">
+                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                        <input type="text" name="start_date" id="start_date" class="form-control need-custom-validate"
+                            placeholder="วว/ดด/ปปปป" required />
+                        <div class="invalid-feedback">
+                            กรุณากรอกวันที่เริ่มต้นการส่งเอกสาร
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
-                    <div class="col-sm-3 mt-3">
-                        <label for="end_date" class="col-form-label text-secondary">วันที่สิ้นสุด</label>
-                    </div>
-                    <div class="col-sm-5 mt-3">
-                        <div class="input-group date" id="">
-                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                            <input type="text" name="end_date" id="end_date" class="form-control need-custom-validate"
-                                placeholder="วว/ดด/ปปปป" required />
-                            <div class="invalid-feedback">
-                                กรุณากรอกวันที่สิ้นสุดการส่งเอกสาร
-                            </div>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-sm-3 mt-3">
+                    <label for="end_date" class="col-form-label text-secondary">วันที่สิ้นสุด</label>
+                </div>
+                <div class="col-sm-5 mt-3">
+                    <div class="input-group date" id="">
+                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                        <input type="text" name="end_date" id="end_date" class="form-control need-custom-validate"
+                            placeholder="วว/ดด/ปปปป" required />
+                        <div class="invalid-feedback">
+                            กรุณากรอกวันที่สิ้นสุดการส่งเอกสาร
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
-                    <div class="col-sm-3 mt-3">
-                        <label for="description" class="col-form-label text-secondary">คำอธิบาย</label>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-sm-3 mt-3">
+                    <label for="description" class="col-form-label text-secondary">คำอธิบาย</label>
+                </div>
+                <div class="col-sm-9 mt-3">
+                    <div class="input-group mt-3" id="description">
+                        <textarea class="form-control need-custom-validate" name="description" id="" cols="30" rows="5"></textarea>
                     </div>
-                    <div class="col-sm-9 mt-3">
-                        <div class="input-group mt-3" id="description">
-                            <textarea class="form-control need-custom-validate" name="description" id="" cols="30" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12 text-end mt-3">
-                        <button type="reset" class="btn btn-secondary">ล้างฟอร์ม</button>
-                        <button type="button" class="w-25 btn btn-success" onclick="document_scheduler_submitform('document-scheduler-put-form')">เพิ่ม</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="col-md-12 text-end mt-3">
+                    <button type="reset" class="btn btn-secondary">ล้างฟอร์ม</button>
+                    <button type="button" class="w-25 btn btn-success" onclick="document_scheduler_submitform('document-scheduler-put-form')">เพิ่ม</button>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">รายการกำหนดการ</h5>
-                <div class="table-responsive">
-                    <table class="table table-striped" id="documant-sheduler-table">
-                        <thead>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">รายการกำหนดการ</h5>
+            <div class="table-responsive">
+                <table class="table table-striped" id="documant-sheduler-table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">เอกสาร</th>
+                        <th scope="col" class="text-center">วันที่เริ่ม</th>
+                        <th scope="col" class="text-center">วันที่สิ้นสุด</th>
+                        <th scope="col">เพิ่มโดย</th>
+                        <th scope="col" class="text-center">แก้ใข / ลบ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($documents as $document)
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">เอกสาร</th>
-                            <th scope="col" class="text-center">วันที่เริ่ม</th>
-                            <th scope="col" class="text-center">วันที่สิ้นสุด</th>
-                            <th scope="col">เพิ่มโดย</th>
-                            <th scope="col" class="text-center">แก้ใข / ลบ</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($documents as $document)
-                            <tr>
-                                <td>{{$loop->index+1}}</td>
-                                <td>
-                                    <span>{{$document->doctype_title}}</span><br>
-                                    <span class="text-secondary fw-light">{{$document->term}} / {{$document->year}}</span>
-                                </td>
-                                <td class="text-center">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->start_date)->format('d-m-Y')}}</td>
-                                <td class="text-center">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->end_date)->format('d-m-Y')}}</td>
-                                <td>{{$document->last_access}}</td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary" onclick="fetchDocumnetById({{$document->id}})">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </button>
-                                        <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#deleteDocumentModal-{{$document->id}}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
+                            <td>{{$loop->index+1}}</td>
+                            <td>
+                                <span>{{$document->doctype_title}}</span><br>
+                                <span class="text-secondary fw-light">{{$document->term}} / {{$document->year}}</span>
+                            </td>
+                            <td class="text-center">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->start_date)->format('d-m-Y')}}</td>
+                            <td class="text-center">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $document->end_date)->format('d-m-Y')}}</td>
+                            <td>{{$document->last_access}}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-primary" onclick="fetchDocumnetById({{$document->id}})">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#deleteDocumentModal-{{$document->id}}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
 
-                                    {{-- edit modal --}}
-                                    <div>
-                                        <div class="modal fade" id="editDocumentModal" tabindex="-1" aria-hidden="true" style="display: none;">
-                                            <div class="modal-dialog modal-dialog-scrollable modal-xl">
-                                                <div class="modal-content" id="editDocumentModalContent">
-                                                    
-                                                </div>
+                                {{-- edit modal --}}
+                                <div>
+                                    <div class="modal fade" id="editDocumentModal" tabindex="-1" aria-hidden="true" style="display: none;">
+                                        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                                            <div class="modal-content" id="editDocumentModalContent">
+                                                
                                             </div>
-                                          </div>
-                                    </div>
+                                        </div>
+                                        </div>
+                                </div>
 
-                                    {{-- delete modal --}}
-                                    <div>
-                                        <div class="modal fade" id="deleteDocumentModal-{{$document->id}}" tabindex="-1" style="display: none;" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">ลบหนังสือ</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="{{route('admin.doc.scheduler.deletedata',['document_id' => $document->id])}}" method="post">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$document->doctype_title}} {{$document->term}} / {{$document->year}}</span> หรือไม่</label>
-                                                            
-                                                        {{-- </form> form must close here --}}
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary w-25" data-bs-dismiss="modal">ปิด</button>
-                                                        <button type="submit" class="btn btn-light">ลบ</button>
-                                                    </div>
-                                                </form> 
-                                                {{-- but i'm lazy and here to easy --}}
+                                {{-- delete modal --}}
+                                <div>
+                                    <div class="modal fade" id="deleteDocumentModal-{{$document->id}}" tabindex="-1" style="display: none;" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">ลบหนังสือ</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
+                                                <div class="modal-body">
+                                                    <form action="{{route('admin.doc.scheduler.deletedata',['document_id' => $document->id])}}" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <label for="" class="form-label">ต้องการลบ <span class="text-danger">{{$document->doctype_title}} {{$document->term}} / {{$document->year}}</span> หรือไม่</label>
+                                                        
+                                                    {{-- </form> form must close here --}}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary w-25" data-bs-dismiss="modal">ปิด</button>
+                                                    <button type="submit" class="btn btn-light">ลบ</button>
+                                                </div>
+                                            </form> 
+                                            {{-- but i'm lazy and here to easy --}}
                                             </div>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
 </section>
 
 @endsection
@@ -365,7 +359,7 @@ admin document scheduler
                         <label for="doctype_id" class="col-form-label text-secondary">เลือกหนังสือ</label>
                     </div>
                     <div class="col-md-6 mt-3">
-                        <select id="doctype_id" name="doctype_id" class="form-select need-custom-validate" aria-label="Default select example" value="${document_data.doctype_id}">
+                        <select id="edit-doctype-id" name="doctype_id" class="form-select need-custom-validate" aria-label="Default select example" onchange= "doctypeSelected(this.value,'edit')" value="${document_data.doctype_id}">
                             ${doc_types.map((doc_type)=>{
                                 return `<option ${(document_data.doctype_id == doc_type.id) ? 'selected' : '' } value="${doc_type.id}">${doc_type.doctype_title}</option>`
                             }).join('')}
@@ -383,10 +377,10 @@ admin document scheduler
                             ${child_documents.map((child_document)=>{
                                 return `<div class="list-group-item">
                                             <div class="form-check">
-                                                <label class="form-check-label" for="document">
+                                                <label class="form-check-label" for="edit-document-${child_document.id}">
                                                     ${child_document.child_document_title}
                                                 </label>
-                                                <input class="form-check-input need-custom-validate" type="checkbox"  name="child_documents[]" value="${child_document.id}" ${(document_data.child_document_id.includes(child_document.id)) ? 'checked' : ''}>
+                                                <input id="edit-document-${child_document.id}" class="form-check-input need-custom-validate" type="checkbox"  name="child_documents[]" value="${child_document.id}" ${(document_data.child_document_id.includes(child_document.id)) ? 'checked' : ''}>
                                             </div>
                                             ${child_document.addon_documents.map((addon_document)=>{
                                                 return `<small>+ ${addon_document.title} ${(addon_document.for_minors) ? '(สำหรับผู้กู้อายุต่ำว่า 20 ปี)' : '' } </small><br>`
@@ -396,16 +390,16 @@ admin document scheduler
                             
                             <div class="list-group-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="teacher-comment" name="need_teacher_comment" value="true" ${(document_data.need_teacher_comment) ? 'checked' : ''}>
-                                    <label class="form-check-label" for="teacher-comment">
+                                    <input class="form-check-input" type="checkbox" id="edit-teacher-comment" name="need_teacher_comment" value="true" ${(document_data.need_teacher_comment) ? 'checked' : ''}>
+                                    <label class="form-check-label" for="edit-teacher-comment">
                                         หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
                                     </label>
                                 </div>
                             </div>
                             <div class="list-group-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true" ${(document_data.need_useful_activity) ? 'checked' : ''}>
-                                    <label class="form-check-label" for="useful-act">
+                                    <input class="form-check-input" type="checkbox" id="edit-useful-act" name="need_useful_activity" value="true" ${(document_data.need_useful_activity) ? 'checked' : ''}>
+                                    <label class="form-check-label" for="edit-useful-act">
                                         กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
                                     </label>
                                 </div>
@@ -477,25 +471,22 @@ admin document scheduler
         });
     }
 
+    //format date form Y-m-d to d-m-Y
     function formatDate(inputDate) {
-        // Parse the input date string into a Date object
         const parts = inputDate.split("-");
         const year = parts[0];
         const month = parts[1];
         const day = parts[2];
-        const date = new Date(year, month - 1, day); // Month is 0-indexed in JavaScript Date object
-
-        // Get the day, month, and year components from the Date object
-        const formattedDay = String(date.getDate()).padStart(2, "0"); // Ensure leading zero if necessary
-        const formattedMonth = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed, so add 1
+        const date = new Date(year, month - 1, day);
+        const formattedDay = String(date.getDate()).padStart(2, "0");
+        const formattedMonth = String(date.getMonth() + 1).padStart(2, "0");
         const formattedYear = date.getFullYear();
-
-        // Construct the new date string in "dd-mm-YYYY" format
         const formattedDate = `${formattedDay}-${formattedMonth}-${formattedYear}`;
 
         return formattedDate;
     }
 
+    //thai data-table
     $(document).ready(function() {
         $('#documant-sheduler-table').DataTable({
             language: {
@@ -515,5 +506,18 @@ admin document scheduler
             },
         });
     });
+
+    function doctypeSelected(select_id,option){
+        const teacher_comment = document.getElementById(option + '-teacher-comment');
+        const required_child_document = document.getElementById(option + '-document-4');
+        
+        if(select_id == '1'){
+            teacher_comment.checked = true;
+            required_child_document.checked = true;
+        }else{
+            teacher_comment.checked = false;
+            required_child_document.checked = false;
+        }
+    }
 </script>
 @endsection

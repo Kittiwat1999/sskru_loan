@@ -401,14 +401,15 @@
         // const hostName = "http://127.0.0.1:8000";
 
         function activeSidebar(paths){
-            path.forEach(paths => {
-                activeElement = document.getElementById(paths);
+            for(let i = 0; i <= paths.length; i ++){
+                let activeElement = document.getElementById(paths[i]);
                 if(activeElement != null){
                     activeElement.className = 'nav-link '
                     var firstChild = activeElement.firstElementChild;
                     firstChild.className += '-fill';
+                    break;
                 }
-            });
+            }
         }
         var path = window.location.pathname; //get path name
         path = path.split('/');             //split path with '/'

@@ -52,7 +52,12 @@
                         @foreach($child_documents as $child_document)
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class=" {{ ($child_document->borrower_child_document) ? 'text-success' : 'text-dark' }}" >
-                                    <h6>- {{$child_document->child_document_title}} </h6>
+                                    <h6>
+                                        - {{$child_document->child_document_title}}
+                                        @if(!$child_document['isrequired'])
+                                            <small class="text-warning">กรณีไม่มีให้ข้ามการอัพโหลดนี้</small>
+                                        @endif
+                                    </h6>
                                     @if($child_document->need_loan_balance)
                                         <div class="px-4">
                                             <small class="text-dark"> ค่าเล่าเรียนที่เบิก: {{number_format($child_document->borrower_child_document->education_fee)}}</small><br>
@@ -163,7 +168,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary mt-3 w-25" onclick="nextPage('request-status-tab')">ถัดไป</button>
+                <button type="button" class="btn btn-primary mt-3 w-25" onclick="nextPage('request-status-tab')">บันทึกข้อมูล</button>
             </div>
         </div>
     </div>
