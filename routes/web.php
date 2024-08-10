@@ -406,3 +406,16 @@ Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_doc
 
 Route::get('/borrower/borrower_register/result/page',[BorrowerRegister::class, 'result'])->name('borrower.register.result');
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');
+
+Route::get('/admin/check_document/index',function () {
+    return view('/admin/check_document/index');
+});
+Route::get('/admin/check_document/select_check_document',function () {
+    return view('/admin/check_document/select_check_document');
+});
+Route::get('/admin/check_document/check_documents',function () {
+    return view('/admin/check_document/check_documents');
+});
+Route::get('/admin/check_document/document_submission',function () {
+    return view('/admin/check_document/document_submission');
+});
