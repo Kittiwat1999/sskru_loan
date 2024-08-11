@@ -177,7 +177,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
+        $privilage = "admin";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -268,6 +268,13 @@
             <a id="over_course" class="nav-link collapsed" href="{{url('over_course')}}">
             <i class="bi bi-file-earmark-diff"></i>
             <span>คำขอกู้เกินหลักสูตร</span>
+            </a>
+        </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
+
+        <li class="nav-item">
+            <a id="index" class="nav-link collapsed" href="{{url('/admin/check_document/index')}}">
+            <i class="bi bi-file-earmark-medical"></i>
+            <span>ตรวจเอกสาร</span>
             </a>
         </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
 
