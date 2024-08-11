@@ -2,27 +2,23 @@
 @section('title')
 ยื่นกู้
 @endsection
-<style>
+@section('style')
+    <style>
 
-    .label {
-        height: 100%;
-        width: 100%;
-    }
+        .label {
+            height: 100%;
+            width: 100%;
+        }
 
-    .nav-link.active {
-        background-color: #4382FB;
-        -webkit-clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
-        clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
-        color: white !important;
-    }
+        .nav-link.active {
+            background-color: #4382FB;
+            -webkit-clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+            color: white !important;
+        }
 
-    /* .status{
-        min-width: 100px; 
-        width: 100px; 
-        height: 20px; 
-        border-radius: 10px !important;
-    } */
-</style>
+    </style>
+@endsection
 @section('content')
 <section >
     <div class="card mb-3">
@@ -32,13 +28,25 @@
                     <a class="nav-link text-dark text-center m-0" id="borrower-type-tab" href="{{route('borrower.register')}}" role="tab" aria-controls="borrower-type" aria-selected="true">ประเภทผู้กู้ยืม</a>
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center m-0 active" id="send-documents-tab" href="{{route('borrower.register.upload_document')}}" >ส่งเอกสาร</a>
+                    @if(!($borrower_register_type == null))
+                        <a class="nav-link text-dark text-center m-0 active" id="send-documents-tab" href="{{route('borrower.register.upload_document')}}"></i>ส่งเอกสาร</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="send-documents-tab" href="#"><i class="bi bi-lock"></i>ส่งเอกสาร</a>
+                    @endif
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-secondary text-center m-0" id="check-documents-tab" href="{{route('borrower.register.result')}}" @disabled(false)>ตรวจสอบเอกสาร</a>
+                    @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="{{route('borrower.register.result')}}"></i>ตรวจสอบเอกสาร</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="#"><i class="bi bi-lock"></i>ตรวจสอบเอกสาร</a>
+                    @endif
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-secondary text-center m-0" id="request-status-tab" href="{{route('borrower.register.status')}}" @disabled(false)>สถานะคำร้อง</a>
+                    @if($have_register_document && $delivered_borrower_document)
+                        <a class="nav-link text-dark text-center m-0" id="request-status-tab" href="{{route('borrower.register.status')}}"></i>สถานะคำร้อง</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="request-status-tab" href="#"><i class="bi bi-lock"></i>สถานะคำร้อง</a>
+                    @endif
                 </li>
             </ul>
         </div>

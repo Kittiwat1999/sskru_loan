@@ -276,7 +276,6 @@ class SendDocumentController extends Controller
             $borrower_child_document['borrower_file_id'] = $borrower_file['id'];
         }
         $borrower_child_document->save();
-
         return redirect()->back()->with(['success'=>'แก้ไขไฟล์ '. $child_document_title . ' เสร็จสิ้น']);
     }
 

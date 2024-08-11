@@ -2,27 +2,23 @@
 @section('title')
 ยื่นกู้
 @endsection
-<style>
+@section('style')
+    <style>
 
-    .label {
-        height: 100%;
-        width: 100%;
-    }
+        .label {
+            height: 100%;
+            width: 100%;
+        }
 
-    .nav-link.active {
-        background-color: #4382FB;
-        -webkit-clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
-        clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
-        color: white !important;
-    }
+        .nav-link.active {
+            background-color: #4382FB;
+            -webkit-clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+            color: white !important;
+        }
 
-    /* .status{
-        min-width: 100px; 
-        width: 100px; 
-        height: 20px; 
-        border-radius: 10px !important;
-    } */
-</style>
+    </style>
+@endsection
 @section('content')
 <section >
     <div class="card mb-3">
@@ -32,13 +28,25 @@
                     <a class="nav-link text-dark text-center m-0" id="borrower-type-tab" href="{{route('borrower.register')}}" role="tab" aria-controls="borrower-type" aria-selected="true">ประเภทผู้กู้ยืม</a>
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center m-0" id="send-documents-tab" href="{{route('borrower.register.upload_document')}}" >ส่งเอกสาร</a>
+                    @if($borrower_register_type == null)
+                        <a class="nav-link text-dark text-center m-0" id="send-documents-tab" href="#"><i class="bi bi-lock"></i>ส่งเอกสาร</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="send-documents-tab" href="{{route('borrower.register.upload_document')}}"></i>ส่งเอกสาร</a>
+                    @endif
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center m-0 active" id="check-documents-tab" href="{{route('borrower.register.result')}}" >ตรวจสอบเอกสาร</a>
+                    @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
+                        <a class="nav-link text-dark text-center m-0 active" id="check-documents-tab" href="{{route('borrower.register.result')}}"></i>ตรวจสอบเอกสาร</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="#"><i class="bi bi-lock"></i>ตรวจสอบเอกสาร</a>
+                    @endif
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-secondary text-center m-0" id="request-status-tab" href="{{route('borrower.register.status')}}" @disabled(false)>สถานะคำร้อง</a>
+                    @if($have_register_document && $delivered_borrower_document)
+                        <a class="nav-link text-dark text-center m-0" id="request-status-tab" href="{{route('borrower.register.status')}}"></i>สถานะคำร้อง</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="request-status-tab" href="#"><i class="bi bi-lock"></i>สถานะคำร้อง</a>
+                    @endif
                 </li>
             </ul>
         </div>
@@ -93,85 +101,78 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">ข้าพเจ้าได้แนบเอกสารต่างๆ ตามที่กองทุนกำหนดเพื่อประกอบการพิจารณาครบถ้วนทุกรายการ อย่างละ 1 ฉบับ ได้แก่</h5>
-            <div class="row mx-2">
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="copy_student_id_card" id="copy_student_id_card" value="1">
-                    <label class="form-check-label mx-2" for="copy_student_id_card">
-                        1. สำเนาบัตรประชาชนของนักศึกษา รับรองสำเนาถูกต้อง เฉพาะหน้าบัตร
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="student_consent" id="student_consent" value="2">
-                    <label class="form-check-label mx-2" for="student_consent">
-                        2. หนังสือให้ความยินยอมในการเปิดเผยข้อมูลของนักศึกษา
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="copy_parent_id_card" id="copy_parent_id_card" value="3">
-                    <label class="form-check-label mx-2" for="copy_parent_id_card">
-                        3. สำเนาบัตรประชาชนของบิดา มารดา ผู้แทนโดยชอบธรรม รับรองสำเนาถูกต้อง เฉพาะหน้าบัตร
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="parent_consent" id="parent_consent" value="4">
-                    <label class="form-check-label mx-2" for="parent_consent">
-                        4. หนังสือให้ความยินยอมในการเปิดเผยข้อมูลของบิดา มารดา ผู้แทนโดยชอบธรรม
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    {{-- <input class="form-check-input" type="checkbox" name="family_income" id="family_income" value="5"> --}}
-                    <label class="form-check-label mx-2 mb-3" for="family_income">
-                        5. หนังสือรับรองรายได้ครอบครัว
-                    </label>
-                    <div class="col-12 form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="regular_income" id="regular_income" value="5.1">
-                        <label class="form-check-label mx-2 col-md-10 col-12" for="regular_income">
-                            5.1 มีรายได้ประจำ แนบหนังสือรับรองเงินเดือน/สลิปเงินเดือน
-                        </label>
-                    </div>
-                    <div class="col-12 form-check">
-                        <input class="form-check-input" type="checkbox" name="no_regular_income" id="no_regular_income" value="5.2">
-                        <label class="form-check-label mx-2 col-md-10 col-12" for="no_regular_income">
-                            5.2 ไม่มีรายได้ประจำ (แบบกยศ.102 แนบสำเนาบัตรเจ้าหน้าที่ของรัฐ รับรองสำเนาถูกต้อง)
-                        </label>
-                    </div>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="teacher_opinion" id="teacher_opinion" value="6">
-                    <label class="form-check-label mx-2" for="teacher_opinion">
-                        6. หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="house_photo" id="house_photo" value="7">
-                    <label class="form-check-label mx-2" for="house_photo">
-                        7. รูปถ่ายบ้านที่อยู่อาศัยของผู้ปกครองและนักศึกษา
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="gpa" id="gpa" value="8">
-                    <label class="form-check-label mx-2" for="gpa">
-                        8. สำเนาใบรายงานผลการเรียน/สำเร็จการศึกษาในปีการศึกษาที่ผ่านมา
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="activities" id="activities" value="9">
-                    <label class="form-check-label mx-2" for="activities">
-                        9. บันทึกกิจกรรมจิตอาสา
-                    </label>
-                </div>
-                <div class="col-12 form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="other" id="other" value="10">
-                    <label class="form-check-label mx-2" for="other">
-                        10. อื่นๆ (ถ้ามี) เช่น สำเนาบัตรสวัสดิการแห่งรัฐ/สำเนาใบเปลี่ยนชื่อ-สกุล/ใบมรณบัตร/ใบหย่า..............
-                    </label>
-                </div>
+            <div id="invalid-checkbox" class="invalid-feedback">
+                กรุณาระบุเอกสารที่ส่ง
             </div>
+            <form id="register-document-form" class="row mx-2" action="{{route('borrower.register.result.store')}}" method="POST">
+                @csrf
+                @foreach($register_documents as $index => $register_document)
+                    @if($index == 4)
+                        <label class="col-12 form-label m-0 p-0 mb-3" for="">
+                            5. หนังสือรับรองรายได้ครอบครัว
+                        </label>
+                    @endif
+
+                    @if($index == 4 || $index == 5)
+                        <div class="col-12 form-check mb-3">
+                            <div class="col-12 form-check">
+                                <input class="form-check-input" type="checkbox" name="register_document[]" id="register_document-{{$register_document}}" value="{{$register_document['id']}}" @checked($register_document['checked'])>
+                                <label class="form-check-label mx-2 col-md-10 col-12" for="register_document-{{$register_document}}">
+                                    {{$register_document['title']}}
+                                </label>
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-12 form-check mb-3">
+                            <input class="form-check-input" type="checkbox" name="register_document[]" id="register_document-{{$register_document}}" value="{{$register_document['id']}}" @checked($register_document['id'] == 7) @checked($register_document['checked'])>
+                            <label class="form-check-label mx-2" for="register_document-{{$register_document}}">
+                                {{$register_document['title']}}
+                            </label>
+                        </div>
+                    @endif
+                @endforeach
+            </form>
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary mt-3 w-25" onclick="nextPage('request-status-tab')">บันทึกข้อมูล</button>
+                <button type="button" class="btn btn-primary mt-3 w-25" onclick="submitForm('register-document-form')">ถัดไป</button>
             </div>
         </div>
     </div>
 
 </section>
+@endsection
+@section('script')
+    <script>
+        async function submitForm(form_id){
+            var validation = await validateForm(form_id) 
+
+            if(validation){
+                const form = document.getElementById(form_id);
+                form.submit();
+            }else{
+                alert('ยังไม่ระบุเอกสารที่ส่ง');
+                var invalid_element = document.getElementById('invalid-checkbox');
+                if(invalid_element)invalid_element.classList.add('d-inline');
+                window.scrollTo(0,0);
+            }
+        }
+
+        async function validateForm(form_id){
+            const form = document.getElementById(form_id);
+            const checkbox =  form.querySelectorAll('input[name="register_document[]"]');
+            validator = await validateCheckBox(checkbox);
+            return validator;
+        }
+
+        async function validateCheckBox(checkbox){
+            var checker = false;
+            for(let i = 0; i < checkbox.length; i ++){
+                if(checkbox[i].checked == true){
+                    checker = true;
+                    break;
+                }
+            }
+
+            return (checker) ? true : false;
+        }
+    </script>
 @endsection

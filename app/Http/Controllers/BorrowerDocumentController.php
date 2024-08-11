@@ -26,7 +26,8 @@ class BorrowerDocumentController extends Controller
         $user_id = Session::get('user_id','1');
         $borrower_documents = DocTypes::join('documents','doc_types.id','=','documents.doctype_id')
             ->join('borrower_documents','documents.id', '=', 'borrower_documents.document_id')
-            ->where('borrower_documents.user_id',$user_id)
+            ->where('borrower_documents.user_id', $user_id)
+            ->where('borrower_documents.status', 'delivered')
             ->select('documents.year', 'documents.term', 'doc_types.doctype_title','borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date','borrower_documents.check_date', 'borrower_documents.document_id')
             ->get();
         return view('borrower.documents.index', compact('borrower_documents'));
@@ -60,6 +61,7 @@ class BorrowerDocumentController extends Controller
         $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
         $child_documents = DocStructure::join('child_documents','doc_structures.child_document_id','=','child_documents.id')
             ->where('doc_structures.document_id',$document_id)
+            ->where('child_documents.id', '!=' , 4) //กยศ 101 ระบบออกให้
             ->get();
         $child_document_required_count = 0;
 
@@ -71,9 +73,11 @@ class BorrowerDocumentController extends Controller
                 ->where('borrower_child_documents.document_id', $document['id'])
                 ->where('borrower_child_documents.child_document_id', $child_document['id'])
                 ->where('borrower_child_documents.user_id', $user_id)
-                ->first();
+                ->first() ?? null ;
             if($child_document['isrequired']) $child_document_required_count += 1;
         }
+
+        // dd($child_document);
 
         return view('borrower.documents.document_page',
             compact(

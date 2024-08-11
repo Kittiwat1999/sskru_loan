@@ -25,7 +25,12 @@
     @foreach($child_documents as $child_document)
     <div class="card mb-3 {{ !empty($child_document['borrower_child_document']) ? 'border border-2 border-success' : '' }}">
         <div class="card-body">
-            <h5 class="card-title">{{$child_document->child_document_title}}</h5>
+            <h6 class="card-title">
+                {{$child_document->child_document_title}}
+                @if(!$child_document['isrequired'])
+                    <small class="text-warning">กรณีไม่มีให้ข้ามการอัพโหลดนี้</small>
+                @endif
+            </h6>
             <div class="row">
                 <div class="col-md-12 row mb-3 mx-0">
                     <label class="col-sm-2 col-form-label text-secondary" for="component-file">ไฟล์ประกอบไปด้วย</label>
@@ -105,10 +110,14 @@
                     @endif
                 @endif
                     <div class="row col-md-12 mx-0 px-0">
-                        <label class="col-sm-2 col-form-label text-success fw-bold" for="component-file">อัพโหลดไฟล์แล้ว</label>
-                        <div class="col-sm-10 mb-3">
-                            <a href="{{route('borrower.upload.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}" target="_blank" rel="noopener noreferrer" class="btn btn-success w-100">คลิกเพื่อดูไฟล์ที่อัพโหลด</a>
-                        </div>
+                        @if($child_document->borrower_child_document != null)
+                            <label class="col-sm-2 col-form-label text-success fw-bold" for="component-file">อัพโหลดไฟล์แล้ว</label>
+                            <div class="col-sm-10 mb-3">
+                                <a href="{{route('borrower.upload.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}" target="_blank" rel="noopener noreferrer" class="btn btn-success w-100">คลิกเพื่อดูไฟล์ที่อัพโหลด</a>
+                            </div>
+                        @else
+                            <label class="col-sm-2 col-form-label text-secondary fw-bold" for="component-file">ไม่ได้อัพโหลดเอกสาร</label>
+                        @endif
                     </div>
             </form>
     

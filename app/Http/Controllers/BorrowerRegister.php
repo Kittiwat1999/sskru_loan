@@ -7,6 +7,7 @@ use App\Models\Borrower;
 use App\Models\BorrowerChildDocument;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
+use App\Models\BorrowerRegisterDocument;
 use App\Models\BorrowerRegisterType;
 use App\Models\ChildDocumentExampleFiles;
 use App\Models\ChildDocuments;
@@ -14,11 +15,15 @@ use App\Models\Config;
 use App\Models\DocStructure;
 use App\Models\DocTypes;
 use App\Models\Documents;
+use App\Models\RegisterDocument;
+use App\Models\RegisterType;
 use App\Models\UsefulActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use iio\libmergepdf\Merger;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 
 class BorrowerRegister extends Controller
@@ -36,17 +41,80 @@ class BorrowerRegister extends Controller
         return $document ?? null;
     }
 
+    public function deleteFile($file_path,$file_name){
+        $path = storage_path($file_path.'/'.$file_name);
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+    }
+
+    private function storeFile($file_path,$file){
+        $path = storage_path($file_path);
+        !file_exists($path) && mkdir($path, 0777, true);
+        $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
+        $file->move($path, $name);
+        return $name;
+    }
+
+    public function displayFile($file_path,$file_name){
+        $path = storage_path($file_path.'/'.$file_name);
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    }
+
+    function convertToBuddhistDateTime(){
+        $currentDateTime = Carbon::now();
+        $buddhistDateTime = $currentDateTime->addYears(543);
+        return $buddhistDateTime->format('Y-m-d H:i:s');
+    }
+
     public function index(Request $request){
         $user_id = $request->session()->get('user_id','1');
-        $document_id = $this->checkActiveDocument();
+        $document = $this->checkActiveDocument();
         if(!CheckBorrowerInformation::check($user_id)){
             return view('borrower.borrower_information_not_complete');
         }
-        if($document_id == null){
+        if($document == null){
             return view('borrower.document_undefined');
         }
-        $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
-        return view('borrower.register.index',compact('borrower_register_type'));
+
+        $child_documents = DocStructure::join('child_documents','doc_structures.child_document_id','=','child_documents.id')
+        ->where('doc_structures.document_id',$document['id'])
+        ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
+        ->get();
+        $child_document_required_count = 0;
+        foreach($child_documents as $child_document){
+            $child_document['borrower_child_document'] =  BorrowerChildDocument::where('borrower_child_documents.document_id', $document['id'])
+                ->where('borrower_child_documents.child_document_id', $child_document['id'])
+                ->where('borrower_child_documents.user_id', $user_id)
+                ->first() ?? null;
+
+            if($child_document['isrequired']) $child_document_required_count += 1;
+        }
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id', $document['id'])->sum('hour_count') ?? 0 ;
+        $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
+        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document['id'])->count();
+        $have_register_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
+        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->where('status','delivered')->exists();
+
+
+        $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id) ->first();
+        return view('borrower.register.index',
+            compact(
+                'borrower_register_type',
+                'child_document_required_count',
+                'borrower_useful_activities_hours_sum',
+                'useful_activities_hours',
+                'borrower_child_document_delivered_count',
+                'have_register_document',
+                'delivered_borrower_document',
+            ));
     }
 
     public function storeRegisterType(Request $request){
@@ -70,7 +138,7 @@ class BorrowerRegister extends Controller
         $borrower_register_type['times'] = $request->times ?? null;
         $borrower_register_type->save();
 
-        return redirect('/borrower/borrower_register/upload_document');
+        return redirect('/borrower/borrower_register/upload_document')->with(['success'=>'บันทึกข้อมูลประเภทผู้กู้แล้ว']);
     }
 
     public function uploadDocumentPage(Request $request){
@@ -108,6 +176,9 @@ class BorrowerRegister extends Controller
                 ->first();
             if($child_document['isrequired']) $child_document_required_count += 1;
         }
+        $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id) ->first();
+        $have_register_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
+        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->where('status','delivered')->exists();
 
         return view('borrower.register.upload_document',
         compact(
@@ -119,6 +190,9 @@ class BorrowerRegister extends Controller
             'useful_activities_hours',
             'child_document_required_count',
             'borrower_child_document_delivered_count',
+            'borrower_register_type',
+            'have_register_document',
+            'delivered_borrower_document',
         ));
     }
     
@@ -211,8 +285,6 @@ class BorrowerRegister extends Controller
     }
 
     public function editDocument($document_id, $child_document_id, Request $request){
-        // dd($request);
-
         $rules = [
             'document_file' => 'file|mimes:jpg,png,jpeg,pdf|max:2048',
             'education_fee' => 'string',
@@ -300,6 +372,7 @@ class BorrowerRegister extends Controller
         ->where('doc_structures.document_id',$document['id'])
         ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
         ->get();
+
         $child_document_required_count = 0;
 
         foreach($child_documents as $child_document){
@@ -314,6 +387,14 @@ class BorrowerRegister extends Controller
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id', $document['id'])->sum('hour_count') ?? 0 ;
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
         $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document['id'])->count();
+        $register_documents = RegisterDocument::all();
+
+        foreach ($register_documents as $register_document){
+            $register_document['checked'] = BorrowerRegisterDocument::where('register_document_id', $register_document['id'])->where('user_id', $user_id)->exists();
+        }
+        $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id) ->first();
+        $have_register_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
+        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->where('status','delivered')->exists();
 
         return view('borrower.register.document_result',
             compact(
@@ -322,13 +403,94 @@ class BorrowerRegister extends Controller
                 'child_document_required_count',
                 'borrower_useful_activities_hours_sum',
                 'useful_activities_hours',
-                'borrower_child_document_delivered_count'
+                'borrower_child_document_delivered_count',
+                'register_documents',
+                'borrower_register_type',
+                'have_register_document',
+                'delivered_borrower_document',
             )
         );
     }
 
-    public function status(){
+    public function storeBorrowerRegisterDocument(Request $request){
+        $user_id = $request->session()->get('user_id', '1');
+        $document = $this->checkActiveDocument();
+        if($document == null){
+            return view('borrower.document_undefined');
+        }
+        $rules = [
+            'register_document' => 'required',
+            'register_document.*' => 'string|max:5',
+        ];
+        $messages = [
+            'register_document.required' => 'กรุณาเลือกไฟล์ที่ส่ง',
+            'register_document.*.string' => 'รูปแบบข้อมูลไม่ถุกต้อง',
+        ];
+        $request->validate($rules, $messages);
 
-        return view('borrower.register.status');
+        $register_document_Db = BorrowerRegisterDocument::where('user_id',$user_id)->pluck('register_document_id')->toArray();
+        $register_document_Req = $request->register_document;
+
+        $register_document_for_delete = array_diff($register_document_Db,$register_document_Req);
+        $register_document_for_add = array_diff($register_document_Req,$register_document_Db);
+
+        foreach($register_document_for_delete as $register_document_id){
+            BorrowerRegisterDocument::where('user_id',$user_id)->where('register_document_id',$register_document_id)->delete();
+        }
+
+        foreach($register_document_for_add as $register_document_id){
+            BorrowerRegisterDocument::create(['user_id'=>$user_id,'register_document_id'=>$register_document_id]);
+        }
+
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->first();
+        $borrower_document['status'] = 'delivered';
+        $borrower_document['delivered_date'] = $this->convertToBuddhistDateTime();
+        $borrower_document->save();
+
+        return redirect('/borrower/borrower_register/status')->with(['success'=>'บันทึกข้อมูลเสร็จสิ้น']);
+    }
+
+    public function status(Request $request){
+        $user_id = $request->session()->get('user_id','1');
+        $document = $this->checkActiveDocument();
+        if(!CheckBorrowerInformation::check($user_id)){
+            return view('borrower.borrower_information_not_complete');
+        }
+        if($document == null){
+            return view('borrower.document_undefined');
+        }
+        $child_documents = DocStructure::join('child_documents','doc_structures.child_document_id','=','child_documents.id')
+        ->where('doc_structures.document_id',$document['id'])
+        ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
+        ->get();
+
+        $child_document_required_count = 0;
+
+        foreach($child_documents as $child_document){
+            $child_document['borrower_child_document'] =  BorrowerChildDocument::where('borrower_child_documents.document_id', $document['id'])
+                ->where('borrower_child_documents.child_document_id', $child_document['id'])
+                ->where('borrower_child_documents.user_id', $user_id)
+                ->first() ?? null;
+
+            if($child_document['isrequired']) $child_document_required_count += 1;
+        }
+
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id',$user_id)->where('document_id', $document['id'])->sum('hour_count') ?? 0 ;
+        $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
+        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document['id'])->count();
+        $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id) ->first();
+        $have_register_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
+        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->where('status','delivered')->exists();
+
+        return view('borrower.register.status',
+        compact(
+            'child_document_required_count',
+            'borrower_useful_activities_hours_sum',
+            'useful_activities_hours',
+            'borrower_child_document_delivered_count',
+            'borrower_register_type',
+            'have_register_document',
+            'delivered_borrower_document',
+        ));
     }
 }

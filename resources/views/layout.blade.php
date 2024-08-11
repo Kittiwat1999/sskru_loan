@@ -8,6 +8,7 @@
         @yield('title')
     </title>
 
+    @yield('style')
     <title>Dashboard - NiceAdmin Bootstrap Template</title>
     <meta content="" name="description">
     <meta content="" name="keywords">

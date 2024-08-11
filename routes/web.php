@@ -399,10 +399,10 @@ Route::get('/borrower/borrower_register',[BorrowerRegister::class, 'index'])->na
 Route::post('/borrower/borrower_register/regeister_type/submit',[BorrowerRegister::class, 'storeRegisterType'])->name('borrower.register.store.type');
 
 Route::get('/borrower/borrower_register/upload_document',[BorrowerRegister::class, 'uploadDocumentPage'])->name('borrower.register.upload_document');
-Route::get('/borrower/borrower_register/get_examplefile/{child_document_id}/{file_for}',[SendDocumentController::class,'mergeExampleFile'])->name('borrower.register.get.examplefile');
-Route::post('/borrower/borrower_register/upload_file/{document_id}/{child_document_id}',[SendDocumentController::class,'uploadDocument'])->name('borrower.register.upload.document');
-Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}',[SendDocumentController::class,'editDocument'])->name('borrower.register.edit.document');
-Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}',[SendDocumentController::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
-
+Route::get('/borrower/borrower_register/get_examplefile/{child_document_id}/{file_for}',[BorrowerRegister::class,'mergeExampleFile'])->name('borrower.register.get.examplefile');
+Route::post('/borrower/borrower_register/upload_file/{document_id}/{child_document_id}',[BorrowerRegister::class,'uploadDocument'])->name('borrower.register.upload.document');
+Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}',[BorrowerRegister::class,'editDocument'])->name('borrower.register.edit.document');
+Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}',[BorrowerRegister::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
 Route::get('/borrower/borrower_register/result/page',[BorrowerRegister::class, 'result'])->name('borrower.register.result');
+Route::post('/borrower/borrower_register/result/store/',[BorrowerRegister::class, 'storeBorrowerRegisterDocument'])->name('borrower.register.result.store');
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');
