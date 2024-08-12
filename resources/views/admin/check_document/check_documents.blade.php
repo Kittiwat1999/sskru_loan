@@ -26,6 +26,25 @@
     background-color: #FFFFFF;
     padding: 5px 10px;
     }
+    iframe {
+      width: 100%;
+      border: none;
+    }
+    @media (max-width: 600px) {
+      iframe {
+        height: 400px;
+      }
+    }
+    @media (min-width: 601px) and (max-width: 1200px) {
+      iframe {
+        height: 500px;
+      }
+    }
+    @media (min-width: 1201px) {
+      iframe {
+        height: 1000px;
+      }
+    }
 </style>
 @section('content')
 <section class="section Editing">
@@ -45,7 +64,7 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
                                 <div class="accordion-body">
-                                    <iframe src="{{asset("assets/pdf/บัตรประชาชนผู้กู้.pdf")}}" frameborder="0" class="w-100" height="600"></iframe>
+                                    <iframe src="{{asset("assets/pdf/บัตรประชาชนผู้กู้.pdf")}}"></iframe>
                                 </div>
 
                                 <fieldset class="row mb-3 mt-3 mx-2">
@@ -73,21 +92,21 @@
 
                                     <div class="col-sm-2"></div>
                                     <div class="col-sm-5">
-                        
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="id_card_comment_1" disabled="">
                                             <label class="form-check-label" for="id_card_comment_1" name="id_card_comment_1">
                                                 เอกสารไม่ชัดเจน
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="id_card_comment_2" disabled="">
                                             <label class="form-check-label" for="id_card_comment_2" name="id_card_comment_2">
                                                 บัตรประชาชนหมดอายุ
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="id_card_more_radio" disabled="" onchange="enableInputArea('id_card_')">
                                             <label class="form-check-label" for="id_card_more_radio">
@@ -109,7 +128,7 @@
                                                 ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="id_card_comment_4" disabled="">
                                             <label class="form-check-label" for="id_card_comment_4" name="id_card_comment_4">
@@ -118,7 +137,7 @@
                                         </div>
 
                                     </div>
-                                    
+
                                     <div class="text-end mt-3">
                                         <button class="btn btn-primary col-4 col-md-2">ยืนยัน</button>
                                     </div>
@@ -136,7 +155,7 @@
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <iframe src="{{asset("assets/pdf/รายงานผลการเรียนผู้กู้.pdf")}}" frameborder="0" class="w-100" height="600"></iframe>
+                                    <iframe src="{{asset("assets/pdf/รายงานผลการเรียนผู้กู้.pdf")}}"></iframe>
                                 </div>
 
                                 <fieldset class="row mb-3 mt-3 mx-2">
@@ -164,21 +183,21 @@
 
                                     <div class="col-sm-2"></div>
                                     <div class="col-sm-5">
-                        
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="gpa_comment_1" disabled="">
                                             <label class="form-check-label" for="gpa_comment_1" name="gpa_comment_1">
                                                 เอกสารไม่ชัดเจน
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="gpa_comment_2" disabled="">
                                             <label class="form-check-label" for="gpa_comment_2" name="gpa_comment_2">
                                                 บัตรประชาชนหมดอายุ
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="gpa_more_radio" disabled="" onchange="enableInputArea('gpa_')">
                                             <label class="form-check-label" for="gpa_more_radio">
@@ -200,7 +219,7 @@
                                                 ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="gpa_comment_4" disabled="">
                                             <label class="form-check-label" for="gpa_comment_4" name="gpa_comment_4">
@@ -209,7 +228,7 @@
                                         </div>
 
                                     </div>
-                                    
+
                                     <div class="text-end mt-3">
                                         <button class="btn btn-primary col-4 col-md-2">ยืนยัน</button>
                                     </div>
@@ -227,7 +246,7 @@
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <iframe src="{{asset("assets/pdf/แบบยืนยัน(อย่างเดียว).pdf")}}" frameborder="0" class="w-100" height="600"></iframe>
+                                    <iframe src="{{asset("assets/pdf/แบบยืนยัน(อย่างเดียว).pdf")}}"></iframe>
                                 </div>
 
                                 <fieldset class="row mb-3 mt-3 mx-2">
@@ -255,21 +274,21 @@
 
                                     <div class="col-sm-2"></div>
                                     <div class="col-sm-5">
-                        
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="loan_form_comment_1" disabled="">
                                             <label class="form-check-label" for="loan_form_comment_1" name="loan_form_comment_1">
                                                 เอกสารไม่ชัดเจน
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="loan_form_comment_2" disabled="">
                                             <label class="form-check-label" for="loan_form_comment_2" name="loan_form_comment_2">
                                                 บัตรประชาชนหมดอายุ
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="loan_form_more_radio" disabled="" onchange="enableInputArea('loan_form_')">
                                             <label class="form-check-label" for="loan_form_more_radio">
@@ -291,7 +310,7 @@
                                                 ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
                                             </label>
                                         </div>
-                            
+
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="loan_form_comment_4" disabled="">
                                             <label class="form-check-label" for="loan_form_comment_4" name="loan_form_comment_4">
