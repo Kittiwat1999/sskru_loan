@@ -87,8 +87,8 @@ class MultiTableSeeder extends Seeder
             ['property_title' => 'มีรายได้ไม่เกิน 360,000 บาทต่อปี'],
             ['property_title' => 'ไม่เคยสำเร็จการศึกษาระดับปริญญาตรีสาขาใดๆมาก่อน'],
             ['property_title' => 'จบการศึกษาระดับมัธยมหรือเทียบเท่าแล้ว'],
-            ['property_title' => 'ไม่เป็นผู้มีงานประจำ'],
             ['property_title' => 'มีอายุไม่เกิน 30 ปีบริบูรณ์'],
+            ['property_title' => 'ไม่เป็นผู้มีงานประจำ'],
             ['property_title' => 'ไม่เป็นบุคคลล้มละลาย'],
             ['property_title' => 'ไม่เคยผิดหนี้ชำระกับกองทุน'],
             ['property_title' => 'ไม่เคยต้องโทษจำคุก'],
@@ -296,6 +296,7 @@ class MultiTableSeeder extends Seeder
             ['child_document_id'=>'3','original_name'=>'rabrongraidai.pdf','file_path'=>'child_document_files','file_name'=>'rabrongraidai.pdf','file_type'=>'pdf','full_path'=>'..'],
             ['child_document_id'=>'1','original_name'=>'yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
             ['child_document_id'=>'2','original_name'=>'parent-yinyorm.pdf','file_path'=>'child_document_files','file_name'=>'parent-yinyorm.pdf','file_type'=>'pdf','full_path'=>'..'],
+            ['child_document_id'=>'4','original_name'=>'borrower_101.pdf','file_path'=>'child_document_files','file_name'=>'borrower_101.pdf','file_type'=>'pdf','full_path'=>'..'],
         ]);
     }
 

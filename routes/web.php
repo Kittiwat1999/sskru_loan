@@ -346,18 +346,18 @@ Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}/{document_i
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 
-Route::get('/borrower/download_document/recheck_document/{document_id}',[DownloadDocumentController::class,'recheck_document'])->name('borrower.recheck.document');
-Route::get('/borrower/download_document/response_document/{document_id}',[DownloadDocumentController::class,'response_file'])->name('borrower.response.document');
+Route::get('/borrower/download_document/recheck_document/{child_document_id}',[DownloadDocumentController::class,'recheck_document'])->name('borrower.recheck.document');
+Route::get('/borrower/download_document/response_document/{child_document_id}',[DownloadDocumentController::class,'response_file'])->name('borrower.response.document');
 
 Route::get('/borrower/download_document/recheck_document/parent/{parent_id}',[DownloadDocumentController::class,'recheck_parent_document'])->name('borrower.recheck.parent.document');
 Route::get('/borrower/download_document/response_document/parent/{parent_id}',[DownloadDocumentController::class,'response_parent_file'])->name('borrower.response.parent.document');
 
+//test generate file
 Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraidai']);
 Route::get('/generate_yinyorm',[GenerateFile::class,'generate_yinyorm_student']);
 Route::get('/teachers_comment',[GenerateFile::class,'teachers_comment']);
 
-Route::get('/borrower_101_page_1',[GenerateDocController::class,'borrower_101_page_1']);
-Route::get('/borrower_101_page_2',[GenerateDocController::class,'borrower_101_page_2']);
+Route::get('/borrower_101',[GenerateDocController::class,'borrower_101']);
 
 Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
 Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
@@ -396,15 +396,24 @@ Route::get('/borrower/document_submission',function () {
 });
 
 Route::get('/borrower/borrower_register',[BorrowerRegister::class, 'index'])->name('borrower.register');
+Route::get('/borrower/borrower_register/register_type',[BorrowerRegister::class, 'registerType'])->name('borrower.register.type');
 Route::post('/borrower/borrower_register/regeister_type/submit',[BorrowerRegister::class, 'storeRegisterType'])->name('borrower.register.store.type');
 
 Route::get('/borrower/borrower_register/upload_document',[BorrowerRegister::class, 'uploadDocumentPage'])->name('borrower.register.upload_document');
 Route::get('/borrower/borrower_register/get_examplefile/{child_document_id}/{file_for}',[BorrowerRegister::class,'mergeExampleFile'])->name('borrower.register.get.examplefile');
+//puload document
 Route::post('/borrower/borrower_register/upload_file/{document_id}/{child_document_id}',[BorrowerRegister::class,'uploadDocument'])->name('borrower.register.upload.document');
 Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}',[BorrowerRegister::class,'editDocument'])->name('borrower.register.edit.document');
 Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}',[BorrowerRegister::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
+//result
 Route::get('/borrower/borrower_register/result/page',[BorrowerRegister::class, 'result'])->name('borrower.register.result');
 Route::post('/borrower/borrower_register/result/store/',[BorrowerRegister::class, 'storeBorrowerRegisterDocument'])->name('borrower.register.result.store');
+Route::get('/borrower/borrower_register/recheck',[BorrowerRegister::class, 'recheckDocument'])->name('borrower.register.recheck');
+Route::get('/borrower/borrower_register/sumit/document',[BorrowerRegister::class, 'submitDocument'])->name('borrower.register.sumit.document');
+//preview file
+Route::get('/borrower/borrower_register/recheck/document/{document_id}/{child_document_id}',[BorrowerRegister::class, 'generateFile101'])->name('borrower.register.generate.document');
+Route::get('/borrower/borrower_register/recheck/teacher-comment/{document_id}',[BorrowerRegister::class, 'generateFile103'])->name('borrower.register.generate.teacher.comment');
+
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');
 
 Route::get('/admin/check_document/index',function () {

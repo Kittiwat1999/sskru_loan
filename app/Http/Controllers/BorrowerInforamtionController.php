@@ -178,7 +178,6 @@ class BorrowerInforamtionController extends Controller
         $borrower['phone'] = $request->phone;
         $borrower['address_id'] = $address['id'];
         $borrower['borrower_appearance_id'] = $request->borrower_appearance;
-        $borrower['marital_status'] = json_encode('{"status":"","file_path":""}');
         $borrower->save();
 
         BorrowerNessessities::where('borrower_id',$borrower['id'])->delete();

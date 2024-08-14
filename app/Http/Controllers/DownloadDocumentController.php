@@ -47,44 +47,46 @@ class DownloadDocumentController extends Controller
             return view('borrower/borrower_information_not_complete');
         }
         $borrower_id = Session::get('borrower_id','1');
-        $documents = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
+        $child_documents = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
             ->where('child_documents.isactive',true)
             ->where('child_documents.id','!=','2')
+            ->where('child_documents.id','!=','4')
             ->select('child_documents.child_document_title','child_documents.id',)
             ->get();
         // dd($documents);
         $parents = Parents::where('borrower_id',$borrower_id)->get();
-        return view('borrower.download_document.download_document',compact('documents','parents'));
+        return view('borrower.download_document.download_document',compact('child_documents','parents'));
     }
 
-    public function recheck_document($document_id){
-        $document = ChildDocuments::find($document_id);
-        return view('borrower.download_document.recheck_document',compact('document'));
+    public function recheck_document($child_document_id){
+        $child_document = ChildDocuments::find($child_document_id);
+        return view('borrower.download_document.recheck_document',compact('child_document'));
     }
 
-    public function response_file($document_id){
+    public function response_file($child_document_id){
         $user_id = Session::get('user_id','1');
         $borrower_id = Session::get('borrower_id','1');
-        $document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
+        $child_document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
             ->where('child_documents.isactive',true)
-            ->where('child_documents.id' ,$document_id)
+            ->where('child_documents.id' ,$child_document_id)
             ->select('child_document_files.file_path','child_document_files.file_name','child_document_files.file_type','child_documents.child_document_title','child_documents.generate_file','child_documents.id')
             ->first();
 
-        if($document['generate_file']){
+        if($child_document['generate_file']){
             $generate = new GenerateFile();
 
-            switch ($document['id']) {
+            switch ($child_document['id']) {
                 case '1':
-                    $response = $generate->generate_yinyorm_student($user_id, $document);
-                    return $response;
+                    return  $generate->generate_yinyorm_student($user_id, $child_document);
                     break;
                 case '3':
-                    $response = $generate->generate_rabrongraidai($user_id, $document);
-                    return $response;
+                    return $generate->generate_rabrongraidai($user_id, $child_document);
+                    break;
+                case '4':
+                    return $generate->borrower_101($user_id, $child_document, 1);
                     break;
                 default:
-                    $filePath = public_path($document['file_path'].'/'.$document['file_name']);
+                    $filePath = public_path($child_document['file_path'].'/'.$child_document['file_name']);
                     if (!File::exists($filePath)) {
                         abort(404, 'File not found');
                     }
@@ -97,7 +99,7 @@ class DownloadDocumentController extends Controller
             }
 
         }else{
-            $filePath = public_path($document['file_path'].'/'.$document['file_name']);
+            $filePath = public_path($child_document['file_path'].'/'.$child_document['file_name']);
             if (!File::exists($filePath)) {
                 abort(404, 'File not found');
             }
@@ -111,27 +113,27 @@ class DownloadDocumentController extends Controller
     }
 
     public function recheck_parent_document($parent_id){
-        $document_id = 2;
-        $document = ChildDocuments::find($document_id);
-        return view('borrower.download_document.recheck_parent_document',compact('document','parent_id'));
+        $child_document_id = 2;
+        $child_document = ChildDocuments::find($child_document_id);
+        return view('borrower.download_document.recheck_parent_document',compact('child_document','parent_id'));
     }
 
     public function response_parent_file($parent_id){
         $user_id = Session::get('user_id','1');
-        $document_id = 2; //id ของหนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง
-        $document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
+        $child_document_id = 2; //id ของหนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง
+        $child_document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
             ->where('child_documents.isactive',true)
-            ->where('child_documents.id',$document_id)
+            ->where('child_documents.id', $child_document_id)
             ->select('child_document_files.file_path','child_document_files.file_name','child_document_files.file_type','child_documents.child_document_title','child_documents.generate_file','child_documents.id')
             ->first();
 
-        if($document['generate_file']){
+        if($child_document['generate_file']){
             $generate = new GenerateFile();
-            $response = $generate->generate_yinyorm_parent($parent_id, $user_id, $document);
+            $response = $generate->generate_yinyorm_parent($parent_id, $user_id, $child_document);
                 return $response;
 
         }else{
-            $filePath = public_path($document['file_path'].'/'.$document['file_name']);
+            $filePath = public_path($child_document['file_path'].'/'.$child_document['file_name']);
             if (!File::exists($filePath)) {
                 abort(404, 'File not found');
             }

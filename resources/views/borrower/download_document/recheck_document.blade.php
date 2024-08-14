@@ -10,7 +10,7 @@ preview document
                 <a class="open-link" onclick="openPDFInNewTab()" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
                 <div class="row my-6 mx-1  border border-2 mb-2">
                     <div class="col-md-12 iframe-container">
-                        <iframe id="pdfIframe" src="{{route('borrower.response.document',['document_id' => $document->id, 'request_type' => 'preview'])}}" frameborder="0" class="w-100" height="800"></iframe>
+                        <iframe id="pdfIframe" src="{{route('borrower.response.document',['child_document_id' => $child_document->id, 'request_type' => 'preview'])}}" frameborder="0" class="w-100" height="800"></iframe>
                     </div>
                 </div>    
                 <div class="text-end">

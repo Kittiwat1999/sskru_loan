@@ -24,25 +24,34 @@
     <div class="card mb-3">
         <div class="card-body pb-0 mb-0">
             <ul class="nav row mx-0 my-2" id="myTab" role="tablist">
-                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    <a class="nav-link text-dark text-center m-0" id="borrower-type-tab" href="{{route('borrower.register')}}" role="tab" aria-controls="borrower-type" aria-selected="true">ประเภทผู้กู้ยืม</a>
+                <li class="nav-item col-md-2 m-0 px-0 py-2" role="presentation">
+                    @if($step >= 1)
+                        <a class="nav-link text-dark text-center m-0" id="borrower-type-tab" href="{{route('borrower.register.type')}}" role="tab" aria-controls="borrower-type" aria-selected="true">ประเภทผู้กู้ยืม</a>
+                    @endif
                 </li>
-                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    @if(!($borrower_register_type == null))
+                <li class="nav-item col-md-2 m-0 px-0 py-2" role="presentation">
+                    @if($step >= 2)
                         <a class="nav-link text-dark text-center m-0 active" id="send-documents-tab" href="{{route('borrower.register.upload_document')}}"></i>ส่งเอกสาร</a>
                     @else
                         <a class="nav-link text-dark text-center m-0" id="send-documents-tab" href="#"><i class="bi bi-lock"></i>ส่งเอกสาร</a>
                     @endif
                 </li>
-                <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
-                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="{{route('borrower.register.result')}}"></i>ตรวจสอบเอกสาร</a>
+                <li class="nav-item col-md-2 m-0 px-0 py-2" role="presentation">
+                    @if($step >= 3)
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="{{route('borrower.register.result')}}"></i>สรุปการส่งเอกสาร</a>
                     @else
-                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="#"><i class="bi bi-lock"></i>ตรวจสอบเอกสาร</a>
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="#"><i class="bi bi-lock"></i>สรุปการส่งเอกสาร</a>
                     @endif
                 </li>
                 <li class="nav-item col-md-3 m-0 px-0 py-2" role="presentation">
-                    @if($have_register_document && $delivered_borrower_document)
+                    @if($step >= 4)
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="{{route('borrower.register.recheck')}}"></i>ตรวจสอบเอกสารของระบบ</a>
+                    @else
+                        <a class="nav-link text-dark text-center m-0" id="check-documents-tab" href="#"><i class="bi bi-lock"></i>ตรวจสอบเอกสารของระบบ</a>
+                    @endif
+                </li>
+                <li class="nav-item col-md-2 m-0 px-0 py-2" role="presentation">
+                    @if($step >= 5)
                         <a class="nav-link text-dark text-center m-0" id="request-status-tab" href="{{route('borrower.register.status')}}"></i>สถานะคำร้อง</a>
                     @else
                         <a class="nav-link text-dark text-center m-0" id="request-status-tab" href="#"><i class="bi bi-lock"></i>สถานะคำร้อง</a>

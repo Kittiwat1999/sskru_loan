@@ -26,13 +26,13 @@
                             </td>
                         </tr>
                         @endforeach
-                        @foreach($documents as $document)
+                        @foreach($child_documents as $child_document)
                         <tr>
                             <td>
-                                {{$document->child_document_title}}
+                                {{$child_document->child_document_title}}
                             </td>
                             <td>
-                                <a href="{{route('borrower.recheck.document',['document_id' => $document->id])}}" class="btn btn-primary">ตรวจสอบเอกสาร</a>
+                                <a href="{{route('borrower.recheck.document',['child_document_id' => $child_document->id])}}" class="btn btn-primary">ตรวจสอบเอกสาร</a>
                             </td>
                         </tr>
                         @endforeach
