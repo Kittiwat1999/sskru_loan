@@ -2,54 +2,56 @@
 @section('title')
 ตรวจเอกสาร
 @endsection
-<style>
-    .custom-dropdown-toggle {
-        text-align: left;
-        padding-left: 1rem;
-        padding-right: 1.5rem;
-        position: relative;
-    }
-    .custom-dropdown-toggle::after {
-        position: absolute;
-        right: 0.1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        border-top: 0.3em !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z'%3E%3C/path%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right .2rem center;
-        background-size: 24px 30px;
-        width: 100px;
-        height: 100px;
-    }
-    .custom-button{
-        border: 1px solid #ced4da;
-        padding: .375rem 2.25rem .375rem .75rem;
-        background-color: white;
-        border-radius: 4px;
-    }
-    .dropdown-item:hover {
-        background-color: #767676 !important;
-        color: #ffffff !important;
-        margin-top: 8px;
-        margin-bottom: 8px;
-  }
-    .dropdown-item.active {
-        background-color: #767676 !important;
-        color: #ffffff;
-        margin-top: 8px;
-        margin-bottom: 8px;
+@section('style')
+  <style>
+      .custom-dropdown-toggle {
+          text-align: left;
+          padding-left: 1rem;
+          padding-right: 1.5rem;
+          position: relative;
+      }
+      .custom-dropdown-toggle::after {
+          position: absolute;
+          right: 0.1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          border-top: 0.3em !important;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z'%3E%3C/path%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right .2rem center;
+          background-size: 24px 30px;
+          width: 100px;
+          height: 100px;
+      }
+      .custom-button{
+          border: 1px solid #ced4da;
+          padding: .375rem 2.25rem .375rem .75rem;
+          background-color: white;
+          border-radius: 4px;
+      }
+      .dropdown-item:hover {
+          background-color: #767676 !important;
+          color: #ffffff !important;
+          margin-top: 8px;
+          margin-bottom: 8px;
+      }
+      .dropdown-item.active {
+            background-color: #767676 !important;
+            color: #ffffff;
+            margin-top: 8px;
+            margin-bottom: 8px;
 
-  }
-    .dropdown-item{
-        border-radius: 10px;
-  }
-    .dropdown-menu{
-        border-radius: 20px !important;
-        padding-top: 0.1px !important;
-        padding-bottom: 0.1px !important;
-  }
-</style>
+      }
+      .dropdown-item{
+            border-radius: 10px;
+      }
+      .dropdown-menu{
+            border-radius: 20px !important;
+            padding-top: 0.1px !important;
+            padding-bottom: 0.1px !important;
+      }
+  </style>
+@endsection
 @section('content')
     <div class="card">
         <div class="card-body">

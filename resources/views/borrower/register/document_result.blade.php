@@ -101,6 +101,14 @@
                                 @endif
                             </li>
                         @endif
+                        @if($document->need_teacher_comment)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-success" >
+                                    <h6>- หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103) (ระบบออกเอกสารให้)</h6>
+                                </span>
+                                <i class="bi bi-check-square-fill text-success fs-5"></i>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>

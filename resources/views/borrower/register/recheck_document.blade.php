@@ -72,10 +72,10 @@
             </div>    
         </div>
     </div>
-
+    @if($document['need_teacher_comment'])
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">ตรวจสอบเอกสาร กยศ. 103</h5>
+            <h5 class="card-title">ตรวจสอบเอกสาร หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)</h5>
             <a class="open-link" onclick="openPDFInNewTab('pdf-103')" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
             <div class="row my-6 mx-1  border border-2 mb-2">
                 <div class="col-md-12 iframe-container">
@@ -84,7 +84,7 @@
             </div>    
         </div>
     </div>
-
+    @endif
     <div class="card">
         <div class="card-body row mx-0">
             <div class="col-md-9 col-sm-12"></div>

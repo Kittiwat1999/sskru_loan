@@ -177,7 +177,7 @@
 
     </header><!-- End Header -->
     <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
+        $privilage = "employee";//admin,borrower,faculty,teacher,employee
     ?>
     <aside id="sidebar" class="sidebar">
 
@@ -272,7 +272,7 @@
         </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
 
         <li class="nav-item">
-            <a id="index" class="nav-link collapsed" href="{{url('/admin/check_document/index')}}">
+            <a id="check_document" class="nav-link collapsed" href="{{url('check_document/index')}}">
             <i class="bi bi-file-earmark-medical"></i>
             <span>ตรวจเอกสาร</span>
             </a>

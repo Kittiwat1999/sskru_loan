@@ -2,50 +2,53 @@
 @section('title')
 ตรวจเอกสาร
 @endsection
+@section('style')
 <style>
-    .accordionContainer .accordionItem {
-    margin-bottom: 10px;
-    }
-    .accordionContainer .accordionHeader {
-    border-radius: 2px;
-    background-color: #F4F7FE;
-    padding: 5px;
-    font-weight: 700;
-    }
-    .accordionContainer .accordionHeader:hover {
-    cursor: pointer;
-    }
-    .accordionContainer .accordionContent {
-    overflow: hidden;
-    transition: 0.3s ease;
-    transform: tanslateZ(0);
-    height: 0px;
-    }
-    .accordionContainer .accordionContentInner {
-    padding: 15px 0;
-    background-color: #FFFFFF;
-    padding: 5px 10px;
-    }
-    iframe {
-      width: 100%;
-      border: none;
-    }
-    @media (max-width: 600px) {
-      iframe {
-        height: 400px;
-      }
-    }
-    @media (min-width: 601px) and (max-width: 1200px) {
-      iframe {
-        height: 500px;
-      }
-    }
-    @media (min-width: 1201px) {
-      iframe {
-        height: 1000px;
-      }
-    }
-</style>
+        .accordionContainer .accordionItem {
+        margin-bottom: 10px;
+        }
+        .accordionContainer .accordionHeader {
+        border-radius: 2px;
+        background-color: #F4F7FE;
+        padding: 5px;
+        font-weight: 700;
+        }
+        .accordionContainer .accordionHeader:hover {
+        cursor: pointer;
+        }
+        .accordionContainer .accordionContent {
+        overflow: hidden;
+        transition: 0.3s ease;
+        transform: tanslateZ(0);
+        height: 0px;
+        }
+        .accordionContainer .accordionContentInner {
+        padding: 15px 0;
+        background-color: #FFFFFF;
+        padding: 5px 10px;
+        }
+        iframe {
+        width: 100%;
+        border: none;
+        }
+        @media (max-width: 600px) {
+        iframe {
+            height: 400px;
+        }
+        }
+        @media (min-width: 601px) and (max-width: 1200px) {
+        iframe {
+            height: 500px;
+        }
+        }
+        @media (min-width: 1201px) {
+        iframe {
+            height: 1000px;
+        }
+        }
+    </style>
+@endsection
+
 @section('content')
 <section class="section Editing">
     <div class="card">

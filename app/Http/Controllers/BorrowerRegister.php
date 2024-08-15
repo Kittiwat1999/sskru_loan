@@ -523,7 +523,11 @@ class BorrowerRegister extends Controller
         }
 
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->first();
-        $borrower_document['status'] = 'wait-teacher-comment';
+        if($document['need_teacher_comment']){
+            $borrower_document['status'] = 'wait-teacher-comment';
+        }else{
+            $borrower_document['status'] = 'delivered';
+        }
         $borrower_document['delivered_date'] = $this->convertToBuddhistDateTime();
         $borrower_document->save();
         return redirect('/borrower/borrower_register/status')->with(['success'=>'บันทึกข้อมูลเสร็จสิ้น']);
@@ -541,6 +545,6 @@ class BorrowerRegister extends Controller
         }
 
         $step = $this->checkStep($document['id'], $user_id);
-        return view('borrower.register.status',compact('step'));
+        return view('borrower.register.status',compact('step','document'));
     }
 }

@@ -76,7 +76,7 @@
                             ผู้กู้ส่งเอกสาร
                         </div>
                     </div><!-- End activity item-->
-    
+                    @if($document['need_teacher_comment'])
                     <div class="activity-item d-flex">
                         <div class="col-2 pt-1">
                             <span class="badge bg-warning w-100">รอดำเนินการ</span>
@@ -87,6 +87,7 @@
                             อาจารย์ที่ปรึกษาให้ความเห็น
                         </div>
                     </div><!-- End activity item-->
+                    @endif
     
                     <div class="activity-item d-flex">
                         <div class="col-2 pt-1">

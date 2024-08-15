@@ -12,6 +12,7 @@ use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\BorrowerRegister;
 use App\Http\Controllers\CheckBorrowerInformation;
+use App\Http\Controllers\CheckDocumentController;
 use App\Http\Controllers\GenerateFile;
 use App\Http\Controllers\GenerateDocController;
 use App\Http\Controllers\MainParentInfomationController;
@@ -401,7 +402,7 @@ Route::post('/borrower/borrower_register/regeister_type/submit',[BorrowerRegiste
 
 Route::get('/borrower/borrower_register/upload_document',[BorrowerRegister::class, 'uploadDocumentPage'])->name('borrower.register.upload_document');
 Route::get('/borrower/borrower_register/get_examplefile/{child_document_id}/{file_for}',[BorrowerRegister::class,'mergeExampleFile'])->name('borrower.register.get.examplefile');
-//puload document
+//upload document
 Route::post('/borrower/borrower_register/upload_file/{document_id}/{child_document_id}',[BorrowerRegister::class,'uploadDocument'])->name('borrower.register.upload.document');
 Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}',[BorrowerRegister::class,'editDocument'])->name('borrower.register.edit.document');
 Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}',[BorrowerRegister::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
@@ -416,15 +417,13 @@ Route::get('/borrower/borrower_register/recheck/teacher-comment/{document_id}',[
 
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');
 
-Route::get('/admin/check_document/index',function () {
-    return view('/admin/check_document/index');
+Route::get('/check_document/index',[CheckDocumentController::class, 'index']);
+Route::get('/check_document/select_check_document',function () {
+    return view('check_document/select_check_document');
 });
-Route::get('/admin/check_document/select_check_document',function () {
-    return view('/admin/check_document/select_check_document');
+Route::get('/check_document/check_documents',function () {
+    return view('check_document/check_documents');
 });
-Route::get('/admin/check_document/check_documents',function () {
-    return view('/admin/check_document/check_documents');
-});
-Route::get('/admin/check_document/document_submission',function () {
-    return view('/admin/check_document/document_submission');
+Route::get('/check_document/document_submission',function () {
+    return view('check_document/document_submission');
 });

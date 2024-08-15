@@ -708,7 +708,7 @@ class GenerateFile extends Controller
         }
 
         if($parents != null){
-            foreach ($parents as &$parent){
+            foreach ($parents as $parent){
                 $parent['prefix'] = iconv('UTF-8', 'cp874', $parent['prefix']);
                 $parent['firstname'] = iconv('UTF-8', 'cp874', $parent['firstname']);
                 $parent['lastname'] = iconv('UTF-8', 'cp874', $parent['lastname']);
@@ -797,19 +797,19 @@ class GenerateFile extends Controller
             $borrower_house_no_input = 24;
             $borrower_house_no_length = strlen($borrower_address['house_no']);
             $borrower_house_no_x = 75+($borrower_house_no_input/2 - $borrower_house_no_length/2)-1;
-            $pdf->Text($borrower_house_no_x, 117, $borrower_address['house_no']);
+            $pdf->Text($borrower_house_no_x, 116.5, $borrower_address['house_no']);
 
-            $pdf->Text(107, 117, $borrower_address['village_no']);
+            $pdf->Text(107, 116.5, $borrower_address['village_no']);
 
             $borrower_tambon_input = 24;
             $borrower_tambon_length = strlen($borrower_address['tambon']);
             $borrower_tambon_x = 122+($borrower_tambon_input/2 - $borrower_tambon_length/2)-1;
-            $pdf->Text($borrower_tambon_x, 117, $borrower_address['tambon']);
+            $pdf->Text($borrower_tambon_x, 116.5, $borrower_address['tambon']);
 
             $borrower_aumphure_input = 26;
             $borrower_aumphure_length = strlen($borrower_address['aumphure']);
             $borrower_aumphure_x = 157+($borrower_aumphure_input/2 - $borrower_aumphure_length/2)-1;
-            $pdf->Text($borrower_aumphure_x, 117, $borrower_address['aumphure']);
+            $pdf->Text($borrower_aumphure_x, 116.5, $borrower_address['aumphure']);
 
             $borrower_province_input = 35;
             $borrower_province_length = strlen($borrower_address['province']);
@@ -899,7 +899,7 @@ class GenerateFile extends Controller
                 $pdf->Text($other_x, 177, $borrower['marital_status']);
             }
             
-            if(isset($parent[0])){
+            if(isset($parents[0])){
                 $parent1_fullname_input = 88;
                 $parent1_fullname_length = strlen($parents[0]['prefix'].$parents[0]['firstname'].'   '.$parents[0]['lastname']);
                 $parent1_fullname_x = 96+($parent1_fullname_input/2 - $parent1_fullname_length/2)-3;
@@ -921,7 +921,7 @@ class GenerateFile extends Controller
                 $pdf->Text($parent1_income_x, 192, $parents[0]['income']);
             }
 
-            if(isset($parent[1])){
+            if(isset($parents[1])){
                 $parent2_fullname_input = 69;
                 $parent2_fullname_length = strlen($parents[1]['prefix'].$parents[1]['firstname'].'   '.$parents[1]['lastname']);
                 $parent2_fullname_x = 114+($parent2_fullname_input/2 - $parent2_fullname_length/2)-3;
