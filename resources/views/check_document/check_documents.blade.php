@@ -334,7 +334,7 @@
                 </div>
             </div>
             <div class="text-end">
-                <a href="{{url('/admin/check_document/document_submission')}}" class="btn btn-primary col-4 col-md-3">ถัดไป</a>
+                <a href="{{url('check_document/document_submission')}}" class="btn btn-primary col-4 col-md-3">ถัดไป</a>
             </div>
         </div>
     </div>

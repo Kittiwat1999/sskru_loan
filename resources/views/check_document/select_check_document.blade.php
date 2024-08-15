@@ -137,7 +137,7 @@
                                     {{$borrower['date_return']}}
                                   </td>
                                   <td>
-                                    <a href="{{ url('/admin/check_document/check_documents') }}" class="btn btn-primary mt-4">ตรวจเอกสาร</a>
+                                    <a href="{{ url('check_document/check_documents') }}" class="btn btn-primary mt-4">ตรวจเอกสาร</a>
                                   </td>
                                 </tr>
                                 @endforeach
