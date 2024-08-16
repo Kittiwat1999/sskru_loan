@@ -27,7 +27,7 @@ class BorrowerDocumentController extends Controller
         $borrower_documents = DocTypes::join('documents','doc_types.id','=','documents.doctype_id')
             ->join('borrower_documents','documents.id', '=', 'borrower_documents.document_id')
             ->where('borrower_documents.user_id', $user_id)
-            ->where('borrower_documents.status', 'delivered')
+            ->where('borrower_documents.status', 'wait-employee-approve')
             ->orWhere('borrower_documents.status','wait-teacher-comment')
             ->select('documents.year', 'documents.term', 'doc_types.doctype_title','borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date','borrower_documents.check_date', 'borrower_documents.document_id')
             ->get();

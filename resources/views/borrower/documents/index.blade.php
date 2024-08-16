@@ -28,7 +28,7 @@ index borrower
                             <td>{{$document->id}}</td>
                             <td>
                             <span class="">{{$document->doctype_title}}</span><br>
-                            <span class="fw-light text-secondary">{{$document->year}} / {{$document->term}}</span>
+                            <span class="fw-light text-secondary">{{$document->term}} / {{$document->year}}</span>
                             </td>
                             <td>
                               <span class="text-secondary">
@@ -45,7 +45,7 @@ index borrower
                               </span>
                             </td>
                             <td>
-                            @if($document['status'] == "delivered" || $document['status'] == 'wait-teacher-comment')
+                            @if($document['status'] == "wait-employee-approve" || $document['status'] == 'wait-teacher-comment')
                                 <span class="badge bg-warning">รอการอนุมัติ</span>
                             @elseif($document['status'] == "rejected")
                                 <span class="badge bg-danger text-light">ต้องแก้ไข</span>

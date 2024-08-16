@@ -7,7 +7,7 @@
         <div class="card-body">
             <h5 class="card-title">รายการเอกสาร</h5>
             <div class="table-responsive mb-3">
-                <table class="table table-striped table-bordered" id="documents-table">
+                <table class="table table-striped" id="documents-table">
                     <thead>
                         <tr>
                             <th class="fw-bold">ID</th>
@@ -31,7 +31,7 @@
                                 <td class="text-center">{{$document['end_date']}}</td>
                                 <td class="text-center">{{$document['last_access']}}</td>
                                 <td class="text-center">
-                                    <a href="{{ url('check_document/select_check_document') }}" class="bugget btn btn-primary mt-1">ตรวจเอกสาร</a>
+                                    <a href="{{ route('check_document.select_document',[ 'document_id' => $document['id']]) }}" class="bugget btn btn-primary mt-1">ตรวจเอกสาร</a>
                                 </td>
                             </tr>
                         @endforeach

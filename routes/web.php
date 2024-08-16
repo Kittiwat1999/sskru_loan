@@ -418,12 +418,20 @@ Route::get('/borrower/borrower_register/recheck/teacher-comment/{document_id}',[
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');
 
 Route::get('/check_document/index',[CheckDocumentController::class, 'index']);
-Route::get('/check_document/select_check_document',function () {
-    return view('check_document/select_check_document');
-});
-Route::get('/check_document/check_documents',function () {
-    return view('check_document/check_documents');
-});
+Route::get('/check_document/select_document/{document_id}', [CheckDocumentController::class, 'selectDocument'])->name('check_document.select_document');
+Route::get('/check_document/select_document/borrower_documents/get/{document_id}',[CheckDocumentController::class, 'getBorrowerDocuments'])->name('select_document.borrower_documents.get');
+Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}', [CheckDocumentController::class, 'selectMajorByFacultyId']);
+// Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
+Route::post('/check_document/select_document/post/status/{document_id}', [CheckDocumentController::class, 'selectStatusDocument'])->name('check_document.select.status');
+
+Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');
+Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('view.borrower.document');
+Route::get('/check_document/check_borrower_document/previe/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
+
 Route::get('/check_document/document_submission',function () {
     return view('check_document/document_submission');
+});
+
+Route::get('/check_document/check_borrower_document',function () {
+    return view('check_document/check_documents_test');
 });

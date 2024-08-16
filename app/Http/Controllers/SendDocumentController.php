@@ -329,7 +329,7 @@ class SendDocumentController extends Controller
     public function submitDocument($document_id){
         $user_id = Session::get('user_id','1');
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
-        $borrower_document['status'] = 'delivered';
+        $borrower_document['status'] = 'wait-employee-approve';
         $borrower_document['delivered_date'] = $this->convertToBuddhistDateTime();
         $borrower_document->save();
 

@@ -258,17 +258,17 @@ class MultiTableSeeder extends Seeder
     }
     private function seedDocuments(){ 
         DB::table('documents')->insert([
-            ['doctype_id'=>'1','last_access'=>'1','year'=>'2566','term'=>'1','need_useful_activity'=>'1','need_teacher_comment'=>'1','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
+            ['doctype_id'=>'5','last_access'=>'1','year'=>'2567','term'=>'2','need_useful_activity'=>'0','need_teacher_comment'=>'0','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
         ]);
     }
 
     private function seedDocStructure(){
         DB::table('doc_structures')->insert([
-            ['document_id'=>'1','child_document_id'=>'1'],
-            ['document_id'=>'1','child_document_id'=>'2'],
-            ['document_id'=>'1','child_document_id'=>'3'],
-            ['document_id'=>'1','child_document_id'=>'4'],
-            ['document_id'=>'1','child_document_id'=>'5'],
+            ['document_id'=>'1','child_document_id'=>'7'],
+            // ['document_id'=>'1','child_document_id'=>'2'],
+            // ['document_id'=>'1','child_document_id'=>'3'],
+            // ['document_id'=>'1','child_document_id'=>'4'],
+            // ['document_id'=>'1','child_document_id'=>'5'],
         ]);
     }
 

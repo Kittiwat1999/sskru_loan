@@ -5,62 +5,66 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-
-            <div class="row">
-                <div class="col-md-4 mt-4 mb-3">
-                    <select id="menu" class="form-select" aria-label="Default select example">
-                        <option selected>สถานะเอกสาร</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
+            @php
+                $select_status = Session::get('select_status');
+                $select_faculty = Session::get('select_faculty');
+                $select_major = Session::get('select_major');
+                $select_grade = Session::get('select_grade');
+            @endphp
+            
+            <form class="row mb-3" action="{{route('check_document.select.status', ['document_id' => $document->id])}}" method="POST">
+                @csrf
+                <div class="col-md-4 my-3">
+                    <label for="status" class="col-form-label text-secondary">สถานะเอกสาร</label>
+                    <select id="status" class="form-select" aria-label="Default select example" name="status">
+                        <option @selected($select_status == 'wait-employee-approve') value="wait-employee-approve">รออนุมัติ</option>
+                        <option @selected($select_status == 'wait-teacher-comment') value="wait-teacher-comment">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
+                        <option @selected($select_status == 'approved') value="approved">อนุมัติแล้ว</option>
+                        <option @selected($select_status == 'rejected') value="rejected">ต้องแก้ไข</option>
+                        <option @selected($select_status == 'response-reject') value="response-reject">ต้องแก้ไข</option>
+                        <option @selected($select_status == 'sending') value="sending">ผู้กู้กำลังดำเนินการ</option>
                     </select>
                 </div>
-            </div>
-
-            <?php
-                date_default_timezone_set("Asia/Bangkok");
-
-                $loan_request = array(
-                array('id'=>'6410014103','name'=>'กิตติวัฒน์ เทียนเพ็ชร','faculty'=>'คณะศิลปศาสตร์และวิทยาศาสตร์','major'=>'สาขาวิชาวิทยาการคอมพิวเตอร์','ckeker_name'=>'ปกรณ์','grade'=>'3','date_return'=>date("Y-m-d H:i:s")),
-                array('id'=>'6410014102','name'=>'กฤษณะ ภารสุวรรณ','faculty'=>'คณะมนุษยศาสตร์และสังคมศาสตร์','major'=>'สาขาวิชาภาษาญี่ปุ่น','ckeker_name'=>'กรวี','grade'=>'1','date_return'=>date("Y-m-d H:i:s")),
-                array('id'=>'6410014101','name'=>'กฤษดา เจริญวิเชียรฉาย','faculty'=>'คณะบริหารธุรกิจและการบัญชี','major'=>'สาขาวิชาการบริหารธุรกิจ','ckeker_name'=>'มาโนช','grade'=>'1','date_return'=>date("Y-m-d H:i:s")),
-                array('id'=>'6410014106','name'=>'ภัทรนันท์ ประสานสุข','faculty'=>'วิทยาลัยกฎหมายและการปกครอง','major'=>'สาขาวิชารัฐประศาสนศาสตร์','ckeker_name'=>'สถาพร','grade'=>'4','date_return'=>date("Y-m-d H:i:s")),
-                );
-            ?>
-
-            <div class="row">
+                <div class="col-md-8"></div>
                 <div class="col-md-4">
                     <label for="borrower-type" class="col-form-label text-secondary">คณะ</label>
-                    <select id="faculty" class="form-select" aria-label="Default select example">
-                        <option selected>ทั้งหมด</option>
-                        <option value="1">คณะอะไร</option>
-                        <option value="2">หมูกรอบ</option>
+                    <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajors(this.value)">
+                        <option @selected($select_faculty == 'all') value="all">ทั้งหมด</option>
+                        @foreach($faculties as $faculty)
+                            <option @selected($select_faculty == $faculty->id) value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="borrower-type" class="col-form-label text-secondary">สาขา</label>
-                    <select id="major" class="form-select" aria-label="Default select example">
-                        <option selected>ทั้งหมด</option>
-                        <option value="1">สาขาอะไร</option>
-                        <option value="2">สักอย่าง</option>
+                    <select id="major" class="form-select" aria-label="Default select example" name="major">
+                        <option selected value="all">ทั้งหมด</option>
+                        @foreach($majors as $major)
+                            <option @selected($select_major == $major->id) value="{{$major->id}}">{{$major->major_name}}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-2">
                     <label for="grade" class="col-form-label text-secondary">ชั้นปี</label>
-                    <select id="grade" class="form-select" aria-label="Default select example">
-                        <option selected>ทั้งหมด</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
+                    <select id="grade" class="form-select" aria-label="Default select example" name="grade">
+                        <option @selected($select_grade == 'all') value="all">ทั้งหมด</option>
+                        <option @selected($select_grade == '1') value="1">1</option>
+                        <option @selected($select_grade == '2') value="2">2</option>
+                        <option @selected($select_grade == '3') value="3">3</option>
+                        <option @selected($select_grade == '4') value="4">4</option>
+                        <option @selected($select_grade == '5') value="5">5</option>
                     </select>
                 </div>
-                <div class="col-md-12"><p class="text-secondary mt-3 mb-3">จำนวน {{ count($loan_request) }} ราย</p></div>
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                    <!-- Dark Table -->
-                    <table class="table table-striped">
-                        <thead>
+
+                <div class="col-md-2 d-flex flex-column justify-content-end">
+                    <button type="submit" class="btn btn-primary">นำไปใช้</button>
+                </div>
+
+            </form>
+            <div class="table-responsive">
+                <!-- Dark Table -->
+                <table id="borrower-documents-table" class="table table-striped">
+                    <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">รหัสนักศึกษา</th>
@@ -68,34 +72,76 @@
                             <th scope="col">วันที่ส่งเอกสาร</th>
                             <th class="text-center"></th>
                         </tr>
-                        </thead>
-                        <tbody >
-                        <?php $i = 1?>
-                        @foreach($loan_request as $borrower)
-                        <tr onclick="showdocModal({{$borrower['id']}})">
-                            <td>{{ $i++ }}</td>
-                            <td>{{$borrower['id']}}</td>
-                            <td>
-                            <span>{{$borrower['name']}}</span><br>
-                            <span class="text-secondary fw-lighter">คณะ: {{$borrower['faculty']}}</span><br>
-                            <span class="text-secondary fw-lighter">สาขา: {{$borrower['major']}}</span><br>
-                            <span class="text-secondary fw-lighter">ชั้นปี: {{$borrower['grade']}}</span><br>
-                            </td>
-                            <td>
-                            {{$borrower['date_return']}}
-                            </td>
-                            <td>
-                            <a href="{{ url('check_document/check_documents') }}" class="btn btn-primary mt-4">ตรวจเอกสาร</a>
-                            </td>
-                        </tr>
-                        @endforeach
-
-                        </tbody>
-                    </table>
-                    </div>
-                    <!-- End Dark Table -->
-                </div>
+                    </thead>
+                </table>
             </div>
+                <!-- End Dark Table -->
         </div>
     </div>
+@endsection
+@section('script')
+<script>
+    $(document).ready(function() {
+            $('#borrower-documents-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url:"{{ route('select_document.borrower_documents.get', ['document_id' => $document['id'] ]) }}",
+                    type:'GET',
+                },
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'student_id', name: 'student_id' },
+                    { data: 'information', name: 'information' },
+                    { data: 'delivered_date', name: 'delivered_date' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
+                buttons: [],
+                responsive: true,
+                language: {
+                    "sProcessing": "กำลังประมวลผล...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
+                    "sSearch": "ค้นหา:",
+                    "oPaginate": {
+                        "sFirst": "แรก",
+                        "sPrevious": "ก่อนหน้า",
+                        "sNext": "ถัดไป",
+                        "sLast": "สุดท้าย"
+                    }
+                }
+            });
+        });
+
+        function getMajors(faculty_id){
+            fetch(`{{url('/check_document/select_document/get-major-by-faculty-id/${faculty_id}')}}`)
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(majors => {
+                // console.log(majors);
+                const major_select = document.getElementById('major');
+                major_select.innerHTML = '';
+                var first_option = document.createElement('option');
+                first_option.value = 'all';
+                first_option.textContent = 'ทั้งหมด';
+                major_select.appendChild(first_option);
+                majors.forEach((major) => {
+                    var newOption = document.createElement('option');
+                    newOption.value = major.id;
+                    newOption.textContent = major.major_name;
+                    major_select.appendChild(newOption);
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch majors operation:', error);
+            });
+        }
+</script>
 @endsection
