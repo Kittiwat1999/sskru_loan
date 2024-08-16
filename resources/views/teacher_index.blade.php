@@ -16,7 +16,7 @@
                     <button class="nav-link" id="appove-tab" data-bs-toggle="tab" data-bs-target="#appove" type="button" role="tab" aria-controls="appove" aria-selected="false">ให้ความเห็นแล้ว</button>
                     </li>
                 </ul>
-                <?php 
+                <?php
                     date_default_timezone_set("Asia/Bangkok");
                     $loan_requests = array(
                         array('id'=>'6410014103','name'=>'กิตติวัฒน์ เทียนเพ็ชร','faculty'=>'คณะศิลปศาสตร์และวิทยาศาสตร์','major'=>'สาขาวิชาวิทยาการคอมพิวเตอร์','professor'=>'อลงกรณ์','faculty_check'=>'อนุมัติ','ckeker_name'=>'ปกรณ์','grade'=>'3','send_date'=>date("Y-m-d H:i:s"),'approve_date'=>date("Y-m-d H:i:s"),'tel'=>'0931037881','type'=>'กู้มาผ่อน Iphone 15 promax','age'=>'24','comment'=>array('ครอบครัวขาดแคลน iphone 15','เห็นควรพิจารณาอนุมัติให้กู้ยืม'),'gpa'=>'3.56'),
@@ -46,7 +46,7 @@
                                     <option value="5">5</option>
                                 </select>
                             </div>
-                            
+
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -73,7 +73,7 @@
                                         </td>
                                         <td>{{$loan_req['type']}}</td>
                                         <td>
-                                            <button type="button" class="btn btn-outline-secondary"  data-bs-toggle="modal" data-bs-target="#docModal">ดูรายละเอียดเอกสาร <i class="bi bi-file-pdf"></i></button>
+                                            <a href="{{url('teacher_view_document')}}" class="btn btn-outline-secondary">ดูรายละเอียดเอกสาร <i class="bi bi-file-pdf"></i></a>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comment-modal"><i class="bi bi-chat-right-quote"></i> ให้ความเห็น</button>
@@ -103,7 +103,7 @@
                                     <option value="5">5</option>
                                 </select>
                             </div>
-                            
+
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -143,27 +143,6 @@
             </div>
         </div>
         <!-- end card -->
-        <!-- doc Modal -->
-        <div class="modal fade" id="docModal" tabindex="-1">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">เอกสารยื่นกู้</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex flex-row justify-content-center">
-                    <iframe scrolling="no" src="{{asset('assets/pdf/รวมขอกู้.pdf#zoom=100')}}" width="100%" height="1500"></iframe>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-                </div>
-            </div>
-        </div>
-        <!-- End doc Modal-->
         <!-- comment Modal -->
         <div class="modal fade" id="comment-modal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">

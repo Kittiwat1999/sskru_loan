@@ -268,6 +268,9 @@ Route::get('/loan_submission/to_edit/{id}',function ($id){
 Route::get('/teacher_index',function () {
     return view('teacher_index');
 })->name('teacher_index');
+Route::get('/teacher_view_document',function () {
+    return view('teacher_view_document');
+})->name('teacher_view_document');
 
 
 Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
@@ -430,8 +433,4 @@ Route::get('/check_document/check_borrower_document/previe/borrower_file/{borrow
 
 Route::get('/check_document/document_submission',function () {
     return view('check_document/document_submission');
-});
-
-Route::get('/check_document/check_borrower_document',function () {
-    return view('check_document/check_documents_test');
 });
