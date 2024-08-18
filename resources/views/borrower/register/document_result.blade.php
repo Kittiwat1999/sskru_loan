@@ -114,7 +114,7 @@
             </div>
         </div>
     </div>
-
+    {{$marital_status->status}}
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">ข้าพเจ้าได้แนบเอกสารต่างๆ ตามที่กองทุนกำหนดเพื่อประกอบการพิจารณาครบถ้วนทุกรายการ อย่างละ 1 ฉบับ ได้แก่</h5>
@@ -133,17 +133,33 @@
                     @if($index == 4 || $index == 5)
                         <div class="col-12 form-check mb-3">
                             <div class="col-12 form-check">
-                                <input class="form-check-input" type="checkbox" name="register_document[]" id="register_document-{{$register_document}}" value="{{$register_document['id']}}" @checked($register_document['checked'])>
-                                <label class="form-check-label mx-2 col-md-10 col-12" for="register_document-{{$register_document}}">
+                                <input class="form-check-input" type="checkbox" name="register_document[]" 
+                                    id="register_document-{{$register_document['id']}}" 
+                                    value="{{$register_document['id']}}" 
+                                    @checked($register_document['checked'])
+                                >
+                                <label class="form-check-label mx-2 col-md-10 col-12" for="register_document-{{$register_document['id']}}">
                                     {{$register_document['title']}}
                                 </label>
                             </div>
                         </div>
                     @else
                         <div class="col-12 form-check mb-3">
-                            <input class="form-check-input" type="checkbox" name="register_document[]" id="register_document-{{$register_document}}" value="{{$register_document['id']}}" @checked($register_document['id'] == 7) @checked($register_document['checked'])>
-                            <label class="form-check-label mx-2" for="register_document-{{$register_document}}">
+                            <input class="form-check-input" 
+                                type="checkbox" name="register_document[]" 
+                                id="register_document-{{$register_document['id']}}" 
+                                value="{{$register_document['id']}}" 
+                                @checked($register_document['id'] == 7)
+                                @checked($register_document['checked']) 
+                                @checked($register_document['id'] == 11 && $marital_status->status == 'หย่า')
+                            >
+                            <label class="form-check-label mx-2" for="register_document-{{$register_document['id']}}">
                                 {{$register_document['title']}}
+                                @if($register_document['id'] == 11 && $marital_status->status == 'หย่า')
+                                    <span class="text-warning">(มีใบหย่าในระบบ)</span>
+                                @elseif($register_document['id'] == 7)
+                                <span class="text-warning">(ระบบออกเอกสารให้)</span>
+                                @endif
                             </label>
                         </div>
                     @endif

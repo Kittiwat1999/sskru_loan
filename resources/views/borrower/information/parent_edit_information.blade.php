@@ -594,7 +594,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-5">
-                                <input class="form-control" type="file" id="devorceFile" name="devorce_file"  accept=".jpg, .jpeg, .png, .pdf" @disabled($marital_status->status != 'หย่า')>
+                                <input class="form-control" type="file" id="devorceFile" name="devorce_file"  accept=".pdf" @disabled($marital_status->status != 'หย่า')>
                                 <div class="invalid-feedback">
                                     กรุณาเลือกไฟล์
                                 </div>

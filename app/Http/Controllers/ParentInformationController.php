@@ -310,7 +310,7 @@ class ParentInformationController extends Controller
         }else if($request->marital_status == "หย่า"){
 
             $file_validator = Validator::make($request->all(), [
-                "devorce_file" => 'required|file|max:2048|mimes:jpg,jpeg,png,pdf',
+                "devorce_file" => 'required|file|max:2048|mimes:pdf',
             ]);
         
             // Check if validation fails
@@ -324,8 +324,8 @@ class ParentInformationController extends Controller
             $file_name = $file->getClientOriginalName();
             $spit_filename = explode('.', $file_name);
             $file_extenstion = last($spit_filename);
-            if(($file_extenstion != 'png' && $file_extenstion != 'jpg') && ($file_extenstion != 'jpeg' && $file_extenstion != 'pdf')){
-                $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .jpg .png .pdf เท่านั้น'];
+            if($file_extenstion != 'pdf'){
+                $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .pdf เท่านั้น'];
                 return $error;
             }
             $new_file_name = $this->storeFile($marital_status_path.'/'.$user_id,$file);
@@ -610,7 +610,7 @@ class ParentInformationController extends Controller
             }
             
             $file_validator = Validator::make($request->all(), [
-                "devorce_file" => 'required|file|max:2048|mimes:jpg,jpeg,png,pdf',
+                "devorce_file" => 'required|file|max:2048|mimes:pdf',
             ]);
         
             if ($file_validator->fails()) {
@@ -625,8 +625,8 @@ class ParentInformationController extends Controller
             $spit_filename = explode('.', $file_name);
             $file_extenstion = last($spit_filename);
 
-            if(($file_extenstion != 'png' && $file_extenstion != 'jpg') && ($file_extenstion != 'jpeg' && $file_extenstion != 'pdf')){
-                $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .jpg .png .pdf เท่านั้น'];
+            if( $file_extenstion != 'pdf'){
+                $error =['devorce_file'=>'ประเภทไฟล์ต้องเป็น .pdf เท่านั้น'];
                 return $error;
             }
 

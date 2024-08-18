@@ -326,7 +326,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-5">
-                                <input disabled class="form-control" type="file" id="devorceFile" name="devorce_file"  accept=".jpg, .jpeg, .png, .pdf">
+                                <input disabled class="form-control" type="file" id="devorceFile" name="devorce_file"  accept=".pdf">
                                 <div class="invalid-feedback">
                                     กรุณาเลือกไฟล์
                                 </div>

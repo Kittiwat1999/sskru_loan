@@ -25,7 +25,7 @@ use iio\libmergepdf\Merger;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
-
+use League\CommonMark\Extension\SmartPunct\EllipsesParser;
 
 class BorrowerRegister extends Controller
 {
@@ -51,7 +51,7 @@ class BorrowerRegister extends Controller
 
     private function storeFile($file_path,$file){
         $path = storage_path($file_path);
-        !file_exists($path) && mkdir($path, 0755, true);
+        !file_exists($path) && mkdir($path, 0777, true);
         $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
         $file->move($path, $name);
         return $name;
@@ -347,13 +347,11 @@ class BorrowerRegister extends Controller
             ->where('documents.id', $document_id)
             ->first();
         $child_document_title = ChildDocuments::where('id', $child_document_id)->value('child_document_title');
-
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first() ?? new BorrowerDocument();
         $borrower_document['user_id'] = $user_id;
         $borrower_document['document_id'] = $document_id;
         $borrower_document['status'] = 'sending';
         $borrower_document->save();
-
         $borrower_child_document = BorrowerChildDocument::where('document_id', $document_id)->where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document_id;
@@ -403,6 +401,8 @@ class BorrowerRegister extends Controller
     public function result(Request $request){
         $user_id = $request->session()->get('user_id','1');
         $document = $this->checkActiveDocument();
+        $marital_status = json_decode(Borrower::where('user_id', $user_id)->value('marital_status'));
+        // dd($marital_status);
         if(!CheckBorrowerInformation::check($user_id)){
             return view('borrower.borrower_information_not_complete');
         }
@@ -437,6 +437,7 @@ class BorrowerRegister extends Controller
                 'borrower_useful_activities_hours_sum',
                 'useful_activities_hours',
                 'register_documents',
+                'marital_status',
                 'step',
             )
         );
@@ -515,12 +516,6 @@ class BorrowerRegister extends Controller
 
     //save file กยศ 101
     private function saveDocument101($document, $user_id, $temp_path){
-        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first() ?? new BorrowerDocument();
-        $borrower_document['user_id'] = $user_id;
-        $borrower_document['document_id'] = $document['id'];
-        $borrower_document['status'] = 'sending';
-        $borrower_document->save();
-
         $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 4)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document['id'];
@@ -528,8 +523,8 @@ class BorrowerRegister extends Controller
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
         $borrower_child_document['status'] = 'delivered';
-        //file
         
+        //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_'. $user_id.'.pdf';
         $store_path = $document['id'] .'/'. 4 . '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id;
         $path = storage_path($store_path);
@@ -538,7 +533,6 @@ class BorrowerRegister extends Controller
         }
         $final_path = $path. '/' .$custom_filename;
         File::move($temp_path, $final_path);
-
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']) ?? new BorrowerFiles();;
         $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
         $borrower_file['user_id'] = $user_id;
@@ -568,12 +562,12 @@ class BorrowerRegister extends Controller
             ->where('child_documents.id' , 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->select('child_document_files.file_path','child_document_files.file_name','child_document_files.file_type','child_documents.child_document_title','child_documents.generate_file','child_documents.id')
             ->first();
-
+        
         //save file
         $generator = new GenerateFile();
         $temp_path = $generator->saveBorrowerDocument101($user_id, $child_document, $document['id']);
         $this->saveDocument101($document, $user_id, $temp_path);
-
+        
         //update เอกสารผู้กู้
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->first();
         if($document['need_teacher_comment']){

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Response;
 class CheckDocumentController extends Controller
 {
     protected $status = [
-        'sending' => 'ผู้กู้กำลังดำเนินการ',
+        'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
         'wait-teacher-comment' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
         'wait-employee-approve' => 'รออนุมัติ',
         'rejected' => 'ต้องแก้ไข',
@@ -107,8 +107,8 @@ class CheckDocumentController extends Controller
     }
     
     public function selectStatusDocument($document_id, Request $request){
-
-        $request->session()->put([                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+        // dd($request);
+        $request->session()->put([                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
             'select_status' => $request->status,
             'select_faculty' => $request->faculty ?? 'all',
             'select_major' => $request->major ?? 'all',
@@ -123,7 +123,7 @@ class CheckDocumentController extends Controller
         $select_major = $request->session()->get('select_major','all');
         $select_grade = $request->session()->get('select_grade','all');
 
-        if(($select_faculty == 'all' && $select_major == 'all') && $select_grade == 'all'){
+        if(($select_faculty == 'all' && $select_major == 'all') && $select_grade == 'all'){ //ไม่ได้เลือก คณะ, สาขา, ชั้นปี
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -134,7 +134,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty != 'all' && $select_major == 'all') && $select_grade == 'all'){
+        }else if(($select_faculty != 'all' && $select_major == 'all') && $select_grade == 'all'){  //เลือก คณะ แต่ ไม่ได้เลือก สาขา, ชั้นปี
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -146,7 +146,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade == 'all'){
+        }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade == 'all'){ //เลือก คณะ , สาขา แต่ ไม่ได้เลือก ชั้นปี
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -159,7 +159,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade != 'all'){
+        }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade != 'all'){ //เลือกทั้ง คณะ, สาขา และ ชั้นปี
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -173,7 +173,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty == 'all' && $select_major == 'all') && $select_grade != 'all'){
+        }else if(($select_faculty == 'all' && $select_major != 'all') && $select_grade != 'all'){ //เลือก สาขา, ชั้นปี แต่ ไม่ได้เลือก คณะ
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -181,9 +181,32 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
-                ->where('borrower.faculty_id', $select_faculty)
-                ->where('borrower.major_id', $select_major)
-                ->where('borrower.grade', $select_grade)
+                ->where('borrowers.major_id', $select_major)
+                ->where('borrowers.grade', $select_grade)
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->orderBy('delivered_date', 'asc')
+                ->get();
+        }else if(($select_faculty == 'all' && $select_major != 'all') && $select_grade == 'all'){ //เลือกเฉพาะสาขา
+            $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
+                ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
+                ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
+                ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+                ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+                ->where('documents.id', $document_id)
+                ->where('borrower_documents.status', $select_status)
+                ->where('borrowers.major_id', $select_major)
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->orderBy('delivered_date', 'asc')
+                ->get();
+        }else if(($select_faculty == 'all' && $select_major == 'all') && $select_grade != 'all'){ //เลือกเฉพาะชั้นปี
+            $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
+                ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
+                ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
+                ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+                ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+                ->where('documents.id', $document_id)
+                ->where('borrower_documents.status', $select_status)
+                ->where('borrowers.grade', $select_grade)
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
@@ -193,10 +216,8 @@ class CheckDocumentController extends Controller
     }
 
     public function getBorrowerDocuments($document_id, Request $request){
-        
         if ($request->ajax()) {
             $data = $this->multipleQuery($document_id, $request);
-
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('information', function($row){
@@ -211,7 +232,10 @@ class CheckDocumentController extends Controller
                 ->addColumn('action', function($row){
                     if($row->status == 'wait-employee-approve'){
                         $selectBtn = '<a href="' .route('check.borrower.document', $row->id). '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
-                    }else{
+                    }elseif($row->status == 'sending'){
+                        $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';
+                    }
+                    else{
                         $selectBtn = '<a href="' .route('view.borrower.document', $row->id). '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
                     }
                     return $selectBtn;
@@ -250,7 +274,7 @@ class CheckDocumentController extends Controller
 
         // dd($child_documents);
 
-        return view('check_document.check_documents', 
+        return view('check_document.view_documents', 
             compact(
                 'document',
                 'useful_activities',
@@ -273,5 +297,11 @@ class CheckDocumentController extends Controller
         , $borrower_file['file_name']);
 
         return $response;
+    }
+
+    public function generateFile103(Request $request, $document_id){
+        $user_id = $request->session()->get('user_id','1');
+        $generator = new GenerateFile();
+        return $generator->teacherCommentDocument103($user_id, $document_id);
     }
 }

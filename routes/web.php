@@ -429,7 +429,8 @@ Route::post('/check_document/select_document/post/status/{document_id}', [CheckD
 
 Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');
 Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('view.borrower.document');
-Route::get('/check_document/check_borrower_document/previe/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
+Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
+Route::get('/check_document/check_borrower_document/preview/teacher-comment/{document_id}',[CheckDocumentController::class, 'generateFile103'])->name('check.document.preview.teacher.comment');
 
 Route::get('/check_document/document_submission',function () {
     return view('check_document/document_submission');

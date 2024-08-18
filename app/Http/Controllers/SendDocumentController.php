@@ -34,7 +34,7 @@ class SendDocumentController extends Controller
 
     private function storeFile($file_path,$file){
         $path = storage_path($file_path);
-        !file_exists($path) && mkdir($path, 0777, true);
+        !file_exists($path) && mkdir($path, 0755, true);
         $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
         $file->move($path, $name);
         return $name;

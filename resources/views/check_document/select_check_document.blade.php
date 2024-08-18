@@ -22,7 +22,7 @@
                         <option @selected($select_status == 'approved') value="approved">อนุมัติแล้ว</option>
                         <option @selected($select_status == 'rejected') value="rejected">ต้องแก้ไข</option>
                         <option @selected($select_status == 'response-reject') value="response-reject">ต้องแก้ไข</option>
-                        <option @selected($select_status == 'sending') value="sending">ผู้กู้กำลังดำเนินการ</option>
+                        <option @selected($select_status == 'sending') value="sending">ผู้กู้ยืมกำลังดำเนินการ</option>
                     </select>
                 </div>
                 <div class="col-md-8"></div>

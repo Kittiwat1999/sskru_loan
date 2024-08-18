@@ -60,18 +60,6 @@
             </ul>
         </div>
     </div>
-
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">ตรวจสอบเอกสาร กยศ. 101</h5>
-            <a class="open-link" onclick="openPDFInNewTab('pdf-101')" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
-            <div class="row my-6 mx-1  border border-2 mb-2">
-                <div class="col-md-12 iframe-container">
-                    <iframe id="pdf-101" src="{{route('borrower.register.generate.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
-                </div>
-            </div>    
-        </div>
-    </div>
     @if($document['need_teacher_comment'])
     <div class="card mb-3">
         <div class="card-body">
@@ -85,6 +73,19 @@
         </div>
     </div>
     @endif
+    
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">ตรวจสอบเอกสาร กยศ. 101</h5>
+            <a class="open-link" onclick="openPDFInNewTab('pdf-101')" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
+            <div class="row my-6 mx-1  border border-2 mb-2">
+                <div class="col-md-12 iframe-container">
+                    <iframe id="pdf-101" src="{{route('borrower.register.generate.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
+                </div>
+            </div>    
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body row mx-0">
             <div class="col-md-9 col-sm-12"></div>
