@@ -179,7 +179,7 @@ class MultiTableSeeder extends Seeder
                 'place_of_work' => 'ที่ทำงาน',
                 'income' => '100,000',
                 'alive' => 1,
-                'is_main_parent' => 0,
+                'is_main_parent' => 1,
                 'created_at' => '2024-03-20 19:40:05',
                 'updated_at' => '2024-03-20 19:48:08'
             ],

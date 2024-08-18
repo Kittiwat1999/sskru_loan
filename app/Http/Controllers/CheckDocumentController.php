@@ -285,16 +285,23 @@ class CheckDocumentController extends Controller
     }
 
     public function previewBorrowerFile($borrower_child_document_id){
+        $user_id = Session::get('user_id','1');
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id' ,'=' ,'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
+            ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
             ->first();
+        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
+            ->where('documents.id', $borrower_child_document['document_id'])
+            ->select('doc_types.id', 'documents.year', 'documents.term')
+            ->first();
+
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $response = $this->displayFile($borrower_child_document['document_id'] 
-                .'/'. $borrower_child_document['child_document_id']
-                . '/' . $borrower_child_document['term'] 
-                . '-' . $borrower_child_document['year'] 
-                . '/' . $borrower_child_document['user_id']
-        , $borrower_file['file_name']);
+        $response = $this->displayFile(
+            $document['term'] . '-' . $document['year'] 
+            .'/' .$document['id']
+            .'/'. $borrower_child_document['child_document_id'] 
+            .'/' . $user_id
+            , $borrower_file['file_name']);
 
         return $response;
     }

@@ -21,6 +21,7 @@ use App\Models\UsefulActivity;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use League\CommonMark\Node\Block\Document;
 
 class SendDocumentController extends Controller
 {
@@ -185,6 +186,7 @@ class SendDocumentController extends Controller
         $user_id = Session::get('user_id','1');
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.id', $document_id)
+            ->select('doc_types.id', 'documents.year', 'documents.term')
             ->first();
         $child_document_title = ChildDocuments::where('id', $child_document_id)->value('child_document_title');
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first() ?? new BorrowerDocument();
@@ -202,15 +204,16 @@ class SendDocumentController extends Controller
         $borrower_child_document['status'] = 'delivered';
         //file
         $input_file = $request->file('document_file');
-        $file_name = $this->storeFile($document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id, $input_file);
+        $file_path = $document['term'] . '-' . $document['year'] .'/'. $document['id'] .'/'. $child_document_id .'/'. $user_id;
+        $file_name = $this->storeFile($file_path, $input_file);
         $borrower_file = new BorrowerFiles();
         $borrower_file['user_id'] = $user_id;
         $borrower_file['description'] = '-';
         $borrower_file['original_name'] = $input_file->getClientOriginalName();
-        $borrower_file['file_path'] = $document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id;
+        $borrower_file['file_path'] = $file_path;
         $borrower_file['file_name'] = $file_name;
         $borrower_file['file_type'] = last(explode('.', $file_name));
-        $borrower_file['full_path'] = $document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id.'/' . $file_name;
+        $borrower_file['full_path'] = $file_path.'/' . $file_name;
         $borrower_file['upload_date'] = date('Y-m-d');
         $borrower_file->save(); 
         $borrower_child_document['borrower_file_id'] = $borrower_file['id'];
@@ -242,6 +245,7 @@ class SendDocumentController extends Controller
         $user_id = Session::get('user_id','1');
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.id', $document_id)
+            ->select('doc_types.id', 'documents.year', 'documents.term')
             ->first();
         $child_document_title = ChildDocuments::where('id', $child_document_id)->value('child_document_title');
 
@@ -261,16 +265,17 @@ class SendDocumentController extends Controller
         //file
         if($request->file('document_file') != null){
             $input_file = $request->file('document_file');
-            $file_name = $this->storeFile($document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id, $input_file);
+            $file_path = $document['term'] . '-' . $document['year'] .'/'. $document['id'] .'/'. $child_document_id .'/'. $user_id;
+            $file_name = $this->storeFile($file_path, $input_file);
             $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
             $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
             $borrower_file['user_id'] = $user_id;
             $borrower_file['description'] = '-';
             $borrower_file['original_name'] = $input_file->getClientOriginalName();
-            $borrower_file['file_path'] = $document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id;
+            $borrower_file['file_path'] = $file_path;
             $borrower_file['file_name'] = $file_name;
             $borrower_file['file_type'] = last(explode('.', $file_name));
-            $borrower_file['full_path'] = $document_id .'/'. $child_document_id. '/' . $document['term'] . '-' . $document['year'] . '/' . $user_id.'/' . $file_name;
+            $borrower_file['full_path'] = $file_path.'/' . $file_name;
             $borrower_file['upload_date'] = date('Y-m-d');
             $borrower_file->save(); 
             $borrower_child_document['borrower_file_id'] = $borrower_file['id'];
@@ -283,14 +288,20 @@ class SendDocumentController extends Controller
         $user_id = Session::get('user_id','1');
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id' ,'=' ,'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
+            ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
             ->first();
+        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
+            ->where('documents.id', $borrower_child_document['document_id'])
+            ->select('doc_types.id', 'documents.year', 'documents.term')
+            ->first();
+
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $response = $this->displayFile($borrower_child_document['document_id'] 
-                .'/'. $borrower_child_document['child_document_id']
-                . '/' . $borrower_child_document['term'] 
-                . '-' . $borrower_child_document['year'] 
-                . '/' . $user_id
-        , $borrower_file['file_name']);
+        $response = $this->displayFile(
+            $document['term'] . '-' . $document['year'] 
+            .'/' .$document['id']
+            .'/'. $borrower_child_document['child_document_id'] 
+            .'/' . $user_id
+            , $borrower_file['file_name']);
 
         return $response;
     }
