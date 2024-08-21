@@ -335,7 +335,7 @@
             <li class="nav-heading text-secondary">Pages</li>
 
             <li class="nav-item">
-                <a id="teacher_index" class="nav-link collapsed" href="{{route('teacher_index')}}">
+                <a id="teacher" class="nav-link collapsed" href="{{route('teacher.index')}}">
                 <i class="bi bi-grid-1x2"></i>
                 <span>รายการคำขอกู้</span>
                 </a>

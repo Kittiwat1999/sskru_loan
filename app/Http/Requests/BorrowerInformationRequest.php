@@ -31,7 +31,6 @@ class BorrowerInformationRequest extends FormRequest
             'student_id' => 'required|string|max:50',
             'faculty' => 'required|string|max:100',
             'major' => 'required|string|max:100',
-            'grade' => 'required|string|max:10',
             'gpa' => 'required|string|max:10',
 
             'village' => 'required|string|max:50',
@@ -73,7 +72,6 @@ class BorrowerInformationRequest extends FormRequest
             'major.required' => 'ต้องกรอกสาขา',
             'major.max' => 'คณะต้องมีครวามยาวไม่เกิน 100 ตัวอักษร',
             'grade.required' => 'ต้องกรอกชั้นปี',
-            'grade.max' => 'ชั้นปีต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
             'gpa.required' => 'ต้องกรอกคณะผลการเรียน',
             'gpa.max' => 'ผลการเรียนต้องมีครวามยาวไม่เกิน 10 ตัวอักษร',
 

@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\BorrowerDocument;
-use App\Models\TeacherAccounts;
-use App\Models\TeacherComments;
 use App\Models\Users;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,12 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teacher_comment_documents', function (Blueprint $table) {
+        Schema::create('teacher_approve_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('commentator_id')->foreignIdFor(Users::class);
+            $table->integer('teacher_uid')->foreignIdFor(Users::class);
             $table->integer('borrower_document_id')->foreignIdFor(BorrowerDocument::class);
-            $table->integer('teacher_comment_id')->foreignIdFor(TeacherComments::class)->nullable();
-            $table->string('custom_comment');
+            $table->boolean('isapprove');
+            $table->string('non_approve_comment');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teacher_comment_documents');
+        Schema::dropIfExists('teacher_approve_documents');
     }
 };

@@ -10,7 +10,7 @@ class BorrowerDocument extends Model
     use HasFactory;
 
     protected $table = 'borrower_documents';
-    protected $fillable = ['document_id', 'user_id', 'status'];
+    protected $fillable = ['document_id', 'user_id', 'status', 'delivered_date', 'checked_date', 'commented_date'];
     public $timestamps = true;
 
     public function document(){

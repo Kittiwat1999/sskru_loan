@@ -68,6 +68,21 @@ class CheckDocumentController extends Controller
     function convert_to_dmy_date($input_date){
         $currentDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $input_date);
         return $currentDateTime->format('d-m-Y H:i:s');
+    } 
+
+    function getBorrowerBeginYear($grade){
+        $year = date('Y') + 543;
+        $begin_year = $year - (int) $grade + 1;
+        return $lastTwoDigits = substr($begin_year, -2);
+    }
+
+    function calculateGrade($student_id){
+        $date = date('Y') + 543;
+        $firstTwoDigits = floor($date / 100);
+        $buddhistCurrentYear = intval(floor($date));
+        $beginYear = intval($firstTwoDigits . substr($student_id, 0, 2));
+        $grade = ($buddhistCurrentYear - $beginYear) + 1;
+        return $grade;
     }
 
     public function index(){
@@ -100,7 +115,6 @@ class CheckDocumentController extends Controller
         $majors = Majors::where('isactive', true)->get();
         return view('check_document.select_check_document',compact('document' ,'faculties','majors'));
     }
-
     public function selectMajorByFacultyId($faculty_id){
         $majors = Majors::where('faculty_id', $faculty_id)->where('isactive', true)->get();
         return json_encode($majors);
@@ -117,7 +131,7 @@ class CheckDocumentController extends Controller
         return redirect('/check_document/select_document/'.$document_id);
     }
 
-    private function multipleQuery($document_id, $request){
+    public function multipleQuery($document_id, $request){
         $select_status = $request->session()->get('select_status','wait-employee-approve');
         $select_faculty = $request->session()->get('select_faculty','all');
         $select_major = $request->session()->get('select_major','all');
@@ -131,7 +145,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }else if(($select_faculty != 'all' && $select_major == 'all') && $select_grade == 'all'){  //เลือก คณะ แต่ ไม่ได้เลือก สาขา, ชั้นปี
@@ -143,7 +157,7 @@ class CheckDocumentController extends Controller
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
                 ->where('borrowers.faculty_id', $select_faculty)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade == 'all'){ //เลือก คณะ , สาขา แต่ ไม่ได้เลือก ชั้นปี
@@ -156,7 +170,7 @@ class CheckDocumentController extends Controller
                 ->where('borrower_documents.status', $select_status)
                 ->where('borrowers.faculty_id', $select_faculty)
                 ->where('borrowers.major_id', $select_major)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade != 'all'){ //เลือกทั้ง คณะ, สาขา และ ชั้นปี
@@ -169,8 +183,8 @@ class CheckDocumentController extends Controller
                 ->where('borrower_documents.status', $select_status)
                 ->where('borrowers.faculty_id', $select_faculty)
                 ->where('borrowers.major_id', $select_major)
-                ->where('borrowers.grade', $select_grade)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade).'%')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }else if(($select_faculty == 'all' && $select_major != 'all') && $select_grade != 'all'){ //เลือก สาขา, ชั้นปี แต่ ไม่ได้เลือก คณะ
@@ -182,8 +196,8 @@ class CheckDocumentController extends Controller
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
                 ->where('borrowers.major_id', $select_major)
-                ->where('borrowers.grade', $select_grade)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade).'%')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }else if(($select_faculty == 'all' && $select_major != 'all') && $select_grade == 'all'){ //เลือกเฉพาะสาขา
@@ -195,7 +209,7 @@ class CheckDocumentController extends Controller
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
                 ->where('borrowers.major_id', $select_major)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }else if(($select_faculty == 'all' && $select_major == 'all') && $select_grade != 'all'){ //เลือกเฉพาะชั้นปี
@@ -206,8 +220,8 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
-                ->where('borrowers.grade', $select_grade)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrowers.grade','borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
+                ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade).'%')
+                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
         }   
@@ -224,7 +238,7 @@ class CheckDocumentController extends Controller
                     return '<span>' . $row->prefix . $row->firstname . ' ' . $row->lastname .'</span><br>
                     <small class="text-secondary fw-lighter">'. $row->faculty_name . '</small><br>
                     <small class="text-secondary fw-lighter">' . $row->major_name . '</small><br>
-                    <small class="text-secondary fw-lighter">' . 'ชั้นปี : ' . $row->grade. '</small>';
+                    <small class="text-secondary fw-lighter">' . 'ชั้นปี : ' . $this->calculateGrade($row->student_id). '</small>';
                 })
                 ->addColumn('delivered_date', function($row){
                     return $this->convert_to_dmy_date($row->delivered_date);
@@ -257,7 +271,7 @@ class CheckDocumentController extends Controller
         ->first();
         $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $borrower_document['user_id'])
-        ->where('document_id', $borrower_document['documet_id'])
+        ->where('document_id', $borrower_document['document_id'])
         ->sum('hour_count') ?? 0 ;
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
@@ -271,8 +285,6 @@ class CheckDocumentController extends Controller
             ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
             ->first();
         }
-
-        // dd($child_documents);
 
         return view('check_document.view_documents', 
             compact(

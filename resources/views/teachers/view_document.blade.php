@@ -219,28 +219,31 @@
             </div>
         </div>
     </div>
-    <script>
 
-        function enableCheckbox(roleName){
-            const isDisabled = $(`:checkbox[id^=${roleName}]`).prop('disabled');
-            $(`:checkbox[id^=${roleName}]`).prop('disabled', !isDisabled);
-            if($(`#${roleName}confirm_radio`).prop('checked')){
-                console.log('reset form');
-                $(`:checkbox[id^=${roleName}]`).prop('checked', false);
-                $(`#${roleName}moreText`).prop({'value':'','disabled':true});
-            }
-        }
-
-        function enableInputArea(roleName){
-        const isDisabled = $(`#${roleName}moreText`).prop('disabled');
-        $(`#${roleName}moreText`).prop({'value':'','disabled': !isDisabled});
-        }
-
-        function enableInputText(){
-            const inputText = document.getElementById('morecommnet');
-            inputText.disabled = !inputText.disabled;
-        }
-
-    </script>
 </section>
+@endsection
+@section('script')
+<script>
+
+    function enableCheckbox(roleName){
+        const isDisabled = $(`:checkbox[id^=${roleName}]`).prop('disabled');
+        $(`:checkbox[id^=${roleName}]`).prop('disabled', !isDisabled);
+        if($(`#${roleName}confirm_radio`).prop('checked')){
+            console.log('reset form');
+            $(`:checkbox[id^=${roleName}]`).prop('checked', false);
+            $(`#${roleName}moreText`).prop({'value':'','disabled':true});
+        }
+    }
+
+    function enableInputArea(roleName){
+    const isDisabled = $(`#${roleName}moreText`).prop('disabled');
+    $(`#${roleName}moreText`).prop({'value':'','disabled': !isDisabled});
+    }
+
+    function enableInputText(){
+        const inputText = document.getElementById('morecommnet');
+        inputText.disabled = !inputText.disabled;
+    }
+
+</script>
 @endsection

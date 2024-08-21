@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TeacherComments extends Model
 {
     use HasFactory;
+    protected $table = 'teacher_comments';
+    protected $fillable = ['comment', 'isactive'];
+    public $timestamps = false;
 }

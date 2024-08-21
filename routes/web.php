@@ -19,6 +19,7 @@ use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetpasswordController;
+use App\Http\Controllers\TeacherComment;
 use App\Http\Controllers\UsefulActivityController;
 use App\Http\Controllers\UsersProfileController;
 use App\Http\Requests\borrowerInformationValidationRequest;
@@ -63,6 +64,7 @@ Route::get('/admin/edit_informaion_request/to_edit/{id}', function ($id) {
     return json_encode(array('msg'=>'no filed '.$id));
 });
 
+//document shceduler
 Route::get('/admin/document_scheduler',[AdminDocumentSchedulerController::class, 'index']);
 Route::put('/admin/document_scheduler/putdata',[AdminDocumentSchedulerController::class, 'putDocSchedulerData'])->name('admin.doc.scheduler.putdata');
 Route::get('/admin/document_scheduler/get/document/{document_id}',[AdminDocumentSchedulerController::class, 'getDocumentById'])->name('admin.doc.scheduler.get.document');
@@ -265,13 +267,12 @@ Route::get('/loan_submission/to_edit/{id}',function ($id){
 });
 
 
-Route::get('/teacher_index',function () {
-    return view('teacher_index');
-})->name('teacher_index');
+Route::get('/teacher/index',[TeacherComment::class, 'index'])->name('teacher.index');
+Route::get('/teahcer/select-grade/{grade}',[TeacherComment::class ,'selectGrade'])->name('teacher.select.grade');
 Route::get('/teacher_view_document',function () {
-    return view('teacher_view_document');
-})->name('teacher_view_document');
-
+    return view('teachers.view_document');
+})->name('teachers.view_document');
+Route::get('/teacher/borrower_document/comment/{borrower_document_id}', [TeacherComment::class, 'commnetBorrowerDocument'])->name('teacher.comment.borrower.document');
 
 Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
 Route::get('/borrower/borrower_document/document/{document_id}', [BorrowerDocumentController::class,'DocumentPage'])->name('borrower.document.page');
@@ -339,8 +340,6 @@ Route::put('/borrower/upload_document/edit_file/{document_id}/{child_document_id
 Route::get('/borrower/upload_document/previe/borrower_file/{borrower_child_document_id}',[SendDocumentController::class, 'previewBorrowerFile'])->name('borrower.upload.document.preview.file');
 Route::get('/borrower/upload_document/result/{document_id}',[SendDocumentController::class,'result'])->name('borrower.upload.document.result.page');
 Route::get('/borrower/upload_document/submit/{document_id}',[SendDocumentController::class,'submitDocument'])->name('borrower.upload.document.submit');
-
-
 
 //useful activity
 Route::post('/borrower/usefulactivity/store/{document_id}',[UsefulActivityController::class,'storeUsefulActivity'])->name('borrower.store.usefulactivity');
@@ -424,7 +423,7 @@ Route::get('/check_document/index',[CheckDocumentController::class, 'index']);
 Route::get('/check_document/select_document/{document_id}', [CheckDocumentController::class, 'selectDocument'])->name('check_document.select_document');
 Route::get('/check_document/select_document/borrower_documents/get/{document_id}',[CheckDocumentController::class, 'getBorrowerDocuments'])->name('select_document.borrower_documents.get');
 Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}', [CheckDocumentController::class, 'selectMajorByFacultyId']);
-// Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
+Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
 Route::post('/check_document/select_document/post/status/{document_id}', [CheckDocumentController::class, 'selectStatusDocument'])->name('check_document.select.status');
 
 Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');

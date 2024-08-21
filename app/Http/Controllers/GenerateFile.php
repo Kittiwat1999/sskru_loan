@@ -56,6 +56,15 @@ class GenerateFile extends Controller
         return $age;
     }
 
+    function calculateGrade($student_id){
+        $date = date('Y') + 543;
+        $firstTwoDigits = floor($date / 100);
+        $buddhistCurrentYear = intval(floor($date));
+        $beginYear = intval($firstTwoDigits . substr($student_id, 0, 2));
+        $grade = ($buddhistCurrentYear - $beginYear) + 1;
+        return $grade;
+    }
+
     public function generate_rabrongraidai($user_id, $document){
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
@@ -536,13 +545,13 @@ class GenerateFile extends Controller
 
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
-            ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.id', 'borrowers.grade', )
+            ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.id', 'borrowers.student_id')
             ->first();
 
         $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
         $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
         $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $borrower['grade']);
+        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
 
         // $teachers = [
         //     'prefix'=>'นาย',
@@ -604,10 +613,7 @@ class GenerateFile extends Controller
             $borrower_fullname_x = 65+($borrower_fullname_input/2 - $borrower_fullname_length/2)-3;
             $pdf->Text($borrower_fullname_x, 83,$borrower['prefix'].$borrower['firstname'].'   '.$borrower['lastname']);
 
-            $borrower_grade_input = 7;
-            $borrower_grade_length = strlen($borrower['grade']);
-            $borrower_grade_x = 176+($borrower_grade_input/2 - $borrower_grade_length/2);
-            $pdf->Text($borrower_grade_x, 83,$borrower['grade']);
+            $pdf->Text(178, 83,$borrower['grade']);
 
             //comment
             // $pdf->SetXY(26, 93);
@@ -643,7 +649,7 @@ class GenerateFile extends Controller
 
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
-            ->select('users.prefix', 'users.firstname', 'users.lastname','borrowers.id', 'borrowers.address_id', 'borrowers.student_id', 'borrowers.faculty_id','borrowers.major_id', 'borrowers.grade', 'borrowers.gpa', 'borrowers.marital_status','borrowers.phone',  )
+            ->select('users.prefix', 'users.firstname', 'users.lastname','borrowers.id', 'borrowers.address_id', 'borrowers.student_id', 'borrowers.faculty_id','borrowers.major_id', 'borrowers.gpa', 'borrowers.marital_status','borrowers.phone',  )
             ->first();
         $father = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','บิดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive')->first();
         $mother = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','มารดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive')->first();
@@ -674,8 +680,8 @@ class GenerateFile extends Controller
         $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
         $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
         $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
+        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
         $borrower['student_id'] = iconv('UTF-8', 'cp874', $borrower['student_id']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $borrower['grade']);
         $borrower['gpa'] = iconv('UTF-8', 'cp874', $borrower['gpa']);
         $borrower['phone'] = iconv('UTF-8', 'cp874', $borrower['phone']);
         $borrower['faculty'] = iconv('UTF-8', 'cp874',$faculty);
@@ -1044,7 +1050,7 @@ class GenerateFile extends Controller
 
         $borrower = Users::join('borrowers','users.id','=','borrowers.user_id')
             ->where('users.id',$user_id)
-            ->select('users.prefix', 'users.firstname', 'users.lastname','borrowers.id', 'borrowers.address_id', 'borrowers.student_id', 'borrowers.faculty_id','borrowers.major_id', 'borrowers.grade', 'borrowers.gpa', 'borrowers.marital_status','borrowers.phone',  )
+            ->select('users.prefix', 'users.firstname', 'users.lastname','borrowers.id', 'borrowers.address_id', 'borrowers.student_id', 'borrowers.faculty_id','borrowers.major_id', 'borrowers.gpa', 'borrowers.marital_status','borrowers.phone',  )
             ->first();
         $father = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','บิดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive')->first();
         $mother = Parents::where('borrower_id',$borrower['id'])->where('borrower_relational','มารดา')->select('prefix','firstname','lastname','occupation','place_of_work','phone','income','alive')->first();

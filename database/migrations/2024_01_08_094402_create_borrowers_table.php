@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('student_id');
             $table->integer('faculty_id')->foreignIdFor(Faculties::class);
             $table->integer('major_id')->foreignIdFor(Majors::class);
-            $table->integer('grade');
             $table->string('gpa');
             $table->json('marital_status');
             $table->string('phone');

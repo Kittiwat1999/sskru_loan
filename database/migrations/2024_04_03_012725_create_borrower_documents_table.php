@@ -20,7 +20,8 @@ return new class extends Migration
             $table->integer('user_id')->foreignIdFor(Users::class);
             $table->string('status');
             $table->datetime('delivered_date')->nullable();
-            $table->datetime('check_date')->nullable();
+            $table->datetime('checked_date')->nullable();
+            $table->datetime('commented_date')->nullable();
             $table->timestamps();
         });
     }

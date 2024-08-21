@@ -22,7 +22,7 @@ class MultiTableSeeder extends Seeder
         $this->seedBorrowerApprearanceTypes();
         $this->seedNeesessities();
         $this->seedProperties();
-        $this->seedDouTypes();
+        $this->seedDocTypes();
         $this->seedFaculties();
         $this->seedBorrowers();
         $this->seedParents();
@@ -40,6 +40,8 @@ class MultiTableSeeder extends Seeder
         $this->seedChildDocumentExampleFiles();
         $this->seedRegisterDocuments();
         $this->seedRegisterTypes();
+        $this->seedTeacherComments();
+        $this->seedTeacher();
 
     }
 
@@ -54,9 +56,33 @@ class MultiTableSeeder extends Seeder
                 'password'=>Hash::make('1234567890'),
                 'privilage' =>'borrower',
                 'isactive'=>true,
+                'activated'=>true,
                 'created_at'=>Now(),
                 'updated_at'=>Now(),
             ],
+            [
+                'prefix' => 'นาย',
+                'firstname' => 'อาจารย์',
+                'lastname' => 'ที่ปรึกษา',
+                'email'=>'th.kittiwat-ooo@gmail.com',
+                'password'=>Hash::make('1234567890'),
+                'privilage' =>'teacher',
+                'isactive'=>true,
+                'activated'=>true,
+                'created_at'=>Now(),
+                'updated_at'=>Now(),
+            ],
+        ]);
+    }
+
+    private function seedTeacher(){
+        DB::table('teacher_accounts')->insert([
+            [
+                'user_id' => 2,
+                'faculty_id' => 6,
+                'major_id' => 41,
+            ],
+
         ]);
     }
 
@@ -95,7 +121,7 @@ class MultiTableSeeder extends Seeder
         ]);
     }
 
-    private function seedDouTypes()
+    private function seedDocTypes()
     {
         DB::table('doc_types')->insert([
             ['doctype_title' => 'ยื่นกู้รายใหม่'],
@@ -128,13 +154,12 @@ class MultiTableSeeder extends Seeder
                 'borrower_appearance_id' => 1,
                 'birthday' => '2542-04-26',
                 'citizen_id' => Crypt::encryptString('1-3304-00570-61-6'),
-                'student_id' => '1231231231',
+                'student_id' => '6410014103',
                 'faculty_id' => 6,
                 'major_id' => 41,
-                'grade' => 2,
                 'gpa' => 3.08,
                 'marital_status' => json_encode(["status"=>"อยู่ด้วยกัน","file_name"=>""]),
-                'phone' => '+66931037881',
+                'phone' => '0931037881',
                 'created_at' => '2024-03-20 19:40:05',
                 'updated_at' => '2024-03-20 19:48:08',
             ],
@@ -258,15 +283,15 @@ class MultiTableSeeder extends Seeder
     }
     private function seedDocuments(){ 
         DB::table('documents')->insert([
-            ['doctype_id'=>'5','last_access'=>'1','year'=>'2567','term'=>'2','need_useful_activity'=>'0','need_teacher_comment'=>'0','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
+            ['doctype_id'=>'1','last_access'=>'1','year'=>'2567','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'1','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
         ]);
     }
 
     private function seedDocStructure(){
         DB::table('doc_structures')->insert([
-            ['document_id'=>'1','child_document_id'=>'7'],
-            // ['document_id'=>'1','child_document_id'=>'2'],
-            // ['document_id'=>'1','child_document_id'=>'3'],
+            ['document_id'=>'1','child_document_id'=>'1'],
+            ['document_id'=>'1','child_document_id'=>'4'],
+            ['document_id'=>'1','child_document_id'=>'10'],
             // ['document_id'=>'1','child_document_id'=>'4'],
             // ['document_id'=>'1','child_document_id'=>'5'],
         ]);
@@ -434,6 +459,16 @@ class MultiTableSeeder extends Seeder
             ['title'=>'เป็นผู้กู้ยืมรายใหม่'],
             ['title'=>'เป็นผู้กู้ยืมรายเก่า'],
 
+        ]);
+    }
+
+    private function seedTeacherComments(){
+        DB::table('teacher_comments')->insert([
+            ['comment'=>'ครอบครัวของนักศึกษาขาดแคลนคุณทรัพย์'],
+            ['comment'=>'เป็นสาขาที่เป็นความต้องการหลักของประเทศ'],
+            ['comment'=>'เป็นสารขาที่ขาดแคลนของประเทศ'],
+            ['comment'=>'เพื่อส่งต่อโอกาศทางการศึกษาให้นักศึกษาได้สำเร็จการศึกษา'],
+            ['comment'=>'เห็นควรพิจารณาอนุมัติให้กู้ยืม'],
         ]);
     }
 }

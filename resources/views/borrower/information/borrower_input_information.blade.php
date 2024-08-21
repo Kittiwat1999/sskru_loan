@@ -78,7 +78,7 @@
 
                 <div class="col-md-5 mb-3">
                     <label for="student_id" class="form-label text-secondary">รหัสนักศึกษา</label>
-                    <input type="text" class="form-control" id="student_id" name="student_id" required>
+                    <input type="text" class="form-control" id="student_id" name="student_id" required onblur="calculateGrade(this.value)">
                     <div class="invalid-feedback">
                         กรุณากรอกรหัสนักศึกษา
                     </div>
@@ -111,17 +111,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="grade" class="col-md-12 col-form-label text-secondary">ชั้นปี</label>
-                    <select id="grade" name="grade" class="form-select" aria-label="Default select example" required>
-                        <option disabled selected value="">เลือกชั้นปี</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        กรุณาเลือกชั้นปี
-                    </div>
+                    <input class="form-control" type="text" name="grade" id="grade">
                 </div>
                 <div class="col-md-9"></div>
                 <div class="col-md-3 mb-3">
@@ -505,6 +495,15 @@
         }
 
         return validator;
+    }
+
+    function calculateGrade(student_id){
+        const date = new Date().getFullYear() + 543;
+        let firstTwoDigits = Math.floor(date / 100);
+        let buddhistCurrentYear = parseInt(Math.floor(date));
+        let beginYear = parseInt(firstTwoDigits+student_id[0]+student_id[1]);
+        let grade = (buddhistCurrentYear - beginYear) + 1;
+        document.getElementById('grade').value = grade;
     }
 
     $("#borrower_birthday").datetimepicker({

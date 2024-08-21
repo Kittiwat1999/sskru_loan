@@ -112,17 +112,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="grade" class="col-md-12 col-form-label text-secondary">ชั้นปี</label>
-                    <select id="grade" name="grade" class="form-select" aria-label="Default select example" required>
-                        <option disabled selected value="">เลือกชั้นปี</option>
-                        <option value="1" {{($borrower->grade == '1') ? 'selected' : '' }}>1</option>
-                        <option value="2" {{($borrower->grade == '2') ? 'selected' : '' }}>2</option>
-                        <option value="3" {{($borrower->grade == '3') ? 'selected' : '' }}>3</option>
-                        <option value="4" {{($borrower->grade == '4') ? 'selected' : '' }}>4</option>
-                        <option value="5" {{($borrower->grade == '5') ? 'selected' : '' }}>5</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        กรุณาเลือกชั้นปี
-                    </div>
+                    <input type="text" class="form-control" id="grade" name="grade">
                 </div>
                 <div class="col-md-9"></div>
                 <div class="col-md-3 mb-3">
@@ -309,8 +299,11 @@
 @section('script')
 <script>
     var tambon = @json($address->tambon);
+    var student_id = @json($borrower->student_id);
     ageCal('borrower');
     tambonFormPostcode('borrower',tambon);
+    calculateGrade(student_id);
+
 
     function ageCal(role) {
         var inputBirthday = document.getElementById(role + '_birthday');
@@ -539,6 +532,15 @@
         .catch(error => {
             console.error('Fetch error:', error);
         });
+    }
+
+    function calculateGrade(student_id){
+        const date = new Date().getFullYear() + 543;
+        let firstTwoDigits = Math.floor(date / 100);
+        let buddhistCurrentYear = parseInt(Math.floor(date));
+        let beginYear = parseInt(firstTwoDigits+student_id[0]+student_id[1]);
+        let grade = (buddhistCurrentYear - beginYear) + 1;
+        document.getElementById('grade').value = grade;
     }
 
     $("#borrower_birthday").datetimepicker({
