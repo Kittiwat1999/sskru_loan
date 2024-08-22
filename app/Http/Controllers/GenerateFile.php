@@ -1081,8 +1081,8 @@ class GenerateFile extends Controller
         $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
         $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
         $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
+        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
         $borrower['student_id'] = iconv('UTF-8', 'cp874', $borrower['student_id']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $borrower['grade']);
         $borrower['gpa'] = iconv('UTF-8', 'cp874', $borrower['gpa']);
         $borrower['phone'] = iconv('UTF-8', 'cp874', $borrower['phone']);
         $borrower['faculty'] = iconv('UTF-8', 'cp874',$faculty);

@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teacher_approve_documents', function (Blueprint $table) {
+        Schema::create('teacher_reject_documents', function (Blueprint $table) {
             $table->id();
             $table->integer('teacher_uid')->foreignIdFor(Users::class);
             $table->integer('borrower_document_id')->foreignIdFor(BorrowerDocument::class);
-            $table->boolean('isapprove');
-            $table->string('non_approve_comment');
+            $table->string('reject_comment');
             $table->timestamps();
+            
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teacher_approve_documents');
+        Schema::dropIfExists('teacher_reject_documents');
     }
 };

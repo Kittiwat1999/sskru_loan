@@ -45,7 +45,7 @@ index borrower
                               </span>
                             </td>
                             <td>
-                            @if($document['status'] == "wait-employee-approve" || $document['status'] == 'wait-teacher-comment')
+                            @if($document['status'] == "wait-approve" || $document['status'] == 'wait-teacher-approve')
                                 <span class="badge bg-warning">รอการอนุมัติ</span>
                             @elseif($document['status'] == "rejected")
                                 <span class="badge bg-danger text-light">ต้องแก้ไข</span>

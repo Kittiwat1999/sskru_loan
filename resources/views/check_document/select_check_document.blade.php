@@ -17,11 +17,11 @@
                 <div class="col-md-4 my-3">
                     <label for="status" class="col-form-label text-secondary">สถานะเอกสาร</label>
                     <select id="status" class="form-select" aria-label="Default select example" name="status">
-                        <option @selected($select_status == 'wait-employee-approve') value="wait-employee-approve">รออนุมัติ</option>
-                        <option @selected($select_status == 'wait-teacher-comment') value="wait-teacher-comment">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
+                        <option @selected($select_status == 'wait-approve') value="wait-employee-approve">รออนุมัติ</option>
+                        <option @selected($select_status == 'wait-teacher-approve') value="wait-teacher-approve">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
                         <option @selected($select_status == 'approved') value="approved">อนุมัติแล้ว</option>
                         <option @selected($select_status == 'rejected') value="rejected">ต้องแก้ไข</option>
-                        <option @selected($select_status == 'response-reject') value="response-reject">ต้องแก้ไข</option>
+                        <option @selected($select_status == 'response-reject') value="response-reject">แก้ไขแล้ว</option>
                         <option @selected($select_status == 'sending') value="sending">ผู้กู้ยืมกำลังดำเนินการ</option>
                     </select>
                 </div>
@@ -68,7 +68,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">รหัสนักศึกษา</th>
-                            <th scope="col"></th>
+                            <th scope="col">ข้อมูลผู้กู้</th>
                             <th scope="col">วันที่ส่งเอกสาร</th>
                             <th class="text-center"></th>
                         </tr>

@@ -216,35 +216,73 @@
                     </div>
 
                     <div class="border-top mt-4"></div>
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <label for="#" class="form-label">ให้ความเห็น</label>
+                    <form id="comment-form" class="row mt-4" action="{{route('tacher.store.commnet',['borrower_document_id' => $borrower_document['id'] ])}}" method="POST">
+                        @csrf
+                        <div class="col-md-12 mt-3">
+                            <h6 class="text-dark">ความคิดเห็นของผู้สัมภาษณ์</h6>
                         </div>
-                        @foreach($comments as $comment)
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="comment-{{$comment['id']}}" name="comments[]">
-                                    <label class="form-check-label" for="comment-{{$comment['id']}}">
-                                        {{$comment['comment']}}
-                                    </label>
-                                </div>
-                            </div>
-                        @endforeach
-                        <div class="col-md-12">
+                        <div id="invalid-radio" class="invalid-feedback">
+                            กรุณาระบุความเห็น
+                        </div>
+                        <div class="col-md-10">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="other-comment" name="comments[]" onchange="enableInputText()">
-                                <label class="form-check-label" for="other-comment">
-                                อื่นๆ
+                                <input class="form-check-input" type="radio" name="status" id="approve" value="approve" onchange="displayInputComment(this.value)" @checked($borrower_document['teacher_status'] == 'approved')>
+                                <label class="form-check-label" for="approve">
+                                    อนุมัติ
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-5 col-11 mx-4">
-                            <input type="text" name="more_comment" id="more_comment" class="form-control" disabled>
+                        <div class="col-md-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="reject" value="reject" onchange="displayInputComment(this.value)" @checked($borrower_document['teacher_status'] == 'rejected' ||  $borrower_document['teacher_status'] == 'response-reject')>
+                                <label class="form-check-label" for="reject">
+                                    ไม่อนุมัติ เนื่องจาก
+                                </label>
+                                <input type="text" name="reject_comment" id="reject-comment" class="form-control" @disabled($borrower_document['teacher_status'] == 'wait-approve' ||  $borrower_document['teacher_status'] == 'approved') value="{{ ($teacher_reject_document != null) ? $teacher_reject_document->reject_comment : '' }}">
+                                <div class="invalid-feedback">
+                                    กรุณากรอกเหตุผลที่ไม่อนุมัติ
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div id="input-comment" class="col-12 row m-0 p-0 d-none">
+                            <div class="col-md-12 mt-3">
+                                <h6 class="text-dark">ให้ความเห็น</label>
+                            </div>
+                            <div id="invalid-checkbox" class="invalid-feedback">
+                                กรุณาระบุความเห็น
+                            </div>
+                            @foreach($comments as $comment)
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="comment-{{$comment['id']}}" name="comments[]" value="{{$comment['id']}}" @checked($comment['checked'])>
+                                        <label class="form-check-label text-dark" for="comment-{{$comment['id']}}">
+                                            {{$comment['comment']}}
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="other-comment" name="more_comment_check" value="1" onchange="enableInputText()" @checked($more_comment != null)>
+                                    <label class="form-check-label" for="other-comment">
+                                    อื่นๆ
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-11 mx-4">
+                                <input type="text" name="more_comment" id="more_comment" class="form-control" @disabled($more_comment == null) value="{{ ($more_comment != null) ? $more_comment->custom_comment : '' }}">
+                                <div class="invalid-feedback">
+                                    กรุณากรอกความคิดเห็น
+                                </div>
+                            </div>
+                        </div>
+                    </form>
             </div>
-            <div class="text-start">
-                <a href="{{url('/teacher/index')}}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
+            <div class="col-12 row m-0 p-0">
+                <div class="col-md-9 col-sm-12"></div>
+                <div class="col-md-3 col-sm-12">
+                    <button type="button" class="btn btn-primary w-100" onclick="submitForm('comment-form')">บันทึก</button>
+                </div>
             </div>
         </div>
     </div>
@@ -257,8 +295,10 @@
 
 <script>
     var student_id = @json($borrower->student_id);
+    var status = @json($borrower_document['teacher_status']);
 
     calculateGrade(student_id);
+    (status == 'approved') ? displayInputComment('approve') : displayInputComment('reject');
 
     function calculateGrade(student_id){
         const date = new Date().getFullYear() + 543;
@@ -281,6 +321,7 @@
     function enableInputText(){
         const inputText = document.getElementById('more_comment');
         inputText.disabled = !inputText.disabled;
+        inputText.required = !inputText.required;
     }
 
     async function submitForm(form_id){
@@ -290,17 +331,43 @@
             const form = document.getElementById(form_id);
             form.submit();
         }else{
-            alert('ยังไม่ระบุเอกสารที่ส่ง');
-            var invalid_element = document.getElementById('invalid-checkbox');
-            if(invalid_element)invalid_element.classList.add('d-inline');
+            alert('กรุณากรอกความเห็น');
             window.scrollTo(0,0);
         }
     }
 
     async function validateForm(form_id){
         const form = document.getElementById(form_id);
-        const checkbox =  form.querySelectorAll('input[name="register_document[]"]');
-        validator = await validateCheckBox(checkbox);
+        const checkbox =  form.querySelectorAll('input[name="comments[]"][required]');
+        const inputs_text = form.querySelectorAll('input[type="text"][required]');
+        const radio = form.querySelectorAll('input[name="status"]');
+        var validator = true;
+
+        inputs_text.forEach((input_text) => {
+            if(input_text.value == ''){
+                validator = false;
+                var invalid_element = input_text.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = input_text.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+        });
+
+        var validate_checkbox = (checkbox.length != 0) ? await validateCheckBox(checkbox) : true;
+        if(!validate_checkbox){
+            validator = false;
+            var invalid_checkbox = document.getElementById('invalid-checkbox');
+            if(invalid_checkbox)invalid_checkbox.classList.add('d-inline');
+        }
+
+        var validate_radio =  await validateRadio(radio);
+        if(validate_radio){
+            validator = false;
+            var invalid_radio = document.getElementById('invalid-radio');
+            if(invalid_radio)invalid_radio.classList.add('d-inline');
+        }
+
         return validator;
     }
 
@@ -311,9 +378,41 @@
                 checker = true;
                 break;
             }
-        }
-
+        }   
         return (checker) ? true : false;
     }
+
+    async function validateRadio(radio){
+        var checker = false;
+        await radio.forEach((e) => {
+            if(radio.checked){
+                checker = true;
+            }
+        });
+        return checker;
+    }
+
+    function displayInputComment(checkbox_value){
+        const input_comment = document.getElementById('input-comment');
+        const checkbox =  document.querySelectorAll('input[name="comments[]"]');
+        if(checkbox_value == 'approve'){
+            input_comment.classList.remove('d-none');
+            const reject_comment = document.getElementById('reject-comment');
+            reject_comment.disabled = true;
+            reject_comment.required = false;
+
+            checkbox.forEach((e) => {e.required = true});
+        }else{
+            input_comment.classList.add('d-none');
+            const reject_comment = document.getElementById('reject-comment');
+            reject_comment.disabled = false;
+            reject_comment.required = true;
+            const inputText = document.getElementById('more_comment');
+            inputText.disabled = true;
+            inputText.required = false;
+            checkbox.forEach((e) => {e.required = false});
+        }
+    }
 </script>
+    
 @endsection

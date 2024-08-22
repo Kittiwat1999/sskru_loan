@@ -268,11 +268,15 @@ Route::get('/loan_submission/to_edit/{id}',function ($id){
 
 
 Route::get('/teacher/index',[TeacherComment::class, 'index'])->name('teacher.index');
-Route::get('/teahcer/select-grade/{grade}',[TeacherComment::class ,'selectGrade'])->name('teacher.select.grade');
+Route::post('/teacher/select-option',[TeacherComment::class ,'selectOption'])->name('teacher.select.option');
+Route::get('/teacher/get_borrower_documents',[TeacherComment::class ,'getBorrowerDocuments'])->name('teacher.get.borrower.document');
+// Route::get('/teacher/test-getdata',[TeacherComment::class ,'multipleQuery']);
+Route::post('/teacher/sotre/comment/{borrower_document_id}',[TeacherComment::class, 'storeComment'])->name('tacher.store.commnet');
 Route::get('/teacher_view_document',function () {
     return view('teachers.view_document');
 })->name('teachers.view_document');
 Route::get('/teacher/borrower_document/comment/{borrower_document_id}', [TeacherComment::class, 'commnetBorrowerDocument'])->name('teacher.comment.borrower.document');
+Route::get('/teacher/borrower_document/view/{borrower_document_id}', [TeacherComment::class, 'viewBorrowerDocument'])->name('teacher.view.borrower.document');
 
 Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
 Route::get('/borrower/borrower_document/document/{document_id}', [BorrowerDocumentController::class,'DocumentPage'])->name('borrower.document.page');

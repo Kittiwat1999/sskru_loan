@@ -17,10 +17,10 @@ return new class extends Migration
     {
         Schema::create('teacher_comment_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('commentator_id')->foreignIdFor(Users::class);
+            $table->string('teacher_uid')->foreignIdFor(Users::class);
             $table->integer('borrower_document_id')->foreignIdFor(BorrowerDocument::class);
             $table->integer('teacher_comment_id')->foreignIdFor(TeacherComments::class)->nullable();
-            $table->string('custom_comment');
+            $table->string('custom_comment')->nullable();
             $table->timestamps();
         });
     }

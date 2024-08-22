@@ -116,7 +116,11 @@ class CheckDocumentController extends Controller
         return view('check_document.select_check_document',compact('document' ,'faculties','majors'));
     }
     public function selectMajorByFacultyId($faculty_id){
-        $majors = Majors::where('faculty_id', $faculty_id)->where('isactive', true)->get();
+        if($faculty_id == 'all'){
+            $majors = Majors::where('isactive', true)->get();
+        }else{
+            $majors = Majors::where('faculty_id', $faculty_id)->where('isactive', true)->get();
+        }
         return json_encode($majors);
     }
     
@@ -148,7 +152,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty != 'all' && $select_major == 'all') && $select_grade == 'all'){  //เลือก คณะ แต่ ไม่ได้เลือก สาขา, ชั้นปี
+        }else if(($select_faculty != 'all' && $select_major == 'all') && $select_grade == 'all'){  //เลือก คณะ แต่ไม่ได้เลือก สาขา, ชั้นปี
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -160,7 +164,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade == 'all'){ //เลือก คณะ , สาขา แต่ ไม่ได้เลือก ชั้นปี
+        }else if(($select_faculty != 'all' && $select_major != 'all') && $select_grade == 'all'){ //เลือก คณะ , สาขา แต่ไม่ได้เลือก ชั้นปี
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -187,7 +191,7 @@ class CheckDocumentController extends Controller
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id' ,'borrower_documents.id','borrower_documents.status', 'borrower_documents.delivered_date','faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
-        }else if(($select_faculty == 'all' && $select_major != 'all') && $select_grade != 'all'){ //เลือก สาขา, ชั้นปี แต่ ไม่ได้เลือก คณะ
+        }else if(($select_faculty == 'all' && $select_major != 'all') && $select_grade != 'all'){ //เลือก สาขา, ชั้นปี แต่ไม่ได้เลือก คณะ
             $data = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
                 ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                 ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')

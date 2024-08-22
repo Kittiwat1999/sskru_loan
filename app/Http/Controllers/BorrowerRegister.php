@@ -86,7 +86,7 @@ class BorrowerRegister extends Controller
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
         $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
         $registered_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
-        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->where('status','delivered')->orWhere('status','wait-teacher-comment')->exists();
+        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->where('status','wait-approve')->orWhere('teacher_status','wait-approve')->exists();
         $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
 
         $step = 1;
@@ -531,9 +531,10 @@ class BorrowerRegister extends Controller
         //update เอกสารผู้กู้
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->first();
         if($document['need_teacher_comment']){
-            $borrower_document['status'] = 'wait-teacher-comment';
+            $borrower_document['teacher_status'] = 'wait-approve';
+            $borrower_document['status'] = 'wait-teacher-approve';
         }else{
-            $borrower_document['status'] = 'wait-employee-approve';
+            $borrower_document['status'] = 'wait-approve';
         }
         $borrower_document['delivered_date'] = $this->convertToBuddhistDateTime();
         $borrower_document->save();

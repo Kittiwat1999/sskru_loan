@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->integer('document_id')->foreignIdFor(Documents::class);
             $table->integer('user_id')->foreignIdFor(Users::class);
+            $table->string('teacher_status')->nullable()->default(null);
             $table->string('status');
             $table->datetime('delivered_date')->nullable();
             $table->datetime('checked_date')->nullable();
