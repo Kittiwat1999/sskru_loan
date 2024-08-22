@@ -42,11 +42,6 @@
                                         <h5 class="card-title">รายละเอียดบัญชี</h5>
 
                                         <div class="row">
-                                            <div class="col-lg-3 col-md-4 label ">ชื่อผู้ใช้</div>
-                                            <div class="col-lg-9 col-md-8">{{$user->username}}</div>
-                                        </div>
-
-                                        <div class="row">
                                             <div class="col-lg-3 col-md-4 label ">ชื่อ</div>
                                             <div class="col-lg-9 col-md-8">{{$user->prefix}}{{$user->firstname}} {{$user->lastname}}</div>
                                         </div>
@@ -64,14 +59,6 @@
                                     <!-- Profile Edit Form -->
                                         <form action="{{ route('users.profile.edit') }}" method="post">
                                             @csrf
-
-                                            <div class="row mb-3">
-                                                <label for="username" class="col-md-4 col-lg-3 col-form-label">ชื่อผู้ใช้</label>
-                                                <div class="col-md-8 col-lg-9">
-                                                    <input name="username" type="text" class="form-control" id="username" value={{$user->username}} required>
-                                                    <div class="invalid-feedback">กรุณากรอกชื่อผู้ใช้</div>
-                                                </div>
-                                            </div>
 
                                             <div class="row mb-3">
                                                 <label for="prefix" class="col-md-4 col-lg-3 col-form-label">คำนำหน้า</label>

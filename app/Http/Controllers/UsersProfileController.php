@@ -33,17 +33,6 @@ class UsersProfileController extends Controller
 
         $user = Users::find($user_id);
 
-        if($user->username != $request->username){
-            $request->validate([
-                'username' => 'required|string|unique:users,username|max:255',
-            ],[
-                "username.required" => 'กรุณากรอกชื่อผู้ใช้',
-                "username.string" => 'กรุณากรอกชื่อผู้ใช้เป็นข้อความ',
-                "username.unique" => 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว',
-                "username.max" => 'กรุณากรอกชื่อผู้ใช้ไม่เกิน :max ตัวอักษร',
-            ]);
-        }
-
         if($user->email != $request->email){
             $request->validate([
                 'email' => 'required|email|unique:users,email|max:255',
@@ -55,7 +44,6 @@ class UsersProfileController extends Controller
             ]);
         }
 
-        $user->username = $request->input('username');
         $user->prefix = $request->input('prefix');
         $user->firstname = $request->input('firstname');
         $user->lastname = $request->input('lastname');
