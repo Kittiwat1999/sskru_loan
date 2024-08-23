@@ -97,7 +97,7 @@
                                                 <div class="invalid-feedback">กรุณากรอกอีเมล</div>
                                             </div>
                                             @method('PUT')
-                                            <div class="text-center">
+                                            <div class="text-end">
                                                 <button type="submit" class="btn btn-primary">บันทึก</button>
                                             </div>
                                         </form><!-- End Profile Edit Form -->
@@ -133,7 +133,7 @@
                                             <div class="invalid-feedback">กรุณายืนยันรหัสผ่านใหม่</div>
                                         </div>
 
-                                        <div class="text-center">
+                                        <div class="text-end">
                                             <button type="submit" class="btn btn-primary" onclick="return validatePassword()">บันทึก</button>
                                         </div>
                                     </form><!-- End Change Password Form -->
