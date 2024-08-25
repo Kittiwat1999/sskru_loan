@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Borrower;
+use App\Models\BorrowerChildDocument;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
 use App\Models\Comments;
@@ -18,9 +19,38 @@ use App\Models\Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 class TeacherComment extends Controller
 {
+
+    public function deleteFile($file_path,$file_name){
+        $path = storage_path($file_path.'/'.$file_name);
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+    }
+
+    private function storeFile($file_path,$file){
+        $path = storage_path($file_path);
+        !file_exists($path) && mkdir($path, 0755, true);
+        $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
+        $file->move($path, $name);
+        return $name;
+    }
+
+    public function displayFile($file_path,$file_name){
+        $path = storage_path($file_path.'/'.$file_name);
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    }
 
     function getBorrowerBeginYear($grade){
         $year = date('Y') + 543;
@@ -185,7 +215,6 @@ class TeacherComment extends Controller
             $comment['checked'] = TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->where('teacher_comment_id', $comment['id'])->exists();
         }
 
-
         return view('teachers.comment_documents', 
             compact(
                 'document',
@@ -225,10 +254,9 @@ class TeacherComment extends Controller
             $comments_Db = TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->pluck('teacher_comment_id')->toArray();
             $comments_Req = $request->comments;
             $custom_comment = TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->where('teacher_comment_id', null)->first() ?? new TeacherCommentDocuments();
-
+            $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->first();
             $comments_for_delete = array_diff($comments_Db,$comments_Req);
             $comments_for_add = array_diff($comments_Req,$comments_Db);
-
 
             foreach($comments_for_delete as $teacher_comment_id){
                 TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->where('teacher_comment_id',$teacher_comment_id)->delete();
@@ -258,6 +286,11 @@ class TeacherComment extends Controller
             $teacher_reject_document = TeacherRejectDocument::where('borrower_document_id',$borrower_document_id)->first();
             if($teacher_reject_document != null) $teacher_reject_document->delete();
 
+            //sign borrower 101
+            $generator = new GenerateFile();
+            $temp_path = $generator->teacherCommentDocument101($user_id, $borrower_child_document_101['borrower_file_id']);
+            $this->updateBorrowerFile101($temp_path, $borrower_child_document_101['borrower_file_id']);
+
             $borrower_document['teacher_status'] = 'approved';
             $borrower_document['status'] = 'wait-approve';
             $borrower_document->save();
@@ -274,6 +307,25 @@ class TeacherComment extends Controller
         }else{
             return redirect()->back()->withErrors('สถานะที่เลือกไม่ตรงกับสถานะใดๆในระบบ');
         }
+    }
+
+    public function updateBorrowerFile101($temp_path, $borrower_file_101_id){
+        $borrower_file = BorrowerFiles::find($borrower_file_101_id);
+        //file
+        $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';
+        $store_path = $borrower_file['file_path'];
+        $path = storage_path($store_path);
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+        $final_path = $path. '/' .$custom_filename;
+        File::move($temp_path, $final_path);
+        $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
+        $borrower_file['file_path'] = $store_path;
+        $borrower_file['file_name'] = $custom_filename;
+        $borrower_file['file_type'] = last(explode('.', $custom_filename));
+        $borrower_file['full_path'] = $store_path. '/' .$custom_filename;
+        $borrower_file->save(); 
     }
 
     public function viewBorrowerDocument($borrower_document_id, Request $request){
@@ -324,8 +376,6 @@ class TeacherComment extends Controller
         foreach($comments as $comment){
             $comment['checked'] = TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->where('teacher_comment_id', $comment['id'])->exists();
         }
-
-
         return view('teachers.view_document', 
             compact(
                 'document',

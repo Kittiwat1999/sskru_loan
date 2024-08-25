@@ -45,8 +45,10 @@ index borrower
                               </span>
                             </td>
                             <td>
-                            @if($document['status'] == "wait-approve" || $document['status'] == 'wait-teacher-approve')
+                            @if($document['status'] == "wait-approve")
                                 <span class="badge bg-warning">รอการอนุมัติ</span>
+                            @elseif($document['status'] == 'wait-teacher-approve')
+                                <span class="badge bg-warning">รออาจารย์ที่ปรึกษาอนุมัติ</span>
                             @elseif($document['status'] == "rejected")
                                 <span class="badge bg-danger text-light">ต้องแก้ไข</span>
                             @elseif($document['status'] == "approved")
@@ -55,7 +57,9 @@ index borrower
                             </td>
                             <td class="text-center">
                               @if($document['status'] == "rejected")
-                                <button type="button" class="btn btn-sm btn-warning">แก้ใขไฟล์</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยฝ่ายทุน</button>
+                              @elseif($document['teacher_status'] == "rejected")
+                                <button type="button" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</button>
                               @else
                                 <a href="{{route('borrower.document.page',['document_id' => $document->document_id ])}}" class="btn btn-sm btn-outline-primary">ดูไฟล์ที่ส่ง</a>
                               @endif

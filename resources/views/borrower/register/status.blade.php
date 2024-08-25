@@ -61,7 +61,7 @@
         </div>
     </div>
     <div class="row d-flex flex-column align-items-center">
-        <div class="card section dashboard col-md-6">
+        <div class="card section dashboard col-md-8">
             <div class="card-body">
                 <h5 class="card-title">สถานะการยื่นกู้</h5>
                 <div class="activity">
@@ -79,12 +79,23 @@
                     @if($document['need_teacher_comment'])
                     <div class="activity-item d-flex">
                         <div class="col-2 pt-1">
-                            <span class="badge bg-warning w-100">รอดำเนินการ</span>
+                            @if($borrower_document['teacher_status'] == 'wait-approve')
+                                <span class="badge bg-warning w-100">รอดำเนินการ</span>
+                            @elseif($borrower_document['teacher_status'] == 'rejected')
+                                <span class="badge bg-danger w-100">ไม่อนุมัติ</span>
+                            @elseif($borrower_document['teacher_status'] == 'response-reject')
+                                <span class="badge bg-warning w-100">ส่งแก้ไขเอกสาร</span>
+                            @elseif($borrower_document['teacher_status'] == 'approved')
+                                <span class="badge bg-success w-100">อนุมัติแล้ว</span>
+                            @endif
                         </div>
                         <div class="activite-label"></div>
-                        <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
+                        <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                         <div class="activity-content">
                             อาจารย์ที่ปรึกษาให้ความเห็น
+                            @if($borrower_document['teacher_status'] == 'response-reject' || $borrower_document['teacher_status'] == 'rejected')
+                                <br><span class="text-danger">{{$borrower_document['teacher_reject']}}</span>
+                            @endif
                         </div>
                     </div><!-- End activity item-->
                     @endif
@@ -94,7 +105,7 @@
                             <span class="badge bg-warning w-100">รอดำเนินการ</span>
                         </div>
                         <div class="activite-label"></div>
-                        <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
+                        <i class='bi bi-circle-fill activity-badge text-secondary align-self-start'></i>
                         <div class="activity-content">
                             ฝ่ายทุนตรวจเอกสาร
                         </div>
@@ -105,7 +116,7 @@
                             <span class="badge bg-warning w-100">รอดำเนินการ</span>
                         </div>
                         <div class="activite-label"></div>
-                        <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
+                        <i class='bi bi-circle-fill activity-badge text-secondary align-self-start'></i>
                         <div class="activity-content">
                             ยื่นกู้เสร็จสิ้น
                         </div>

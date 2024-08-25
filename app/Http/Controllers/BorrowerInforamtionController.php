@@ -95,7 +95,6 @@ class BorrowerInforamtionController extends Controller
         $borrower['student_id'] = $request->student_id;
         $borrower['faculty_id'] = $request->faculty;
         $borrower['major_id'] = $request->major;
-        $borrower['grade'] = $request->grade;
         $borrower['gpa'] = $request->gpa;
         $borrower['phone'] = $request->phone;
         $borrower['address_id'] = $address['id'];
@@ -173,7 +172,6 @@ class BorrowerInforamtionController extends Controller
         $borrower['student_id'] = $request->student_id;
         $borrower['faculty_id'] = $request->faculty;
         $borrower['major_id'] = $request->major;
-        $borrower['grade'] = $request->grade;
         $borrower['gpa'] = $request->gpa;
         $borrower['phone'] = $request->phone;
         $borrower['address_id'] = $address['id'];

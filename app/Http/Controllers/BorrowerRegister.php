@@ -17,6 +17,7 @@ use App\Models\DocTypes;
 use App\Models\Documents;
 use App\Models\RegisterDocument;
 use App\Models\RegisterType;
+use App\Models\TeacherRejectDocument;
 use App\Models\UsefulActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,7 +39,16 @@ class BorrowerRegister extends Controller
             ->where('documents.isactive',true)
             ->where('documents.start_date', '<=', $current_date)
             ->where('documents.end_date', '>=', $current_date)
+            ->select('documents.*', 'doc_types.doctype_title as doctype_title')
+            ->first() 
+            ??  
+            BorrowerDocument::join('documents', 'documents.id', '=', 'borrower_documents.document_id')
+            ->join('doc_types','doc_types.id','=','documents.doctype_id')
+            ->where('doc_types.id' ,1)
+            ->where('documents.isactive',true)
+            ->select('documents.*', 'doc_types.doctype_title as doctype_title')
             ->first();
+
         return $document ?? null;
     }
 
@@ -86,7 +96,17 @@ class BorrowerRegister extends Controller
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
         $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
         $registered_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
-        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->where('status','wait-approve')->orWhere('teacher_status','wait-approve')->exists();
+        $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)
+            ->where('document_id', $document_id)
+            ->where('status','wait-approve')
+            ->orWhere('status','rejected')
+            ->orWhere('status','response-rejected')
+            ->orWhere('status','approved')
+            ->orWhere('teacher_status','wait-approve')
+            ->orWhere('teacher_status','rejected')
+            ->orWhere('teacher_status','response-rejected')
+            ->orWhere('teacher_status','approved')
+            ->exists();
         $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
 
         $step = 1;
@@ -127,7 +147,7 @@ class BorrowerRegister extends Controller
         $step = $this->checkStep($document['id'], $user_id);
         switch ($step) {
             case 1:
-                return $this->registerType($request);
+                return $this->rregisterType($request);
                 break;
             case 2:
                 return $this->uploadDocumentPage($request);
@@ -522,24 +542,34 @@ class BorrowerRegister extends Controller
             ->select('child_document_files.file_path','child_document_files.file_name','child_document_files.file_type','child_documents.child_document_title','child_documents.generate_file','child_documents.id')
             ->first();
 
-        $this->mergeMaritalFile($document, $user_id);
-        //save file
-        $generator = new GenerateFile();
-        $temp_path = $generator->saveBorrowerDocument101($user_id, $child_document, $document['id']);
-        $this->saveDocument101($document, $user_id, $temp_path);
-        
-        //update เอกสารผู้กู้
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document->id)->first();
+        if($borrower_document['status'] == 'sending'){
+            $this->mergeMaritalFile($document, $user_id);
+        }
+        //save file
+        if($borrower_document['status'] != 'approved'){
+            $generator = new GenerateFile();
+            $temp_path = $generator->saveBorrowerDocument101($user_id, $child_document, $document['id']);
+            $this->saveDocument101($document, $user_id, $temp_path);
+        }
+        
         if($document['need_teacher_comment']){
-            $borrower_document['teacher_status'] = 'wait-approve';
-            $borrower_document['status'] = 'wait-teacher-approve';
+            if($borrower_document['teacher_status'] == 'sending'){
+                $borrower_document['teacher_status'] = 'wait-approve';
+                $borrower_document['status'] = 'wait-teacher-approve';
+            }elseif($borrower_document['teacher_status'] == 'rejected'){
+                $borrower_document['teacher_status'] = 'response-reject';
+            }
         }else{
-            $borrower_document['status'] = 'wait-approve';
+            if($borrower_document['status'] == 'sending'){
+                $borrower_document['status'] = 'wait-approve';
+            }elseif($borrower_document['status'] == 'rejected'){
+                $borrower_document['status'] = 'response-reject';
+            }
         }
         $borrower_document['delivered_date'] = $this->convertToBuddhistDateTime();
         $borrower_document->save();
         return redirect('/borrower/borrower_register/status')->with(['success'=>'บันทึกข้อมูลเสร็จสิ้น']);
-
     }
 
     public function generateFile101(Request $request, $document_id, $child_document_id){
@@ -720,8 +750,11 @@ class BorrowerRegister extends Controller
             return view('borrower.document_undefined');
         }
 
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first();
+        $borrower_document['teacher_reject'] = TeacherRejectDocument::where('borrower_document_id', $borrower_document['id'])->value('reject_comment');
+
         $step = $this->checkStep($document['id'], $user_id);
-        return view('borrower.register.status',compact('step','document'));
+        return view('borrower.register.status',compact('step','document','borrower_document'));
     }
 
    
