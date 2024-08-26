@@ -147,7 +147,7 @@ class BorrowerRegister extends Controller
         $step = $this->checkStep($document['id'], $user_id);
         switch ($step) {
             case 1:
-                return $this->rregisterType($request);
+                return $this->registerType($request);
                 break;
             case 2:
                 return $this->uploadDocumentPage($request);
@@ -521,10 +521,9 @@ class BorrowerRegister extends Controller
             ->where('doc_structures.document_id',$document->id)
             ->where('doc_structures.child_document_id', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->first();
-        
-        // dd($child_document);
+        $borrower_document = BorrowerDocument::where('document_id', $document['id'])->first();
         $step = $this->checkStep($document['id'], $user_id);
-        return view('borrower.register.recheck_document',compact('document','child_document', 'step'));
+        return view('borrower.register.recheck_document',compact('document','child_document', 'step', 'borrower_document'));
     }
 
     public function submitDocument(Request $request){
@@ -583,10 +582,10 @@ class BorrowerRegister extends Controller
         return $generator->borrowerDocument101($user_id, $child_document, $document_id);
     }
 
-    public function generateFile103(Request $request, $document_id){
-        $user_id = $request->session()->get('user_id','1');
+    public function generateFile103(Request $request, $borrower_document_id){
+        $borrower_uid = $request->session()->get('user_id','1');
         $generator = new GenerateFile();
-        return $generator->teacherCommentDocument103($user_id, $document_id);
+        return $generator->teacherCommentDocument103($borrower_uid, $borrower_document_id);
     }
 
     //save file กยศ 101

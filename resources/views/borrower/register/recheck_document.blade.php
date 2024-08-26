@@ -67,7 +67,7 @@
             <a class="open-link" onclick="openPDFInNewTab('pdf-103')" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
             <div class="row my-6 mx-1  border border-2 mb-2">
                 <div class="col-md-12 iframe-container">
-                    <iframe id="pdf-103" src="{{route('borrower.register.generate.teacher.comment',['document_id' => $document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
+                    <iframe id="pdf-103" src="{{route('borrower.register.generate.teacher.comment',['borrower_document_id' => $borrower_document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
                 </div>
             </div>    
         </div>

@@ -252,10 +252,10 @@ class TeacherComment extends Controller
         ]);
         if($request->status == "approve"){
             $comments_Db = TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->pluck('teacher_comment_id')->toArray();
-            $comments_Req = $request->comments;
+            $comments_Req = $request->comments ?? [];
             $custom_comment = TeacherCommentDocuments::where('borrower_document_id',$borrower_document_id)->where('teacher_comment_id', null)->first() ?? new TeacherCommentDocuments();
             $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->first();
-            $comments_for_delete = array_diff($comments_Db,$comments_Req);
+            $comments_for_delete = array_diff($comments_Db,$comments_Req) ;
             $comments_for_add = array_diff($comments_Req,$comments_Db);
 
             foreach($comments_for_delete as $teacher_comment_id){

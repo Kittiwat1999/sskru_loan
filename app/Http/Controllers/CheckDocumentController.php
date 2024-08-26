@@ -25,7 +25,7 @@ class CheckDocumentController extends Controller
     protected $status = [
         'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
         'wait-teacher-comment' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
-        'wait-employee-approve' => 'รออนุมัติ',
+        'wait-approve' => 'รออนุมัติ',
         'rejected' => 'ต้องแก้ไข',
         'approved' => 'อนุมัติแล้ว',
         'response-reject' => 'แก้ใขแล้ว',
@@ -100,7 +100,7 @@ class CheckDocumentController extends Controller
 
     public function selectDocument($document_id, Request $request){
         $request->session()->put([
-            'select_status' =>  $request->session()->get('select_status') ?? 'wait-employee-approve',
+            'select_status' =>  $request->session()->get('select_status') ?? 'wait-approve',
             'select_faculty' => $request->session()->get('select_faculty') ?? 'all',
             'select_major' => $request->session()->get('select_major') ?? 'all',
             'select_grade' => $request->session()->get('select_grade') ?? 'all',
@@ -136,7 +136,7 @@ class CheckDocumentController extends Controller
     }
 
     public function multipleQuery($document_id, $request){
-        $select_status = $request->session()->get('select_status','wait-employee-approve');
+        $select_status = $request->session()->get('select_status','wait-approve');
         $select_faculty = $request->session()->get('select_faculty','all');
         $select_major = $request->session()->get('select_major','all');
         $select_grade = $request->session()->get('select_grade','all');
@@ -248,7 +248,7 @@ class CheckDocumentController extends Controller
                     return $this->convert_to_dmy_date($row->delivered_date);
                 })
                 ->addColumn('action', function($row){
-                    if($row->status == 'wait-employee-approve'){
+                    if($row->status == 'wait-approve'){
                         $selectBtn = '<a href="' .route('check.borrower.document', $row->id). '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
                     }elseif($row->status == 'sending'){
                         $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';

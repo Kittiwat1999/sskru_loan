@@ -338,7 +338,7 @@
 
     async function validateForm(form_id){
         const form = document.getElementById(form_id);
-        const checkbox =  form.querySelectorAll('input[name="comments[]"][required]');
+        const checkbox =  form.querySelectorAll('input[type="checkbox"]');
         const inputs_text = form.querySelectorAll('input[type="text"][required]');
         const radio = form.querySelectorAll('input[name="status"]');
         var validator = true;
@@ -394,7 +394,7 @@
 
     function displayInputComment(checkbox_value){
         const input_comment = document.getElementById('input-comment');
-        const checkbox =  document.querySelectorAll('input[name="comments[]"]');
+        const checkbox =  document.querySelectorAll('input[type="checkbox"]');
         if(checkbox_value == 'approve'){
             input_comment.classList.remove('d-none');
             const reject_comment = document.getElementById('reject-comment');
