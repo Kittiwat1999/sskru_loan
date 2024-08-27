@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AddOnStructure;
-use App\Models\Borrower;
-use App\Models\BorrowerChildDocument;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
 use App\Models\Config;
@@ -12,32 +9,21 @@ use App\Models\DocStructure;
 use App\Models\DocTypes;
 use App\Models\Documents;
 use App\Models\UsefulActivity;
-use Carbon\Carbon;
+use App\Models\Users;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
-class BorrowerDocumentController extends Controller
+class SearchDocuments extends Controller
 {
-
-    private function convertBuddhistDataTime($input_date)
-    {
-        $updatedAtGregorian = Carbon::parse($input_date);
-        $updatedAtBuddhist = $updatedAtGregorian->copy()->addYears(543);
-        return $updatedAtBuddhist->format('d-m-Y H:i:s');
-    }
-
-    public function deleteFile($file_path, $file_name)
-    {
-        $path = storage_path($file_path . '/' . $file_name);
+    public function deleteFile($file_path,$file_name){
+        $path = storage_path($file_path.'/'.$file_name);
         if (File::exists($path)) {
             File::delete($path);
         }
     }
 
-    private function storeFile($file_path, $file)
-    {
+    private function storeFile($file_path,$file){
         $path = storage_path($file_path);
         !file_exists($path) && mkdir($path, 0755, true);
         $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
@@ -45,9 +31,8 @@ class BorrowerDocumentController extends Controller
         return $name;
     }
 
-    public function displayFile($file_path, $file_name)
-    {
-        $path = storage_path($file_path . '/' . $file_name);
+    public function displayFile($file_path,$file_name){
+        $path = storage_path($file_path.'/'.$file_name);
         if (!File::exists($path)) {
             abort(404);
         }
@@ -57,13 +42,60 @@ class BorrowerDocumentController extends Controller
         $response->header("Content-Type", $type);
         return $response;
     }
-
+    
+    function calculateGrade($student_id)
+    {
+        $date = date('Y') + 543;
+        $firstTwoDigits = floor($date / 100);
+        $buddhistCurrentYear = intval(floor($date));
+        $beginYear = intval($firstTwoDigits . substr($student_id, 0, 2));
+        $grade = ($buddhistCurrentYear - $beginYear) + 1;
+        return $grade;
+    }
+    
     public function index()
     {
-        $user_id = Session::get('user_id', '1');
+        return view('search_document.index');
+    }
+    public function serachBorrowerDocuments(Request $request)
+    {
+        $input_id = $request->student_id;
+        $borrowers = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
+        ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+        ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+        ->where('borrowers.student_id', 'like', $input_id.'%')
+        ->select(
+            'users.prefix', 
+            'users.id as user_id', 
+            'users.firstname', 
+            'users.lastname', 
+            'borrowers.student_id',
+            'faculties.faculty_name', 
+            'majors.major_name')
+        ->get();
+
+        foreach($borrowers as $borrower){
+            $borrower['grade'] = $this->calculateGrade($borrower['student_id']);
+        }
+        return view('search_document.index',compact('borrowers','input_id'));
+    }
+
+    public function listDocument($borrower_uid)
+    {
+        $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
+        ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+        ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+        ->where('borrowers.user_id', $borrower_uid)
+        ->select(
+            'users.prefix', 
+            'users.firstname', 
+            'users.lastname', 
+            'borrowers.student_id',)
+        ->first();
+
         $borrower_documents = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->join('borrower_documents', 'documents.id', '=', 'borrower_documents.document_id')
-            ->where('borrower_documents.user_id', $user_id)
+            ->where('borrower_documents.user_id', $borrower_uid)
             ->select(
                 'documents.year',
                 'documents.term',
@@ -77,7 +109,7 @@ class BorrowerDocumentController extends Controller
                 'borrower_documents.document_id'
             )
             ->get();
-        return view('borrower.documents.index', compact('borrower_documents'));
+        return view('search_document.document_list', compact('borrower_documents','borrower'));
     }
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
@@ -104,20 +136,20 @@ class BorrowerDocumentController extends Controller
                 ->first();
         }
         return view(
-            'borrower.documents.document_page',
+            'search_document.document_page',
             compact(
                 'document',
                 'useful_activities',
                 'borrower_useful_activities_hours_sum',
                 'useful_activities_hours',
                 'child_documents',
+                'borrower_document',
             )
         );
     }
 
     public function previewBorrowerFile($borrower_child_document_id)
     {
-        $user_id = Session::get('user_id', '1');
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id', '=', 'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
             ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
@@ -129,10 +161,7 @@ class BorrowerDocumentController extends Controller
 
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
         $response = $this->displayFile(
-            $document['term'] . '-' . $document['year']
-                . '/' . $document['id']
-                . '/' . $borrower_child_document['child_document_id']
-                . '/' . $user_id,
+            $borrower_file['file_path'],
             $borrower_file['file_name']
         );
 

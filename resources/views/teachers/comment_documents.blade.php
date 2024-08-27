@@ -338,7 +338,7 @@
 
     async function validateForm(form_id){
         const form = document.getElementById(form_id);
-        const checkbox =  form.querySelectorAll('input[type="checkbox"]');
+        const checkbox =  form.querySelectorAll('input[type="checkbox"][required]');
         const inputs_text = form.querySelectorAll('input[type="text"][required]');
         const radio = form.querySelectorAll('input[name="status"]');
         var validator = true;

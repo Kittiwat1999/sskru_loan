@@ -18,7 +18,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
-
+use League\CommonMark\Node\Block\Document;
 
 class CheckDocumentController extends Controller
 {
@@ -89,9 +89,9 @@ class CheckDocumentController extends Controller
         $documents = Documents::join('doc_types', 'documents.doctype_id', '=', 'doc_types.id')
             ->where('documents.isactive',true)
             ->select('documents.*', 'doc_types.doctype_title')
-            ->orderBy('created_at', 'desc')
+            // ->orderBy('documents.created_at', 'desc')
             ->get();
-
+        // dd($documents);
         foreach($documents as $document){
             $document['last_access'] = Users::where('id',$document['last_access'])->value('firstname');
         }
@@ -109,7 +109,6 @@ class CheckDocumentController extends Controller
             ->where('documents.isactive',true)
             ->where('documents.id', $document_id)
             ->select('documents.*', 'doc_types.doctype_title')
-            ->orderBy('created_at', 'desc')
             ->first();
         $faculties = Faculties::where('isactive', true)->get();
         $majors = Majors::where('isactive', true)->get();

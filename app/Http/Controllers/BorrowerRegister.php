@@ -553,7 +553,7 @@ class BorrowerRegister extends Controller
         }
         
         if($document['need_teacher_comment']){
-            if($borrower_document['teacher_status'] == 'sending'){
+            if($borrower_document['teacher_status'] == null){
                 $borrower_document['teacher_status'] = 'wait-approve';
                 $borrower_document['status'] = 'wait-teacher-approve';
             }elseif($borrower_document['teacher_status'] == 'rejected'){

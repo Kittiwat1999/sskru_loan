@@ -19,6 +19,7 @@ use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetpasswordController;
+use App\Http\Controllers\SearchDocuments;
 use App\Http\Controllers\TeacherComment;
 use App\Http\Controllers\UsefulActivityController;
 use App\Http\Controllers\UsersProfileController;
@@ -197,10 +198,12 @@ Route::get('/search_document',function (){
     return view('search_document');
 })->name('search_document');
 
-Route::get('/search_document/borrower_documents',function (){
-    return view('borrower_documents');
-})->name('borrower_documents');
-
+Route::get('/search_document',[SearchDocuments::class, 'index']);
+Route::get('/search_document/get_student_id',[SearchDocuments::class, 'serachBorrowerDocuments'])->name('search.document.borrower.student_id');
+Route::get('/search_document/list_document/{borrower_uid}', [SearchDocuments::class,'listDocument'])->name('serach.document.list.document');
+Route::get('/search_document/document/{borrower_document_id}', [SearchDocuments::class,'viewBorrowerDocument'])->name('serach.document.view.document.page');
+Route::get('/search_document/preview/borrower_file/{borrower_child_document_id}', [SearchDocuments::class,'previewBorrowerFile'])->name('serach.document.preview.file');
+Route::get('/search_document/preview/teacher-comment/{document_id}', [SearchDocuments::class,'generateFile103'])->name('serach.document.preview.teacher.comment');
 
 Route::get('/new_loan_submission', function () {
     $privilage = "employee";
@@ -279,7 +282,10 @@ Route::get('/teacher/borrower_document/comment/{borrower_document_id}', [Teacher
 Route::get('/teacher/borrower_document/view/{borrower_document_id}', [TeacherComment::class, 'viewBorrowerDocument'])->name('teacher.view.borrower.document');
 
 Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
-Route::get('/borrower/borrower_document/document/{document_id}', [BorrowerDocumentController::class,'DocumentPage'])->name('borrower.document.page');
+Route::get('/borrower/borrower_document/document/{borrower_document_id}', [BorrowerDocumentController::class,'viewBorrowerDocument'])->name('borrower.view.document.page');
+Route::get('/borrower/borrower_document/preview/borrower_file/{borrower_child_document_id}', [BorrowerDocumentController::class,'previewBorrowerFile'])->name('borrower.document.preview.file');
+Route::get('/borrower/borrower_document/preview/teacher-comment/{document_id}', [BorrowerDocumentController::class,'generateFile103'])->name('borrower.document.preview.teacher.comment');
+
 
 Route::get('/borrower/information/information_list',[BorrowerInforamtionController::class,'index']);
 //borrower information

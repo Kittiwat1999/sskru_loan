@@ -74,7 +74,7 @@
                         </h2>
                         <div id="collapse-child-document-{{$child_document->id}}" class="accordion-collapse collapse" aria-labelledby="child-document-{{$child_document->id}}" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe src="{{route('borrower.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                <iframe src="{{route('serach.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
                                 <div class="row">
                                     @if($child_document->need_loan_balance)
                                     <div class="col-md-12 row mb-3 mx-0 px-0 mt-3">
@@ -123,7 +123,7 @@
                         </h2>
                         <div id="document-103-collapse" class="accordion-collapse collapse" aria-labelledby="document-103" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe id="pdf-103" src="{{route('borrower.document.preview.teacher.comment',['document_id' => $document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
+                                <iframe id="pdf-103" src="{{route('serach.document.preview.teacher.comment',['document_id' => $document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
                                 <div class="row">
                                     <div class="col-md-10 col-sm-12"></div>
                                     <div class="col-md-2 col-sm-12">
@@ -199,7 +199,7 @@
                 @endif
             </div>
             <div class="text-start">
-                <a href="{{url('/borrower/borrower_document/index')}}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
+                <a href="{{route('serach.document.list.document', ['borrower_uid' => $borrower_document->user_id])}}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
             </div>
         </div>
     </div>

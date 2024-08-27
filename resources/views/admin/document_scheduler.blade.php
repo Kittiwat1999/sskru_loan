@@ -152,7 +152,7 @@ admin document scheduler
                     <tbody>
                         @foreach($documents as $document)
                         <tr>
-                            <td>{{$loop->index+1}}</td>
+                            <td>{{$document->id}}</td>
                             <td>
                                 <span>{{$document->doctype_title}}</span><br>
                                 <span class="text-secondary fw-light">{{$document->term}} / {{$document->year}}</span>

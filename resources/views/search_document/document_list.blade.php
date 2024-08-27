@@ -8,7 +8,7 @@ index borrower
       <!-- start card table -->
       <div class="card">
           <div class="card-body">
-              <h5 class="card-title">เอกสารที่ส่งแล้ว</h5>
+              <h5 class="card-title">เอกสารของ {{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}} {{$borrower['student_id']}}</h5>
               <div class="table-responsive">
 
                 <table id="borrower-document-table" class="table table-striped">
@@ -56,22 +56,13 @@ index borrower
                             @endif
                             </td>
                             <td class="text-center">
-                              @if($borrower_document['status'] == "rejected")
-                                  @if($borrower_document['doctype_id'] == 1)
-                                    <a href="{{url('/borrower/borrower_register')}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
-                                  @else
-                                    <a href="{{route('borrower.upload.document.page', ['document_id' => $borrower_document['document_id']])}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
-                                  @endif
-                              @elseif($borrower_document['teacher_status'] == "rejected")
-                                @if($borrower_document['doctype_id'] == 1)
-                                  <a href="{{url('/borrower/borrower_register')}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
-                                @else
-                                  <a href="{{route('borrower.upload.document.page', ['document_id' => $borrower_document['document_id']])}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
-                                @endif
+                              @if($borrower_document['status'] == 'sending')
+                              <button type="button" class="btn btn-light">ผู้กู้ยืมกำลังดำเนินการ</button>
                               @else
-                                <a href="{{route('borrower.view.document.page',['borrower_document_id' => $borrower_document->id ])}}" class="btn btn-sm btn-outline-primary">ดูไฟล์ที่ส่ง</a>
+                              <a href="{{route('serach.document.view.document.page',['borrower_document_id' => $borrower_document->id ])}}" class="btn btn-sm btn-primary">ดูไฟล์ที่ส่ง</a>
                               @endif
                             </td>
+                            
                         </tr>
                         @endforeach
                     </tbody>
