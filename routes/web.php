@@ -418,7 +418,7 @@ Route::post('/borrower/borrower_register/result/store/',[BorrowerRegister::class
 Route::get('/borrower/borrower_register/recheck',[BorrowerRegister::class, 'recheckDocument'])->name('borrower.register.recheck');
 Route::get('/borrower/borrower_register/sumit/document',[BorrowerRegister::class, 'submitDocument'])->name('borrower.register.sumit.document');
 //preview file
-Route::get('/borrower/borrower_register/recheck/document/{document_id}/{child_document_id}',[BorrowerRegister::class, 'generateFile101'])->name('borrower.register.generate.document');
+Route::get('/borrower/borrower_register/recheck/document/{document_id}/{child_document_id}',[BorrowerRegister::class, 'showFile101'])->name('borrower.register.generate.document');
 Route::get('/borrower/borrower_register/recheck/teacher-comment/{borrower_document_id}',[BorrowerRegister::class, 'generateFile103'])->name('borrower.register.generate.teacher.comment');
 
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');

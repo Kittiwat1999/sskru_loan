@@ -571,15 +571,21 @@ class BorrowerRegister extends Controller
         return redirect('/borrower/borrower_register/status')->with(['success'=>'บันทึกข้อมูลเสร็จสิ้น']);
     }
 
-    public function generateFile101(Request $request, $document_id, $child_document_id){
+    public function showFile101(Request $request, $document_id, $child_document_id){
         $user_id = $request->session()->get('user_id','1');
-        $child_document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
-            ->where('child_documents.isactive',true)
-            ->where('child_documents.id' ,$child_document_id)
-            ->select('child_document_files.file_path','child_document_files.file_name','child_document_files.file_type','child_documents.child_document_title','child_documents.generate_file','child_documents.id')
-            ->first();
-        $generator = new GenerateFile();
-        return $generator->borrowerDocument101($user_id, $child_document, $document_id);
+        $borrower_child_document_101 = BorrowerChildDocument::where('child_document_id', $child_document_id)->where('document_id', $document_id)->first() ?? null;
+        //ถ้าระบบบันทึกไฟล์ กยศ 101 ให้ผู้กู้แล้ว
+        if($borrower_child_document_101 != null){
+            return $this->previewBorrowerFile($borrower_child_document_101['id']);
+        }else{ //กรณียังไม่บันทึก
+            $child_document = ChildDocuments::join('child_document_files','child_documents.id','=','child_document_files.child_document_id')
+                ->where('child_documents.isactive',true)
+                ->where('child_documents.id' ,$child_document_id)
+                ->select('child_document_files.file_path','child_document_files.file_name','child_document_files.file_type','child_documents.child_document_title','child_documents.generate_file','child_documents.id')
+                ->first();
+            $generator = new GenerateFile();
+            return $generator->borrowerDocument101($user_id, $child_document, $document_id);
+        }
     }
 
     public function generateFile103(Request $request, $borrower_document_id){
