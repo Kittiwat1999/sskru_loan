@@ -9,7 +9,6 @@
         <div class="card-body">
             <h5 class="card-title">ตรวจเอกสาร</h5>
 
-            <div class="card-body">
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         สำเนาบัตรประชาชน
@@ -24,9 +23,8 @@
                         <a class="badge bg-primary rounded-pill" href="{{url('check_document/documents')}}">ตรวจเอกสาร</a>
                     </li>
                 </ul>
-            </div>
 
-            <div class="text-end px-3 pb-3">
+            <div class="text-end mt-3">
                 <a href="{{url('check_document/document_submission')}}" class="btn btn-primary col-4 col-md-2">ถัดไป</a>
             </div>
         </div>
