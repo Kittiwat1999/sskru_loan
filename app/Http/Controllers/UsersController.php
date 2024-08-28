@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
-    protected $privilage = [
+    protected $privilege = [
         'admin' => 'แอดมิน',
         'employee' => 'พนักงานทุนฯ',
         'teacher' => 'อาจารย์ที่ปรึกษา',
@@ -23,24 +23,24 @@ class UsersController extends Controller
     ];
 
     function index(Request $request){
-        $select_privilage = $request->session()->get('select_privilage','employee');
+        $select_privilege = $request->session()->get('select_privilege','employee');
         $faculties = Faculties::where('isactive',true)->get();
         return view('/admin/manage_account',compact('faculties'));
     }
 
-    function admin_getUsersDataByPrivilage(Request $request, $select_privilage){
-        $request->session()->put('select_privilage', $select_privilage);
+    function admin_getUsersDataByprivilege(Request $request, $select_privilege){
+        $request->session()->put('select_privilege', $select_privilege);
         return redirect('/admin/manage_account');
     }
 
     function getUsers(Request $request){
-        $select_privilage = $request->session()->get('select_privilage','employee');
+        $select_privilege = $request->session()->get('select_privilege','employee');
         if ($request->ajax()) {
-            $data = Users::where('isactive',true)->where('privilage',$select_privilage)->get(['id','email','firstname','lastname','privilage','created_at','updated_at']);
+            $data = Users::where('isactive',true)->where('privilege',$select_privilege)->get(['id','email','firstname','lastname','privilege','created_at','updated_at']);
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('thai-privilage', function($row){
-                    return $this->privilage[$row->privilage];
+                ->addColumn('thai-privilege', function($row){
+                    return $this->privilege[$row->privilege];
                 })
                 ->addColumn('fullname', function($row){
                     return $row->prefix . $row->firstname . $row->lastname;
@@ -50,7 +50,7 @@ class UsersController extends Controller
                     $deleteBtn = '<button id="button-delete-modal" type="button" class="btn btn-sm btn-secondary" onclick="showDeleteModal( \''.$row->id.'\',\''.$row->firstname.'\',\''.$row->lastname.'\' )"><i class="bi bi-trash"></i></button> ';
                     return $editBtn . ' <div class="mt-2"></div> ' . $deleteBtn;
                 })
-                ->rawColumns(['thai-privilage','fullname','action'])
+                ->rawColumns(['thai-privilege','fullname','action'])
                 ->make(true);
         }
     }
@@ -58,13 +58,13 @@ class UsersController extends Controller
     function admin_get_user_by_id($user_id){
         $user = Users::find($user_id);
         $majors = [];
-        if($user->privilage == 'teacher'){
+        if($user->privilege == 'teacher'){
             $teacher_account = TeacherAccounts::where('user_id',$user->id)->first();
             $majors = Majors::where('faculty_id',$teacher_account->faculty_id)->get();
             $user->faculty_id = $teacher_account->faculty_id;
             $user->major_id = $teacher_account->major_id;
 
-        }else if($user->privilage == 'borrower'){
+        }else if($user->privilege == 'borrower'){
             $borrower_account = Borrower::where('user_id',$user->id)->first();
             $majors = Majors::where('faculty_id',$borrower_account->faculty_id)->get();
             $user->faculty_id = $borrower_account->faculty_id;
@@ -94,11 +94,11 @@ class UsersController extends Controller
         $user['lastname'] = $request->lastname;
         $user['email'] = $request->email;
         $user['password'] = Hash::make($request->password);
-        $user['privilage'] = $request->privilage;
+        $user['privilege'] = $request->privilege;
         $user['activated'] = true;
         $user->save();
 
-        if($request->privilage == 'teacher'){
+        if($request->privilege == 'teacher'){
             $request->validate(
                 [   
                     'major'=>'required|string',
@@ -132,7 +132,7 @@ class UsersController extends Controller
                 'prefix' => 'required|string|max:30',
                 'firstname' => 'required|string|max:50',
                 'lastname' => 'required|string|max:50',
-                'privilage' => 'required|string|max:50',
+                'privilege' => 'required|string|max:50',
             ],
             [
                 'required' => 'กรุณากรอก :attribute',
@@ -144,7 +144,7 @@ class UsersController extends Controller
             'prefix'=>$request->prefix,
             'firstname'=>$request->firstname,
             'lastname'=>$request->lastname,
-            'privilage'=>$request->privilage,
+            'privilege'=>$request->privilege,
             'updated_at'=>date('Y-m-d H:i:s')
         ];
         if($request->email != $user->email){
@@ -175,7 +175,7 @@ class UsersController extends Controller
         }
 
         Users::where('id',$request->id)->update($data);
-        if($request->privilage == 'teacher'){
+        if($request->privilege == 'teacher'){
             $request->validate(
                 ['major'=>'required|string'],
                 [

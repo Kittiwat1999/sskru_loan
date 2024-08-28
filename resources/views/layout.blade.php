@@ -110,14 +110,14 @@
     </nav><!-- End Icons Navigation -->
 
     </header><!-- End Header -->
-    <?php
-        $privilage = "borrower";//admin,borrower,faculty,teacher,employee
-    ?>
+    @php
+        $privilege = Session::get('privilege');
+    @endphp
     <aside id="sidebar" class="sidebar">
 
         <ul class="sidebar-nav" id="sidebar-nav">
 
-            @if($privilage == "admin")
+            @if($privilege == "admin")
             <li class="nav-heading text-secondary">Dashboard</li>
             <li class="nav-item">
                 <a id="dashboard" class="nav-link collapsed" href="{{url('/admin/dashboard')}}">
@@ -165,7 +165,7 @@
             </li><!-- End แก้ไขเอกสาร Page Nav -->
         @endif
 
-        @if(($privilage == 'admin' || $privilage == "employee") || $privilage == 'faculty')
+        @if(($privilege == 'admin' || $privilege == "employee") || $privilege == 'faculty')
             <li class="nav-heading text-secondary">ตรวจเอกสาร</li>
             <li class="nav-item">
                 <a id="new_loan_submission" class="nav-link collapsed" href="{{url('new_loan_submission')}}">
@@ -175,7 +175,7 @@
             </li><!-- End รายการยื่นกู้รายใหม่ Page Nav -->
         @endif
 
-        @if($privilage == 'admin' || $privilage == "employee")
+        @if($privilege == 'admin' || $privilege == "employee")
 
         <li class="nav-item">
             <a id="loan_submission" class="nav-link collapsed" href="{{url('loan_submission')}}">
@@ -220,7 +220,7 @@
             <span>ค้นหาเอกสาร</span>
             </a>
         </li><!-- End ค้นหาเอกสาร Page Nav -->
-        @elseif($privilage == "borrower")
+        @elseif($privilege == "borrower")
 
             <li class="nav-heading text-secondary">กรอกข้อมูลผู้กู้</li>
             <li class="nav-item">
@@ -265,7 +265,7 @@
                 <span>ขอแก้ใขข้อมูล</span>
                 </a>
             </li><!-- End Blank Page Nav -->
-        @elseif($privilage == "teacher")
+        @elseif($privilege == "teacher")
             <li class="nav-heading text-secondary">Pages</li>
 
             <li class="nav-item">

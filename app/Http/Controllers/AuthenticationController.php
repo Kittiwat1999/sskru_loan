@@ -34,6 +34,7 @@ class AuthenticationController extends Controller
             $request->session()->put('user_id',$user['id']);
             $request->session()->put('email',$user['email']);
 
+            dd($user['privilege']);
             if($user['activated']){
                 return redirect()->intended('/borrower/information/information_list');
             }else{
