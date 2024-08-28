@@ -285,3 +285,9 @@ Route::get('/check_document/check_borrower_document/preview/teacher-comment/{doc
 Route::get('/check_document/document_submission',function () {
     return view('check_document/document_submission');
 });
+Route::get('/check_document/check_documents_test',function () {
+    return view('check_document/check_documents_test');
+});
+Route::get('/check_document/documents',function () {
+    return view('check_document/documents');
+});
