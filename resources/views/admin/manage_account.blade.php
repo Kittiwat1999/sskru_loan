@@ -7,17 +7,17 @@
                 <h5 class="card-title">จัดการบัญชีผู้ใช้</h5>
                 <div class="row mb-4">
                     <!-- <div class="col-md-2">
-                        <label for="privilage" class="col-form-label text-secondary">ประเภทผู้ใช้</label>
+                        <label for="privilege" class="col-form-label text-secondary">ประเภทผู้ใช้</label>
                     </div> -->
                     @php
-                        $select_privilage = Session::get('select_privilage');
+                        $select_privilege = Session::get('select_privilege');
                     @endphp
                     <div class="col-md-4 mb-3">
-                        <select id="select-level-show" class="form-select" aria-label="Default select example" name="privilage" required onchange="getUsersByPrivilage(this.value)">
-                            <option {{($select_privilage == "admin") ? 'selected' : '' }} value="admin">แอดมิน</option>
-                            <option {{($select_privilage == "employee") ? 'selected' : '' }} value="employee">พนักงานทุนฯ</option>
-                            <option {{($select_privilage == "teacher") ? 'selected' : '' }} value="teacher">อาจารย์ที่ปรึกษา</option>
-                            <option {{($select_privilage == "borrower") ? 'selected' : '' }} value="borrower">ผู้กู้</option>
+                        <select id="select-level-show" class="form-select" aria-label="Default select example" name="privilege" required onchange="getUsersByPrivilege(this.value)">
+                            <option {{($select_privilege == "admin") ? 'selected' : '' }} value="admin">แอดมิน</option>
+                            <option {{($select_privilege == "employee") ? 'selected' : '' }} value="employee">พนักงานทุนฯ</option>
+                            <option {{($select_privilege == "teacher") ? 'selected' : '' }} value="teacher">อาจารย์ที่ปรึกษา</option>
+                            <option {{($select_privilege == "borrower") ? 'selected' : '' }} value="borrower">ผู้กู้ยืม</option>
                         </select>
                     </div>
                     <div class="col-md-5"></div>
@@ -77,8 +77,8 @@
                                             </div>
                                             <div class="col-6"></div>
                                             <div class="col-12">
-                                                <label for="privilage" class="col-form-label">ประเภทผู้ใช้</label>
-                                                <select id="privilage" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'input-faculty','major')">
+                                                <label for="privilege" class="col-form-label">ประเภทผู้ใช้</label>
+                                                <select id="privilege" class="form-select" aria-label="Default select example" name="privilege" required onchange="user_privilege(this.value,'input-faculty','major')">
                                                     <option selected disabled value="">เลือกประเภทผู้ใช้..</option>
                                                     <option value="admin">แอดมิน</option>
                                                     <option value="employee">พนักงานทุนฯ</option>
@@ -231,16 +231,16 @@
                         </div>
                         <div class="col-12">
                             <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                            <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilage" required onchange="user_privilage(this.value,'edit-faculty','edit-major')" ${(user.privilage == 'borrower') ? 'disabled' : '' }>
-                                <option ${(user.privilage == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
-                                <option ${(user.privilage == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
-                                <option ${(user.privilage == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
-                                <option ${(user.privilage == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้</option>
+                            <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilege" required onchange="user_privilege(this.value,'edit-faculty','edit-major')" ${(user.privilege == 'borrower') ? 'disabled' : '' }>
+                                <option ${(user.privilege == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
+                                <option ${(user.privilege == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
+                                <option ${(user.privilege == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
+                                <option ${(user.privilege == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้ยืม</option>
                             </select>
                         </div>
                         <div class="col-6">
                             <label for="edit-faculty" class="col-form-label text-secondary">คณะ</label>
-                            <select id="edit-faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value,'edit-major')" ${(user.privilage == 'teacher' || user.privilage == 'faculty') ? '' : 'disabled'}>
+                            <select id="edit-faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value,'edit-major')" ${(user.privilege == 'teacher' || user.privilege == 'faculty') ? '' : 'disabled'}>
                                 <option selected disabled value="">เลือกคณะ..</option>
                                 ${faculties.map((faculty) => {
                                     return `<option value="${faculty.id}" ${(user.faculty_id == faculty.id) ? 'selected' : '' } >${faculty.faculty_name}</option>`
@@ -252,7 +252,7 @@
                         </div>
                         <div class="col-6">
                             <label for="edit-major" class="col-form-label text-secondary">สาขา</label>
-                            <select id="edit-major" class="form-select" aria-label="Default select example" name="major" ${(user.privilage == 'teacher') ? '' : 'disabled'}>
+                            <select id="edit-major" class="form-select" aria-label="Default select example" name="major" ${(user.privilege == 'teacher') ? '' : 'disabled'}>
                                 <option selected disabled value="">เลือกสาขา..</option>
                                 ${majors.map((major) => {
                                     return `<option value="${major.id}" ${(user.major_id == major.id)? 'selected' : '' } >${major.major_name}</option>`
@@ -311,8 +311,8 @@
         }
         }
 
-        function getUsersByPrivilage(select_privilage){
-            window.location.href = '{{ route('admin.manageaccount.privilage', ['select_privilage' => ':select_privilage']) }}'.replace(':select_privilage', select_privilage);
+        function getUsersByPrivilege(select_privilege){
+            window.location.href = '{{ route('admin.manageaccount.privilege', ['select_privilege' => ':select_privilege']) }}'.replace(':select_privilege', select_privilege);
         }
 
         function getMajorByFacultyId(faculty_id,major_element_id){
@@ -388,10 +388,10 @@
             return validator;
         }
 
-        function user_privilage(privilageType,facultyId,majorId){
+        function user_privilege(privilegeType,facultyId,majorId){
             var majorSelectElement = document.getElementById(majorId);
             var facultySelectElement = document.getElementById(facultyId);
-            if(privilageType == 'teacher'){
+            if(privilegeType == 'teacher'){
                 majorSelectElement.disabled = false;
                 majorSelectElement.required = true;
                 facultySelectElement.disabled = false;
@@ -416,7 +416,7 @@
                     { data: 'id', name: 'id' },
                     { data: 'fullname', name: 'fullname' },
                     { data: 'email', name: 'email' },
-                    { data: 'thai-privilage', name: 'thai-privilage' },
+                    { data: 'thai-privilege', name: 'thai-privilege' },
                     // { data: 'created_at', name: 'created_at' },
                     { data: 'updated_at', name: 'updated_at' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }

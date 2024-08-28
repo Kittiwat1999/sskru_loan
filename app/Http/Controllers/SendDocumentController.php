@@ -72,6 +72,7 @@ class SendDocumentController extends Controller
         $current_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
         $documents = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
+            ->where('doc_types.id', '!=', 1)
             ->where('documents.start_date', '<=', $current_date)
             ->where('documents.end_date', '>=', $current_date)
             ->select('documents.*', 'doc_types.doctype_title')

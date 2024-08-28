@@ -31,7 +31,7 @@ class AuthenticationRequest extends FormRequest
     {
         return [
             'email.required' => 'กรุณาระบุที่อยู่อีเมลของคุณ',
-            'email.email' => 'ที่อยู่อีเมลไม่ถูกต้อง',
+            'email.email' => 'รูปแบบอีเมลไม่ถูกต้อง',
             'email.exists' => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
             'password.required' => 'กรุณาระบุรหัสผ่านของคุณ',
             'password.min' => 'รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร',

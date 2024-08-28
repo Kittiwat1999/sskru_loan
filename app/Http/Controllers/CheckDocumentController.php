@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Borrower;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
 use App\Models\Config;
@@ -269,18 +270,38 @@ class CheckDocumentController extends Controller
     public function viewBorrowerDocument($borrower_document_id, Request $request){
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $document = DocTypes::join('documents','doc_types.id','=','documents.doctype_id')
-        ->where('documents.isactive',true)
-        ->where('documents.id', $borrower_document['document_id'])
-        ->first();
+            ->where('documents.isactive',true)
+            ->where('documents.id', $borrower_document['document_id'])
+            ->first();
         $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $borrower_document['user_id'])
-        ->where('document_id', $borrower_document['document_id'])
-        ->sum('hour_count') ?? 0 ;
+            ->where('document_id', $borrower_document['document_id'])
+            ->sum('hour_count') ?? 0 ;
         $useful_activities_hours = Config::where('variable','useful_activity_hour')->value('value');
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
-        ->where('doc_structures.document_id',$borrower_document['document_id'])
-        ->select('child_documents.*')
-        ->get();
+            ->where('doc_structures.document_id',$borrower_document['document_id'])
+            ->select('child_documents.*')
+            ->get();
+        $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
+            ->join('faculties' ,'faculties.id', '=', 'borrowers.faculty_id')
+            ->join('majors' ,'majors.id', '=', 'borrowers.major_id')
+            ->join('borrower_apprearance_types' ,'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->select(
+                'users.prefix',
+                'users.firstname',
+                'users.lastname',
+                'borrower_apprearance_types.title',
+                'borrowers.user_id',
+                'borrowers.birthday',
+                'borrowers.student_id',
+                'borrowers.phone',
+                'borrowers.gpa',
+                'borrowers.birthday',
+                'faculties.faculty_name',
+                'majors.major_name',
+            )
+            ->where('user_id',$borrower_document['user_id'])
+            ->first();
         foreach($child_documents as $child_document){
             $child_document['borrower_child_document'] =  BorrowerFiles::join('borrower_child_documents' ,'borrower_files.id' ,'=', 'borrower_child_documents.borrower_file_id')
             ->where('borrower_child_documents.document_id', $document->id)
@@ -296,34 +317,23 @@ class CheckDocumentController extends Controller
                 'borrower_useful_activities_hours_sum',
                 'useful_activities_hours',
                 'child_documents',
+                'borrower',
             ));
     }
 
     public function previewBorrowerFile($borrower_child_document_id){
-        $user_id = Session::get('user_id','1');
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id' ,'=' ,'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
             ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
             ->first();
-        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
-            ->where('documents.id', $borrower_child_document['document_id'])
-            ->select('doc_types.id', 'documents.year', 'documents.term')
-            ->first();
 
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $response = $this->displayFile(
-            $document['term'] . '-' . $document['year'] 
-            .'/' .$document['id']
-            .'/'. $borrower_child_document['child_document_id'] 
-            .'/' . $user_id
-            , $borrower_file['file_name']);
-
+        $response = $this->displayFile($borrower_file['file_path'], $borrower_file['file_name']);
         return $response;
     }
 
-    public function generateFile103(Request $request, $document_id){
-        $user_id = $request->session()->get('user_id','1');
+    public function generateFile103($document_id, $borrower_uid){
         $generator = new GenerateFile();
-        return $generator->teacherCommentDocument103($user_id, $document_id);
+        return $generator->teacherCommentDocument103($borrower_uid, $document_id);
     }
 }

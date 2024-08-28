@@ -74,7 +74,7 @@
                         </h2>
                         <div id="collapse-child-document-{{$child_document->id}}" class="accordion-collapse collapse" aria-labelledby="child-document-{{$child_document->id}}" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe src="{{route('check.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                <iframe src="{{route('teacher.comment.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
                                 <div class="row">
                                     <div class="col-md-10 col-sm-12"></div>
                                     <div class="col-md-2 col-sm-12">
@@ -99,7 +99,7 @@
                         </h2>
                         <div id="document-103-collapse" class="accordion-collapse collapse" aria-labelledby="document-103" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe id="pdf-103" src="{{route('check.document.preview.teacher.comment',['document_id' => $document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
+                                <iframe id="pdf-103" src="{{route('teacher.comment.preview.teacher.comment',['document_id' => $document->id, 'borrower_uid' => $borrower->user_id])}}" frameborder="0" class="w-100" height="800"></iframe>
                                 <div class="row">
                                     <div class="col-md-10 col-sm-12"></div>
                                     <div class="col-md-2 col-sm-12">
@@ -187,7 +187,11 @@
                         <div class="col-md-5"></div>
 
                         <div class="col-md-3 text-secondary fw-bold">เกิดเมื่อ</div>
-                        <div class="col-md-4">{{$borrower['birthday']}}</div>
+                        <div class="col-md-4">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $borrower['birthday'])->format('d-m-Y')}}</div>
+                        <div class="col-md-5"></div>
+
+                        <div class="col-md-3 text-secondary fw-bold">อายุ</div>
+                        <div class="col-md-4" id="age"></div>
                         <div class="col-md-5"></div>
 
                         <div class="col-md-3 text-secondary fw-bold">รหัสนักศึกษา</div>
@@ -296,7 +300,9 @@
 <script>
     var student_id = @json($borrower->student_id);
     var status = @json($borrower_document['teacher_status']);
+    var birthday = @json($borrower['birthday']);
 
+    ageCal(birthday);
     calculateGrade(student_id);
     (status == 'approved') ? displayInputComment('approve') : displayInputComment('reject');
 
@@ -411,6 +417,22 @@
             inputText.disabled = true;
             inputText.required = false;
             checkbox.forEach((e) => {e.required = false});
+        }
+    }
+
+    function ageCal(birthday) {
+        var dateParts = birthday.split('-');
+        var selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // Month is 0-based
+        var currentDate = new Date();
+        var buddhistCurrentYear = currentDate.getFullYear() + 543;
+        var age = buddhistCurrentYear - (selectedDate.getFullYear());
+        if (currentDate.getMonth() < selectedDate.getMonth() || (currentDate.getMonth() === selectedDate.getMonth() && currentDate.getDate() < selectedDate.getDate())) {
+            age--;
+        }
+        if (age < 0) {
+            document.getElementById('age').innerText = "วันเกิดไม่ถูกต้อง";
+        } else {
+            document.getElementById('age').innerText = age+' ปี';
         }
     }
 </script>

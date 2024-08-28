@@ -55,6 +55,7 @@ class UsersProfileController extends Controller
     public function change_password(Request $request){
         $user_id = Session::get('user_id','1');
         // ตรวจสอบข้อมูลที่ส่งมา
+        // dd($request);
         $request->validate([
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:8|confirmed',

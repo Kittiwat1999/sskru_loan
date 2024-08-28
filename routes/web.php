@@ -47,18 +47,14 @@ Route::get('/admin/document_scheduler/get/document/{document_id}',[AdminDocument
 Route::post('/admin/document_scheduler/postdata/{document_id}',[AdminDocumentSchedulerController::class, 'postDocSchedulerData'])->name('admin.doc.scheduler.postdata');
 Route::delete('/admin/document_scheduler/deletedata/{document_id}',[AdminDocumentSchedulerController::class, 'deleteDocSchedulerData'])->name('admin.doc.scheduler.deletedata');
 
-
+//manage account
 Route::get('/admin/manage_account',[UsersController::class,'index'])->name('admin_manage_account');
-Route::get('/admin/manage_account/select_privilage/{select_privilage}',[UsersController::class,'admin_getUsersDataByPrivilage'])->name('admin.manageaccount.privilage');
+Route::get('/admin/manage_account/select_privilege/{select_privilege}',[UsersController::class,'admin_getUsersDataByPrivilege'])->name('admin.manageaccount.privilege');
 Route::get('/admin/manage_account/get-users',[UsersController::class,'getUsers'])->name('admin.get.users');
-
 Route::get('/admin/get_user_by_id/{user_id}',[UsersController::class,'admin_get_user_by_id'])->name('admin.get_ser_by_id');
-
 Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])->name('admin.deleteUser');
-
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
 Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
-
 Route::get('/admin/manage_account/get_major_by_faculty_id/{faculty_id}',[UsersController::class,'get_major_by_faculty_id']);
 
 //manage document page
@@ -94,7 +90,6 @@ Route::post('/admin/manage_child_document/minors_example_file/store/{child_docum
 Route::put('/admin/manage_child_document/child_document/update/addon/{child_document_id}',[AdminManageDocumentsController::class,'update_child_document_addon'])->name('admim.child.document.update.addon');
 
 
-
 // addon file
 Route::get('/admin/manage_documents/addon/files/{addon_document_id}',[AdminManageDocumentsController::class,'mange_addon_file_page'])->name('admin.manage.addon.file.document');
 //crud download file
@@ -107,10 +102,27 @@ Route::delete('/admin/manage_addon_document/example_addon_file/delete/{example_a
 //admin manage account display all file
 Route::get('/admin/manage_documents/deisplayfile/file/{file_path}/{file_name}',[AdminManageDocumentsController::class,'displayFile'])->name('admin.display.file');
 
-Route::get('/search_document',function (){
-    return view('search_document');
-})->name('search_document');
+//admin manage data
+Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
+Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
+Route::delete('/admin/manage_data/faculty/delete/{faculty_id}',[AdminManageDataController::class,'delete_faculty'])->name('admin.manage.data.delete.faculty');
+Route::delete('/admin/manage_data/apprearancetype/delete/{apprearancetype_id}',[AdminManageDataController::class,'delete_apprearancetype'])->name('admin.manage.data.delete.apprearancetype');
+Route::delete('/admin/manage_data/property/delete/{property_id}',[AdminManageDataController::class,'delete_property'])->name('admin.manage.data.delete.property');
+Route::delete('/admin/manage_data/nessessity/delete/{nessessity_id}',[AdminManageDataController::class,'delete_nessessity'])->name('admin.manage.data.delete.nessessity');
+Route::delete('/admin/manage_data/major/delete/{major_id}',[AdminManageDataController::class,'delete_major'])->name('admin.manage.data.delete.major');
+Route::post('/admin/manage_data/faculty/add/',[AdminManageDataController::class,'add_faculty'])->name('admin.manage.data.add.faculty');
+Route::post('/admin/manage_data/apprearancetype/add/',[AdminManageDataController::class,'add_apprearancetype'])->name('admin.manage.data.add.apprearancetype');
+Route::post('/admin/manage_data/property/add/',[AdminManageDataController::class,'add_property'])->name('admin.manage.data.add.property');
+Route::post('/admin/manage_data/nessessity/add/',[AdminManageDataController::class,'add_nessessity'])->name('admin.manage.data.add.nessessity');
+Route::post('/admin/manage_data/major/add/{faculty_id}',[AdminManageDataController::class,'add_major'])->name('admin.manage.data.add.major');
+Route::put('/admin/manage_data/faculty/edit/{faculty_id}',[AdminManageDataController::class,'edit_faculty'])->name('admin.manage.data.edit.faculty');
+Route::put('/admin/manage_data/apprearancetype/edit/{apprearancetype_id}',[AdminManageDataController::class,'edit_apprearancetype'])->name('admin.manage.data.edit.apprearancetype');
+Route::put('/admin/manage_data/property/edit/{property_id}',[AdminManageDataController::class,'edit_property'])->name('admin.manage.data.edit.property');
+Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}',[AdminManageDataController::class,'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
+Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController::class,'edit_major'])->name('admin.manage.data.edit.major');
 
+//search document
+Route::get('/search_document',function (){return view('search_document');})->name('search_document');
 Route::get('/search_document',[SearchDocuments::class, 'index']);
 Route::get('/search_document/get_student_id',[SearchDocuments::class, 'serachBorrowerDocuments'])->name('search.document.borrower.student_id');
 Route::get('/search_document/list_document/{borrower_uid}', [SearchDocuments::class,'listDocument'])->name('serach.document.list.document');
@@ -118,16 +130,28 @@ Route::get('/search_document/document/{borrower_document_id}', [SearchDocuments:
 Route::get('/search_document/preview/borrower_file/{borrower_child_document_id}', [SearchDocuments::class,'previewBorrowerFile'])->name('serach.document.preview.file');
 Route::get('/search_document/preview/teacher-comment/{document_id}', [SearchDocuments::class,'generateFile103'])->name('serach.document.preview.teacher.comment');
 
+Route::get('/check_document/index',[CheckDocumentController::class, 'index']);
+Route::get('/check_document/select_document/{document_id}', [CheckDocumentController::class, 'selectDocument'])->name('check_document.select_document');
+Route::get('/check_document/select_document/borrower_documents/get/{document_id}',[CheckDocumentController::class, 'getBorrowerDocuments'])->name('select_document.borrower_documents.get');
+Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}', [CheckDocumentController::class, 'selectMajorByFacultyId']);
+Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
+Route::post('/check_document/select_document/post/status/{document_id}', [CheckDocumentController::class, 'selectStatusDocument'])->name('check_document.select.status');
+
+Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');
+Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('view.borrower.document');
+Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
+Route::get('/check_document/check_borrower_document/preview/teacher-comment/{document_id}/{borrower_uid}',[CheckDocumentController::class, 'generateFile103'])->name('check.document.preview.teacher.comment');
+
+
 Route::get('/teacher/index',[TeacherComment::class, 'index'])->name('teacher.index');
 Route::post('/teacher/select-option',[TeacherComment::class ,'selectOption'])->name('teacher.select.option');
 Route::get('/teacher/get_borrower_documents',[TeacherComment::class ,'getBorrowerDocuments'])->name('teacher.get.borrower.document');
-// Route::get('/teacher/test-getdata',[TeacherComment::class ,'multipleQuery']);
+
 Route::post('/teacher/sotre/comment/{borrower_document_id}',[TeacherComment::class, 'storeComment'])->name('tacher.store.commnet');
-Route::get('/teacher_view_document',function () {
-    return view('teachers.view_document');
-})->name('teachers.view_document');
 Route::get('/teacher/borrower_document/comment/{borrower_document_id}', [TeacherComment::class, 'commnetBorrowerDocument'])->name('teacher.comment.borrower.document');
 Route::get('/teacher/borrower_document/view/{borrower_document_id}', [TeacherComment::class, 'viewBorrowerDocument'])->name('teacher.view.borrower.document');
+Route::get('/teacher/borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('teacher.comment.preview.file');
+Route::get('/teacher/borrower_document/preview/teacher-comment/{document_id}/{borrower_uid}',[CheckDocumentController::class, 'generateFile103'])->name('teacher.comment.preview.teacher.comment');
 
 Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
 Route::get('/borrower/borrower_document/document/{borrower_document_id}', [BorrowerDocumentController::class,'viewBorrowerDocument'])->name('borrower.view.document.page');
@@ -156,8 +180,9 @@ Route::put('/borrower/edit/main_parent/information',[MainParentInfomationControl
 
 Route::get('/register_student',[RegisterController::class,'index']);
 Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
-Route::get('/', [AuthenticationController::class,'index']);
-Route::get('/login',[AuthenticationController::class,'index']);
+
+// Route::get('/', [AuthenticationController::class,'homePage']);
+Route::get('/login',[AuthenticationController::class,'loginPage'])->name('login');
 Route::post('/post/login',[AuthenticationController::class,'login'])->name('post.login');
 Route::get('/signout',[AuthenticationController::class,'signout']);
 
@@ -165,21 +190,16 @@ Route::get('/register-success', function () {
     return view('register-success');
 })->name('register.success');
 
-Route::get('/homepage',[AuthenticationController::class,'go_to_home_page']);
+Route::get('/',[AuthenticationController::class,'index']);
 
-// Route::get('/login_student',[ResetpasswordController::class,'index']);
 Route::get('/reset_password/email',function () {return view('/input_email_reset_password');});
 Route::post('/check_email',[ResetpasswordController::class,'check_email'])->name('check_email.reset_password');
 Route::get('/verify_reset_password',function () {return view('verify_reset_password');});
 Route::post('/verify_reset_password/post',[ResetpasswordController::class,'email_confirm'])->name('verify.reset_password');
 Route::get('/send_email/reset_password',[ResetpasswordController::class,'send_email'])->name('send.email.reset_password');
 Route::put('/change_password',[ResetpasswordController::class,'change_password'])->name('change.password');
-// Route::get('/change_password',function () {return view('/change_password');});
 Route::get('/reset_password_success',function () {return view('/reset_password_success');});
 
-Route::get('/login_teacher',function () {
-    return view('/login_teacher');
-});
 
 Route::get('/borrower/upload_document',[SendDocumentController::class,'index']);
 Route::get('/borrower/upload_document/page/{document_id}',[SendDocumentController::class,'uploadDocumentPage'])->name('borrower.upload.document.page');
@@ -211,27 +231,10 @@ Route::get('/teachers_comment',[GenerateFile::class,'teachers_comment']);
 
 Route::get('/borrower_101',[GenerateDocController::class,'borrower_101']);
 
-Route::get('/admin/manage_data',[AdminManageDataController::class,'index']);
-Route::get('/admin/manage_data/major/{faculty_id}',[AdminManageDataController::class,'major_page'])->name('admin.manage.data.major');
-Route::delete('/admin/manage_data/faculty/delete/{faculty_id}',[AdminManageDataController::class,'delete_faculty'])->name('admin.manage.data.delete.faculty');
-Route::delete('/admin/manage_data/apprearancetype/delete/{apprearancetype_id}',[AdminManageDataController::class,'delete_apprearancetype'])->name('admin.manage.data.delete.apprearancetype');
-Route::delete('/admin/manage_data/property/delete/{property_id}',[AdminManageDataController::class,'delete_property'])->name('admin.manage.data.delete.property');
-Route::delete('/admin/manage_data/nessessity/delete/{nessessity_id}',[AdminManageDataController::class,'delete_nessessity'])->name('admin.manage.data.delete.nessessity');
-Route::delete('/admin/manage_data/major/delete/{major_id}',[AdminManageDataController::class,'delete_major'])->name('admin.manage.data.delete.major');
-Route::post('/admin/manage_data/faculty/add/',[AdminManageDataController::class,'add_faculty'])->name('admin.manage.data.add.faculty');
-Route::post('/admin/manage_data/apprearancetype/add/',[AdminManageDataController::class,'add_apprearancetype'])->name('admin.manage.data.add.apprearancetype');
-Route::post('/admin/manage_data/property/add/',[AdminManageDataController::class,'add_property'])->name('admin.manage.data.add.property');
-Route::post('/admin/manage_data/nessessity/add/',[AdminManageDataController::class,'add_nessessity'])->name('admin.manage.data.add.nessessity');
-Route::post('/admin/manage_data/major/add/{faculty_id}',[AdminManageDataController::class,'add_major'])->name('admin.manage.data.add.major');
-Route::put('/admin/manage_data/faculty/edit/{faculty_id}',[AdminManageDataController::class,'edit_faculty'])->name('admin.manage.data.edit.faculty');
-Route::put('/admin/manage_data/apprearancetype/edit/{apprearancetype_id}',[AdminManageDataController::class,'edit_apprearancetype'])->name('admin.manage.data.edit.apprearancetype');
-Route::put('/admin/manage_data/property/edit/{property_id}',[AdminManageDataController::class,'edit_property'])->name('admin.manage.data.edit.property');
-Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}',[AdminManageDataController::class,'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
-Route::put('/admin/manage_data/major/edit/{major_id}',[AdminManageDataController::class,'edit_major'])->name('admin.manage.data.edit.major');
 
-// Route::get('/verify_email',function () {
-//     return view('/verify_email');
-// });
+Route::get('/verify_email',function () {
+    return view('/verify_email');
+});
 
 Route::post('/verify_email/post',[AuthenticationController::class,'email_confirm'])->name('verify.email.post');
 Route::get('/send_email',[AuthenticationController::class,'send_email'])->name('send.email');
@@ -239,13 +242,6 @@ Route::get('/send_email',[AuthenticationController::class,'send_email'])->name('
 Route::get('/users_profile',[UsersProfileController::class,'index']);
 Route::put('/users_profile/edit',[UsersProfileController::class,'edit_profile'])->name('users.profile.edit');
 Route::post('/users_profile/password/change', [UsersProfileController::class, 'change_password'])->name('users.password.change');
-
-Route::get('/borrower/check_documents',function () {
-    return view('/borrower/check_documents');
-});
-Route::get('/borrower/document_submission',function () {
-    return view('/borrower/document_submission');
-});
 
 Route::get('/borrower/borrower_register',[BorrowerRegister::class, 'index'])->name('borrower.register');
 Route::get('/borrower/borrower_register/register_type',[BorrowerRegister::class, 'registerType'])->name('borrower.register.type');
@@ -268,17 +264,6 @@ Route::get('/borrower/borrower_register/recheck/teacher-comment/{borrower_docume
 
 Route::get('/borrower/borrower_register/status',[BorrowerRegister::class, 'status'])->name('borrower.register.status');
 
-Route::get('/check_document/index',[CheckDocumentController::class, 'index']);
-Route::get('/check_document/select_document/{document_id}', [CheckDocumentController::class, 'selectDocument'])->name('check_document.select_document');
-Route::get('/check_document/select_document/borrower_documents/get/{document_id}',[CheckDocumentController::class, 'getBorrowerDocuments'])->name('select_document.borrower_documents.get');
-Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}', [CheckDocumentController::class, 'selectMajorByFacultyId']);
-Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
-Route::post('/check_document/select_document/post/status/{document_id}', [CheckDocumentController::class, 'selectStatusDocument'])->name('check_document.select.status');
-
-Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');
-Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('view.borrower.document');
-Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
-Route::get('/check_document/check_borrower_document/preview/teacher-comment/{document_id}',[CheckDocumentController::class, 'generateFile103'])->name('check.document.preview.teacher.comment');
 
 Route::get('/check_document/document_submission',function () {
     return view('check_document/document_submission');

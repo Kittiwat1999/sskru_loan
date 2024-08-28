@@ -19,7 +19,7 @@ class AdminMgeAccountRequest extends FormRequest
             'lastname' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8', // Add more complex rules as needed
-            'privilage' => 'required|string|max:50',
+            'privilege' => 'required|string|max:50',
         ];
     }
 

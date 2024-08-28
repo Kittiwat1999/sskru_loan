@@ -4,12 +4,21 @@
     <section class="section profile">
         <div class="row">
                 <div class="col-xl-4">
+                        @php
+                         $privilege_map = [
+                            'admin' => 'แอดมิน',
+                            'employee' => 'พนักงานทุนฯ',
+                            'teacher' => 'อาจารย์ที่ปรึกษา',
+                            'borrower' => 'ผู้กู้ยืม',
+                        ];
+                         $role = Session::get('privilege')   
+                        @endphp
 
                         <div class="card">
                             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                                 <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
                                 <h2>{{$user->prefix}}{{$user->firstname}} {{$user->lastname}}</h2>
-                                <h3>ผู้กู้รายเก่า</h3>
+                                <h3>{{$privilege_map[$role]}}</h3>
                             </div>
                         </div>
 
@@ -35,11 +44,9 @@
                                 </li>
 
                             </ul>
-                            <div class="tab-content pt-2">
+                            <div class="tab-content pt-3">
 
                                     <div class="tab-pane fade show active profile-overview" id="profile-overview">
-
-                                        <h5 class="card-title">รายละเอียดบัญชี</h5>
 
                                         <div class="row">
                                             <div class="col-lg-3 col-md-4 label ">ชื่อ</div>

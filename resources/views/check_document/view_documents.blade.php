@@ -99,7 +99,7 @@
                         </h2>
                         <div id="document-103-collapse" class="accordion-collapse collapse" aria-labelledby="document-103" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe id="pdf-103" src="{{route('check.document.preview.teacher.comment',['document_id' => $document->id])}}" frameborder="0" class="w-100" height="800"></iframe>
+                                <iframe id="pdf-103" src="{{route('check.document.preview.teacher.comment',['document_id' => $document->id, 'borrower_uid' => $borrower->user_id])}}" frameborder="0" class="w-100" height="800"></iframe>
                                 <div class="row">
                                     <div class="col-md-10 col-sm-12"></div>
                                     <div class="col-md-2 col-sm-12">

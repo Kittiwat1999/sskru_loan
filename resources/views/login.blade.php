@@ -104,24 +104,12 @@
                     </div>
 
                     <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label text-secondary" for="rememberMe">จดจำฉัน</label>
-                      </div>
-                    </div>
-
-                    <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">ล็อกอิน</button>
                     </div>
 
                     <div class="col-12">
                       <p class="small mb-0" align="center">นักศึกษา&nbsp;<a
                           href="{{url('/register_student')}}">ลงทะเบียน</a>&nbsp;เข้าใช้ระบบ</p>
-                    </div>
-
-                    <div class="col-12">
-                      <p class="small mb-0" align="center">ล็อกอิน&nbsp;<a
-                          href="{{url('/login_teacher')}}">สำหรับอาจารย์ที่ปรึกษา</a>&nbsp;</p>
                     </div>
 
                   </form>

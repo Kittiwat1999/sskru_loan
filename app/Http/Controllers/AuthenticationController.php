@@ -15,12 +15,17 @@ use App\Http\Requests\AuthenticationRequest;
 
 class AuthenticationController extends Controller
 {
-    public function index(){
-        return view('login');
+    public function loginPage(Request $request){
+        $user_id = $request->session()->get('user_id', null);
+        if($user_id == null){
+            return view('login');
+        }else{
+            return $this->homePage($request);
+        }
     }
 
-    public function signout(){
-        Session::regenerate();
+    public function signout(Request $request){
+        $request->session()->flush();
         return redirect('/login');
     }
 
@@ -28,14 +33,16 @@ class AuthenticationController extends Controller
     {
         $credentials = $request->only('email', 'password');
         $user = Users::where('email',$request->email)->first();
+        // dd($user);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $request->session()->put('user_id',$user['id']);
             $request->session()->put('email',$user['email']);
-
-            dd($user['privilege']);
             if($user['activated']){
-                return redirect()->intended('/borrower/information/information_list');
+                $request->session()->put('privilege',$user['privilege']);
+                $request->session()->put('firstname',$user['firstname']);
+                $request->session()->put('lastname',$user['lastname']);
+                return $this->homePage($request);
             }else{
                 $this->send_email();
                 return view('verify_email');
@@ -90,24 +97,40 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function go_to_home_page(){
-        $user_id = Session::get('user_id');
+    public function index(Request $request){
+        $user_id = $request->session()->get('user_id');
         $user = Users::find($user_id);
         if($user != null){
             if($user['activated']){
                 //auto login
-                return redirect()->intended('/borrower/information/information_list');
+                return $this->homePage($request);
             }else{
                 //go verify email page
-                Session::regenerate();
-                Session::put('user_id',$user['id']);
-                Session::put('email',$user['email']);
+                $request->session()->regenerate();
+                $request->session()->put('user_id',$user['id']);
+                $request->session()->put('email',$user['email']);
                 $this->send_email();
                 return view('verify_email');
             }
         }else{
             //go login
-           return $this->index();
+           return $this->loginPage($request);
+        }
+    }
+
+    public function homePage($request){
+        $privilege = $request->session()->get('privilege');
+        if($privilege == 'admin'){
+            return redirect('/admin/dashboard');
+        }elseif($privilege == 'teacher'){
+            return redirect('/teacher/index');
+        }elseif($privilege == 'employee'){
+            return redirect('/check_document/index');
+        }elseif($privilege == 'borrower'){
+            return redirect('/borrower/borrower_document/index');
+        }else{
+            $request->session()->regenerate();
+            return $this->loginPage($request);
         }
     }
 

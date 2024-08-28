@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
+
 class UsefulActivityController extends Controller
 {
     private function convert_date($inputDate){
@@ -21,7 +22,7 @@ class UsefulActivityController extends Controller
         return $isoDate;
     }
 
-    public function deleteFile($file_path,$file_name){
+    public function deleteFile($file_path, $file_name){
         $path = storage_path($file_path.'/'.$file_name);
         if (File::exists($path)) {
             File::delete($path);
@@ -30,7 +31,7 @@ class UsefulActivityController extends Controller
 
     private function storeFile($file_path,$file){
         $path = storage_path($file_path);
-        !file_exists($path) && mkdir($path, 0777, true);
+        !file_exists($path) && mkdir($path, 0755, true);
         $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
         $file->move($path, $name);
         return $name;
@@ -48,15 +49,14 @@ class UsefulActivityController extends Controller
         return $response;
     }
     
-    public function showUsefulActivityFile($useful_activity_id, $document_id){
-        $user_id = Session::get('user_id','1');
+    public function showUsefulActivityFile($useful_activity_id, $document_id, Request $request){
         $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id',$useful_activity_id)->first();
-        $useful_activity_file_path = Config::where('variable','useful_activity_file_path')->value('value');
-        $reqsonse = $this->displayFile($useful_activity_file_path .'/'.$document_id. '/' . $user_id, $useful_activity_file->file_name);
+        $reqsonse = $this->displayFile($useful_activity_file['file_path'], $useful_activity_file->file_name);
         return $reqsonse;
     }
 
     public function storeUsefulActivity($document_id, UsefulActivityRequest $request){
+        $user_id = $request->session()->get('user_id','1');
         $user_id = Session::get('user_id','1');
         $useful_activity = new UsefulActivity();
         $useful_activity['user_id'] = $user_id;
@@ -67,6 +67,8 @@ class UsefulActivityController extends Controller
         $useful_activity['end_date'] = $this->convert_date($request->end_date);
         $useful_activity['hour_count'] = $request->hour_count;
         $useful_activity['description'] = $request->description;
+
+        $document = Documents::find($document_id);
 
         $rules = [
             'useful_activity_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
@@ -81,16 +83,17 @@ class UsefulActivityController extends Controller
         $useful_activity->save();
 
         $useful_activity_file_path = Config::where('variable','useful_activity_file_path')->value('value');
+        $file_path = $useful_activity_file_path.'/' .$document['term']. '-' .$document['year']. '/' .$document_id. '/' .$user_id;
         $input_file = $request->file('useful_activity_file');
-        $file_name = $this->storeFile($useful_activity_file_path .'/'.$document_id. '/' . $user_id, $input_file);
+        $file_name = $this->storeFile($file_path, $input_file);
         $useful_activity_file = new UsefulActivitiyFile();
         $useful_activity_file['useful_activity_id'] = $useful_activity['id'];
         $useful_activity_file['description'] = $useful_activity['activity_name'];
         $useful_activity_file['original_name'] = $input_file->getClientOriginalName();
-        $useful_activity_file['file_path'] = $useful_activity_file_path;
+        $useful_activity_file['file_path'] = $file_path;
         $useful_activity_file['file_name'] = $file_name;
         $useful_activity_file['file_type'] = last(explode('.', $file_name));
-        $useful_activity_file['full_path'] = $useful_activity_file_path .'/'.$document_id. '/' . $user_id.'/'.$file_name;
+        $useful_activity_file['full_path'] = $file_path. '/' .$file_name;
         $useful_activity_file['upload_date'] = date('Y-m-d');
         $useful_activity_file->save();
 
@@ -98,7 +101,7 @@ class UsefulActivityController extends Controller
     }
 
     public function editUsefulActivity($useful_activity_id, UsefulActivityRequest $request){
-        $user_id = Session::get('user_id','1');
+        $user_id = $request->session()->get('user_id','1');
         $useful_activity = UsefulActivity::find($useful_activity_id);
         $useful_activity['activity_name'] = $request->activity_name ;
         $useful_activity['activity_location'] = $request->activity_location;
@@ -106,6 +109,8 @@ class UsefulActivityController extends Controller
         $useful_activity['end_date'] = $this->convert_date($request->end_date);
         $useful_activity['hour_count'] = $request->hour_count;
         $useful_activity['description'] = $request->description;
+
+        $document = Documents::find($useful_activity['document_id']);
 
         if($request->file('useful_activity_file') != null){
             $rules = [
@@ -121,16 +126,17 @@ class UsefulActivityController extends Controller
             $useful_activity->save();
     
             $useful_activity_file_path = Config::where('variable','useful_activity_file_path')->value('value');
+            $file_path = $useful_activity_file_path.'/' .$document['term']. '-' .$document['year']. '/' .$document['id']. '/' .$user_id;
             $input_file = $request->file('useful_activity_file');
-            $file_name = $this->storeFile($useful_activity_file_path .'/'.$useful_activity['document_id']. '/' . $user_id, $input_file);
+            $file_name = $this->storeFile($file_path, $input_file);
             $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
-            $this->deleteFile($useful_activity_file_path .'/'.$useful_activity['document_id']. '/' . $user_id, $useful_activity_file['file_name']);
+            $this->deleteFile($file_path, $useful_activity_file['file_name']);
             $useful_activity_file['description'] = $useful_activity['activity_name'];
             $useful_activity_file['original_name'] = $input_file->getClientOriginalName();
-            $useful_activity_file['file_path'] = $useful_activity_file_path;
+            $useful_activity_file['file_path'] = $file_path;
             $useful_activity_file['file_name'] = $file_name;
             $useful_activity_file['file_type'] = last(explode('.', $file_name));
-            $useful_activity_file['full_path'] = $useful_activity_file_path .'/'. $useful_activity['document_id']. '/' . $user_id.'/'.$file_name;
+            $useful_activity_file['full_path'] = $file_path. '/' .$file_name;
             $useful_activity_file['upload_date'] = date('Y-m-d');
             $useful_activity_file->save();
     
@@ -141,13 +147,12 @@ class UsefulActivityController extends Controller
         }
     }
 
-    public function deleteUsefulActivity($useful_activity_id){
-        $user_id = Session::get('user_id','1');
+    public function deleteUsefulActivity($useful_activity_id, Request $request){
+        $user_id = $request->session()->get('user_id','1');
         $useful_activity = UsefulActivity::find($useful_activity_id);
         $useful_activity_name = $useful_activity['activity_name'];
         $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
-        $useful_activity_file_path = Config::where('variable','useful_activity_file_path')->value('value');
-        $this->deleteFile($useful_activity_file_path .'/'. $useful_activity['document_id']. '/' . $user_id, $useful_activity_file['file_name']);
+        $this->deleteFile($useful_activity_file['file_path'], $useful_activity_file['file_name']);
         $useful_activity_file->delete();
         $useful_activity->delete();
 

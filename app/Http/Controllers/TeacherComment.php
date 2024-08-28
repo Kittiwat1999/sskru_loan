@@ -10,6 +10,7 @@ use App\Models\Comments;
 use App\Models\Config;
 use App\Models\DocStructure;
 use App\Models\DocTypes;
+use App\Models\Documents;
 use App\Models\TeacherAccounts;
 use App\Models\TeacherCommentDocuments;
 use App\Models\TeacherComments;
@@ -182,6 +183,7 @@ class TeacherComment extends Controller
                 'users.firstname',
                 'users.lastname',
                 'borrower_apprearance_types.title',
+                'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
                 'borrowers.phone',
@@ -344,6 +346,7 @@ class TeacherComment extends Controller
                 'users.firstname',
                 'users.lastname',
                 'borrower_apprearance_types.title',
+                'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
                 'borrowers.phone',
@@ -389,5 +392,21 @@ class TeacherComment extends Controller
                 'more_comment',
                 'teacher_reject_document',
             ));
+    }
+
+    public function previewBorrowerFile($borrower_child_document_id){
+        $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id' ,'=' ,'borrower_child_documents.document_id')
+            ->where('borrower_child_documents.id', $borrower_child_document_id)
+            ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
+            ->first();
+
+        $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
+        $response = $this->displayFile($borrower_file['file_path'], $borrower_file['file_name']);
+        return $response;
+    }
+
+    public function generateFile103($document_id, $borrower_uid){
+        $generator = new GenerateFile();
+        return $generator->teacherCommentDocument103($borrower_uid, $document_id);
     }
 }
