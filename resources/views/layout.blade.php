@@ -111,7 +111,7 @@
 
     </header><!-- End Header -->
     @php
-        $privilege = Session::get('privilege');
+        $privilege = Session::get('privilege','admin'); //borrower, teacher, employee, admin
     @endphp
     <aside id="sidebar" class="sidebar">
 
@@ -151,13 +151,6 @@
             </li><!-- End กำหนดระยะเวลา Page Nav -->
 
             <li class="nav-item">
-                <a id="edit_informaion_request" class="nav-link collapsed" href="{{url('/admin/edit_informaion_request')}}">
-                <i class="bi bi-pencil-square"></i>
-                <span>คำร้องขอแก้ใขข้อมูล</span>
-                </a>
-            </li><!-- End คำร้องขอแก้ใขข้อมูล Page Nav -->
-
-            <li class="nav-item">
                 <a id="manage_data" class="nav-link collapsed" href="{{url('/admin/manage_data')}}">
                 <i class="bi bi-box-seam"></i>
                 <span>แก้ไขข้อมูล</span>
@@ -165,61 +158,24 @@
             </li><!-- End แก้ไขเอกสาร Page Nav -->
         @endif
 
-        @if(($privilege == 'admin' || $privilege == "employee") || $privilege == 'faculty')
+        @if(($privilege == 'admin' || $privilege == "employee"))
             <li class="nav-heading text-secondary">ตรวจเอกสาร</li>
+
             <li class="nav-item">
-                <a id="new_loan_submission" class="nav-link collapsed" href="{{url('new_loan_submission')}}">
-                <i class="bi bi-file-earmark-plus"></i>
-                <span>รายการยื่นกู้รายใหม่</span>
+                <a id="check_document" class="nav-link collapsed" href="{{url('check_document/index')}}">
+                <i class="bi bi-file-earmark-medical"></i>
+                <span>ตรวจเอกสาร</span>
                 </a>
-            </li><!-- End รายการยื่นกู้รายใหม่ Page Nav -->
-        @endif
+            </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
 
-        @if($privilege == 'admin' || $privilege == "employee")
+            <li class="nav-heading text-secondary">ค้นหาเอกสาร</li>
 
-        <li class="nav-item">
-            <a id="loan_submission" class="nav-link collapsed" href="{{url('loan_submission')}}">
-            <i class="bi bi-file-earmark-person"></i>
-            <span>รายการยื่นกู้รายเก่า</span>
-            </a>
-        </li><!-- End รายการยื่นกู้รายเก่า Page Nav -->
-
-        <li class="nav-item">
-            <a id="contract" class="nav-link collapsed" href="{{url('contract')}}">
-            <i class="bi bi-file-break"></i>
-            <span>สัญญาผู้กู้รายใหม่</span>
-            </a>
-        </li><!-- End สัญญาผู้กู้รายใหม่ Page Nav -->
-
-        <li class="nav-item">
-            <a id="confirm_money_withdraw" class="nav-link collapsed" href="{{url('confirm_money_withdraw')}}">
-            <i class="bi bi-file-check"></i>
-            <span>แบบยืนยันการเบิกเงิน</span>
-            </a>
-        </li><!-- End แบบยืนยันการเบิกเงิน Page Nav -->
-
-        <li class="nav-item">
-            <a id="over_course" class="nav-link collapsed" href="{{url('over_course')}}">
-            <i class="bi bi-file-earmark-diff"></i>
-            <span>คำขอกู้เกินหลักสูตร</span>
-            </a>
-        </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
-
-        <li class="nav-item">
-            <a id="check_document" class="nav-link collapsed" href="{{url('check_document/index')}}">
-            <i class="bi bi-file-earmark-medical"></i>
-            <span>ตรวจเอกสาร</span>
-            </a>
-        </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
-
-        <li class="nav-heading text-secondary">ค้นหาเอกสาร</li>
-
-        <li class="nav-item">
-            <a id="search_document" class="nav-link collapsed" href="{{url('search_document')}}">
-            <i class="bi bi-search"></i>
-            <span>ค้นหาเอกสาร</span>
-            </a>
-        </li><!-- End ค้นหาเอกสาร Page Nav -->
+            <li class="nav-item">
+                <a id="search_document" class="nav-link collapsed" href="{{url('search_document')}}">
+                <i class="bi bi-search"></i>
+                <span>ค้นหาเอกสาร</span>
+                </a>
+            </li><!-- End ค้นหาเอกสาร Page Nav -->
         @elseif($privilege == "borrower")
 
             <li class="nav-heading text-secondary">กรอกข้อมูลผู้กู้</li>
@@ -258,19 +214,13 @@
                 </a>
             </li><!-- End ยื่นกู้รายใหม่ Page Nav -->
 
-            <li class="nav-heading text-secondary">ขอแก้ใขข้อมูล</li>
-            <li class="nav-item">
-                <a id="edit_borrower_information" class="nav-link collapsed" href="{{url('/borrower/edit_borrower_information')}}">
-                <i class="bi bi-pencil-square"></i>
-                <span>ขอแก้ใขข้อมูล</span>
-                </a>
-            </li><!-- End Blank Page Nav -->
         @elseif($privilege == "teacher")
+
             <li class="nav-heading text-secondary">Pages</li>
 
             <li class="nav-item">
                 <a id="teacher" class="nav-link collapsed" href="{{route('teacher.index')}}">
-                <i class="bi bi-grid-1x2"></i>
+                <i class="bi bi-file-earmark-medical"></i>
                 <span>รายการคำขอกู้</span>
                 </a>
             </li><!-- End รายการคำขอกู้ Page Nav -->

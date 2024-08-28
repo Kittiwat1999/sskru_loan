@@ -23,8 +23,7 @@ use App\Http\Controllers\SearchDocuments;
 use App\Http\Controllers\TeacherComment;
 use App\Http\Controllers\UsefulActivityController;
 use App\Http\Controllers\UsersProfileController;
-use App\Http\Requests\borrowerInformationValidationRequest;
-use App\Models\OldLoanRequest;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -134,7 +133,6 @@ Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::cla
 Route::get('/borrower/borrower_document/document/{borrower_document_id}', [BorrowerDocumentController::class,'viewBorrowerDocument'])->name('borrower.view.document.page');
 Route::get('/borrower/borrower_document/preview/borrower_file/{borrower_child_document_id}', [BorrowerDocumentController::class,'previewBorrowerFile'])->name('borrower.document.preview.file');
 Route::get('/borrower/borrower_document/preview/teacher-comment/{document_id}', [BorrowerDocumentController::class,'generateFile103'])->name('borrower.document.preview.teacher.comment');
-
 
 Route::get('/borrower/information/information_list',[BorrowerInforamtionController::class,'index']);
 //borrower information

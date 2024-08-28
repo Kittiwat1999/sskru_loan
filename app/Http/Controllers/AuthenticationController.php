@@ -16,7 +16,6 @@ use App\Http\Requests\AuthenticationRequest;
 class AuthenticationController extends Controller
 {
     public function index(){
-
         return view('login');
     }
 
@@ -108,7 +107,7 @@ class AuthenticationController extends Controller
             }
         }else{
             //go login
-            $this->index();
+           return $this->index();
         }
     }
 
