@@ -36,7 +36,7 @@ class AuthenticationController extends Controller
     {
         $credentials = $request->only('email', 'password');
         $user = Users::where('email', $request->email)->first();
-        // dd($user);
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $request->session()->put('email', $user['email']);

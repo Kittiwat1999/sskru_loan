@@ -669,7 +669,7 @@
     var parent1_tambon = @json($parent1_address['tambon']);
     if(parent1_tambon)tambonFormPostcode('parent1',parent1_tambon);
 
-    var parent2_tambon = @json(($parent2_address['tambon'] != null) ? $parent2_address['tambon'] : null);
+    var parent2_tambon = @json(isset($parent2_address['tambon']) ? $parent2_address['tambon'] : null);
     if(parent2_tambon != null)tambonFormPostcode('parent2',parent2_tambon);
 
     function enableInputCountry(parentNo,isthai){
