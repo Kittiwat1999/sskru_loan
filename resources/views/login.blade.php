@@ -60,6 +60,21 @@
                 // }, 3000);
             </script>
         @endif
+        
+        @if (!empty(session('success')))
+            <div class="alert alert-success" id="success-alert">
+                {{ session('success') }}
+            </div>
+            <script>
+                // Wait for 3000 milliseconds (3 seconds) and then remove the element
+                setTimeout(function() {
+                    const elementToRemove = document.getElementById('success-alert');
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
+                }, 5000);
+            </script>
+        @endif
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">

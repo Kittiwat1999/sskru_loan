@@ -186,9 +186,12 @@ Route::get('/login',[AuthenticationController::class,'loginPage'])->name('login'
 Route::post('/post/login',[AuthenticationController::class,'login'])->name('post.login');
 Route::get('/signout',[AuthenticationController::class,'signout']);
 
-Route::get('/register-success', function () {
-    return view('register-success');
+Route::get('/register_success', function () {
+    return view('register_success');
 })->name('register.success');
+Route::get('/email_comfirm_success', function () {
+    return view('email_confirm_success');
+})->name('email_comfirm_success');
 
 Route::get('/',[AuthenticationController::class,'index']);
 

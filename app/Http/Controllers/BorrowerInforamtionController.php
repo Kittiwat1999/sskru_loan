@@ -23,69 +23,73 @@ use App\Models\Properties;
 
 class BorrowerInforamtionController extends Controller
 {
-    private function convert_date($inputDate){
+    private function convert_date($inputDate)
+    {
         $parsedDate = Carbon::createFromFormat('d-m-Y', $inputDate);
         $isoDate = $parsedDate->format('Y-m-d');
         return $isoDate;
-
     }
 
-    public function getMajorByFaculty($faculty){
-        $major = Majors::where('faculty_id',$faculty)->get();
+    public function getMajorByFaculty($faculty)
+    {
+        $major = Majors::where('faculty_id', $faculty)->get();
         return json_encode($major);
     }
 
-    public function index(){
-        $user_id = Session::get('user_id','1');
-        $borrower_id = Borrower::where('user_id',$user_id)->value('id') ?? null;
-        $parent_count = Parents::where('borrower_id',$borrower_id)->count();
-        $main_parent_id = Parents::where('borrower_id',$borrower_id)->where('is_main_parent',true)->value('id');
+    public function index()
+    {
+        $user_id = Session::get('user_id', '1');
+        $borrower_id = Borrower::where('user_id', $user_id)->value('id') ?? null;
+        $parent_count = Parents::where('borrower_id', $borrower_id)->count();
+        $main_parent_id = Parents::where('borrower_id', $borrower_id)->where('is_main_parent', true)->value('id');
         // dd($borrower_id,$parent_count);
-        return view('borrower.information_list',compact('borrower_id','parent_count','main_parent_id'));
+        return view('borrower.information_list', compact('borrower_id', 'parent_count', 'main_parent_id'));
     }
 
-    public function borrower_input_information(){
-        $user_id = Session::get('user_id','1');
-        $borrower_id = Session::get('borrower_id','1');
-        $faculties = Faculties::where('isactive',true)->get();
-        $majors = Majors::where('isactive',true)->get();
-        $borrower_apprearance_types = BorrowerApprearanceType::where('isactive',true)->get();
-        $nessessities = Nessessities::where('isactive',true)->get();
-        $properties = Properties::where('isactive',true)->get();
-        $user = Users::where('id',$user_id)->first();
+    public function borrower_input_information()
+    {
+        $user_id = Session::get('user_id', '1');
+        $borrower_id = Session::get('borrower_id', '1');
+        $faculties = Faculties::where('isactive', true)->get();
+        $majors = Majors::where('isactive', true)->get();
+        $borrower_apprearance_types = BorrowerApprearanceType::where('isactive', true)->get();
+        $nessessities = Nessessities::where('isactive', true)->get();
+        $properties = Properties::where('isactive', true)->get();
+        $user = Users::where('id', $user_id)->first();
         unset($user['password']);
-        return view('borrower.information.borrower_input_information',compact('user','borrower_apprearance_types','nessessities','properties','faculties','majors'));
+        return view('borrower.information.borrower_input_information', compact('user', 'borrower_apprearance_types', 'nessessities', 'properties', 'faculties', 'majors'));
     }
 
-    public function borrower_store_information(BorrowerInformationRequest $request){
-        $user_id = Session::get('user_id','1');
+    public function borrower_store_information(BorrowerInformationRequest $request)
+    {
+        $user_id = Session::get('user_id', '1');
 
-        $user = Users::where('id',$user_id)->first();
+        $user = Users::where('id', $user_id)->first();
         $user['prefix'] = $request->prefix;
         $user['firstname'] = $request->firstname;
         $user['lastname'] = $request->lastname;
-        if($user['email'] == $request->email){
+        if ($user['email'] == $request->email) {
             $user['email'] = $request->email;
-        }else{
+        } else {
             $request->validate([
-                'email'=>'unique:users,email',
-                ],[
+                'email' => 'unique:users,email',
+            ], [
                 'email.unique' => 'อีเมลล์นี้มีอยุ่ในระบบแล้ว',
-                ]);
+            ]);
             $user['email'] = $request->email;
         }
         $user->save();
 
         $address = new Address();
         $address['village'] = $request->village;
-        $address['house_no']=$request->house_no;
-        $address['village_no']=$request->village_no;
-        $address['street']=$request->street;
-        $address['road']=$request->road;
-        $address['postcode']=$request->postcode;
-        $address['province']=$request->province;
-        $address['aumphure']=$request->aumphure;
-        $address['tambon']=$request->tambon;
+        $address['house_no'] = $request->house_no;
+        $address['village_no'] = $request->village_no;
+        $address['street'] = $request->street;
+        $address['road'] = $request->road;
+        $address['postcode'] = $request->postcode;
+        $address['province'] = $request->province;
+        $address['aumphure'] = $request->aumphure;
+        $address['tambon'] = $request->tambon;
         $address->save();
 
         $borrower = new Borrower();
@@ -102,51 +106,53 @@ class BorrowerInforamtionController extends Controller
         $borrower['marital_status'] = json_encode('{"status":"","file_path":""}');
         $borrower->save();
 
-        foreach($request->nessessities as $nessessity){
-            BorrowerNessessities::create(['borrower_id'=>$borrower['id'],'nessessity_id'=>$nessessity]);
+        foreach ($request->nessessities as $nessessity) {
+            BorrowerNessessities::create(['borrower_id' => $borrower['id'], 'nessessity_id' => $nessessity]);
         }
-        foreach($request->properties as $property){
-            BorrowerProperties::create(['borrower_id'=>$borrower['id'],'property_id'=>$property]);
+        foreach ($request->properties as $property) {
+            BorrowerProperties::create(['borrower_id' => $borrower['id'], 'property_id' => $property]);
         }
-        if(filter_var($request->morePropCheck, FILTER_VALIDATE_BOOLEAN)){
+        if (filter_var($request->morePropCheck, FILTER_VALIDATE_BOOLEAN)) {
             $nessessity = new BorrowerNessessities();
             $nessessity['borrower_id'] = $borrower['id'];
             $nessessity['other'] = $request->necessMoreProp;
             $nessessity->save();
         }
-        return redirect('/borrower/information/information_list')->with(['success'=> 'บันทึกข้อมูลผู้กู้เรียบร้อยแล้ว']);
+        return redirect('/borrower/information/information_list')->with(['success' => 'บันทึกข้อมูลผู้กู้เรียบร้อยแล้ว']);
     }
 
-    public function borrower_edit_information_page(){
-        $user_id = Session::get('user_id','1');
-        $borrower_id = Session::get('borrower_id','1');
+    public function borrower_edit_information_page()
+    {
+        $user_id = Session::get('user_id', '1');
+        $borrower_id = Session::get('borrower_id', '1');
 
         $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
             $join->on('users.id', '=', 'borrowers.user_id')
-                 ->where('borrowers.user_id', '=', $user_id);
-            })
+                ->where('borrowers.user_id', '=', $user_id);
+        })
             ->first();
-        $faculties = Faculties::where('isactive',true)->get();
-        $majors = Majors::where('isactive',true)->get();
-        $borrower_apprearance_types = BorrowerApprearanceType::where('isactive',true)->get();
-        $nessessities = Nessessities::where('isactive',true)->get();
-        $properties = Properties::where('isactive',true)->get();
-        $borrower_nessessities = BorrowerNessessities::where('borrower_id',$borrower_id)->where('nessessity_id',"!=",null)->pluck('nessessity_id')->toArray();
-        $borrower_nessessity_other = BorrowerNessessities::where('borrower_id',$borrower_id)->where('nessessity_id',"=",null)->first() ?? null;
-        $borrower_properties = BorrowerProperties::where('borrower_id',$borrower_id)->pluck('property_id')->toArray();
-        $user = Users::where('id',$user_id)->first();
+        $faculties = Faculties::where('isactive', true)->get();
+        $majors = Majors::where('isactive', true)->get();
+        $borrower_apprearance_types = BorrowerApprearanceType::where('isactive', true)->get();
+        $nessessities = Nessessities::where('isactive', true)->get();
+        $properties = Properties::where('isactive', true)->get();
+        $borrower_nessessities = BorrowerNessessities::where('borrower_id', $borrower_id)->where('nessessity_id', "!=", null)->pluck('nessessity_id')->toArray();
+        $borrower_nessessity_other = BorrowerNessessities::where('borrower_id', $borrower_id)->where('nessessity_id', "=", null)->first() ?? null;
+        $borrower_properties = BorrowerProperties::where('borrower_id', $borrower_id)->pluck('property_id')->toArray();
+        $user = Users::where('id', $user_id)->first();
         $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
         $address = Address::find($borrower['address_id']);
         // dd($address);
         unset($user['password']);
-        return view('borrower.information.borrower_edit_information',compact('user','borrower_apprearance_types','nessessities','properties','faculties','majors','borrower','address','borrower_nessessities','borrower_nessessity_other','borrower_properties'));
+        return view('borrower.information.borrower_edit_information', compact('user', 'borrower_apprearance_types', 'nessessities', 'properties', 'faculties', 'majors', 'borrower', 'address', 'borrower_nessessities', 'borrower_nessessity_other', 'borrower_properties'));
     }
 
-    public function borrower_edit_information(BorrowerInformationRequest $request){
+    public function borrower_edit_information(BorrowerInformationRequest $request)
+    {
         // dd($request);
-        $user_id = Session::get('user_id','1');
-        $db_borrower = Borrower::where('user_id',$user_id)->first();
-        $user = Users::where('id',$user_id)->first();
+        $user_id = Session::get('user_id', '1');
+        $db_borrower = Borrower::where('user_id', $user_id)->first();
+        $user = Users::where('id', $user_id)->first();
         $user['prefix'] = $request->prefix;
         $user['firstname'] = $request->firstname;
         $user['lastname'] = $request->lastname;
@@ -155,14 +161,14 @@ class BorrowerInforamtionController extends Controller
 
         $address = Address::find($db_borrower['address_id']);
         $address['village'] = $request->village;
-        $address['house_no']=$request->house_no;
-        $address['village_no']=$request->village_no;
-        $address['street']=$request->street;
-        $address['road']=$request->road;
-        $address['postcode']=$request->postcode;
-        $address['province']=$request->province;
-        $address['aumphure']=$request->aumphure;
-        $address['tambon']=$request->tambon;
+        $address['house_no'] = $request->house_no;
+        $address['village_no'] = $request->village_no;
+        $address['street'] = $request->street;
+        $address['road'] = $request->road;
+        $address['postcode'] = $request->postcode;
+        $address['province'] = $request->province;
+        $address['aumphure'] = $request->aumphure;
+        $address['tambon'] = $request->tambon;
         $address->save();
 
         $borrower = $db_borrower;
@@ -178,21 +184,21 @@ class BorrowerInforamtionController extends Controller
         $borrower['borrower_appearance_id'] = $request->borrower_appearance;
         $borrower->save();
 
-        BorrowerNessessities::where('borrower_id',$borrower['id'])->delete();
-        BorrowerProperties::where('borrower_id',$borrower['id'])->delete();
+        BorrowerNessessities::where('borrower_id', $borrower['id'])->delete();
+        BorrowerProperties::where('borrower_id', $borrower['id'])->delete();
 
-        foreach($request->nessessities as $nessessity){
-            BorrowerNessessities::create(['borrower_id'=>$borrower['id'],'nessessity_id'=>$nessessity]);
+        foreach ($request->nessessities as $nessessity) {
+            BorrowerNessessities::create(['borrower_id' => $borrower['id'], 'nessessity_id' => $nessessity]);
         }
-        foreach($request->properties as $property){
-            BorrowerProperties::create(['borrower_id'=>$borrower['id'],'property_id'=>$property]);
+        foreach ($request->properties as $property) {
+            BorrowerProperties::create(['borrower_id' => $borrower['id'], 'property_id' => $property]);
         }
-        if(filter_var($request->morePropCheck, FILTER_VALIDATE_BOOLEAN)){
+        if (filter_var($request->morePropCheck, FILTER_VALIDATE_BOOLEAN)) {
             $nessessity = new BorrowerNessessities();
             $nessessity['borrower_id'] = $borrower['id'];
             $nessessity['other'] = $request->necessMoreProp;
             $nessessity->save();
         }
-        return redirect('/borrower/information/information_list')->with(['success'=> 'แก้ใขข้อมูลผู้กู้เรียบร้อยแล้ว']);
+        return redirect('/borrower/information/information_list')->with(['success' => 'แก้ใขข้อมูลผู้กู้เรียบร้อยแล้ว']);
     }
 }

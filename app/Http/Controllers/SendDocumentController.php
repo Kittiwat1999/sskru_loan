@@ -350,16 +350,16 @@ class SendDocumentController extends Controller
         $document = Documents::find($document_id);
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
         if ($document['neen_teacher_comment']) {
-            if($borrower_document['teacher_status'] == 'rejected'){
+            if ($borrower_document['teacher_status'] == 'rejected') {
                 $borrower_document['teacher_status'] = 'response-reject';
-            }else{
+            } else {
                 $borrower_document['teacher_status'] = 'wait-approve';
                 $borrower_document['status'] = 'wait-teacher-approve';
             }
         } else {
-            if($borrower_document['status'] == 'rejected'){
+            if ($borrower_document['status'] == 'rejected') {
                 $borrower_document['status'] = 'response-reject';
-            }else{
+            } else {
                 $borrower_document['status'] = 'wait-approve';
             }
         }

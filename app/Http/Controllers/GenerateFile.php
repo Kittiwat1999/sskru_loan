@@ -277,7 +277,6 @@ class GenerateFile extends Controller
 
     public function generate_yinyorm_student($user_id, $document)
     {
-
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $user_id)
             ->select('users.prefix', 'users.firstname', 'users.lastname', 'users.email', 'borrowers.birthday', 'borrowers.citizen_id', 'borrowers.phone', 'borrowers.address_id')
@@ -1045,7 +1044,6 @@ class GenerateFile extends Controller
 
     public function saveBorrowerDocument101($user_id, $child_document, $document_id)
     {
-
         $document = Documents::find($document_id);
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
         $sign_date = BorrowerChildDocument::where('child_document_id', 4)->where('user_id', $user_id)->where('document_id', $document_id)->value('created_at') ?? null;

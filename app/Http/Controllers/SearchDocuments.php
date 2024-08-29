@@ -16,14 +16,16 @@ use Illuminate\Support\Facades\Response;
 
 class SearchDocuments extends Controller
 {
-    public function deleteFile($file_path,$file_name){
-        $path = storage_path($file_path.'/'.$file_name);
+    public function deleteFile($file_path, $file_name)
+    {
+        $path = storage_path($file_path . '/' . $file_name);
         if (File::exists($path)) {
             File::delete($path);
         }
     }
 
-    private function storeFile($file_path,$file){
+    private function storeFile($file_path, $file)
+    {
         $path = storage_path($file_path);
         !file_exists($path) && mkdir($path, 0755, true);
         $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
@@ -31,8 +33,9 @@ class SearchDocuments extends Controller
         return $name;
     }
 
-    public function displayFile($file_path,$file_name){
-        $path = storage_path($file_path.'/'.$file_name);
+    public function displayFile($file_path, $file_name)
+    {
+        $path = storage_path($file_path . '/' . $file_name);
         if (!File::exists($path)) {
             abort(404);
         }
@@ -42,7 +45,7 @@ class SearchDocuments extends Controller
         $response->header("Content-Type", $type);
         return $response;
     }
-    
+
     function calculateGrade($student_id)
     {
         $date = date('Y') + 543;
@@ -52,7 +55,7 @@ class SearchDocuments extends Controller
         $grade = ($buddhistCurrentYear - $beginYear) + 1;
         return $grade;
     }
-    
+
     public function index()
     {
         return view('search_document.index');
@@ -61,37 +64,39 @@ class SearchDocuments extends Controller
     {
         $input_id = $request->student_id;
         $borrowers = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
-        ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
-        ->join('majors', 'borrowers.major_id', '=', 'majors.id')
-        ->where('borrowers.student_id', 'like', $input_id.'%')
-        ->select(
-            'users.prefix', 
-            'users.id as user_id', 
-            'users.firstname', 
-            'users.lastname', 
-            'borrowers.student_id',
-            'faculties.faculty_name', 
-            'majors.major_name')
-        ->get();
+            ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+            ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+            ->where('borrowers.student_id', 'like', $input_id . '%')
+            ->select(
+                'users.prefix',
+                'users.id as user_id',
+                'users.firstname',
+                'users.lastname',
+                'borrowers.student_id',
+                'faculties.faculty_name',
+                'majors.major_name'
+            )
+            ->get();
 
-        foreach($borrowers as $borrower){
+        foreach ($borrowers as $borrower) {
             $borrower['grade'] = $this->calculateGrade($borrower['student_id']);
         }
-        return view('search_document.index',compact('borrowers','input_id'));
+        return view('search_document.index', compact('borrowers', 'input_id'));
     }
 
     public function listDocument($borrower_uid)
     {
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
-        ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
-        ->join('majors', 'borrowers.major_id', '=', 'majors.id')
-        ->where('borrowers.user_id', $borrower_uid)
-        ->select(
-            'users.prefix', 
-            'users.firstname', 
-            'users.lastname', 
-            'borrowers.student_id',)
-        ->first();
+            ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+            ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+            ->where('borrowers.user_id', $borrower_uid)
+            ->select(
+                'users.prefix',
+                'users.firstname',
+                'users.lastname',
+                'borrowers.student_id',
+            )
+            ->first();
 
         $borrower_documents = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->join('borrower_documents', 'documents.id', '=', 'borrower_documents.document_id')
@@ -109,7 +114,7 @@ class SearchDocuments extends Controller
                 'borrower_documents.document_id'
             )
             ->get();
-        return view('search_document.document_list', compact('borrower_documents','borrower'));
+        return view('search_document.document_list', compact('borrower_documents', 'borrower'));
     }
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
@@ -170,7 +175,7 @@ class SearchDocuments extends Controller
 
     public function generateFile103(Request $request, $document_id)
     {
-        $user_id = $request->session()->get('user_id','1');
+        $user_id = $request->session()->get('user_id', '1');
         $generator = new GenerateFile();
         return $generator->teacherCommentDocument103($user_id, $document_id);
     }

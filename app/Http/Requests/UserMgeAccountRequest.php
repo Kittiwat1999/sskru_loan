@@ -17,7 +17,6 @@ class UserMgeAccountRequest extends FormRequest
             'prefix' => 'required|string|max:30',
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
-            'username' => 'required|string|unique:users,username|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|confirmed', // Add more complex rules as needed
         ];
@@ -33,10 +32,6 @@ class UserMgeAccountRequest extends FormRequest
             'lastname.required' => 'กรุณากรอกนามสกุล',
             'lastname.string' => 'กรุณากรอกนามสกุลเป็นข้อความ',
             'lastname.max' => 'กรุณากรอกนามสกุลไม่เกิน :max ตัวอักษร',
-            'username.required' => 'กรุณากรอกชื่อผู้ใช้',
-            'username.string' => 'กรุณากรอกชื่อผู้ใช้เป็นข้อความ',
-            'username.unique' => 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว',
-            'username.max' => 'กรุณากรอกชื่อผู้ใช้ไม่เกิน :max ตัวอักษร',
             'email.required' => 'กรุณากรอกอีเมล',
             'email.email' => 'กรุณากรอกรูปแบบอีเมลที่ถูกต้อง',
             'email.unique' => 'อีเมลนี้มีอยู่ในระบบแล้ว',

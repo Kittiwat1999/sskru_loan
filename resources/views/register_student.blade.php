@@ -87,7 +87,7 @@
                             </a>
                         </div><!-- End Logo -->
 
-                        <div class="card mb-3 col-md-12">
+                        <div class="card mb-3 col-md-8">
 
                             <div class="card-body">
 
@@ -127,16 +127,6 @@
                                         <input type="text" name="lastname" class="form-control" id="lastname" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกนามสกุล!
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label for="username" class="col-form-label text-secondary">ชื่อผู้ใช้</label>
-                                        <div class="input-group has-validation">
-                                            <input type="text" name="username" class="form-control" id="username" required>
-                                            <div class="invalid-feedback">
-                                                กรุณากรอกชื่อผู้ใช้!
-                                            </div>
                                         </div>
                                     </div>
 

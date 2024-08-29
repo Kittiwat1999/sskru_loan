@@ -88,7 +88,7 @@
                             <span class="d-flex justify-content-center pb-4 display-6">ลงทะเบียนเสร็จสิ้น</span>
 
                             <div class="d-flex justify-content-center pt-2">
-                                <a href="{{url('/homepage')}}" class="text-light btn btn-primary">เข้าสู่ระบบตอนนี้</a>
+                                <a href="{{url('/')}}" class="text-light btn btn-primary">เข้าใช้งานระบบ</a>
                             </div>
                         </div>
                     </div>
