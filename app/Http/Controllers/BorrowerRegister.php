@@ -104,17 +104,9 @@ class BorrowerRegister extends Controller
         $registered_document = BorrowerRegisterDocument::where('user_id', $user_id)->exists();
         $delivered_borrower_document = BorrowerDocument::where('user_id', $user_id)
             ->where('document_id', $document_id)
-            ->where('status', 'wait-approve')
-            ->orWhere('status', 'rejected')
-            ->orWhere('status', 'response-rejected')
-            ->orWhere('status', 'approved')
-            ->orWhere('teacher_status', 'wait-approve')
-            ->orWhere('teacher_status', 'rejected')
-            ->orWhere('teacher_status', 'response-rejected')
-            ->orWhere('teacher_status', 'approved')
+            ->where('status', '!=', 'sending')
             ->exists();
         $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
-
         $step = 1;
 
         if ($borrower_register_type == null) {
@@ -151,6 +143,7 @@ class BorrowerRegister extends Controller
         }
 
         $step = $this->checkStep($document['id'], $user_id);
+        // dd($step);
         switch ($step) {
             case 1:
                 return $this->registerType($request);
@@ -539,7 +532,7 @@ class BorrowerRegister extends Controller
             ->where('doc_structures.document_id', $document->id)
             ->where('doc_structures.child_document_id', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->first();
-        $borrower_document = BorrowerDocument::where('document_id', $document['id'])->first();
+        $borrower_document = BorrowerDocument::where('document_id', $document['id'])->where('user_id', $user_id)->first();
         $step = $this->checkStep($document['id'], $user_id);
         return view('borrower.register.recheck_document', compact('document', 'child_document', 'step', 'borrower_document'));
     }
@@ -590,11 +583,10 @@ class BorrowerRegister extends Controller
         return redirect('/borrower/borrower_register/status')->with(['success' => 'บันทึกข้อมูลเสร็จสิ้น']);
     }
 
-    public function showFile101(Request $request, $document_id, $child_document_id)
+    public function showFile101($document_id, $child_document_id, Request $request)
     {
         $user_id = $request->session()->get('user_id', '1');
-        $borrower_child_document_101 = BorrowerChildDocument::where('child_document_id', $child_document_id)->where('document_id', $document_id)->first() ?? null;
-        //ถ้าระบบบันทึกไฟล์ กยศ 101 ให้ผู้กู้แล้ว
+        $borrower_child_document_101 = BorrowerChildDocument::where('child_document_id', 4)->where('document_id', $document_id)->where('user_id', $user_id)->first() ?? null;
         if ($borrower_child_document_101 != null) {
             return $this->previewBorrowerFile($borrower_child_document_101['id']);
         } else { //กรณียังไม่บันทึก

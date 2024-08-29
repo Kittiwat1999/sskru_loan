@@ -128,10 +128,9 @@ class UsersController extends Controller
         return redirect()->back()->with(['success' => 'เพิ่มข้อมูลผู้ใช้ ' . $user['firstname'] . ' ' . $user['lastname'] . ' แล้ว']);
     }
 
-    function admin_editAccount(Request $request)
+    function admin_editAccount($user_id, Request $request)
     {
-        date_default_timezone_set("Asia/Bangkok");
-        $user = Users::where('id', $request->id)->first();
+        $user = Users::find($user_id);
         $request->validate(
             [
                 'prefix' => 'required|string|max:30',
@@ -145,14 +144,8 @@ class UsersController extends Controller
                 'max' => 'กรุณากรอก :attribute ไม่เกิน :max ตัวอักษร',
             ]
         );
-        $data = [
-            'prefix' => $request->prefix,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'privilege' => $request->privilege,
-            'updated_at' => date('Y-m-d H:i:s')
-        ];
-        if ($request->email != $user->email) {
+
+        if ($request->email != $user['email']) {
             $request->validate(
                 ['email' => 'required|string|unique:users,email|max:255'],
                 [
@@ -162,8 +155,7 @@ class UsersController extends Controller
                     'unique' => ':attribute นี้มีอยู่ในระบบแล้ว',
                 ]
             );
-
-            $data['email'] = $request->email;
+            $user['email'] = $request->email;
         }
         //check password are input
         if ($request->password != null) {
@@ -175,22 +167,39 @@ class UsersController extends Controller
                     'min' => 'กรุณากรอก :attribute อย่างน้อย :min ตัว',
                 ]
             );
-
-            $data['password'] = Hash::make($request->password);
+            $user['password'] = Hash::make($request->password);
         }
 
-        Users::where('id', $request->id)->update($data);
         if ($request->privilege == 'teacher') {
             $request->validate(
-                ['major' => 'required|string'],
+                [
+                    'major' => 'required|string',
+                    'faculty' => 'required|string'
+                ],
                 [
                     'major.required' => 'บัญชีสาขาต้องระบุสาขาที่สังกัด',
                     'major.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
+                    'faculty.required' => 'บัญชีคณะต้องระบุคณะที่สังกัด',
+                    'faculty.string' => 'ประเภทข้อมูลไม่ถูกต้อง',
                 ]
             );
-            $major = $request->major;
-            $faculty = $request->faculty;
+            $teacher_account = TeacherAccounts::where('user_id',$user['id'])->first() ?? new TeacherAccounts();
+            $teacher_account->user_id = $user['id'];
+            $teacher_account->faculty_id = $request->faculty;
+            $teacher_account->major_id = $request->major;
+            $teacher_account->save();
         }
+
+        if($request->privilege != $user['privilege'] && $user['privilege'] == 'teacher'){
+            $teacher_account = TeacherAccounts::where('user_id', $user['id'])->first();
+            $teacher_account->delete();
+        }
+
+        $user['prefix'] = $request->prefix;
+        $user['firstname'] = $request->firstname;
+        $user['lastname'] = $request->lastname;
+        $user['privilege'] = $request->privilege;
+        $user->save();
 
         return redirect()->back()->with(['success' => 'แก้ใขข้อมูลผู้ใช้เสร็จสิ้น']);
     }

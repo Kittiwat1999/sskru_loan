@@ -938,7 +938,7 @@ class GenerateFile extends Controller
                 $pdf->Image($tick_alp, 33, 175, 4, 4);
                 // $other_input = 130;
                 $other_length = strlen($borrower['marital_status']);
-                $other_x = 53 + ($other_length / 2) - 6;
+                $other_x = 55 + ($other_length / 2) - 6;
                 $pdf->Text($other_x, 177, $borrower['marital_status']);
             }
 

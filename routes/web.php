@@ -54,7 +54,7 @@ Route::get('/admin/manage_account/get-users',[UsersController::class,'getUsers']
 Route::get('/admin/get_user_by_id/{user_id}',[UsersController::class,'admin_get_user_by_id'])->name('admin.get_ser_by_id');
 Route::get('/admin/deleteUser/{id}',[UsersController::class,'admin_deleteUser'])->name('admin.deleteUser');
 Route::post('/admin/createUser',[UsersController::class,'admin_createUser'])->name('admin.createUser');
-Route::post('/admin/editAccount',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
+Route::post('/admin/editAccount/{user_id}',[UsersController::class,'admin_editAccount'])->name('admin.editAccount');
 Route::get('/admin/manage_account/get_major_by_faculty_id/{faculty_id}',[UsersController::class,'get_major_by_faculty_id']);
 
 //manage document page
@@ -140,7 +140,7 @@ Route::post('/check_document/select_document/post/status/{document_id}', [CheckD
 Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');
 Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('view.borrower.document');
 Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
-Route::get('/check_document/check_borrower_document/preview/teacher-comment/{document_id}/{borrower_uid}',[CheckDocumentController::class, 'generateFile103'])->name('check.document.preview.teacher.comment');
+Route::get('/check_document/check_borrower_document/preview/teacher-comment/{borrower_document_id}/{borrower_uid}',[CheckDocumentController::class, 'generateFile103'])->name('check.document.preview.teacher.comment');
 
 
 Route::get('/teacher/index',[TeacherComment::class, 'index'])->name('teacher.index');
@@ -150,8 +150,8 @@ Route::get('/teacher/get_borrower_documents',[TeacherComment::class ,'getBorrowe
 Route::post('/teacher/sotre/comment/{borrower_document_id}',[TeacherComment::class, 'storeComment'])->name('tacher.store.commnet');
 Route::get('/teacher/borrower_document/comment/{borrower_document_id}', [TeacherComment::class, 'commnetBorrowerDocument'])->name('teacher.comment.borrower.document');
 Route::get('/teacher/borrower_document/view/{borrower_document_id}', [TeacherComment::class, 'viewBorrowerDocument'])->name('teacher.view.borrower.document');
-Route::get('/teacher/borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('teacher.comment.preview.file');
-Route::get('/teacher/borrower_document/preview/teacher-comment/{document_id}/{borrower_uid}',[CheckDocumentController::class, 'generateFile103'])->name('teacher.comment.preview.teacher.comment');
+Route::get('/teacher/borrower_document/preview/borrower_file/{borrower_child_document_id}',[TeacherComment::class, 'previewBorrowerFile'])->name('teacher.comment.preview.file');
+Route::get('/teacher/borrower_document/preview/teacher-comment/{borrower_document_id}/{borrower_uid}',[TeacherComment::class, 'generateFile103'])->name('teacher.comment.preview.teacher.comment');
 
 Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class,'index']);
 Route::get('/borrower/borrower_document/document/{borrower_document_id}', [BorrowerDocumentController::class,'viewBorrowerDocument'])->name('borrower.view.document.page');

@@ -176,8 +176,7 @@
         }
 
         function getUserById(userid) {
-        const modal = new bootstrap.Modal(document.getElementById('showDataModal'));
-        const modalContent = document.getElementById('showDataModal-content');
+
             fetch(`{{url('admin/get_user_by_id/${userid}')}}`)
                 .then(response => {
                     if (!response.ok) {
@@ -185,10 +184,12 @@
                     }
                 return response.json();
                 }).then(data => {
+                    const modal = new bootstrap.Modal(document.getElementById('showDataModal'));
+                    const modalContent = document.getElementById('showDataModal-content');
                     var user = data.user;
                     var majors = data.majors;
                     modalContent.innerHTML = `
-                    <form class="row" action="{{route('admin.editAccount')}}" method="POST" id="edit-user">
+                    <form class="row" action="{{route('admin.editAccount', ['user_id' => 'PLACEHOLDER_USER_ID' ] ) }}" method="POST" id="edit-user">
                         @csrf
                         <input type="hidden" name="id" class="form-control" value="${user.id}" required>
                         <div class="col-6">
@@ -268,13 +269,13 @@
                         </div>
                     </form>
                     `;
+                    modalContent.innerHTML = modalContent.innerHTML.replace('PLACEHOLDER_USER_ID', user.id);
+                    modal.show();
                 })
                 .catch(error => {
                     console.error('Error fetching user:', error);
                 }
             );
-
-            modal.show();
         }
 
         function showDeleteModal(id, firstname, lastname){

@@ -299,6 +299,7 @@ class CheckDocumentController extends Controller
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
             ->join('majors', 'majors.id', '=', 'borrowers.major_id')
             ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->where('user_id', $borrower_document['user_id'])
             ->select(
                 'users.prefix',
                 'users.firstname',
@@ -313,7 +314,6 @@ class CheckDocumentController extends Controller
                 'faculties.faculty_name',
                 'majors.major_name',
             )
-            ->where('user_id', $borrower_document['user_id'])
             ->first();
         foreach ($child_documents as $child_document) {
             $child_document['borrower_child_document'] =  BorrowerFiles::join('borrower_child_documents', 'borrower_files.id', '=', 'borrower_child_documents.borrower_file_id')
@@ -332,6 +332,7 @@ class CheckDocumentController extends Controller
                 'useful_activities_hours',
                 'child_documents',
                 'borrower',
+                'borrower_document',
             )
         );
     }
@@ -348,9 +349,9 @@ class CheckDocumentController extends Controller
         return $response;
     }
 
-    public function generateFile103($document_id, $borrower_uid)
+    public function generateFile103($borrower_document_id, $borrower_uid)
     {
         $generator = new GenerateFile();
-        return $generator->teacherCommentDocument103($borrower_uid, $document_id);
+        return $generator->teacherCommentDocument103($borrower_uid, $borrower_document_id);
     }
 }

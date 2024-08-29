@@ -190,6 +190,7 @@ class TeacherComment extends Controller
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
             ->join('majors', 'majors.id', '=', 'borrowers.major_id')
             ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->where('user_id', $borrower_document['user_id'])
             ->select(
                 'users.prefix',
                 'users.firstname',
@@ -204,8 +205,8 @@ class TeacherComment extends Controller
                 'faculties.faculty_name',
                 'majors.major_name',
             )
-            ->where('user_id', $borrower_document['user_id'])
             ->first();
+
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
             ->where('documents.id', $borrower_document['document_id'])
@@ -228,7 +229,7 @@ class TeacherComment extends Controller
         foreach ($comments as $comment) {
             $comment['checked'] = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', $comment['id'])->exists();
         }
-
+        // dd($borrower);
         return view(
             'teachers.comment_documents',
             compact(
@@ -358,6 +359,7 @@ class TeacherComment extends Controller
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
             ->join('majors', 'majors.id', '=', 'borrowers.major_id')
             ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->where('user_id', $borrower_document['user_id'])
             ->select(
                 'users.prefix',
                 'users.firstname',
@@ -372,7 +374,6 @@ class TeacherComment extends Controller
                 'faculties.faculty_name',
                 'majors.major_name',
             )
-            ->where('user_id', $borrower_document['user_id'])
             ->first();
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
@@ -396,6 +397,7 @@ class TeacherComment extends Controller
         foreach ($comments as $comment) {
             $comment['checked'] = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', $comment['id'])->exists();
         }
+
         return view(
             'teachers.view_document',
             compact(
@@ -425,9 +427,9 @@ class TeacherComment extends Controller
         return $response;
     }
 
-    public function generateFile103($document_id, $borrower_uid)
+    public function generateFile103($borrower_document_id, $borrower_uid)
     {
         $generator = new GenerateFile();
-        return $generator->teacherCommentDocument103($borrower_uid, $document_id);
+        return $generator->teacherCommentDocument103($borrower_uid, $borrower_document_id);
     }
 }
