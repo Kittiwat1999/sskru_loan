@@ -137,7 +137,9 @@ Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}
 Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
 Route::post('/check_document/select_document/post/status/{document_id}', [CheckDocumentController::class, 'selectStatusDocument'])->name('check_document.select.status');
 
-Route::get('/check_document/check_borrower_document/check/{borrower_document_id}', [CheckDocumentController::class, 'showBorrowerDocument'])->name('check.borrower.document');
+Route::get('/check_document/borrower_list/{borrower_document_id}', [CheckDocumentController::class, 'borrowerDocumentList'])->name('check.document.borrower_document.list');
+Route::get('/check_document/check_borrower_document/check/{borrower_child_document_id}/{borrower_document_id}', [CheckDocumentController::class, 'checkBorrowerDocument'])->name('check.document.check.borrower_child_document');
+Route::get('/check_document/check_borrower_document/check/useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'checkUsefulActivity'])->name('check.document.check.useful_activity');
 Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('view.borrower.document');
 Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}',[CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.file');
 Route::get('/check_document/check_borrower_document/preview/teacher-comment/{borrower_document_id}/{borrower_uid}',[CheckDocumentController::class, 'generateFile103'])->name('check.document.preview.teacher.comment');

@@ -81,7 +81,7 @@ class TeacherComment extends Controller
 
     public function index(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '2');
+        $user_id = $request->session()->get('user_id');
         $teacher = TeacherAccounts::join('users', 'users.id', '=', 'teacher_accounts.user_id')
             ->join('faculties', 'teacher_accounts.faculty_id', '=', 'faculties.id')
             ->join('majors', 'teacher_accounts.major_id', '=', 'majors.id')
@@ -96,6 +96,7 @@ class TeacherComment extends Controller
                 'majors.id as major_id'
             ])
             ->first();
+
         $request->session()->put('faculty_id', $teacher->faculty_id);
         $request->session()->put('major_id', $teacher->major_id);
         return view('teachers.index', compact('teacher'));
@@ -273,6 +274,7 @@ class TeacherComment extends Controller
             $comments_Req = $request->comments ?? [];
             $custom_comment = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', null)->first() ?? new TeacherCommentDocuments();
             $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->first();
+            $borrower_child_document_103 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 5)->first();
             $comments_for_delete = array_diff($comments_Db, $comments_Req);
             $comments_for_add = array_diff($comments_Req, $comments_Db);
 
@@ -306,8 +308,10 @@ class TeacherComment extends Controller
 
             //sign borrower 101
             $generator = new GenerateFile();
-            $temp_path = $generator->teacherCommentDocument101($user_id, $borrower_child_document_101['borrower_file_id']);
-            $this->updateBorrowerFile101($temp_path, $borrower_child_document_101['borrower_file_id']);
+            $_101temp_path = $generator->teacherCommentDocument101($user_id, $borrower_child_document_101['borrower_file_id']);
+            $this->updateBorrowerFile101($_101temp_path, $borrower_child_document_101['borrower_file_id']);
+            $_103temp_path = $generator->saveTeacherCommentDocument103($borrower_document['user_id'], $borrower_document['id']);
+            $this->updateBorrowerFile103($_103temp_path, $borrower_child_document_103['borrower_file_id']);
 
             $borrower_document['teacher_status'] = 'approved';
             $borrower_document['status'] = 'wait-approve';
@@ -332,6 +336,26 @@ class TeacherComment extends Controller
         $borrower_file = BorrowerFiles::find($borrower_file_101_id);
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';
+        $store_path = $borrower_file['file_path'];
+        $path = storage_path($store_path);
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+        $final_path = $path . '/' . $custom_filename;
+        File::move($temp_path, $final_path);
+        $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
+        $borrower_file['file_path'] = $store_path;
+        $borrower_file['file_name'] = $custom_filename;
+        $borrower_file['file_type'] = last(explode('.', $custom_filename));
+        $borrower_file['full_path'] = $store_path . '/' . $custom_filename;
+        $borrower_file->save();
+    }
+
+    public function updateBorrowerFile103($temp_path, $borrower_file_103_id)
+    {
+        $borrower_file = BorrowerFiles::find($borrower_file_103_id);
+        //file
+        $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 103_.pdf';
         $store_path = $borrower_file['file_path'];
         $path = storage_path($store_path);
         if (!File::exists($path)) {

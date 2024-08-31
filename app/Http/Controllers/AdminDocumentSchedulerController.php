@@ -58,6 +58,10 @@ class AdminDocumentSchedulerController extends Controller
         if ($request->description != null) $document['description'] = $request->description;
         $document->save();
 
+        if($document['need_teacher_comment']){
+            DocStructure::create(['child_document_id' => 5, 'document_id' => $document['id']]);
+        }
+
         foreach ($request->child_documents as $child_document_id) {
             DocStructure::create(['child_document_id' => $child_document_id, 'document_id' => $document['id']]);
         }
@@ -78,6 +82,7 @@ class AdminDocumentSchedulerController extends Controller
 
     public function postDocSchedulerData(AdminDocumentSchedulerRequest $request, $document_id)
     {
+        // dd(in_array(5, $request->child_documents));
         $user_id = $request->session()->get('user_id', '1');
         $document = Documents::find($document_id);
         $document['doctype_id'] = $request->doctype_id;
@@ -87,8 +92,12 @@ class AdminDocumentSchedulerController extends Controller
         $document['start_date'] = $this->convert_date($request->start_date);
         $document['end_date'] = $this->convert_date($request->end_date);
         $document['need_useful_activity'] = filter_var($request->need_useful_activity, FILTER_VALIDATE_BOOLEAN);
-        $document['need_teacher_comment'] = filter_var($request->need_teacher_comment, FILTER_VALIDATE_BOOLEAN);
         if ($request->description != null) $document['description'] = $request->description;
+        if(in_array(5, $request->child_documents)){
+            $document['need_teacher_comment'] = true;
+        }else{
+            $document['need_teacher_comment'] = false;
+        }
         $document->save();
 
         $child_document_inDB = DocStructure::where('document_id', $document_id)->pluck('child_document_id')->toArray();

@@ -86,31 +86,6 @@
                     </div>
                     @endif
                 @endforeach
-                {{$borrower->user_id}}
-                @if($document->need_teacher_comment)
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="document-103">
-                            <button id="accordion-button-document-103-1" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                data-bs-target="#document-103-collapse" 
-                                aria-expanded="true" 
-                                aria-controls="document-103-collapse">
-                                <span class="col-md-3 col-7">หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)</span>
-                                {{-- <span class="badge rounded-pill bg-success mx-3">ตรวจแล้ว</span> --}}
-                            </button>
-                        </h2>
-                        <div id="document-103-collapse" class="accordion-collapse collapse" aria-labelledby="document-103" data-bs-parent="#accordion" style="">
-                            <div class="accordion-body">
-                                <iframe id="pdf-103" src="{{route('teacher.comment.preview.teacher.comment',['borrower_document_id' => $borrower_document->id, 'borrower_uid' => $borrower->user_id])}}" frameborder="0" class="w-100" height="800"></iframe>
-                                <div class="row">
-                                    <div class="col-md-10 col-sm-12"></div>
-                                    <div class="col-md-2 col-sm-12">
-                                        <button type="button" class="btn btn-secondary w-100" onclick="closeAccordion('1','document-103')" >ปิด</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
                 @if($document->need_useful_activity)
                 <div class="accordion-item mb-3">
                     <h2 class="accordion-header" id="useful-activity">

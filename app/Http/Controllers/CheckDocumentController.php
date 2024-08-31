@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Borrower;
+use App\Models\BorrowerChildDocument;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
+use App\Models\ChildDocuments;
 use App\Models\Config;
 use App\Models\DocStructure;
 use App\Models\DocTypes;
@@ -124,6 +126,7 @@ class CheckDocumentController extends Controller
         $majors = Majors::where('isactive', true)->get();
         return view('check_document.select_check_document', compact('document', 'faculties', 'majors'));
     }
+    
     public function selectMajorByFacultyId($faculty_id)
     {
         if ($faculty_id == 'all') {
@@ -161,6 +164,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
                 ->get();
@@ -172,6 +176,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->where('borrowers.faculty_id', $select_faculty)
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
@@ -184,6 +189,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->where('borrowers.faculty_id', $select_faculty)
                 ->where('borrowers.major_id', $select_major)
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
@@ -197,6 +203,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->where('borrowers.faculty_id', $select_faculty)
                 ->where('borrowers.major_id', $select_major)
                 ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade) . '%')
@@ -211,6 +218,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->where('borrowers.major_id', $select_major)
                 ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade) . '%')
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
@@ -224,6 +232,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->where('borrowers.major_id', $select_major)
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
@@ -236,6 +245,7 @@ class CheckDocumentController extends Controller
                 ->join('majors', 'borrowers.major_id', '=', 'majors.id')
                 ->where('documents.id', $document_id)
                 ->where('borrower_documents.status', $select_status)
+                ->where('borrower_documents.checking', false)
                 ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade) . '%')
                 ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
                 ->orderBy('delivered_date', 'asc')
@@ -261,7 +271,7 @@ class CheckDocumentController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     if ($row->status == 'wait-approve') {
-                        $selectBtn = '<a href="' . route('check.borrower.document', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('check.document.borrower_document.list', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
                     } elseif ($row->status == 'sending') {
                         $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';
                     } else {
@@ -274,9 +284,68 @@ class CheckDocumentController extends Controller
         }
     }
 
-    public function showBorrowerDocument($borrower_document_id, Request $request)
+    public function borrowerDocumentList($borrower_document_id, Request $request)
     {
-        dd($borrower_document_id);
+        $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
+            ->where('documents.isactive', true)
+            ->where('documents.id', $borrower_document['document_id'])
+            ->first();
+        $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $borrower_document['user_id'])
+            ->where('document_id', $borrower_document['document_id'])
+            ->sum('hour_count') ?? 0;
+        $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
+        $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
+            ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
+            ->where('doc_structures.document_id', $borrower_document['document_id'])
+            ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->select(
+                'child_documents.id',
+                'child_documents.child_document_title as title',
+                'borrower_child_documents.id as borrower_child_document_id',
+                'borrower_child_documents.status',
+                )
+            ->get();
+        $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
+            ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
+            ->join('majors', 'majors.id', '=', 'borrowers.major_id')
+            ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->where('user_id', $borrower_document['user_id'])
+            ->select(
+                'users.prefix',
+                'users.firstname',
+                'users.lastname',
+                'borrower_apprearance_types.title',
+                'borrowers.user_id',
+                'borrowers.birthday',
+                'borrowers.student_id',
+                'borrowers.phone',
+                'borrowers.gpa',
+                'borrowers.birthday',
+                'faculties.faculty_name',
+                'majors.major_name',
+            )
+            ->first();
+
+        return view(
+            'check_document.borrower_document_list',
+            compact(
+                'document',
+                'child_documents',
+                'borrower',
+                'borrower_document',
+            )
+        );
+    }
+
+    public function checkBorrowerDocument($borrower_child_document_id, $borrower_document_id, Request $request)
+    {
+        $borrower_child_document = BorrowerChildDocument::find($borrower_child_document_id);
+        $child_document = ChildDocuments::find($borrower_child_document['child_document_id']);
+        
+        return view('check_document.check_borrower_document', compact('borrower_child_document', 'child_document'));
+
     }
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)

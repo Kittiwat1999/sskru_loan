@@ -42,7 +42,7 @@ class MultiTableSeeder extends Seeder
         $this->seedRegisterTypes();
         $this->seedTeacherComments();
         $this->seedTeacher();
-
+        $this->seedComments();
     }
 
     private function seedUsers()
@@ -261,6 +261,7 @@ class MultiTableSeeder extends Seeder
             ['child_document_title'=>'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง,ผู้แทนโดยชอบธรรม'],
             ['child_document_title'=>'หนังสือรับรองรายได้ครอบครัว'],
             ['child_document_title'=>'แบบคำร้องขอกู้ยืม (กยศ. 101)'],
+            ['child_document_title'=>'หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)'],
             ['child_document_title'=>'ใบรายงานผลการเรียน'],
             ['child_document_title'=>'สัญญากู้ยืม'],
             ['child_document_title'=>'แบบยืนยันการเบิกเงิน'],
@@ -291,7 +292,8 @@ class MultiTableSeeder extends Seeder
         DB::table('doc_structures')->insert([
             ['document_id'=>'1','child_document_id'=>'1'],
             ['document_id'=>'1','child_document_id'=>'4'],
-            ['document_id'=>'1','child_document_id'=>'10'],
+            ['document_id'=>'1','child_document_id'=>'5'],
+            ['document_id'=>'1','child_document_id'=>'11'],
             // ['document_id'=>'1','child_document_id'=>'4'],
             // ['document_id'=>'1','child_document_id'=>'5'],
         ]);
@@ -469,6 +471,15 @@ class MultiTableSeeder extends Seeder
             ['comment'=>'เป็นสารขาที่ขาดแคลนของประเทศ'],
             ['comment'=>'เพื่อส่งต่อโอกาศทางการศึกษาให้นักศึกษาได้สำเร็จการศึกษา'],
             ['comment'=>'เห็นควรพิจารณาอนุมัติให้กู้ยืม'],
+        ]);
+    }
+
+    private function seedComments(){
+        DB::table('comments')->insert([
+            ['comment'=>'เอกสารไม่ชัดเจน'],
+            ['comment'=>'ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน'],
+            ['comment'=>'บัตรประชาชนหมดอายุ'],
+            ['comment'=>'สำเนาบัตรประชาชนไม่ถูกต้อง'],
         ]);
     }
 }

@@ -70,14 +70,6 @@ admin document scheduler
                         @endforeach
                         <div class="list-group-item">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="add-teacher-comment" name="need_teacher_comment" value="true">
-                                <label class="form-check-label" for="add-teacher-comment">
-                                    หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
-                                </label>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="useful-act" name="need_useful_activity" value="true">
                                 <label class="form-check-label" for="useful-act">
                                     กิจกรรมจิตอาสา {{$useful_activity_hour}} ชั่วโมง
@@ -387,15 +379,6 @@ admin document scheduler
                                             }).join('')}
                                         </div>`
                             }).join('')}
-                            
-                            <div class="list-group-item">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="edit-teacher-comment" name="need_teacher_comment" value="true" ${(document_data.need_teacher_comment) ? 'checked' : ''}>
-                                    <label class="form-check-label" for="edit-teacher-comment">
-                                        หนังสือแสดงความคิดเห็นอาจารย์ที่ปรึกษา
-                                    </label>
-                                </div>
-                            </div>
                             <div class="list-group-item">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="edit-useful-act" name="need_useful_activity" value="true" ${(document_data.need_useful_activity) ? 'checked' : ''}>
@@ -508,7 +491,7 @@ admin document scheduler
     });
 
     function doctypeSelected(select_id,option){
-        const teacher_comment = document.getElementById(option + '-teacher-comment');
+        const teacher_comment = document.getElementById(option + '-document-5');
         const required_child_document = document.getElementById(option + '-document-4');
         
         if(select_id == '1'){

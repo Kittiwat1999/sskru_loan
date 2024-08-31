@@ -228,6 +228,7 @@ class BorrowerRegister extends Controller
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document->id)
             ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
+            ->where('doc_structures.child_document_id', '!=', 5) //id=5 คือ กยศ 103 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->get();
         $child_document_required_count = 0;
 
@@ -321,7 +322,7 @@ class BorrowerRegister extends Controller
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first() ?? new BorrowerDocument();
         $borrower_document['user_id'] = $user_id;
         $borrower_document['document_id'] = $document_id;
-        $borrower_document['status'] = 'sending';
+        $borrower_document['status'] = $borrower_document['status'] ?? 'sending';
         $borrower_document->save();
 
         $borrower_child_document = BorrowerChildDocument::where('document_id', $document_id)->where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
@@ -452,6 +453,7 @@ class BorrowerRegister extends Controller
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document['id'])
             ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
+            ->where('doc_structures.child_document_id', '!=', 5) //id=5 คือ กยศ 103 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->get();
         foreach ($child_documents as $child_document) {
             $child_document['borrower_child_document'] =  BorrowerChildDocument::where('borrower_child_documents.document_id', $document['id'])
@@ -547,9 +549,15 @@ class BorrowerRegister extends Controller
         if ($document == null) {
             return view('borrower.document_undefined');
         }
-        $child_document = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
+        $child_document_101 = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
             ->where('child_documents.isactive', true)
             ->where('child_documents.id', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
+            ->select('child_document_files.file_path', 'child_document_files.file_name', 'child_document_files.file_type', 'child_documents.child_document_title', 'child_documents.generate_file', 'child_documents.id')
+            ->first();
+
+        $child_document_103 = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
+            ->where('child_documents.isactive', true)
+            ->where('child_documents.id', 5) //id=3 คือ กยศ 103 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->select('child_document_files.file_path', 'child_document_files.file_name', 'child_document_files.file_type', 'child_documents.child_document_title', 'child_documents.generate_file', 'child_documents.id')
             ->first();
 
@@ -560,8 +568,10 @@ class BorrowerRegister extends Controller
         //save file
         if ($borrower_document['status'] != 'approved') {
             $generator = new GenerateFile();
-            $temp_path = $generator->saveBorrowerDocument101($user_id, $child_document, $document['id']);
-            $this->saveDocument101($document, $user_id, $temp_path);
+            $_101temp_path = $generator->saveBorrowerDocument101($user_id, $child_document_101, $document['id']);
+            $this->saveDocument101($document, $user_id, $_101temp_path);
+            $_103temp_path = $generator->saveDocument103($user_id, $child_document_103);
+            $this->saveDocument103($document, $user_id, $_103temp_path);
         }
 
         if ($document['need_teacher_comment']) {
@@ -642,13 +652,47 @@ class BorrowerRegister extends Controller
         $borrower_child_document->save();
     }
 
+    private function saveDocument103($document, $user_id, $temp_path)
+    {
+        $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 5)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
+        $borrower_child_document['user_id'] = $user_id;
+        $borrower_child_document['document_id'] = $document['id'];
+        $borrower_child_document['child_document_id'] = 5;
+        $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
+        $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
+        $borrower_child_document['status'] = 'delivered';
+
+        //file
+        $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 103_' . $user_id . '.pdf';
+        $store_path = $document['term'] . '-' . $document['year'] . '/' . $document['doctype_id'] . '/' . 5  . '/' . $user_id;
+        $path = storage_path($store_path);
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+        $final_path = $path . '/' . $custom_filename;
+        File::move($temp_path, $final_path);
+        $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']) ?? new BorrowerFiles();;
+        $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
+        $borrower_file['user_id'] = $user_id;
+        $borrower_file['description'] = '-';
+        $borrower_file['original_name'] = $custom_filename;
+        $borrower_file['file_path'] = $store_path;
+        $borrower_file['file_name'] = $custom_filename;
+        $borrower_file['file_type'] = last(explode('.', $custom_filename));
+        $borrower_file['full_path'] = $store_path . '/' . $custom_filename;
+        $borrower_file['upload_date'] = date('Y-m-d');
+        $borrower_file->save();
+        $borrower_child_document['borrower_file_id'] = $borrower_file['id'];
+        $borrower_child_document->save();
+    }
+
     public function mergeMaritalFile($document, $user_id)
     {
         $marital_status = json_decode(Borrower::where('user_id', $user_id)->value('marital_status'));
         if ($marital_status->status == 'หย่า') {
             $child_document = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
                 ->where('doc_structures.document_id', $document['id'])
-                ->where('doc_structures.child_document_id', '=', 10) //id=10 คือ ไฟล์อื่นๆ
+                ->where('doc_structures.child_document_id', '=', 11) //id=11 คือ ไฟล์อื่นๆ
                 ->first() ?? null;
             if ($child_document != null) {
                 $borrower_child_document =  BorrowerFiles::join('borrower_child_documents', 'borrower_files.id', '=', 'borrower_child_documents.borrower_file_id')
@@ -692,17 +736,17 @@ class BorrowerRegister extends Controller
     public function moveMegedFile($document, $user_id, $temp_path)
     {
 
-        $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 10)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
+        $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 11)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document['id'];
-        $borrower_child_document['child_document_id'] = 10;
+        $borrower_child_document['child_document_id'] = 11;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
         $borrower_child_document['status'] = 'delivered';
 
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'other_file' . $user_id . '.pdf';
-        $store_path = $document['term'] . '-' . $document['year'] . '/' . $document['doctype_id'] . '/' . 10  . '/' . $user_id;
+        $store_path = $document['term'] . '-' . $document['year'] . '/' . $document['doctype_id'] . '/' . 11  . '/' . $user_id;
         $path = storage_path($store_path);
         if (!File::exists($path)) {
             File::makeDirectory($path, 0755, true);
@@ -727,17 +771,17 @@ class BorrowerRegister extends Controller
 
     public function copyMaritalFile($document, $user_id, $temp_path, $file_name)
     {
-        $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 10)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
+        $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 11)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document['id'];
-        $borrower_child_document['child_document_id'] = 10;
+        $borrower_child_document['child_document_id'] = 11;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
         $borrower_child_document['status'] = 'delivered';
 
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'other_file' . $user_id . '.pdf';
-        $store_path = $document['term'] . '-' . $document['year'] . '/' . $document['doctype_id'] . '/' . 10  . '/' . $user_id;
+        $store_path = $document['term'] . '-' . $document['year'] . '/' . $document['doctype_id'] . '/' . 11  . '/' . $user_id;
         $path = storage_path($store_path);
         if (!File::exists($path)) {
             File::makeDirectory($path, 0755, true);

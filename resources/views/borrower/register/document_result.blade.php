@@ -114,7 +114,6 @@
             </div>
         </div>
     </div>
-    {{$marital_status->status}}
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">ข้าพเจ้าได้แนบเอกสารต่างๆ ตามที่กองทุนกำหนดเพื่อประกอบการพิจารณาครบถ้วนทุกรายการ อย่างละ 1 ฉบับ ได้แก่</h5>
