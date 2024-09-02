@@ -12,18 +12,39 @@
             <ul class="list-group mb-4">
                 @foreach($child_documents as $child_document)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{$child_document['title']}}
-                        <a class="btn btn-sm btn-outline-primary" href="{{route('check.document.check.borrower_child_document', ['borrower_child_document_id' => $child_document['borrower_child_document_id'], 'borrower_document_id' => $borrower_document['id']] )}}">ตรวจเอกสาร</a>
+                        <div>
+                            <span>{{$child_document['title']}}</span>
+                            @if($child_document['status'] == 'approved')
+                                <span class="text-success fw-bold">(อนุมัติ)</span>
+                            @elseif($child_document['status'] == 'rejected')
+                                <span class="text-danger fw-bold">(ไม่อนุมัติ)</span>
+                            @elseif($child_document['status'] == 'response-reject')
+                                <span class="text-warning fw-bold">(แก้ไขแล้ว)</span>
+                            @endif
+                        </div>
+                        @if($child_document['status'] == 'delivered' || $child_document['status'] == 'response-reject')
+                            <a class="btn btn-sm btn-primary" href="{{route('check_document.get.borrower_child_document', ['borrower_child_document_id' => $child_document['borrower_child_document_id'], 'borrower_document_id' => $borrower_document['id']] )}}">ตรวจเอกสาร</a>
+                        @else
+                            <a class="btn btn-sm btn-outline-primary" href="{{route('check_document.get.borrower_child_document', ['borrower_child_document_id' => $child_document['borrower_child_document_id'], 'borrower_document_id' => $borrower_document['id']] )}}">ตรวจแล้ว</a>
+                        @endif
                     </li>
                 @endforeach
-                @if($document['need_teacher_comment'])
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)
-                    <a class="btn btn-sm btn-outline-primary" href="{{url('check_document/documents')}}">ตรวจเอกสาร</a>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    แบบยืนยันเบิกเงินกู้ยืม
-                    <a class="btn btn-sm btn-outline-primary" href="{{url('check_document/documents')}}">ตรวจเอกสาร</a>
+                    <div>
+                        <span>บันทึกกิจกรรมจิตอาสา</span>
+                        @if($useful_activities_status['status'] == 'approved')
+                            <span class="text-success fw-bold">(อนุมัติ)</span>
+                        @elseif($useful_activities_status['status'] == 'rejected')
+                            <span class="text-danger fw-bold">(ไม่อนุมัติ)</span>
+                        @elseif($useful_activities_status['status'] == 'response-reject')
+                            <span class="text-warning fw-bold">(แก้ไขแล้ว)</span>
+                        @endif
+                    </div>
+                    @if($useful_activities_status['status'] == 'delivered' || $child_document['status'] == 'response-reject')
+                        <a class="btn btn-sm btn-primary" href="{{route('check_document.get.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}">ตรวจเอกสาร</a>
+                    @else
+                        <a class="btn btn-sm btn-outline-primary" href="{{route('check_document.get.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}">ตรวจแล้ว</a>
+                    @endif
                 </li>
             </ul>
 
@@ -69,7 +90,11 @@
                 <div class="col-md-5"></div>
             </div>
             <div class="text-end">
-                <a href="{{url('check_document/document_submission')}}" class="btn btn-primary col-4 col-md-2">ถัดไป</a>
+                @if($checked_document < $document_to_check)
+                <button class="btn btn-secondary col-4 col-md-3" disabled >สรุปผลการตรวจเอกสาร</button>
+                @else
+                    <a href="{{route('check_document.document.result',['borrower_document_id' => $borrower_document['id'] ])}}" class="btn btn-primary col-4 col-md-3">สรุปผลการตรวจเอกสาร</a>
+                @endif
             </div>
         </div>
     </div>

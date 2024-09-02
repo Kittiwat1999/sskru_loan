@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('comments_borrower_child_documents', function (Blueprint $table) {
             $table->id();
             $table->integer('comment_id')->foreignIdFor(Comments::class)->nullable();
-            $table->integer('borrower_child_ducument_id')->foreignIdFor(BorrowerChildDocument::class);
-            $table->string('other_comment');
+            $table->integer('borrower_child_document_id')->foreignIdFor(BorrowerChildDocument::class);
+            $table->string('other_comment')->nullable();
             $table->timestamps();
         });
     }

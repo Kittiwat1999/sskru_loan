@@ -270,7 +270,7 @@ class TeacherComment extends Controller
             "more_comment.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
         ]);
         if ($request->status == "approve") {
-            $comments_Db = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->pluck('teacher_comment_id')->toArray();
+            $comments_Db = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', '!=', null)->pluck('teacher_comment_id')->toArray();
             $comments_Req = $request->comments ?? [];
             $custom_comment = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', null)->first() ?? new TeacherCommentDocuments();
             $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->first();

@@ -7,6 +7,7 @@ use App\Models\Config;
 use App\Models\Documents;
 use App\Models\UsefulActivitiyFile;
 use App\Models\UsefulActivity;
+use App\Models\UsefulActivityStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -63,7 +64,6 @@ class UsefulActivityController extends Controller
     public function storeUsefulActivity($document_id, UsefulActivityRequest $request)
     {
         $user_id = $request->session()->get('user_id', '1');
-        $user_id = Session::get('user_id', '1');
         $useful_activity = new UsefulActivity();
         $useful_activity['user_id'] = $user_id;
         $useful_activity['document_id'] = $document_id;
@@ -73,6 +73,18 @@ class UsefulActivityController extends Controller
         $useful_activity['end_date'] = $this->convert_date($request->end_date);
         $useful_activity['hour_count'] = $request->hour_count;
         $useful_activity['description'] = $request->description;
+
+        $useful_activities_status = UsefulActivityStatus::where('document_id', $document_id)
+            ->where('borrower_uid', $user_id)
+            ->first() ?? new UsefulActivityStatus();
+        if($useful_activities_status['status'] == 'delivered' || empty($useful_activities_status['status'])){
+            $useful_activities_status['status'] = 'delivered';
+        }elseif($useful_activities_status['status'] == 'rejected'){
+            $useful_activities_status['status'] = 'response-reject';
+        }
+        $useful_activities_status['document_id'] = $document_id;
+        $useful_activities_status['borrower_uid'] = $user_id;
+        $useful_activities_status->save();
 
         $document = Documents::find($document_id);
 
@@ -116,6 +128,18 @@ class UsefulActivityController extends Controller
         $useful_activity['end_date'] = $this->convert_date($request->end_date);
         $useful_activity['hour_count'] = $request->hour_count;
         $useful_activity['description'] = $request->description;
+
+        $useful_activities_status = UsefulActivityStatus::where('document_id', $useful_activity['document_id'])
+            ->where('borrower_uid', $user_id)
+            ->first() ?? new UsefulActivityStatus();
+        if($useful_activities_status['status'] == 'delivered' || empty($useful_activities_status['status'])){
+            $useful_activities_status['status'] = 'delivered';
+        }elseif($useful_activities_status['status'] == 'rejected'){
+            $useful_activities_status['status'] = 'response-reject';
+        }
+        $useful_activities_status['document_id'] = $useful_activity['document_id'];
+        $useful_activities_status['borrower_uid'] = $user_id;
+        $useful_activities_status->save();
 
         $document = Documents::find($useful_activity['document_id']);
 

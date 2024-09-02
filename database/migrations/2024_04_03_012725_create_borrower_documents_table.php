@@ -20,10 +20,10 @@ return new class extends Migration
             $table->integer('user_id')->foreignIdFor(Users::class);
             $table->string('teacher_status')->nullable();
             $table->string('status');
+            $table->string('checker_id')->foreignIdFor(Users::class)->nullable();
             $table->boolean('checking')->default(false);
             $table->datetime('delivered_date')->nullable();
             $table->datetime('checked_date')->nullable();
-            $table->datetime('commented_date')->nullable();
             $table->timestamps();
         });
     }

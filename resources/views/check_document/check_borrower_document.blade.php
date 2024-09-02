@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-รายงานผลการเรียนผู้กู้
+ตรวจเอกสารผู้กู้
 @endsection
 @section('style')
 <style>
@@ -31,91 +31,195 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{$child_document['child_document_title']}}</h5>
-            <div class="container">
-                <iframe src="{{route("check.document.preview.file", ['borrower_child_document_id' => $borrower_child_document['id'] ])}}"></iframe>
+            <div class="container-fluid m-0 p-0 mb-3">
+                <iframe src="{{route("check.document.preview.borrower_child_document_file", ['borrower_child_document_id' => $borrower_child_document['id'] ])}}"></iframe>
             </div>
-
-            <fieldset class="row mb-3 mt-3 mx-2">
-                <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
-                <div class="col-sm-10">
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" id="status-approve" value="approve" checked="" onchange="enableCheckbox(this.value)">
-                        <label class="form-check-label" for="status-approve">
-                        เอกสารถูกต้อง
-                        </label>
+            <form id="form-comment" class="border border-1" action="{{route('check_document.post.borrower_child_document', ['borrower_child_document_id' => $borrower_child_document['id'], 'borrower_document_id' => $borrower_document_id] )}}" method="POST">
+                @csrf
+                <fieldset class="row mx-0 p-0 my-3">
+                    <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
+                    <div class="col-sm-10 m-0 p-0">
+                        <div id="invalid-radio" class="invalid-feedback mx-4">
+                            กรุณากรอกความคิดเห็น
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="status" id="status-approve" value="approve" onchange="enableCheckbox(this.value)" required
+                            @checked($borrower_child_document['status'] == 'approved')
+                            />
+                            <label class="form-check-label" for="status-approve">
+                            เอกสารถูกต้อง
+                            </label>
+                        </div>
+    
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" id="status-reject" value="reject" onchange="enableCheckbox(this.value)" required
+                            @checked($borrower_child_document['status'] == 'rejected' || $borrower_child_document['status'] == 'response-reject' )
+                            />
+                            <label class="form-check-label" for="status-reject">
+                            เอกสารไม่ถูกต้อง
+                            </label>
+                        </div>
                     </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" id="status-reject" value="reject" onchange="enableCheckbox(this.value)">
-                        <label class="form-check-label" for="status-reject">
-                        เอกสารไม่ถูกต้อง
-                        </label>
+                </fieldset>
+    
+                <div class="row m-0 p-0">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10 row m-0 p-0">
+                        <div id="invalid-checkbox" class="invalid-feedback col-12 mx-2">
+                            กรุณากรอกความคิดเห็น
+                        </div>
+                        @foreach($comments as $comment)
+                        <div class="col-md-6 form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="comments[]" id="comment-{{$comment['id']}}" value="{{$comment['id']}}" disabled 
+                                @checked(in_array($comment['id'], $comments_db))
+                            />
+                            <label class="form-check-label" for="comment-{{$comment['id']}}">
+                                {{$comment['comment']}}
+                            </label>
+                        </div>
+                        @endforeach
+    
+                        <div class="col-md-6 m-0 p-0 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="more_comment_check" name="more_comment_check" value="true" onchange="enableInputText(this)" disabled
+                                    @checked($custom_comment != null)
+                                />
+                                <label class="form-check-label" for="more_comment_check">
+                                    อื่นๆ
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                <label for="gpa_moreText"></label>
+                                <input class="form-control" type="text" name="more_comment_text" id="more_comment_text" 
+                                    @disabled($custom_comment == null) 
+                                    value="{{($custom_comment != null) ? $custom_comment['other_comment'] : '' }}" 
+                                />
+                                <div class="invalid-feedback">
+                                    กรุณากรอกความคิดเห็น
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
+    
                 </div>
-            </fieldset>
-
-            <div class="row mb-3 mt-2 text-dark text-start mx-2">
-
-                <div class="col-sm-2"></div>
-                <div class="col-sm-5">
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gpa_comment_1" disabled="">
-                        <label class="form-check-label" for="gpa_comment_1" name="gpa_comment_1">
-                            เอกสารไม่ชัดเจน
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gpa_comment_2" disabled="">
-                        <label class="form-check-label" for="gpa_comment_2" name="gpa_comment_2">
-                            บัตรประชาชนหมดอายุ
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gpa_more_radio" disabled="" onchange="enableInputArea('gpa_')">
-                        <label class="form-check-label" for="gpa_more_radio">
-                            อื่นๆ
-                        </label>
-                    </div>
-                    <div class="input-group">
-                        <label for="gpa_moreText"></label>
-                        <textarea class="form-control" name="gpa_moreText" id="gpa_moreText" cols="30" rows="4" disabled=""></textarea>
-                    </div>
-
-                </div>
-
-                <div class="col-sm-5">
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gpa_comment_3" disabled="">
-                        <label class="form-check-label" for="gpa_comment_3" name="gpa_comment_3">
-                            ลายมือชื่อในเอกสารกับสำเนาบัตรไม่ตรงกัน
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gpa_comment_4" disabled="">
-                        <label class="form-check-label" for="gpa_comment_4" name="gpa_comment_4">
-                            สำเนาบัตรประชาชนไม่ถูกต้อง
-                        </label>
-                    </div>
-
-                </div>
-
-                <div class="text-end mt-3">
-                    <a class="btn btn-primary col-4 col-md-2" href="{{url('check_document/check_documents_test')}}">บันทึก</a>
-                </div>
+            </form>
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-primary col-4 col-md-2" onclick="submitForm('form-comment')">บันทึก</button>
             </div>
         </div>
     </div>
 </section>
 @endsection
-@section('scirpt')
+@section('script')
 <script>
+    var borrower_child_document_status = @json($borrower_child_document['status']);
+    if(borrower_child_document_status == 'approved'){
+        enableCheckbox('approve');
+    }else if (borrower_child_document_status == 'rejected' || borrower_child_document_status == 'response-reject') {
+        enableCheckbox('reject');
+    }
+
+    function enableCheckbox(status) {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const input_text = document.getElementById('more_comment_text');
+        if(status == 'approve'){
+            input_text.disabled = true;
+            input_text.required = false;
+            checkboxes.forEach((e) => {
+                e.disabled = true;
+                e.required = false;
+                e.checked = false;
+            });
+        }else{
+            checkboxes.forEach((e) => {
+                e.disabled = false;
+                e.required = true;
+            });
+        }
+    }
+
+    function enableInputText(more_checkbox){
+        const input_text = document.getElementById('more_comment_text');
+        if(more_checkbox.checked == true){
+            input_text.disabled = false;
+            input_text.required = true;
+        }else{
+            input_text.disabled = true;
+            input_text.required = false;
+        }
+    }
+
+    async function submitForm(form_id){
+        var validation = await validateForm(form_id);
+        if(validation){
+            const form = document.getElementById(form_id);
+            form.submit();
+        }else{
+            alert('กรุณากรอกความเห็น');
+        }
+    }
+
+    async function validateForm(form_id){
+        const form = document.getElementById(form_id);
+        const radios = form.querySelectorAll('input[type="radio"][required]');
+        const checkboxes = form.querySelectorAll('input[type="checkbox"][required]');
+        const input_text = document.querySelector('input[type="text"][required]');
+        var validator = true;
+
+        if(input_text){
+            if(input_text.value == ''){
+                validator = false;
+                var invalid_element = input_text.nextElementSibling;
+                if(invalid_element)invalid_element.classList.add('d-inline');
+            }else{
+                var invalid_element = input_text.nextElementSibling;
+                if(invalid_element)invalid_element.classList.remove('d-inline');
+            }
+        }
+
+        var validate_checkbox = (checkboxes.length != 0) ? await validateCheckBox(checkboxes) : true;
+        if(!validate_checkbox){
+            validator = false;
+            var invalid_checkbox = document.getElementById('invalid-checkbox');
+            if(invalid_checkbox)invalid_checkbox.classList.add('d-inline');
+        }else{
+            var invalid_checkbox = document.getElementById('invalid-checkbox');
+            if(invalid_checkbox)invalid_checkbox.classList.add('d-none');
+        }
+
+        var validate_radio =  await validateRadio(radios);
+        if(!validate_radio){
+            validator = false;
+            var invalid_radio = document.getElementById('invalid-radio');
+            if(invalid_radio)invalid_radio.classList.add('d-inline');
+        }else{
+            var invalid_radio = document.getElementById('invalid-radio');
+            if(invalid_radio)invalid_radio.classList.add('d-none');
+        }
+
+        return validator;
+    }
+
+    async function validateCheckBox(checkboxes){
+        var checker = false;
+        for(let i = 0; i < checkboxes.length; i ++){
+            if(checkboxes[i].checked == true){
+                checker = true;
+                break;
+            }
+        }   
+        return checker;
+    }
+
+    async function validateRadio(radio){
+        var checker = false;
+        await radio.forEach((e) => {
+            if(e.checked){
+                checker = true;
+            }
+        });
+        return checker;
+    }
 
 </script>
 @endsection

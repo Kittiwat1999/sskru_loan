@@ -2,6 +2,8 @@
 
 use App\Models\BorrowerDocument;
 use App\Models\Comments;
+use App\Models\Documents;
+use App\Models\Users;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +17,10 @@ return new class extends Migration
     {
         Schema::create('useful_activities_comments', function (Blueprint $table) {
             $table->id();
-            $table->integer('borrower_document_id')->foreignIdFor(BorrowerDocument::class);
-            $table->integer('commnet_id')->foreignIdFor(Comments::class)->nullable();
-            $table->string('custom_comment');
-            $table->timestamps();
+            $table->integer('document_id')->foreignIdFor(Documents::class);
+            $table->integer('borrower_uid')->foreignIdFor(Users::class);
+            $table->integer('comment_id')->foreignIdFor(Comments::class)->nullable();
+            $table->string('custom_comment')->nullable();
         });
     }
 

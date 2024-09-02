@@ -16,7 +16,7 @@
 
                         <div class="card">
                             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                                <img src="{{asset('assets/img/profile-'.$role.'.png')}}" alt="Profile" class="rounded-circle">
                                 <h2>{{$user->prefix}}{{$user->firstname}} {{$user->lastname}}</h2>
                                 <h3>{{$privilege_map[$role]}}</h3>
                             </div>

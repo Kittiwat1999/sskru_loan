@@ -7,13 +7,17 @@ use App\Models\BorrowerChildDocument;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
 use App\Models\ChildDocuments;
+use App\Models\Comments;
+use App\Models\CommentsBorrowerChildDocument;
 use App\Models\Config;
 use App\Models\DocStructure;
 use App\Models\DocTypes;
 use App\Models\Documents;
 use App\Models\Faculties;
 use App\Models\Majors;
+use App\Models\UsefulActivitiesComments;
 use App\Models\UsefulActivity;
+use App\Models\UsefulActivityStatus;
 use App\Models\Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,6 +37,13 @@ class CheckDocumentController extends Controller
         'approved' => 'อนุมัติแล้ว',
         'response-reject' => 'แก้ใขแล้ว',
     ];
+
+    private function convertToBuddhistDateTime()
+    {
+        $currentDateTime = Carbon::now();
+        $buddhistDateTime = $currentDateTime->addYears(543);
+        return $buddhistDateTime->format('Y-m-d H:i:s');
+    }
 
     public function deleteFile($file_path, $file_name)
     {
@@ -271,11 +282,11 @@ class CheckDocumentController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     if ($row->status == 'wait-approve') {
-                        $selectBtn = '<a href="' . route('check.document.borrower_document.list', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('check_document.borrower_child_document.list', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
                     } elseif ($row->status == 'sending') {
                         $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';
                     } else {
-                        $selectBtn = '<a href="' . route('view.borrower.document', $row->id) . '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('check_document.view.borrower.document', $row->id) . '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
                     }
                     return $selectBtn;
                 })
@@ -284,18 +295,17 @@ class CheckDocumentController extends Controller
         }
     }
 
-    public function borrowerDocumentList($borrower_document_id, Request $request)
+    public function borrowerChildDocumentList($borrower_document_id, Request $request)
     {
+        $checker_id = $request->session()->get('user_id');
         $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
+            ->where('borrower_uid', $borrower_document['user_id'])
+            ->first();
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
             ->where('documents.id', $borrower_document['document_id'])
             ->first();
-        $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
-        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $borrower_document['user_id'])
-            ->where('document_id', $borrower_document['document_id'])
-            ->sum('hour_count') ?? 0;
-        $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $borrower_document['document_id'])
@@ -304,8 +314,8 @@ class CheckDocumentController extends Controller
                 'child_documents.id',
                 'child_documents.child_document_title as title',
                 'borrower_child_documents.id as borrower_child_document_id',
-                'borrower_child_documents.status',
-                )
+                'borrower_child_documents.status',)
+            ->orderBy('child_documents.id', 'asc')
             ->get();
         $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
@@ -324,9 +334,23 @@ class CheckDocumentController extends Controller
                 'borrowers.gpa',
                 'borrowers.birthday',
                 'faculties.faculty_name',
-                'majors.major_name',
-            )
+                'majors.major_name',)
             ->first();
+
+        $checked_document = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
+            ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
+            ->where('doc_structures.document_id', $borrower_document['document_id'])
+            ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->where('borrower_child_documents.checker_id', '!=', null)
+            ->where('borrower_child_documents.status', 'approved')
+            ->orWhere('borrower_child_documents.status', 'rejected')
+            ->count();
+
+        $document_to_check = count($child_documents) ?? 0;
+        if($document['need_useful_activity']){
+            $document_to_check += 1;
+            $checked_document += 1;
+        } 
 
         return view(
             'check_document.borrower_document_list',
@@ -335,17 +359,314 @@ class CheckDocumentController extends Controller
                 'child_documents',
                 'borrower',
                 'borrower_document',
+                'useful_activities_status',
+                'document_to_check',
+                'checked_document',
             )
         );
     }
 
-    public function checkBorrowerDocument($borrower_child_document_id, $borrower_document_id, Request $request)
+    public function getBorrowerChildDocument($borrower_child_document_id, $borrower_document_id, Request $request)
     {
         $borrower_child_document = BorrowerChildDocument::find($borrower_child_document_id);
-        $child_document = ChildDocuments::find($borrower_child_document['child_document_id']);
-        
-        return view('check_document.check_borrower_document', compact('borrower_child_document', 'child_document'));
+        $child_document = ChildDocuments::find($borrower_child_document['child_document_id']);        
+        $comments_db = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->where('comment_id', '!=', null)->pluck('comment_id')->toArray() ?? null;
+        $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->where('comment_id', null)->first() ?? null;
+        $comments = Comments::where('isactive', true)->get();
+        return view(
+            'check_document.check_borrower_document', 
+            compact(
+                'borrower_child_document',
+                'child_document',
+                'borrower_document_id', 
+                'comments',
+                'comments_db',
+                'custom_comment',
+            ));
+    }
 
+    public function postBorrowerChildDocument($borrower_child_document_id, $borrower_document_id, Request $request)
+    {
+        $checker_id = $request->session()->get('user_id');
+        $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $borrower_child_document = BorrowerChildDocument::find($borrower_child_document_id);
+        $request->validate([
+            'status' => 'required|string|max:25',
+            'commnets' => 'array',
+            'commnets.*' => 'string',
+            'more_comment_check' => 'string|max:10',
+            'more_comment_text' => 'string|max:100',
+        ], [
+            "status.required" => 'กรุณากรอกคุณสมบัติผู้กู้',
+            "status.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "status.max" => 'ชื่อของคุณสมบัติผู้กู้ต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            "reject_comment.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "reject_comment.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
+            "comments.array" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "comments.*.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "more_comment_check.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "more_comment_check.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
+            "more_comment_text.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "more_comment_text.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
+        ]);
+
+        if ($request->status == 'reject') {
+            $comments_db = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->where('comment_id', '!=', null)->pluck('comment_id')->toArray();
+            $comments_req = $request->comments ?? [];
+            $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->where('comment_id', null)->first() ?? new CommentsBorrowerChildDocument();
+            $comments_for_delete = array_diff($comments_db, $comments_req);
+            $comments_for_add = array_diff($comments_req, $comments_db);
+            foreach($comments_for_add as $comment_id){
+                $comment_borrower_child_document = new CommentsBorrowerChildDocument();
+                $comment_borrower_child_document['comment_id'] = $comment_id;
+                $comment_borrower_child_document['borrower_child_document_id'] = $borrower_child_document_id;
+                $comment_borrower_child_document->save();
+            }
+
+            foreach($comments_for_delete as $comment_id){
+                $comment_borrower_child_document = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->where('comment_id', $comment_id)->delete();
+            }
+
+            if (isset($request->more_comment_check) && $request->more_comment_check == 'true') {
+                $custom_comment['borrower_child_document_id'] = $borrower_child_document_id;
+                $custom_comment['comment_id'] = null;
+                $custom_comment['other_comment'] = $request->more_comment_text;
+                $custom_comment->save();
+            } else {
+                $custom_comment->delete();
+            }
+
+            $borrower_child_document['status'] = 'rejected';
+            $borrower_child_document['checker_id'] = $checker_id;
+            $borrower_child_document->save();
+            
+        } else {
+            CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->delete();
+            $borrower_child_document['status'] = 'approved';
+            $borrower_child_document['checker_id'] = $checker_id;
+            $borrower_child_document->save();
+        }
+        $borrower_document['checking'] = true;
+        $borrower_document['checker_id'] = $checker_id;
+        $borrower_document->save();
+        return redirect()->route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document_id])->with(['success' => 'บันทึกข้อมูลเรียบร้อยแล้ว']);
+    }
+
+    public function getBorrowerUsefulActivities($borrower_document_id)
+    {
+        $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
+        $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
+            ->where('borrower_uid', $borrower_document['user_id'])
+            ->first();
+        $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $borrower_document['user_id'])
+            ->where('document_id', $borrower_document['document_id'])
+            ->sum('hour_count') ?? 0;
+        $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
+        $comments_db = UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('comment_id', '!=', null)->pluck('comment_id')->toArray() ?? null;
+        $custom_comment = UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('comment_id', null)->first() ?? null;
+        $comments = Comments::where('isactive', true)->get();
+        return view('check_document.check_borrower_useful_activity', 
+            compact(
+                'useful_activities', 
+                'borrower_useful_activities_hours_sum', 
+                'useful_activities_hours', 
+                'borrower_document',
+                'useful_activities_status',
+                'comments_db',
+                'custom_comment',
+                'comments',
+            ));
+    }
+
+    public function postBorrowerUsefulActivities ($borrower_document_id, Request $request )
+    {
+        // dd($request);
+        $checker_id = $request->session()->get('user_id');
+        $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
+            ->where('borrower_uid', $borrower_document['user_id'])
+            ->first();
+        $useful_activities_status['document_id'] = $borrower_document['document_id'];
+        $useful_activities_status['borrower_uid'] = $borrower_document['user_id'];
+
+        $request->validate([
+            'status' => 'required|string|max:25',
+            'commnets' => 'array',
+            'commnets.*' => 'string',
+            'more_comment_check' => 'string|max:10',
+            'more_comment_text' => 'string|max:100',
+        ], [
+            "status.required" => 'กรุณากรอกคุณสมบัติผู้กู้',
+            "status.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "status.max" => 'ชื่อของคุณสมบัติผู้กู้ต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            "reject_comment.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "reject_comment.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
+            "comments.array" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "comments.*.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "more_comment_check.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "more_comment_check.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
+            "more_comment_text.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "more_comment_text.max" => 'ความเห็นต้องไม่เกิน :max ตัวอักษร',
+        ]);
+
+        if ($request->status == 'reject') {
+            $comments_db = UsefulActivitiesComments::where('document_id', $borrower_document['id'])
+                ->where('borrower_uid', $borrower_document['user_id'])
+                ->where('comment_id', '!=', null)
+                ->pluck('comment_id')->toArray();
+            $comments_req = $request->comments ?? [];
+            $custom_comment = UsefulActivitiesComments::where('document_id', $borrower_document['id'])
+                ->where('borrower_uid', $borrower_document['user_id'])
+                ->where('comment_id', null)
+                ->first() ?? new UsefulActivitiesComments();
+            $comments_for_delete = array_diff($comments_db, $comments_req);
+            $comments_for_add = array_diff($comments_req, $comments_db);
+            foreach($comments_for_add as $comment_id){
+                $comment_borrower_child_document = new UsefulActivitiesComments();
+                $comment_borrower_child_document['document_id'] = $borrower_document['document_id'];
+                $comment_borrower_child_document['borrower_uid'] = $borrower_document['user_id'];
+                $comment_borrower_child_document['comment_id'] = $comment_id;
+                $comment_borrower_child_document->save();
+            }
+
+            foreach($comments_for_delete as $comment_id){
+                $comment_borrower_child_document = UsefulActivitiesComments::where('document_id', $borrower_document['id'])
+                    ->where('borrower_uid', $borrower_document['user_id'])
+                    ->where('comment_id', $comment_id)->delete();
+            }
+
+            if (isset($request->more_comment_check) && $request->more_comment_check == 'true') {
+                $custom_comment['document_id'] = $borrower_document['document_id'];
+                $custom_comment['borrower_uid'] = $borrower_document['user_id'];
+                $custom_comment['comment_id'] = null;
+                $custom_comment['custom_comment'] = $request->more_comment_text;
+                $custom_comment->save();
+            } else {
+                $custom_comment->delete();
+            }
+
+            $useful_activities_status['status'] = 'rejected';
+            $useful_activities_status['checker_id'] = $checker_id;
+            $useful_activities_status->save();
+        } else {
+            UsefulActivitiesComments::where('document_id', $borrower_document['id'])->where('borrower_uid', $borrower_document['user_id'])->delete();
+            $useful_activities_status['status'] = 'approved';
+            $useful_activities_status['checker_id'] = $checker_id;
+            $useful_activities_status->save();
+        }
+
+        $borrower_document['checking'] = true;
+        $borrower_document['checker_id'] = $checker_id;
+        $borrower_document->save();
+        return redirect()->route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document_id])->with(['success' => 'บันทึกข้อมูลเรียบร้อยแล้ว']);
+    }
+
+    public function checkDocumentResult($borrower_document_id, Request $request){
+        $checker_id = $request->session()->get('user_id');
+        $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
+            ->where('borrower_uid', $borrower_document['user_id'])
+            ->first();
+        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
+            ->where('documents.isactive', true)
+            ->where('documents.id', $borrower_document['document_id'])
+            ->first();
+        $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
+            ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
+            ->where('doc_structures.document_id', $borrower_document['document_id'])
+            ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->select(
+                'child_documents.id',
+                'child_documents.child_document_title as title',
+                'borrower_child_documents.id as borrower_child_document_id',
+                'borrower_child_documents.status',)
+            ->orderBy('child_documents.id', 'asc')
+            ->get();
+        $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
+            ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
+            ->join('majors', 'majors.id', '=', 'borrowers.major_id')
+            ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->where('user_id', $borrower_document['user_id'])
+            ->select(
+                'users.prefix',
+                'users.firstname',
+                'users.lastname',
+                'borrower_apprearance_types.title',
+                'borrowers.user_id',
+                'borrowers.birthday',
+                'borrowers.student_id',
+                'borrowers.phone',
+                'borrowers.gpa',
+                'borrowers.birthday',
+                'faculties.faculty_name',
+                'majors.major_name',)
+            ->first();
+        $list_status = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
+            ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
+            ->where('doc_structures.document_id', $borrower_document['document_id'])
+            ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->where('borrower_child_documents.checker_id', '!=', null)
+            ->pluck('borrower_child_documents.status')
+            ->toArray();
+        
+        if($document['need_useful_activity']){
+            array_push($list_status, $useful_activities_status['status']);
+        } 
+        (in_array('rejected', $list_status)) ? $result_status = 'rejected' : $result_status = 'approved' ; 
+
+        foreach($child_documents as $child_document){
+            $child_document['comments'] = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+                ->where('comments_borrower_child_documents.borrower_child_document_id', $child_document['borrower_child_document_id'])
+                ->where('comments_borrower_child_documents.comment_id', '!=', null)
+                ->pluck('comments.comment')->toArray();
+            $child_document['custom_comment'] = CommentsBorrowerChildDocument::where('borrower_child_document_id', $child_document['borrower_child_document_id'])
+                ->where('comment_id', null)
+                ->value('other_comment') ?? null;
+        }
+
+        $useful_activities_comments = UsefulActivitiesComments::join('comments', 'comments.id', '=', 'useful_activities_comments.comment_id')
+            ->where('useful_activities_comments.document_id', $borrower_document['id'])
+            ->where('useful_activities_comments.borrower_uid', $borrower_document['user_id'])
+            ->where('useful_activities_comments.comment_id', '!=', null)
+            ->pluck('comments.comment')->toArray();
+        $useful_activities_custom_comments =  UsefulActivitiesComments::where('document_id', $borrower_document['id'])
+            ->where('borrower_uid', $borrower_document['user_id'])
+            ->where('comment_id', null)
+            ->value('custom_comment') ?? null;
+
+        if($useful_activities_custom_comments != null) array_push($useful_activities_comments, $useful_activities_custom_comments);
+
+        return view(
+            'check_document.document_submission',
+            compact(
+                'document',
+                'child_documents',
+                'borrower',
+                'borrower_document',
+                'useful_activities_status',
+                'result_status',
+                'useful_activities_comments',
+            )
+        );
+    }
+
+    public function submitCheckDocument($borrower_document_id, Request $request){
+        $checker_id = $request->session()->get('user_id');
+        $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $request->validate([
+            'status' => 'required|string|max:30',
+        ], [
+            "status.required" => 'กรุณากรอกคุณสมบัติผู้กู้',
+            "status.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
+            "status.max" => 'ชื่อของคุณสมบัติผู้กู้ต้องมีความยาวไม่เกิน :max ตัวอักษร',
+        ]);
+        
+        $borrower_document['status'] = $request->status;
+        $borrower_document['checker_id'] = $checker_id;
+        $borrower_document['checking'] = false;
+        $borrower_document['checked_date'] = $this->convertToBuddhistDateTime();
+        $borrower_document->save();
     }
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
@@ -384,6 +705,7 @@ class CheckDocumentController extends Controller
                 'majors.major_name',
             )
             ->first();
+
         foreach ($child_documents as $child_document) {
             $child_document['borrower_child_document'] =  BorrowerFiles::join('borrower_child_documents', 'borrower_files.id', '=', 'borrower_child_documents.borrower_file_id')
                 ->where('borrower_child_documents.document_id', $document->id)

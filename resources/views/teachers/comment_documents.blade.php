@@ -341,13 +341,19 @@
             validator = false;
             var invalid_checkbox = document.getElementById('invalid-checkbox');
             if(invalid_checkbox)invalid_checkbox.classList.add('d-inline');
+        }else{
+            var invalid_checkbox = document.getElementById('invalid-checkbox');
+            if(invalid_checkbox)invalid_checkbox.classList.add('d-none');
         }
 
         var validate_radio =  await validateRadio(radio);
-        if(validate_radio){
+        if(!validate_radio){
             validator = false;
             var invalid_radio = document.getElementById('invalid-radio');
             if(invalid_radio)invalid_radio.classList.add('d-inline');
+        }else{
+            var invalid_radio = document.getElementById('invalid-radio');
+            if(invalid_radio)invalid_radio.classList.add('d-none');
         }
 
         return validator;
@@ -361,13 +367,13 @@
                 break;
             }
         }   
-        return (checker) ? true : false;
+        return checker;
     }
 
     async function validateRadio(radio){
         var checker = false;
         await radio.forEach((e) => {
-            if(radio.checked){
+            if(e.checked){
                 checker = true;
             }
         });

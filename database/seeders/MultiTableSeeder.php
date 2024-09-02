@@ -72,6 +72,30 @@ class MultiTableSeeder extends Seeder
                 'created_at'=>Now(),
                 'updated_at'=>Now(),
             ],
+            [
+                'prefix' => 'นาย',
+                'firstname' => 'emp',
+                'lastname' => 'loyee',
+                'email'=>'employee@gmail.com',
+                'password'=>Hash::make('1234567890'),
+                'privilege' =>'employee',
+                'isactive'=>true,
+                'activated'=>true,
+                'created_at'=>Now(),
+                'updated_at'=>Now(),
+            ],
+            [
+                'prefix' => 'นาย',
+                'firstname' => 'admin',
+                'lastname' => 'nistator',
+                'email'=>'admin@gmail.com',
+                'password'=>Hash::make('1234567890'),
+                'privilege' =>'employee',
+                'isactive'=>true,
+                'activated'=>true,
+                'created_at'=>Now(),
+                'updated_at'=>Now(),
+            ],
         ]);
     }
 
