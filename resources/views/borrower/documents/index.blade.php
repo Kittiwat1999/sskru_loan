@@ -51,6 +51,8 @@ index borrower
                                 <span class="badge bg-warning">รออาจารย์ที่ปรึกษาอนุมัติ</span>
                             @elseif($borrower_document['status'] == "rejected")
                                 <span class="badge bg-danger text-light">ต้องแก้ไข</span>
+                            @elseif($borrower_document['status'] == "response-reject")
+                                <span class="badge bg-warning text-light">แก้ไขแล้ว</span>
                             @elseif($borrower_document['status'] == "approved")
                                 <span class="badge bg-success text-light">อนุมัติแล้ว</span>
                             @endif
@@ -58,7 +60,7 @@ index borrower
                             <td class="text-center">
                               @if($borrower_document['status'] == "rejected")
                                   @if($borrower_document['doctype_id'] == 1)
-                                    <a href="{{url('/borrower/borrower_register')}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
+                                    <a href="{{url('/borrower/borrower_register')}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยฝ่ายทุนฯ</a>
                                   @else
                                     <a href="{{route('borrower.upload.document.page', ['document_id' => $borrower_document['document_id']])}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
                                   @endif

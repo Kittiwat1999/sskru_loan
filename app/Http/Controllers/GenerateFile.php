@@ -951,8 +951,21 @@ class GenerateFile extends Controller
 
     public function borrowerDocument101($user_id, $child_document, $document_id)
     {
-
         $document = Documents::find($document_id);
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
+        $sign_date = BorrowerChildDocument::where('child_document_id', 4)->where('user_id', $user_id)->where('document_id', $document_id)->value('created_at') ?? null;
+
+        $teacher_uid = TeacherCommentDocuments::where('borrower_document_id', $borrower_document['id'])->value('teacher_uid');
+        $teacher = Users::find($teacher_uid) ?? null;
+        $teacher_comments = TeacherCommentDocuments::where('teacher_comment_documents.borrower_document_id', $borrower_document['id'])
+            ->select('updated_at')
+            ->first() ?? null;
+        if ($teacher != null) {
+            $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
+            $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
+            $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
+            $teacher_sign_date = $teacher_comments['updated_at'];
+        }
 
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $user_id)
@@ -1049,6 +1062,9 @@ class GenerateFile extends Controller
             $borrower_properties,
             $borrower_nesseessity_concat,
             $borrower_register_documents,
+            $teacher_sign_date,
+            $teacher,
+            $sign_date,
         ) {
             // Initialize the PDF
             $pdf = new Fpdi();
@@ -1061,7 +1077,11 @@ class GenerateFile extends Controller
             $pdf->useTemplate($templateId, 0, 0);
 
             //date
-            $gregorianDate = Carbon::now();
+            if ($sign_date != null) {
+                $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $sign_date);
+            } else {
+                $gregorianDate = Carbon::now();
+            }
             $buddhistYear = $gregorianDate->year + 543;
 
             // Set the font and add text at specific locations
@@ -1303,6 +1323,27 @@ class GenerateFile extends Controller
 
             $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(47, 219, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
+
+            if ($teacher != null) {
+                //approve
+                $pdf->Image($tick_alp, 81, 228, 4, 4);
+                //not approve
+                // $pdf->Image($tick_alp, 103, 228, 4, 4);
+                $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $teacher_sign_date);
+                $buddhistYear = $gregorianDate->year + 543;
+                $teacher_firstname_input = 67;
+                $teacher_firstname_length = strlen($teacher['firstname']);
+                $teacher_firstname_x = 85 + ($teacher_firstname_input / 2 - $teacher_firstname_length / 2) - 3;
+                $pdf->Text($teacher_firstname_x, 245.5, $teacher['firstname']);
+    
+                $teacher_fullname_input = 77;
+                $teacher_fullanme_length = strlen($teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
+                $teacher_fullname_x = 78 + ($teacher_fullname_input / 2 - $teacher_fullanme_length / 2) - 3;
+                $pdf->Text($teacher_fullname_x, 253, $teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
+    
+                $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+                $pdf->Text(105, 261, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
+            }
             $pdf->Output();
         }, 200, [
             'Content-Type' => 'application/pdf',
@@ -1666,30 +1707,6 @@ class GenerateFile extends Controller
         $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
         $pdf->Text(47, 219, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
 
-        //signature official
-        // $official_firstname_input = 37;
-        // $firstname_official_length = strlen($decrypData['official_firstname']);
-        // $official_firstname_x = 123+($official_firstname_input/2 - $firstname_official_length/2)-2;
-        // $pdf->Text($official_firstname_x, 204,$decrypData['official_firstname']);
-
-        // $official_name_input = 61;
-        // $official_length = strlen($decrypData['official_prefix'].$decrypData['official_firstname'].'   '.$decrypData['official_lastname']);
-        // $official_name_x = 115+($official_name_input/2 - $official_length/2)-5;
-        // $pdf->Text($official_name_x, 211,$decrypData['official_prefix'].$decrypData['official_firstname'].'   '.$decrypData['official_lastname']);
-
-        // $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-        // $pdf->Text(135, 219,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
-
-        // $pdf->Image($tick_alp, 81, 228, 4, 4);
-        // $pdf->Image($tick_alp, 103, 228, 4, 4);
-
-        //not approved
-        // $not_approved_input = 43;
-        // $not_approved_length = strlen($decrypData['not_approved']);
-        // $not_approved_x = 140+($not_approved_input/2 - $not_approved_length/2)-2;
-        // $pdf->Text($not_approved_x, 230,$decrypData['not_approved']);
-
-
         //signature teachers
         if ($teacher != null) {
             //approve
@@ -1754,20 +1771,6 @@ class GenerateFile extends Controller
 
         $tick_alp = public_path('icon_png/tick.png');
 
-        //signature official
-        // $official_firstname_input = 37;
-        // $firstname_official_length = strlen($decrypData['official_firstname']);
-        // $official_firstname_x = 123+($official_firstname_input/2 - $firstname_official_length/2)-2;
-        // $pdf->Text($official_firstname_x, 204,$decrypData['official_firstname']);
-
-        // $official_name_input = 61;
-        // $official_length = strlen($decrypData['official_prefix'].$decrypData['official_firstname'].'   '.$decrypData['official_lastname']);
-        // $official_name_x = 115+($official_name_input/2 - $official_length/2)-5;
-        // $pdf->Text($official_name_x, 211,$decrypData['official_prefix'].$decrypData['official_firstname'].'   '.$decrypData['official_lastname']);
-
-        // $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-        // $pdf->Text(135, 219,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
-
         //approve
         $pdf->Image($tick_alp, 81, 228, 4, 4);
         //not approve
@@ -1786,6 +1789,59 @@ class GenerateFile extends Controller
 
         $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
         $pdf->Text(105, 261, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
+
+        $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';
+        $tempPath = storage_path('app/temp/' . $custom_filename);
+
+        if (!File::exists(storage_path('app/temp'))) {
+            File::makeDirectory(storage_path('app/temp'), 0755, true);
+        }
+        $pdf->Output($tempPath, 'F');
+        return $tempPath;
+    }
+
+    public function checkerSignDocument101($borrower_file_101_id, $checker_id)
+    {
+        $borrower_file = BorrowerFiles::find($borrower_file_101_id);
+        $checker = Users::find($checker_id);
+        $checker['prefix'] = iconv('UTF-8', 'cp874', $checker['prefix']);
+        $checker['firstname'] = iconv('UTF-8', 'cp874', $checker['firstname']);
+        $checker['lastname'] = iconv('UTF-8', 'cp874', $checker['lastname']);
+        // Initialize the PDF
+        $pdf = new Fpdi();
+
+        // Add the page
+        $pdf->AddPage();
+        $pdf->setSourceFile(storage_path($borrower_file['file_path'] . '/' . $borrower_file['file_name'])); // Import an existing PDF form
+
+        $templateId = $pdf->importPage(1);
+        $pdf->useTemplate($templateId, 0, 0);
+
+        $pdf->AddPage();
+        $templateId = $pdf->importPage(2);
+        $pdf->useTemplate($templateId, 0, 0);
+
+        //date
+        $gregorianDate = Carbon::now();
+        $buddhistYear = $gregorianDate->year + 543;
+
+        // Set the font and add text at specific locations
+        $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
+        $pdf->SetFont('THSarabunNew', '', 12);
+
+        //signature cheker
+        $checker_firstname_input = 37;
+        $checker_firstname_length = strlen($checker['firstname']);
+        $checker_firstname_x = 123+($checker_firstname_input/2 - $checker_firstname_length/2)-2;
+        $pdf->Text($checker_firstname_x, 204,$checker['lastname']);
+
+        $checker_fullname_input = 61;
+        $checker_fullname_length = strlen($checker['prefix'].$checker['firstname'].'   '.$checker['lastname']);
+        $checker_fullname_x = 115+($checker_fullname_input/2 - $checker_fullname_length/2)-5;
+        $pdf->Text($checker_fullname_x, 211,$checker['prefix'].$checker['firstname'].'   '.$checker['lastname']);
+
+        $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+        $pdf->Text(135, 219,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
 
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';
         $tempPath = storage_path('app/temp/' . $custom_filename);

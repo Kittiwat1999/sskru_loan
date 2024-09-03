@@ -83,9 +83,6 @@
                                             <input type="text" class="form-control" id="education-fee-{{$child_document->id}}" name="education_fee" 
                                                 @disabled(true)
                                                 value="{{number_format($child_document->borrower_child_document->education_fee)}}">
-                                            <div class="invalid-feedback">
-                                                กรุณากรอกค่าเล่าเรียน
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12 row mb-3 mx-0 px-0">
@@ -94,9 +91,6 @@
                                             <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" 
                                                 @disabled(true)
                                                 value="{{number_format($child_document->borrower_child_document->living_exprenses)}}">
-                                            <div class="invalid-feedback">
-                                                กรุณากรอกค่าครองชีพรวม
-                                            </div>
                                         </div>
                                     </div>
                                     @endif

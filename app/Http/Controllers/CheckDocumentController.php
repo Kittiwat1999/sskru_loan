@@ -281,7 +281,7 @@ class CheckDocumentController extends Controller
                     return $this->convert_to_dmy_date($row->delivered_date);
                 })
                 ->addColumn('action', function ($row) {
-                    if ($row->status == 'wait-approve') {
+                    if ($row->status == 'wait-approve' || $row->status == 'response-reject') {
                         $selectBtn = '<a href="' . route('check_document.borrower_child_document.list', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
                     } elseif ($row->status == 'sending') {
                         $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';
@@ -342,10 +342,9 @@ class CheckDocumentController extends Controller
             ->where('doc_structures.document_id', $borrower_document['document_id'])
             ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
             ->where('borrower_child_documents.checker_id', '!=', null)
-            ->where('borrower_child_documents.status', 'approved')
-            ->orWhere('borrower_child_documents.status', 'rejected')
+            ->where('borrower_child_documents.status', '!=', 'deliverd')
+            ->where('borrower_child_documents.status', '!=', 'response-reject')
             ->count();
-
         $document_to_check = count($child_documents) ?? 0;
         if($document['need_useful_activity']){
             $document_to_check += 1;
@@ -616,21 +615,23 @@ class CheckDocumentController extends Controller
         (in_array('rejected', $list_status)) ? $result_status = 'rejected' : $result_status = 'approved' ; 
 
         foreach($child_documents as $child_document){
-            $child_document['comments'] = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+            $comments = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
                 ->where('comments_borrower_child_documents.borrower_child_document_id', $child_document['borrower_child_document_id'])
                 ->where('comments_borrower_child_documents.comment_id', '!=', null)
                 ->pluck('comments.comment')->toArray();
-            $child_document['custom_comment'] = CommentsBorrowerChildDocument::where('borrower_child_document_id', $child_document['borrower_child_document_id'])
+            $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $child_document['borrower_child_document_id'])
                 ->where('comment_id', null)
                 ->value('other_comment') ?? null;
+            if($custom_comment != null) array_push($comments, $custom_comment);
+            $child_document['comments'] = $comments;
         }
 
         $useful_activities_comments = UsefulActivitiesComments::join('comments', 'comments.id', '=', 'useful_activities_comments.comment_id')
-            ->where('useful_activities_comments.document_id', $borrower_document['id'])
+            ->where('useful_activities_comments.document_id', $borrower_document['document_id'])
             ->where('useful_activities_comments.borrower_uid', $borrower_document['user_id'])
             ->where('useful_activities_comments.comment_id', '!=', null)
             ->pluck('comments.comment')->toArray();
-        $useful_activities_custom_comments =  UsefulActivitiesComments::where('document_id', $borrower_document['id'])
+        $useful_activities_custom_comments =  UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])
             ->where('borrower_uid', $borrower_document['user_id'])
             ->where('comment_id', null)
             ->value('custom_comment') ?? null;
@@ -661,12 +662,44 @@ class CheckDocumentController extends Controller
             "status.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',
             "status.max" => 'ชื่อของคุณสมบัติผู้กู้ต้องมีความยาวไม่เกิน :max ตัวอักษร',
         ]);
+        $have_borrower_child_document_101 = DocStructure::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->exists();
+
+        if($request->status == 'approved' && $have_borrower_child_document_101){
+            $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->first();
+
+            //sign borrower 101
+            $generator = new GenerateFile();
+            $_101temp_path = $generator->checkerSignDocument101($borrower_child_document_101['borrower_file_id'], $checker_id);
+            $this->updateBorrowerFile101($_101temp_path, $borrower_child_document_101['borrower_file_id']);
+        }
         
         $borrower_document['status'] = $request->status;
         $borrower_document['checker_id'] = $checker_id;
         $borrower_document['checking'] = false;
         $borrower_document['checked_date'] = $this->convertToBuddhistDateTime();
         $borrower_document->save();
+
+        return redirect()->route('check_document.select_document',[ 'document_id' => $borrower_document['document_id']])->with(['success' => 'บันทึกข้อมูลการตรวจเอกสารเรียบร้อยแล้ว']);
+    }
+
+    public function updateBorrowerFile101($temp_path, $borrower_file_101_id)
+    {
+        $borrower_file = BorrowerFiles::find($borrower_file_101_id);
+        //file
+        $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';
+        $store_path = $borrower_file['file_path'];
+        $path = storage_path($store_path);
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+        $final_path = $path . '/' . $custom_filename;
+        File::move($temp_path, $final_path);
+        $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
+        $borrower_file['file_path'] = $store_path;
+        $borrower_file['file_name'] = $custom_filename;
+        $borrower_file['file_type'] = last(explode('.', $custom_filename));
+        $borrower_file['full_path'] = $store_path . '/' . $custom_filename;
+        $borrower_file->save();
     }
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)

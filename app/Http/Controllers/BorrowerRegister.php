@@ -11,6 +11,7 @@ use App\Models\BorrowerRegisterDocument;
 use App\Models\BorrowerRegisterType;
 use App\Models\ChildDocumentExampleFiles;
 use App\Models\ChildDocuments;
+use App\Models\CommentsBorrowerChildDocument;
 use App\Models\Config;
 use App\Models\DocStructure;
 use App\Models\DocTypes;
@@ -18,7 +19,9 @@ use App\Models\Documents;
 use App\Models\RegisterDocument;
 use App\Models\RegisterType;
 use App\Models\TeacherRejectDocument;
+use App\Models\UsefulActivitiesComments;
 use App\Models\UsefulActivity;
+use App\Models\UsefulActivityStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -176,6 +179,11 @@ class BorrowerRegister extends Controller
             return view('borrower.document_undefined');
         }
 
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first() ?? null;
+        if($borrower_document != null && $borrower_document['status'] == 'approved'){
+            return $this->status($request);
+        }
+
         $borrower_register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
         $step = $this->checkStep($document['id'], $user_id);
         return view('borrower.register.register_type', compact('borrower_register_type', 'step'));
@@ -217,6 +225,11 @@ class BorrowerRegister extends Controller
             return view('borrower.document_undefined');
         }
 
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first() ?? null;
+        if($borrower_document != null && $borrower_document['status'] == 'approved'){
+            return $this->status($request);
+        }
+
         $borrower_birthday = Borrower::where('user_id', $user_id)->value('birthday');
         $parse_birthday = Carbon::parse($borrower_birthday)->subYears(543);
         $borrower_age = $parse_birthday->age;
@@ -224,6 +237,17 @@ class BorrowerRegister extends Controller
         $useful_activities = UsefulActivity::where('user_id', $user_id)->get();
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $user_id)->where('document_id', $document->id)->sum('hour_count') ?? 0;
         $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
+        $useful_activities_comments = UsefulActivitiesComments::join('comments', 'comments.id', '=', 'useful_activities_comments.comment_id')
+            ->where('useful_activities_comments.document_id', $document['id'])
+            ->where('useful_activities_comments.borrower_uid', $user_id)
+            ->where('useful_activities_comments.comment_id', '!=', null)
+            ->pluck('comments.comment')->toArray() ?? [];
+        $useful_activities_custom_comments =  UsefulActivitiesComments::where('document_id', $document['id'])
+            ->where('borrower_uid', $user_id)
+            ->where('comment_id', null)
+            ->value('custom_comment') ?? null;
+        if($useful_activities_custom_comments != null) array_push($useful_activities_comments, $useful_activities_custom_comments);
+
         $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document->id)->count();
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document->id)
@@ -236,13 +260,25 @@ class BorrowerRegister extends Controller
             $child_document['addon_documents'] = AddOnStructure::join('addon_documents', 'addon_structures.addon_document_id', '=', 'addon_documents.id')
                 ->where('addon_structures.child_document_id', $child_document['id'])
                 ->get();
-            $child_document['borrower_child_document'] =  BorrowerFiles::join('borrower_child_documents', 'borrower_files.id', '=', 'borrower_child_documents.borrower_file_id')
-                ->where('borrower_child_documents.document_id', $document->id)
-                ->where('borrower_child_documents.child_document_id', $child_document['id'])
-                ->where('borrower_child_documents.user_id', $user_id)
+            $child_document['borrower_child_document'] =  BorrowerChildDocument::where('document_id', $document->id)
+                ->where('child_document_id', $child_document['id'])
+                ->where('user_id', $user_id)
                 ->first();
             if ($child_document['isrequired']) $child_document_required_count += 1;
+
+            if($child_document['borrower_child_document'] != null){
+                $comments = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+                    ->where('comments_borrower_child_documents.borrower_child_document_id', $child_document['borrower_child_document']['id'] )
+                    ->where('comments_borrower_child_documents.comment_id', '!=', null)
+                    ->pluck('comments.comment')->toArray();
+                $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $child_document['borrower_child_document']['id'] )
+                    ->where('comment_id', null)
+                    ->value('other_comment') ?? null;
+                if($custom_comment != null) array_push($comments, $custom_comment);
+                $child_document['comments'] = $comments;
+            }
         }
+
         $step = $this->checkStep($document['id'], $user_id);
 
         return view(
@@ -256,6 +292,7 @@ class BorrowerRegister extends Controller
                 'useful_activities_hours',
                 'child_document_required_count',
                 'borrower_child_document_delivered_count',
+                'useful_activities_comments',
                 'step',
             )
         );
@@ -379,7 +416,7 @@ class BorrowerRegister extends Controller
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first() ?? new BorrowerDocument();
         $borrower_document['user_id'] = $user_id;
         $borrower_document['document_id'] = $document_id;
-        $borrower_document['status'] = 'sending';
+        $borrower_document['status'] = $borrower_document['status'] ?? 'sending';
         $borrower_document->save();
         $borrower_child_document = BorrowerChildDocument::where('document_id', $document_id)->where('child_document_id', $child_document_id)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
@@ -387,7 +424,14 @@ class BorrowerRegister extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
         //file
         if ($request->file('document_file') != null) {
             $input_file = $request->file('document_file');
@@ -447,6 +491,11 @@ class BorrowerRegister extends Controller
         }
         if ($document == null) {
             return view('borrower.document_undefined');
+        }
+
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first() ?? null;
+        if($borrower_document != null && $borrower_document['status'] == 'approved'){
+            return $this->status($request);
         }
 
         $child_document_required_count = 0;
@@ -530,13 +579,53 @@ class BorrowerRegister extends Controller
         if ($document == null) {
             return view('borrower.document_undefined');
         }
+
+        $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first() ?? null;
+        if($borrower_document != null && $borrower_document['status'] == 'approved'){
+            return $this->status($request);
+        }
+
+        $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $document['id'])->where('user_id', $user_id)->where('child_document_id', 4)->first() ?? null;
+        if($borrower_child_document_101 != null){
+            $comments = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+                ->where('comments_borrower_child_documents.borrower_child_document_id', $borrower_child_document_101['id'])
+                ->where('comments_borrower_child_documents.comment_id', '!=', null)
+                ->pluck('comments.comment')->toArray();
+            $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_101['id'])
+                ->where('comment_id', null)
+                ->value('other_comment') ?? null;
+            if($custom_comment != null) array_push($comments, $custom_comment);
+            $borrower_child_document_101['comments'] = $comments;
+        }
+
+        $borrower_child_document_103 = BorrowerChildDocument::where('document_id', $document['id'])->where('user_id', $user_id)->where('child_document_id', 5)->first() ?? null;
+        if($borrower_child_document_103 != null){
+            $comments = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+                ->where('comments_borrower_child_documents.borrower_child_document_id', $borrower_child_document_103['id'])
+                ->where('comments_borrower_child_documents.comment_id', '!=', null)
+                ->pluck('comments.comment')->toArray();
+            $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_103['id'])
+                ->where('comment_id', null)
+                ->value('other_comment') ?? null;
+            if($custom_comment != null) array_push($comments, $custom_comment);
+            $borrower_child_document_103['comments'] = $comments;
+        }
+        
         $child_document = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document->id)
             ->where('doc_structures.child_document_id', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->first();
-        $borrower_document = BorrowerDocument::where('document_id', $document['id'])->where('user_id', $user_id)->first();
+
         $step = $this->checkStep($document['id'], $user_id);
-        return view('borrower.register.recheck_document', compact('document', 'child_document', 'step', 'borrower_document'));
+        return view('borrower.register.recheck_document', 
+        compact(
+            'document', 
+            'child_document', 
+            'step', 
+            'borrower_document',
+            'borrower_child_document_103',
+            'borrower_child_document_101',
+        ));
     }
 
     public function submitDocument(Request $request)
@@ -565,6 +654,7 @@ class BorrowerRegister extends Controller
         if ($borrower_document['status'] == 'sending') {
             $this->mergeMaritalFile($document, $user_id);
         }
+
         //save file
         if ($borrower_document['status'] != 'approved') {
             $generator = new GenerateFile();
@@ -575,11 +665,18 @@ class BorrowerRegister extends Controller
         }
 
         if ($document['need_teacher_comment']) {
+
             if ($borrower_document['teacher_status'] == null) {
                 $borrower_document['teacher_status'] = 'wait-approve';
                 $borrower_document['status'] = 'wait-teacher-approve';
             } elseif ($borrower_document['teacher_status'] == 'rejected') {
                 $borrower_document['teacher_status'] = 'response-reject';
+            } elseif ($borrower_document['teacher_status'] == 'approved'){
+                if ($borrower_document['status'] == 'sending') {
+                    $borrower_document['status'] = 'wait-approve';
+                } elseif ($borrower_document['status'] == 'rejected') {
+                    $borrower_document['status'] = 'response-reject';
+                }
             }
         } else {
             if ($borrower_document['status'] == 'sending') {
@@ -596,18 +693,13 @@ class BorrowerRegister extends Controller
     public function showFile101($document_id, $child_document_id, Request $request)
     {
         $user_id = $request->session()->get('user_id', '1');
-        $borrower_child_document_101 = BorrowerChildDocument::where('child_document_id', 4)->where('document_id', $document_id)->where('user_id', $user_id)->first() ?? null;
-        if ($borrower_child_document_101 != null) {
-            return $this->previewBorrowerFile($borrower_child_document_101['id']);
-        } else { //กรณียังไม่บันทึก
-            $child_document = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
-                ->where('child_documents.isactive', true)
-                ->where('child_documents.id', $child_document_id)
-                ->select('child_document_files.file_path', 'child_document_files.file_name', 'child_document_files.file_type', 'child_documents.child_document_title', 'child_documents.generate_file', 'child_documents.id')
-                ->first();
-            $generator = new GenerateFile();
-            return $generator->borrowerDocument101($user_id, $child_document, $document_id);
-        }
+        $child_document = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
+            ->where('child_documents.isactive', true)
+            ->where('child_documents.id', $child_document_id)
+            ->select('child_document_files.file_path', 'child_document_files.file_name', 'child_document_files.file_type', 'child_documents.child_document_title', 'child_documents.generate_file', 'child_documents.id')
+            ->first();
+        $generator = new GenerateFile();
+        return $generator->borrowerDocument101($user_id, $child_document, $document_id);
     }
 
     public function generateFile103(Request $request, $borrower_document_id)
@@ -626,7 +718,14 @@ class BorrowerRegister extends Controller
         $borrower_child_document['child_document_id'] = 4;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
 
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_' . $user_id . '.pdf';
@@ -660,7 +759,14 @@ class BorrowerRegister extends Controller
         $borrower_child_document['child_document_id'] = 5;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
 
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 103_' . $user_id . '.pdf';
@@ -735,14 +841,20 @@ class BorrowerRegister extends Controller
 
     public function moveMegedFile($document, $user_id, $temp_path)
     {
-
         $borrower_child_document = BorrowerChildDocument::where('document_id', $document['id'])->where('child_document_id', 11)->where('user_id', $user_id)->first() ?? new BorrowerChildDocument();
         $borrower_child_document['user_id'] = $user_id;
         $borrower_child_document['document_id'] = $document['id'];
         $borrower_child_document['child_document_id'] = 11;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
 
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'other_file' . $user_id . '.pdf';
@@ -777,7 +889,14 @@ class BorrowerRegister extends Controller
         $borrower_child_document['child_document_id'] = 11;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
 
         //file
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'other_file' . $user_id . '.pdf';
@@ -815,8 +934,52 @@ class BorrowerRegister extends Controller
 
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document['id'])->first();
         $borrower_document['teacher_reject'] = TeacherRejectDocument::where('borrower_document_id', $borrower_document['id'])->value('reject_comment');
+        $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
+            ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
+            ->where('doc_structures.document_id', $borrower_document['document_id'])
+            ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->where('borrower_child_documents.status', 'rejected')
+            ->select(
+                'child_documents.id',
+                'child_documents.child_document_title as title',
+                'borrower_child_documents.id as borrower_child_document_id',
+                'borrower_child_documents.status',)
+            ->orderBy('child_documents.id', 'asc')
+            ->get() ?? [] ;
+
+        foreach($child_documents as $child_document){
+            $comments = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+                ->where('comments_borrower_child_documents.borrower_child_document_id', $child_document['borrower_child_document_id'])
+                ->where('comments_borrower_child_documents.comment_id', '!=', null)
+                ->pluck('comments.comment')->toArray();
+            $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $child_document['borrower_child_document_id'])
+                ->where('comment_id', null)
+                ->value('other_comment') ?? null;
+            if($custom_comment != null) array_push($comments, $custom_comment);
+            $child_document['comments'] = $comments;
+        }
+
+        $useful_activities_comments = UsefulActivitiesComments::join('comments', 'comments.id', '=', 'useful_activities_comments.comment_id')
+            ->where('useful_activities_comments.document_id', $borrower_document['document_id'])
+            ->where('useful_activities_comments.borrower_uid', $borrower_document['user_id'])
+            ->where('useful_activities_comments.comment_id', '!=', null)
+            ->pluck('comments.comment')->toArray() ?? [];
+        $useful_activities_custom_comments =  UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])
+            ->where('borrower_uid', $borrower_document['user_id'])
+            ->where('comment_id', null)
+            ->value('custom_comment') ?? null;
+
+        if($useful_activities_custom_comments != null) array_push($useful_activities_comments, $useful_activities_custom_comments);
 
         $step = $this->checkStep($document['id'], $user_id);
-        return view('borrower.register.status', compact('step', 'document', 'borrower_document'));
+        return view('borrower.register.status', 
+            compact(
+                'step', 
+                'document', 
+                'borrower_document',
+                'child_documents',
+                'useful_activities_comments',
+            ));
     }
+    
 }

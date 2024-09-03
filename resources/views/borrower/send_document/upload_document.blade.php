@@ -132,6 +132,19 @@
                         </div>
                     </div>
                 @endif
+
+                @if($child_document['comments'] != null)
+                    <div class="row col-md-12 mx-0 px-0">
+                        <label class="col-sm-2 col-form-label text-secondary" for="component-file">ส่วนที่ต้องแก้ไข</label>
+                        <div class="col-sm-10">
+                            <ul class="list-group">
+                                @foreach ($child_document['comments'] as $comment)
+                                    <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
             </form>
 
             {{-- edit modal --}}
@@ -414,6 +427,20 @@
                 </div>
             </div>
             {{-- end edit useful activity modal --}}
+
+            @if(count($useful_activities_comments) != 0)
+            <div class="row mx-0 px-0 mt-3">
+                <label class="col-sm-2 m-0 p-0 col-form-label text-dark" for="component-file">ส่วนที่ต้องแก้ไข</label>
+                <div class="col-sm-10 m-0 p-0">
+                    <ul class="list-group">
+                        @foreach ($useful_activities_comments as $comment)
+                            <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            @endif
+            
         </div>
     </div>
     @endif

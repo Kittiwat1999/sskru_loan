@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            <form id="form-comment" class="border border-1 mb-3" action="{{route('check_document.post.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}" method="post">
+            <form id="form-comment" class="border border-1 mb-4" action="{{route('check_document.post.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}" method="post">
                 @csrf
                 <fieldset class="row mx-0 p-0 my-3">
                     <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
@@ -143,8 +143,13 @@
     
                 </div>
             </form>
-            <div class="text-end">
-                <button type="button" class="btn btn-primary col-4 col-md-2" onclick="submitForm('form-comment')">บันทึก</button>
+            <div class="row m-0 p-0">
+                <div class="text-start col-6 m-0 p-0">
+                    <a href="{{route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document['id'] ])}}" class="btn btn-light w-25">ย้อนกลับ</a>
+                </div>
+                <div class="text-end col-6 m-0 p-0">
+                    <button type="button" class="btn btn-primary col-4 col-md-2" onclick="submitForm('form-comment')">บันทึก</button>
+                </div>
             </div>
         </div>
     </div>

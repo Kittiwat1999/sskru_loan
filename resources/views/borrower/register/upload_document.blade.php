@@ -62,7 +62,7 @@
     </div>
 
     @foreach($child_documents as $child_document)
-    <div class="card mb-3 {{ !empty($child_document['borrower_child_document']) ? 'border border-2 border-success' : '' }}">
+    <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">{{$child_document->child_document_title}} 
                 @if(!$child_document['isrequired'])
@@ -173,6 +173,19 @@
                     </div>
                 @endif
 
+                @if($child_document['comments'] != null)
+                    <div class="row col-md-12 mx-0 px-0">
+                        <label class="col-sm-2 col-form-label text-secondary" for="component-file">ส่วนที่ต้องแก้ไข</label>
+                        <div class="col-sm-10">
+                            <ul class="list-group">
+                                @foreach ($child_document['comments'] as $comment)
+                                    <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+
             </form>
 
             {{-- edit modal --}}
@@ -262,7 +275,7 @@
 
     {{-- กิจกรรมจิตอาสา --}}
     @if($document->need_useful_activity)
-    <div class="card {{ (int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours ? 'border border-2 border-success' : '' }} mb-3">
+    <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">กิจกรรมจิตอาสา {{$useful_activities_hours}} ชั่วโมง</h5> 
             <div class="table-responsive">
@@ -455,6 +468,18 @@
                 </div>
             </div>
             {{-- end edit useful activity modal --}}
+            @if(count($useful_activities_comments) != 0)
+            <div class="row mx-0 px-0 mt-3">
+                <label class="col-sm-2 m-0 p-0 col-form-label text-dark" for="component-file">ส่วนที่ต้องแก้ไข</label>
+                <div class="col-sm-10 m-0 p-0">
+                    <ul class="list-group">
+                        @foreach ($useful_activities_comments as $comment)
+                            <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
     @endif

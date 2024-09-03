@@ -74,7 +74,25 @@
                         </h2>
                         <div id="collapse-child-document-{{$child_document->id}}" class="accordion-collapse collapse" aria-labelledby="child-document-{{$child_document->id}}" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe src="{{route('check.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                <iframe src="{{route('check.document.preview.borrower_child_document_file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                @if($child_document->need_loan_balance)
+                                    <div class="col-md-12 row mb-3 mx-0 px-0 mt-3">
+                                        <label for="education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="education-fee-{{$child_document->id}}" name="education_fee" 
+                                                @disabled(true)
+                                                value="{{number_format($child_document->borrower_child_document->education_fee)}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 row mb-3 mx-0 px-0">
+                                        <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" 
+                                                @disabled(true)
+                                                value="{{number_format($child_document->borrower_child_document->living_exprenses)}}">
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="row">
                                     <div class="col-md-10 col-sm-12"></div>
                                     <div class="col-md-2 col-sm-12">

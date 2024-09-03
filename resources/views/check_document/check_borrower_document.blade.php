@@ -34,7 +34,32 @@
             <div class="container-fluid m-0 p-0 mb-3">
                 <iframe src="{{route("check.document.preview.borrower_child_document_file", ['borrower_child_document_id' => $borrower_child_document['id'] ])}}"></iframe>
             </div>
-            <form id="form-comment" class="border border-1" action="{{route('check_document.post.borrower_child_document', ['borrower_child_document_id' => $borrower_child_document['id'], 'borrower_document_id' => $borrower_document_id] )}}" method="POST">
+            @if($child_document['need_loan_balance'])
+            <div class="row m-0 p-0 border border-1 mb-3 pt-3">
+                <div class="col-12">
+                    <label class="text-dark fw-bold mb-3" for="">ข้อมูลที่แนบมากับเอกสาร</label>
+                </div>
+                <div class="col-md-12 row mb-3 mx-0 px-0">
+                    <label for="education-fee" class="col-sm-2 col-form-label text-dark">ค่าเล่าเรียน</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="education-fee" name="education_fee"
+                            @disabled(true)
+                            value="{{number_format($borrower_child_document['education_fee'])}}"
+                            />
+                    </div>
+                </div>
+                <div class="col-md-12 row mb-3 mx-0 px-0">
+                    <label for="living-exprenses" class="col-sm-2 col-form-label text-dark">ค่าครองชีพรวม</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="living-exprenses" name="living_exprenses"
+                            @disabled(true)
+                            value="{{number_format($borrower_child_document['living_exprenses'])}}"
+                            />
+                    </div>
+                </div>
+            </div>
+            @endif
+            <form id="form-comment" class="border border-1 mb-4" action="{{route('check_document.post.borrower_child_document', ['borrower_child_document_id' => $borrower_child_document['id'], 'borrower_document_id' => $borrower_document_id] )}}" method="POST">
                 @csrf
                 <fieldset class="row mx-0 p-0 my-3">
                     <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>
@@ -103,8 +128,13 @@
     
                 </div>
             </form>
-            <div class="text-end mt-3">
-                <button type="button" class="btn btn-primary col-4 col-md-2" onclick="submitForm('form-comment')">บันทึก</button>
+            <div class="row m-0 p-0">
+                <div class="text-start col-6 m-0 p-0">
+                    <a href="{{route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document_id ])}}" class="btn btn-light w-25">ย้อนกลับ</a>
+                </div>
+                <div class="text-end col-6 m-0 p-0">
+                    <button type="button" class="btn btn-primary col-4 col-md-2" onclick="submitForm('form-comment')">บันทึก</button>
+                </div>
             </div>
         </div>
     </div>

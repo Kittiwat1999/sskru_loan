@@ -64,6 +64,13 @@
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">ตรวจสอบเอกสาร หนังสือแสดงความคิดเห็นของอาจารย์ที่ปรึกษา (กยศ. 103)</h5>
+            @if($borrower_child_document_103 != null)
+                <ul class="list-group mb-3">
+                    @foreach ($borrower_child_document_103['comments'] as $comment)
+                        <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                    @endforeach
+                </ul>
+            @endif
             <a class="open-link" onclick="openPDFInNewTab('pdf-103')" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
             <div class="row my-6 mx-1  border border-2 mb-2">
                 <div class="col-md-12 iframe-container">
@@ -77,6 +84,13 @@
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">ตรวจสอบเอกสาร กยศ. 101</h5>
+            @if($borrower_child_document_101 != null)
+                <ul class="list-group mb-3">
+                    @foreach ($borrower_child_document_101['comments'] as $comment)
+                        <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                    @endforeach
+                </ul>
+            @endif
             <a class="open-link" onclick="openPDFInNewTab('pdf-101')" target="_blank" rel="noopener noreferrer">คลิกที่นี่หากไฟล์ไม่แสดง...</a>
             <div class="row my-6 mx-1  border border-2 mb-2">
                 <div class="col-md-12 iframe-container">

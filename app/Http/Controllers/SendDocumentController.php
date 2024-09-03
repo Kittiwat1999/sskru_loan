@@ -15,8 +15,10 @@ use iio\libmergepdf\Merger;
 use App\Models\Documents;
 use App\Models\DocStructure;
 use App\Models\ChildDocuments;
+use App\Models\CommentsBorrowerChildDocument;
 use App\Models\Config;
 use App\Models\DocTypes;
+use App\Models\UsefulActivitiesComments;
 use App\Models\UsefulActivity;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -110,6 +112,17 @@ class SendDocumentController extends Controller
         $useful_activities = UsefulActivity::where('user_id', $user_id)->get();
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $user_id)->where('document_id', $document_id)->sum('hour_count') ?? 0;
         $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
+        $useful_activities_comments = UsefulActivitiesComments::join('comments', 'comments.id', '=', 'useful_activities_comments.comment_id')
+            ->where('useful_activities_comments.document_id', $document['id'])
+            ->where('useful_activities_comments.borrower_uid', $user_id)
+            ->where('useful_activities_comments.comment_id', '!=', null)
+            ->pluck('comments.comment')->toArray() ?? [];
+        $useful_activities_custom_comments =  UsefulActivitiesComments::where('document_id', $document['id'])
+            ->where('borrower_uid', $user_id)
+            ->where('comment_id', null)
+            ->value('custom_comment') ?? null;
+
+        if($useful_activities_custom_comments != null) array_push($useful_activities_comments, $useful_activities_custom_comments);
         $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document_id)
@@ -126,6 +139,18 @@ class SendDocumentController extends Controller
                 ->where('borrower_child_documents.user_id', $user_id)
                 ->first();
             if ($child_document['isrequired']) $child_document_required_count += 1;
+
+            if($child_document['borrower_child_document'] != null){
+                $comments = CommentsBorrowerChildDocument::join('comments', 'comments_borrower_child_documents.comment_id', '=', 'comments.id')
+                    ->where('comments_borrower_child_documents.borrower_child_document_id', $child_document['borrower_child_document']['id'] )
+                    ->where('comments_borrower_child_documents.comment_id', '!=', null)
+                    ->pluck('comments.comment')->toArray();
+                $custom_comment = CommentsBorrowerChildDocument::where('borrower_child_document_id', $child_document['borrower_child_document']['id'] )
+                    ->where('comment_id', null)
+                    ->value('other_comment') ?? null;
+                if($custom_comment != null) array_push($comments, $custom_comment);
+                $child_document['comments'] = $comments;
+            }
         }
 
         return view(
@@ -139,6 +164,7 @@ class SendDocumentController extends Controller
                 'useful_activities_hours',
                 'child_document_required_count',
                 'borrower_child_document_delivered_count',
+                'useful_activities_comments',
             )
         );
     }
@@ -178,7 +204,6 @@ class SendDocumentController extends Controller
 
     public function uploadDocument($document_id, $child_document_id, Request $request)
     {
-
         $rules = [
             'document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
             'education_fee' => 'string',
@@ -213,7 +238,14 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
         //file
         $input_file = $request->file('document_file');
         $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
@@ -265,7 +297,14 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
-        $borrower_child_document['status'] = 'delivered';
+        if($borrower_child_document['status'] != 'approved'){
+            if($borrower_child_document['status'] == 'rejected'){
+                $borrower_child_document['status'] = 'response-reject';
+            }else{
+                $borrower_child_document['status'] = 'delivered';
+            }
+            $borrower_child_document['checker_id'] = null;
+        }
         //file
         if ($request->file('document_file') != null) {
             $input_file = $request->file('document_file');

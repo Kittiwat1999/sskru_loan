@@ -17,9 +17,6 @@
                             @foreach ($child_document['comments'] as $comments)
                                 <small class="text-danger px-2">- {{$comments}}</small><br/>
                             @endforeach
-                            @if($child_document['custom_comment'] != null)
-                                <small class="text-danger px-2">- {{$child_document['custom_comment']}}</small>
-                            @endif
                         </div>
                         @if($child_document['status'] == 'approved')
                             <span class="text-success">อนุมัติ</span>
@@ -28,6 +25,7 @@
                         @endif
                     </li>
                 @endforeach
+                @if($document['need_useful_activity'])
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
                         <span>บันทึกกิจกรรมจิตอาสา</span><br/>
@@ -41,6 +39,7 @@
                         <span class="text-danger">ไม่อนุมัติ</span>
                     @endif
                 </li>
+                @endif
             </ul>
 
             <div class="row mb-3 px-2">
