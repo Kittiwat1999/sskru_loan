@@ -960,6 +960,7 @@ class GenerateFile extends Controller
         $teacher_comments = TeacherCommentDocuments::where('teacher_comment_documents.borrower_document_id', $borrower_document['id'])
             ->select('updated_at')
             ->first() ?? null;
+        $teacher_sign_date = null;
         if ($teacher != null) {
             $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
             $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);

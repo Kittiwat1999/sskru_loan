@@ -62,7 +62,7 @@ index borrower
                                   @if($borrower_document['doctype_id'] == 1)
                                     <a href="{{url('/borrower/borrower_register')}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยฝ่ายทุนฯ</a>
                                   @else
-                                    <a href="{{route('borrower.upload.document.page', ['document_id' => $borrower_document['document_id']])}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
+                                    <a href="{{route('borrower.upload.document.page', ['document_id' => $borrower_document['document_id']])}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยฝ่ายทุนฯ</a>
                                   @endif
                               @elseif($borrower_document['teacher_status'] == "rejected")
                                 @if($borrower_document['doctype_id'] == 1)

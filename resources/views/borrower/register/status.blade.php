@@ -130,6 +130,8 @@
                                 <span class="badge bg-warning w-100">ส่งแก้ไขเอกสาร</span>
                             @elseif($borrower_document['status'] == 'approved')
                                 <span class="badge bg-success w-100">อนุมัติแล้ว</span>
+                            @else
+                                <span class="badge bg-secondary w-100">รอดำเนินการ</span>
                             @endif
                         </div>
                         <div class="activite-label"></div>
@@ -160,7 +162,7 @@
             </div>
         </div>
 
-        @if(count($child_documents) != 0 && count($useful_activities_comments) != 0)
+        @if(count($child_documents) != 0 || count($useful_activities_comments) != 0)
         <div class="card col-md-8 m-0 p-0">
             <div class="card-body">
                 <h6 class="card-title">รายการเอกสารต้องแก้ไข</h6>
@@ -175,7 +177,7 @@
                             </div>
                         </li>
                     @endforeach
-                    @if($document['need_useful_activity'])
+                    @if($document['need_useful_activity'] && $useful_activities_comments != null)
                     <li class="list-group-item">
                         <div>
                             <span>บันทึกกิจกรรมจิตอาสา</span><br/>

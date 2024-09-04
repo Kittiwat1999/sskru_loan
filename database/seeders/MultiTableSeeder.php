@@ -90,7 +90,7 @@ class MultiTableSeeder extends Seeder
                 'lastname' => 'nistator',
                 'email'=>'admin@gmail.com',
                 'password'=>Hash::make('1234567890'),
-                'privilege' =>'employee',
+                'privilege' =>'admin',
                 'isactive'=>true,
                 'activated'=>true,
                 'created_at'=>Now(),
