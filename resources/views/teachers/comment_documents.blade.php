@@ -174,7 +174,7 @@
                         <h6 class="text-dark">ข้อมูลผู้กู้ยืมเงิน</h6>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 text-secondary fw-bold">ชื่อ - นามสกุล</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อ - นามสกุล</div>
                         <div class="col-md-3">{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</div>
                         
                         <div class="col-md-3 text-secondary fw-bold">วัน เดือน ปีเกิด</div>
@@ -192,7 +192,7 @@
                         <h6 class="text-dark">ข้อมูลการติดต่อ</h6>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 text-secondary fw-bold">เบอร์โทรศัพท์บ้าน</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">เบอร์โทรศัพท์บ้าน</div>
                         <div class="col-md-3">-</div>
 
                         <div class="col-md-3 text-secondary fw-bold">เบอร์โทรศัพท์มือถือ</div>
@@ -207,31 +207,31 @@
                         <h6 class="text-dark">รายละเอียดข้อมูลการศึกษา</h6>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 text-secondary fw-bold">ปีการศึกษา</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">ปีการศึกษา</div>
                         <div class="col-md-3">2567</div>
 
                         <div class="col-md-3 text-secondary fw-bold">ภาคเรียน</div>
                         <div class="col-md-3">1</div>
 
                         <div class="col-md-3 text-secondary fw-bold">ระดับการศึกษา</div>
-                        <div class="col-md-9 mb-3">ปริญญาตรี</div>
+                        <div class="col-md-9 mb-4">ปริญญาตรี</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">ชื่อสถานศึกษา</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อสถานศึกษา</div>
                         <div class="col-md-9">มหาวิทยาลัยราชภัฎศรีสะเกษ</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">คณะ</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">คณะ</div>
                         <div class="col-md-9">{{$borrower['faculty_name']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">สาขาวิชา</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">สาขาวิชา</div>
                         <div class="col-md-9">{{$borrower['major_name']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">หลักสูตร</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">หลักสูตร</div>
                         <div class="col-md-9">หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมซอฟต์แวร์ มหาวิทยาลัยราชภัฏศรีสะเกษ</div>
 
                         <div class="col-md-3 text-secondary fw-bold">เวลาการศึกษาตามหลักสูตร</div>
-                        <div class="col-md-9 mb-3">4 ปี</div>
+                        <div class="col-md-9 mb-4">4 ปี</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">ชื่อ - นามสกุล</div>
+                        <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อ - นามสกุล</div>
                         <div class="col-md-3">{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</div>
 
                         <div class="col-md-3 text-secondary fw-bold">รหัสนักศึกษา</div>
