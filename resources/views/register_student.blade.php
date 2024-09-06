@@ -148,8 +148,14 @@
 
                                     <div class="col-md-7 pb-3">
                                         <label for="password_confirmation" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
-                                        <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
-                                        <span id="passwordError" class="text-danger"></span>
+                                        <div class="d-flex flex-column flex-md-row justify-content-between">
+                                            <div class="col-12 text-start">
+                                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
+                                            </div>
+                                            <div class="col-md-6 col-12 mt-2 mt-md-1 mx-md-3">
+                                                <span id="passwordStatus" class="text-danger"></span>
+                                            </div>
+                                        </div>
                                         <div class="invalid-feedback">
                                             กรุณายืนยันรหัสผ่าน!
                                         </div>
@@ -194,23 +200,29 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
+        document.getElementById("password").addEventListener("input", validatePassword);
+        document.getElementById("password_confirmation").addEventListener("input", validatePassword);
         function validatePassword() {
             var password = document.getElementById("password").value;
             var confirm_password = document.getElementById("password_confirmation").value;
-            var passwordError = document.getElementById("passwordError");
+            var passwordStatus = document.getElementById("passwordStatus");
 
             if (password === "") {
-                passwordError.innerHTML = "กรุณากรอกข้อมูลรหัสผ่านก่อน";
-                return false;
-            } else if (password === "" || confirm_password === "") {
-                passwordError.innerHTML = "กรุณายืนยันรหัสผ่าน";
-                return false;
+                passwordStatus.innerHTML = "กรุณากรอกข้อมูลรหัสผ่านก่อน";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
+            } else if (confirm_password === "") {
+                passwordStatus.innerHTML = "กรุณายืนยันรหัสผ่าน";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
             } else if (password !== confirm_password) {
-                passwordError.innerHTML = "รหัสผ่านไม่ตรงกัน";
-                return false;
+                passwordStatus.innerHTML = "รหัสผ่านไม่ตรงกัน";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
             } else {
-                passwordError.innerHTML = "";
-                return true;
+                passwordStatus.innerHTML = "รหัสผ่านตรงกัน";
+                passwordStatus.classList.remove("text-danger");
+                passwordStatus.classList.add("text-success");
             }
         }
 
