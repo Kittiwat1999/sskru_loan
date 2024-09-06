@@ -134,16 +134,29 @@
                 @endif
 
                 @if($child_document['comments'] != null)
-                    <div class="row col-md-12 mx-0 px-0">
-                        <label class="col-sm-2 col-form-label text-secondary" for="component-file">ส่วนที่ต้องแก้ไข</label>
-                        <div class="col-sm-10">
-                            <ul class="list-group">
-                                @foreach ($child_document['comments'] as $comment)
-                                    <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
-                                @endforeach
-                            </ul>
+                    @if($child_document->borrower_child_document->status == 'rejected')
+                        <div class="row col-md-12 mx-0 px-0">
+                            <label class="col-sm-2 col-form-label text-danger" for="component-file">ดำเนินการแก้ไขโดยด่วนที่สุด</label>
+                            <div class="col-sm-10">
+                                <ul class="list-group">
+                                    @foreach ($child_document['comments'] as $comment)
+                                        <li class="list-group-item list-group-item-danger">- {{$comment}}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    @elseif($child_document->borrower_child_document->status == 'response-reject')
+                        <div class="row col-md-12 mx-0 px-0">
+                            <label class="col-sm-2 col-form-label text-warning" for="component-file">แก้ไขแล้ว</label>
+                            <div class="col-sm-10">
+                                <ul class="list-group">
+                                    @foreach ($child_document['comments'] as $comment)
+                                        <li class="list-group-item list-group-item-warning">- {{$comment}}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
                 @endif
             </form>
 

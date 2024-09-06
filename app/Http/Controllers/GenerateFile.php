@@ -11,6 +11,7 @@ use App\Models\BorrowerNessessities;
 use App\Models\BorrowerProperties;
 use App\Models\BorrowerRegisterDocument;
 use App\Models\BorrowerRegisterType;
+use App\Models\ChildDocumentFiles;
 use App\Models\Documents;
 use App\Models\Faculties;
 use App\Models\Majors;
@@ -548,7 +549,7 @@ class GenerateFile extends Controller
 
     public function teacherCommentDocument103($borrower_uid, $borrower_document_id)
     {
-        // $document = Documents::find($document_id);
+        $child_document_103_file = ChildDocumentFiles::where('child_document_id', 5)->first();
         $teacher_uid = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->value('teacher_uid');
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $borrower_uid)
@@ -599,13 +600,13 @@ class GenerateFile extends Controller
         }
 
         // Create a StreamedResponse
-        return new StreamedResponse(function () use ($borrower, $teacher, $strconcat_teacher_comments, $commented, $commented_date) {
+        return new StreamedResponse(function () use ($borrower, $teacher, $strconcat_teacher_comments, $commented, $commented_date, $child_document_103_file) {
             // Initialize the PDF
             $pdf = new Fpdi();
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path('child_document_files/teachers_comment.pdf')); // Import an existing PDF form
+            $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['filename'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -682,7 +683,7 @@ class GenerateFile extends Controller
     }
 
     public function saveDocument103($borrower_uid, $borrower_document_id){
-        // $document = Documents::find($document_id);
+        $child_document_103_file = ChildDocumentFiles::where('child_document_id', 5)->first();
         $teacher_uid = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->value('teacher_uid');
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $borrower_uid)
@@ -736,7 +737,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path('child_document_files/teachers_comment.pdf')); // Import an existing PDF form
+        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['filename'])); // Import an existing PDF form
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
 
@@ -816,7 +817,7 @@ class GenerateFile extends Controller
     }
 
     public function saveTeacherCommentDocument103($borrower_uid, $borrower_document_id){
-        // $document = Documents::find($document_id);
+        $child_document_103_file = ChildDocumentFiles::where('child_document_id', 5)->first();
         $teacher_uid = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->value('teacher_uid');
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $borrower_uid)
@@ -870,7 +871,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path('child_document_files/teachers_comment.pdf')); // Import an existing PDF form
+        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['filename'])); // Import an existing PDF form
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
 

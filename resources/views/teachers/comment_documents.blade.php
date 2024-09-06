@@ -181,7 +181,7 @@
                         <div class="col-md-3">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $borrower['birthday'])->format('d-m-Y')}}</div>
                         
                         <div class="col-md-3 text-secondary fw-bold">เลขประจำตัวประชาชน</div>
-                        <div class="col-md-3">1-3399-00841-27-7</div>
+                        <div class="col-md-3">{{$borrower['citizen_id']}}</div>
 
                         <div class="col-md-3 text-secondary fw-bold">อายุ</div>
                         <div class="col-md-3" id="age"></div>
@@ -192,14 +192,11 @@
                         <h6 class="text-dark">ข้อมูลการติดต่อ</h6>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 text-secondary fw-bold mb-2">เบอร์โทรศัพท์บ้าน</div>
-                        <div class="col-md-3">-</div>
-
                         <div class="col-md-3 text-secondary fw-bold">เบอร์โทรศัพท์มือถือ</div>
-                        <div class="col-md-3">{{$borrower['phone']}}</div>
+                        <div class="col-md-9">{{$borrower['phone']}}</div>
 
                         <div class="col-md-3 text-secondary fw-bold">อีเมล</div>
-                        <div class="col-md-4">stu6410014103@sskru.ac.th</div>
+                        <div class="col-md-9">{{$borrower['email']}}</div>
                     </div>
 
                     <div class="border-top mt-4"></div>
@@ -208,10 +205,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3 text-secondary fw-bold mb-2">ปีการศึกษา</div>
-                        <div class="col-md-3">2567</div>
+                        <div class="col-md-3">{{$document['year']}}</div>
 
                         <div class="col-md-3 text-secondary fw-bold">ภาคเรียน</div>
-                        <div class="col-md-3">1</div>
+                        <div class="col-md-3">{{$document['term']}}</div>
 
                         <div class="col-md-3 text-secondary fw-bold">ระดับการศึกษา</div>
                         <div class="col-md-9 mb-4">ปริญญาตรี</div>
@@ -224,12 +221,6 @@
 
                         <div class="col-md-3 text-secondary fw-bold mb-2">สาขาวิชา</div>
                         <div class="col-md-9">{{$borrower['major_name']}}</div>
-
-                        <div class="col-md-3 text-secondary fw-bold mb-2">หลักสูตร</div>
-                        <div class="col-md-9">หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมซอฟต์แวร์ มหาวิทยาลัยราชภัฏศรีสะเกษ</div>
-
-                        <div class="col-md-3 text-secondary fw-bold">เวลาการศึกษาตามหลักสูตร</div>
-                        <div class="col-md-9 mb-4">4 ปี</div>
 
                         <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อ - นามสกุล</div>
                         <div class="col-md-3">{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</div>

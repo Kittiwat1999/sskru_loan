@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Borrower;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
 use App\Models\Config;
@@ -11,6 +12,7 @@ use App\Models\Documents;
 use App\Models\UsefulActivity;
 use App\Models\Users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
@@ -133,6 +135,29 @@ class SearchDocuments extends Controller
             ->where('doc_structures.document_id', $borrower_document['document_id'])
             ->select('child_documents.*')
             ->get();
+        $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
+            ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
+            ->join('majors', 'majors.id', '=', 'borrowers.major_id')
+            ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
+            ->where('user_id', $borrower_document['user_id'])
+            ->select(
+                'users.prefix',
+                'users.firstname',
+                'users.lastname',
+                'users.email',
+                'borrower_apprearance_types.title',
+                'borrowers.user_id',
+                'borrowers.birthday',
+                'borrowers.student_id',
+                'borrowers.citizen_id',
+                'borrowers.phone',
+                'borrowers.gpa',
+                'borrowers.birthday',
+                'faculties.faculty_name',
+                'majors.major_name',
+            )
+            ->first();
+        $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
         foreach ($child_documents as $child_document) {
             $child_document['borrower_child_document'] =  BorrowerFiles::join('borrower_child_documents', 'borrower_files.id', '=', 'borrower_child_documents.borrower_file_id')
                 ->where('borrower_child_documents.document_id', $document->id)
@@ -149,6 +174,7 @@ class SearchDocuments extends Controller
                 'useful_activities_hours',
                 'child_documents',
                 'borrower_document',
+                'borrower',
             )
         );
     }

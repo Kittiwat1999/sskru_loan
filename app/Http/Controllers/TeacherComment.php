@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Crypt;
 
 class TeacherComment extends Controller
 {
@@ -196,10 +197,12 @@ class TeacherComment extends Controller
                 'users.prefix',
                 'users.firstname',
                 'users.lastname',
+                'users.email',
                 'borrower_apprearance_types.title',
                 'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
+                'borrowers.citizen_id',
                 'borrowers.phone',
                 'borrowers.gpa',
                 'borrowers.birthday',
@@ -207,6 +210,7 @@ class TeacherComment extends Controller
                 'majors.major_name',
             )
             ->first();
+        $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
 
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
@@ -388,10 +392,12 @@ class TeacherComment extends Controller
                 'users.prefix',
                 'users.firstname',
                 'users.lastname',
+                'users.email',
                 'borrower_apprearance_types.title',
                 'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
+                'borrowers.citizen_id',
                 'borrowers.phone',
                 'borrowers.gpa',
                 'borrowers.birthday',
@@ -399,6 +405,8 @@ class TeacherComment extends Controller
                 'majors.major_name',
             )
             ->first();
+        $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
+        
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
             ->where('documents.id', $borrower_document['document_id'])

@@ -37,10 +37,10 @@ index borrower
                             </td>
                             <td>
                               <span class="text-secondary">
-                                @if($borrower_document->check_date == null)
+                                @if($borrower_document->checked_date == null)
                                   -
                                 @else
-                                  {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $borrower_document->check_date)->format('d-m-Y H:i:s')}}
+                                  {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $borrower_document->checked_date)->format('d-m-Y H:i:s')}}
                                 @endif
                               </span>
                             </td>

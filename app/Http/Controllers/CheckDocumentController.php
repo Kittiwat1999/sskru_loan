@@ -21,6 +21,7 @@ use App\Models\UsefulActivityStatus;
 use App\Models\Users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
@@ -317,7 +318,7 @@ class CheckDocumentController extends Controller
                 'borrower_child_documents.status',)
             ->orderBy('child_documents.id', 'asc')
             ->get();
-        $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
+            $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
             ->join('majors', 'majors.id', '=', 'borrowers.major_id')
             ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
@@ -326,16 +327,21 @@ class CheckDocumentController extends Controller
                 'users.prefix',
                 'users.firstname',
                 'users.lastname',
+                'users.email',
                 'borrower_apprearance_types.title',
                 'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
+                'borrowers.citizen_id',
                 'borrowers.phone',
                 'borrowers.gpa',
                 'borrowers.birthday',
                 'faculties.faculty_name',
-                'majors.major_name',)
+                'majors.major_name',
+            )
             ->first();
+        $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
+        
 
         $checked_document = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
@@ -582,7 +588,7 @@ class CheckDocumentController extends Controller
                 'borrower_child_documents.status',)
             ->orderBy('child_documents.id', 'asc')
             ->get();
-        $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
+            $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
             ->join('majors', 'majors.id', '=', 'borrowers.major_id')
             ->join('borrower_apprearance_types', 'borrower_apprearance_types.id', '=', 'borrowers.borrower_appearance_id')
@@ -591,16 +597,21 @@ class CheckDocumentController extends Controller
                 'users.prefix',
                 'users.firstname',
                 'users.lastname',
+                'users.email',
                 'borrower_apprearance_types.title',
                 'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
+                'borrowers.citizen_id',
                 'borrowers.phone',
                 'borrowers.gpa',
                 'borrowers.birthday',
                 'faculties.faculty_name',
-                'majors.major_name',)
+                'majors.major_name',
+            )
             ->first();
+        $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
+        
         $list_status = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $borrower_document['document_id'])
@@ -727,10 +738,12 @@ class CheckDocumentController extends Controller
                 'users.prefix',
                 'users.firstname',
                 'users.lastname',
+                'users.email',
                 'borrower_apprearance_types.title',
                 'borrowers.user_id',
                 'borrowers.birthday',
                 'borrowers.student_id',
+                'borrowers.citizen_id',
                 'borrowers.phone',
                 'borrowers.gpa',
                 'borrowers.birthday',
@@ -738,6 +751,7 @@ class CheckDocumentController extends Controller
                 'majors.major_name',
             )
             ->first();
+        $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
 
         foreach ($child_documents as $child_document) {
             $child_document['borrower_child_document'] =  BorrowerFiles::join('borrower_child_documents', 'borrower_files.id', '=', 'borrower_child_documents.borrower_file_id')

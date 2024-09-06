@@ -169,49 +169,70 @@
                 @endif
             </div>
             <div class="card-body border mb-3">
-                <h5 class="card-title">รายละอียดผู้กู้</h5>
+                <div class="col-md-12 mt-3">
+                    <h6 class="text-dark">ข้อมูลผู้กู้ยืมเงิน</h6>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อ - นามสกุล</div>
+                    <div class="col-md-3">{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</div>
+                    
+                    <div class="col-md-3 text-secondary fw-bold">วัน เดือน ปีเกิด</div>
+                    <div class="col-md-3">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $borrower['birthday'])->format('d-m-Y')}}</div>
+                    
+                    <div class="col-md-3 text-secondary fw-bold">เลขประจำตัวประชาชน</div>
+                    <div class="col-md-3">{{$borrower['citizen_id']}}</div>
 
-                    <div class="row">
-                        <div class="col-md-3 text-secondary fw-bold">ชื่อ-นามสกุล</div>
-                        <div class="col-md-4">{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold">อายุ</div>
+                    <div class="col-md-3" id="age"></div>
+                </div>
 
-                        <div class="col-md-3 text-secondary fw-bold">ลักษณะผู้กู้</div>
-                        <div class="col-md-4">{{$borrower['title']}}</div>
-                        <div class="col-md-5"></div>
+                <div class="border-top mt-4"></div>
+                <div class="col-md-12 mt-3">
+                    <h6 class="text-dark">ข้อมูลการติดต่อ</h6>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 text-secondary fw-bold">เบอร์โทรศัพท์มือถือ</div>
+                    <div class="col-md-9">{{$borrower['phone']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">เกิดเมื่อ</div>
-                        <div class="col-md-4">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $borrower['birthday'])->format('d-m-Y')}}</div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold">อีเมล</div>
+                    <div class="col-md-9">{{$borrower['email']}}</div>
+                </div>
 
-                        <div class="col-md-3 text-secondary fw-bold">อายุ</div>
-                        <div class="col-md-4" id="age"></div>
-                        <div class="col-md-5"></div>
+                <div class="border-top mt-4"></div>
+                <div class="col-md-12 mt-3">
+                    <h6 class="text-dark">รายละเอียดข้อมูลการศึกษา</h6>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 text-secondary fw-bold mb-2">ปีการศึกษา</div>
+                    <div class="col-md-3">{{$document['year']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">รหัสนักศึกษา</div>
-                        <div class="col-md-4">{{$borrower['student_id']}}</div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold">ภาคเรียน</div>
+                    <div class="col-md-3">{{$document['term']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">คณะ</div>
-                        <div class="col-md-4">{{$borrower['faculty_name']}}</div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold">ระดับการศึกษา</div>
+                    <div class="col-md-9 mb-4">ปริญญาตรี</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">สาขา</div>
-                        <div class="col-md-4">{{$borrower['major_name']}}</div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อสถานศึกษา</div>
+                    <div class="col-md-9">มหาวิทยาลัยราชภัฎศรีสะเกษ</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">ชั้นปี</div>
-                        <div id="grade" class="col-md-4"></div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold mb-2">คณะ</div>
+                    <div class="col-md-9">{{$borrower['faculty_name']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">โทรศัพท์</div>
-                        <div class="col-md-4">{{$borrower['phone']}}</div>
-                        <div class="col-md-5"></div>
+                    <div class="col-md-3 text-secondary fw-bold mb-2">สาขาวิชา</div>
+                    <div class="col-md-9">{{$borrower['major_name']}}</div>
 
-                        <div class="col-md-3 text-secondary fw-bold">ผลการเรียนเฉลี่ย</div>
-                        <div class="col-md-4">{{$borrower['gpa']}}</div>
-                        <div class="col-md-5"></div>
-                    </div>
+                    <div class="col-md-3 text-secondary fw-bold mb-2">ชื่อ - นามสกุล</div>
+                    <div class="col-md-3">{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</div>
+
+                    <div class="col-md-3 text-secondary fw-bold">รหัสนักศึกษา</div>
+                    <div class="col-md-3">{{$borrower['student_id']}}</div>
+
+                    <div class="col-md-3 text-secondary fw-bold">เกรดเฉลี่ยสะสมของปีการศึกษาก่อนหน้า/ระดับการศึกษาก่อนหน้า</div>
+                    <div class="col-md-3">{{$borrower['gpa']}}</div>
+
+                    <div class="col-md-3 text-secondary fw-bold">ชั้นปีที่จะกู้</div>
+                    <div id="grade" class="col-md-3"></div>
+                </div>
 
                     <div class="border-top mt-4"></div>
                     <form id="comment-form" class="row mt-4" action="{{route('tacher.store.commnet',['borrower_document_id' => $borrower_document['id'] ])}}" method="POST">
@@ -293,8 +314,8 @@
 
 <script>
     var student_id = @json($borrower->student_id);
-    var status = @json($borrower_document['teacher_status']);
     var birthday = @json($borrower['birthday']);
+    var status = @json($borrower_document['teacher_status']);
 
     ageCal(birthday);
     calculateGrade(student_id);
