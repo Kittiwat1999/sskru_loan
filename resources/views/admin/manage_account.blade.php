@@ -36,12 +36,7 @@
                                             @csrf
                                             <div class="col-6">
                                                 <label for="prefix" class="col-form-label">คำนำหน้า</label>
-                                                <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
-                                                    <option value="" disabled selected>เลือกคำนำหน้า..</option>
-                                                    <option value="นาย">นาย</option>
-                                                    <option value="นาง">นาง</option>
-                                                    <option value="นางสาว">นางสาว</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="prefix" id="prefix">
                                                 <div class="invalid-feedback">
                                                     กรุณาเลือกคำนำหน้า
                                                 </div>
@@ -193,18 +188,13 @@
                         @csrf
                         <input type="hidden" name="id" class="form-control" value="${user.id}" required>
                         <div class="col-6">
-                            <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
-                            <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
-                                <option >เลือกคำนำหน้าชื่อ</option>
-                                <option ${(user.prefix == 'นาย')? 'selected': ''} value="นาย">นาย</option>
-                                <option ${(user.prefix == 'นาง')? 'selected': ''} value="นาง">นาง</option>
-                                <option ${(user.prefix == 'นางสาว')? 'selected': ''} value="นางสาว">นางสาว</option>
-                            </select>
+                            <label for="edit-prefix" class="col-form-label text-secondary">คำนำหน้า</label>
+                            <input type="text" id="prefix" name="prefix" class="form-control" value="${user.prefix}" required />
                         </div>
                         <div class="col-6"></div>
                         <div class="col-6">
-                            <label for="firstname" class="col-form-label">ชื่อ</label>
-                            <input type="text" name="firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
+                            <label for="edit-firstname" class="col-form-label">ชื่อ</label>
+                            <input type="text" name="edit-firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
                             <div class="invalid-feedback">
                                 กรุณากรอกชื่อ
                             </div>
@@ -327,7 +317,7 @@
             })
             .then(majors => {
                 var select_major_element = document.getElementById(major_element_id);
-                select_major_element.innerHTML = `<option selected disabled value="admin">เลือกสาขา..</option>`;
+                select_major_element.innerHTML = `<option selected disabled value="all">เลือกสาขา..</option>`;
                 majors.forEach((major) => {
                     var option = document.createElement('option');
                     option.value = major.id;

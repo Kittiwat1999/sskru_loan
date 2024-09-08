@@ -10,7 +10,6 @@ use App\Models\Faculties;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Majors;
 use App\Models\TeacherAccounts;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
@@ -39,14 +38,14 @@ class UsersController extends Controller
     {
         $select_privilege = $request->session()->get('select_privilege', 'employee');
         if ($request->ajax()) {
-            $data = Users::where('isactive', true)->where('privilege', $select_privilege)->get(['id', 'email', 'firstname', 'lastname', 'privilege', 'created_at', 'updated_at']);
+            $data = Users::where('isactive', true)->where('privilege', $select_privilege)->get(['id', 'email', 'prefix', 'firstname', 'lastname', 'privilege', 'created_at', 'updated_at']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('thai-privilege', function ($row) {
                     return $this->privilege[$row->privilege];
                 })
                 ->addColumn('fullname', function ($row) {
-                    return $row->prefix . $row->firstname . $row->lastname;
+                    return $row->prefix . $row->firstname . ' ' . $row->lastname;
                 })
                 ->addColumn('action', function ($row) {
                     $editBtn = '<button type="button" class="btn btn-sm btn-primary" onclick="showUserModal(' . $row->id . ')" ><i class="bi bi-search"></i></button>';
@@ -91,7 +90,6 @@ class UsersController extends Controller
 
     function admin_createUser(AdminMgeAccountRequest $request)
     {
-        date_default_timezone_set("Asia/Bangkok");
         // dd($request);
         $user = new Users();
         $user['prefix'] = $request->prefix;

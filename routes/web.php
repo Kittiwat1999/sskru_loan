@@ -13,6 +13,8 @@ use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\BorrowerRegister;
 use App\Http\Controllers\CheckBorrowerInformation;
 use App\Http\Controllers\CheckDocumentController;
+use App\Http\Controllers\DashboadController;
+use App\Http\Controllers\ExportBorrowerDocumentController;
 use App\Http\Controllers\GenerateFile;
 use App\Http\Controllers\GenerateDocController;
 use App\Http\Controllers\MainParentInfomationController;
@@ -36,9 +38,11 @@ use App\Http\Controllers\UsersProfileController;
 |
 */
 
-Route::get('/admin/dashboard', function () {
-    return view('/admin/dashboard');
-});
+Route::get('/admin/dashboard', [DashboadController::class, 'index']);
+Route::get('/admin/dashboard/{faculty_id}/get-major/', [DashboadController::class, 'geMajorByFacultyId']);
+Route::post('/admin/dashboard/set-data', [DashboadController::class, 'setData'])->name('admin.dashboard.set-data');
+Route::get('/admin/dashboard/get-data', [DashboadController::class, 'getData'])->name('admin.dashboard.get-data');
+Route::get('/admin/dashboard/get-xcel', [ExportBorrowerDocumentController::class, 'exportBorrowerDocument']);
 
 //document shceduler
 Route::get('/admin/document_scheduler',[AdminDocumentSchedulerController::class, 'index']);
