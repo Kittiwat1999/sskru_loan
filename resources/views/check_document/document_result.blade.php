@@ -121,10 +121,10 @@
                     <div id="grade" class="col-md-3"></div>
                 </div>
             </div>
-            <form class="row m-0 p-0" action="{{route('check_document.document.submit',['borrower_document_id' => $borrower_document['id'] ])}}" method="POST">
+            <form class="row m-0 p-0" action="{{route('check_document.document.submit',['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}" method="POST">
                 @csrf
                 <div class="text-start col-6 m-0 p-0">
-                    <a href="{{route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document['id'] ])}}" class="btn btn-light w-25">ย้อนกลับ</a>
+                    <a href="{{route('check_document.borrower_child_document.list',['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}" class="btn btn-light w-25">ย้อนกลับ</a>
                 </div>
                 <input type="hidden" name="status" value="{{$result_status}}">
                 <div class="text-end col-6 m-0 p-0">

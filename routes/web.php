@@ -11,6 +11,7 @@ use App\Http\Controllers\SendDocumentController;
 use App\Http\Controllers\DownloadDocumentController;
 use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\BorrowerRegister;
+use App\Http\Controllers\CacheAndCommentController;
 use App\Http\Controllers\CheckBorrowerInformation;
 use App\Http\Controllers\CheckDocumentController;
 use App\Http\Controllers\DashboadController;
@@ -26,23 +27,25 @@ use App\Http\Controllers\TeacherComment;
 use App\Http\Controllers\UsefulActivityController;
 use App\Http\Controllers\UsersProfileController;
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+//dashboard
 Route::get('/admin/dashboard', [DashboadController::class, 'index']);
 Route::get('/admin/dashboard/{faculty_id}/get-major/', [DashboadController::class, 'geMajorByFacultyId']);
 Route::post('/admin/dashboard/set-data', [DashboadController::class, 'setData'])->name('admin.dashboard.set-data');
 Route::get('/admin/dashboard/get-data', [DashboadController::class, 'getData'])->name('admin.dashboard.get-data');
 Route::get('/admin/dashboard/get-xcel', [ExportBorrowerDocumentController::class, 'exportBorrowerDocument']);
+
+//chache and comment data
+Route::get('/admin/cache-comment', [CacheAndCommentController::class, 'index']);
+Route::get('/admin/clear-cache/all', [CacheAndCommentController::class, 'clearBorrowerDocumentCacheAll'])->name('admin.clear.cache.all');
+Route::get('/admin/clear-cache/one/{borrower_document_id}', [CacheAndCommentController::class, 'clearBorrowerDocumentCache'])->name('admin.clear.cache.one');
+//teacher comment
+Route::put('/admin/edit/techer-comment/{teacher_comment_id}', [CacheAndCommentController::class, 'editTeacherComment'])->name('admin.edit.teahcer.comment');
+Route::post('/admin/add/techer-comment', [CacheAndCommentController::class, 'addTeacherComment'])->name('admin.add.teahcer.comment');
+Route::get('/admin/delete/techer-comment/{teacher_comment_id}', [CacheAndCommentController::class, 'deleteTeacherComment'])->name('admin.delete.teahcer.comment');
+// comment
+Route::put('/admin/edit/comment/{comment_id}', [CacheAndCommentController::class, 'editComment'])->name('admin.edit.comment');
+Route::post('/admin/add/comment', [CacheAndCommentController::class, 'addComment'])->name('admin.add.comment');
+Route::get('/admin/delete/comment/{comment_id}', [CacheAndCommentController::class, 'deleteComment'])->name('admin.delete.comment');
 
 //document shceduler
 Route::get('/admin/document_scheduler',[AdminDocumentSchedulerController::class, 'index']);
@@ -51,7 +54,7 @@ Route::get('/admin/document_scheduler/get/document/{document_id}',[AdminDocument
 Route::post('/admin/document_scheduler/postdata/{document_id}',[AdminDocumentSchedulerController::class, 'postDocSchedulerData'])->name('admin.doc.scheduler.postdata');
 Route::delete('/admin/document_scheduler/deletedata/{document_id}',[AdminDocumentSchedulerController::class, 'deleteDocSchedulerData'])->name('admin.doc.scheduler.deletedata');
 
-//manage account
+//manage account 
 Route::get('/admin/manage_account',[UsersController::class,'index'])->name('admin_manage_account');
 Route::get('/admin/manage_account/select_privilege/{select_privilege}',[UsersController::class,'admin_getUsersDataByPrivilege'])->name('admin.manageaccount.privilege');
 Route::get('/admin/manage_account/get-users',[UsersController::class,'getUsers'])->name('admin.get.users');
@@ -227,7 +230,7 @@ Route::get('/borrower/upload_document/submit/{document_id}',[SendDocumentControl
 Route::post('/borrower/usefulactivity/store/{document_id}',[UsefulActivityController::class,'storeUsefulActivity'])->name('borrower.store.usefulactivity');
 Route::put('/borrower/usefulactivity/edit/{useful_activity_id}',[UsefulActivityController::class,'editUsefulActivity'])->name('borrower.edit.usefulactivity');
 Route::delete('/borrower/usefulactivity/delete/{useful_activity_id}',[UsefulActivityController::class,'deleteUsefulActivity'])->name('borrower.delete.usefulactivity');
-Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}/{document_id}',[UsefulActivityController::class,'showUsefulActivityFile'])->name('borrower.show.usefulactivity.file');
+Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}',[UsefulActivityController::class,'showUsefulActivityFile'])->name('borrower.show.usefulactivity.file');
 
 Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
 

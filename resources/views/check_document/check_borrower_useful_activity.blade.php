@@ -56,7 +56,7 @@
                                     <td class="text-center">{{$useful_activity->hour_count}}</td>
                                     <td>{{$useful_activity->description}} </td>
                                     <td class="text-center">
-                                        <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $borrower_document['document_id']])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
+                                        <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => Crypt::encryptString($useful_activity->id)] )}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            <form id="form-comment" class="border border-1 mb-4" action="{{route('check_document.post.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}" method="post">
+            <form id="form-comment" class="border border-1 mb-4" action="{{route('check_document.post.borrower.useful_activity', ['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}" method="post">
                 @csrf
                 <fieldset class="row mx-0 p-0 my-3">
                     <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>

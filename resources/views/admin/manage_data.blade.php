@@ -97,14 +97,14 @@
                                 </div>
                                 <form action="{{route('admin.manage.data.add.faculty')}}" method="post">
                                     <div class="modal-body">
-                                            @csrf
-                                            <div class="col-12">
-                                                <label for="faculty_name" class="form-label">ชื่อคณะ</label>
-                                                <input type="text" class="form-control need-custom-validate" id="faculty_name"  name="faculty_name">
-                                                <div class="invalid-feedback">
-                                                    กรุณากรอกชื่อคณะ
-                                                </div>
+                                        @csrf
+                                        <div class="col-12">
+                                            <label for="faculty_name" class="form-label">ชื่อคณะ</label>
+                                            <input type="text" class="form-control need-custom-validate" id="faculty_name"  name="faculty_name">
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกชื่อคณะ
                                             </div>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>

@@ -58,7 +58,7 @@
 <section class="section Editing">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title"></h5>
+            <h5 class="card-title">รายการเอกสาร</h5>
             <div class="accordion mb-3" id="accordion">
                 @foreach($child_documents as $child_document)
                     @if($child_document->borrower_child_document != null)
@@ -141,7 +141,7 @@
                                             <td class="text-center">{{$useful_activity->hour_count}}</td>
                                             <td>{{$useful_activity->description}} </td>
                                             <td class="text-center">
-                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $document->id])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
+                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => Crypt::encryptString($useful_activity->id) ])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

@@ -32,7 +32,7 @@ class CheckDocumentController extends Controller
 {
     protected $status = [
         'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
-        'wait-teacher-comment' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
+        'wait-teacher-approve' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
         'wait-approve' => 'รออนุมัติ',
         'rejected' => 'ต้องแก้ไข',
         'approved' => 'อนุมัติแล้ว',
@@ -134,6 +134,9 @@ class CheckDocumentController extends Controller
             ->where('documents.id', $document_id)
             ->select('documents.*', 'doc_types.doctype_title')
             ->first();
+        if($document == null){
+            return redirect('/check_document/index')->withErrors('เอกสารนี้ไม่มีอยู่');
+        }
         $faculties = Faculties::where('isactive', true)->get();
         $majors = Majors::where('isactive', true)->get();
         return view('check_document.select_check_document', compact('document', 'faculties', 'majors'));
@@ -283,11 +286,11 @@ class CheckDocumentController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     if ($row->status == 'wait-approve' || $row->status == 'response-reject') {
-                        $selectBtn = '<a href="' . route('check_document.borrower_child_document.list', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('check_document.borrower_child_document.list', Crypt::encryptString($row->id)) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
                     } elseif ($row->status == 'sending') {
                         $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';
                     } else {
-                        $selectBtn = '<a href="' . route('check_document.view.borrower.document', $row->id) . '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('check_document.view.borrower.document', Crypt::encryptString($row->id)) . '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
                     }
                     return $selectBtn;
                 })
@@ -299,7 +302,12 @@ class CheckDocumentController extends Controller
     public function borrowerChildDocumentList($borrower_document_id, Request $request)
     {
         $checker_id = $request->session()->get('user_id');
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
+        if($borrower_document == null){
+            return redirect()->back()->withErrors('ไม่พบเอกสารของผู้กู้รายนี้');
+        }
+        
         $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
             ->where('borrower_uid', $borrower_document['user_id'])
             ->first();
@@ -454,11 +462,12 @@ class CheckDocumentController extends Controller
         $borrower_document['checking'] = true;
         $borrower_document['checker_id'] = $checker_id;
         $borrower_document->save();
-        return redirect()->route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document_id])->with(['success' => 'บันทึกข้อมูลเรียบร้อยแล้ว']);
+        return redirect()->route('check_document.borrower_child_document.list',['borrower_document_id' => Crypt::encryptString($borrower_document_id)])->with(['success' => 'บันทึกข้อมูลเรียบร้อยแล้ว']);
     }
 
     public function getBorrowerUsefulActivities($borrower_document_id)
     {
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
         $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
@@ -488,6 +497,7 @@ class CheckDocumentController extends Controller
     {
         // dd($request);
         $checker_id = $request->session()->get('user_id');
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
             ->where('borrower_uid', $borrower_document['user_id'])
@@ -564,11 +574,12 @@ class CheckDocumentController extends Controller
         $borrower_document['checking'] = true;
         $borrower_document['checker_id'] = $checker_id;
         $borrower_document->save();
-        return redirect()->route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document_id])->with(['success' => 'บันทึกข้อมูลเรียบร้อยแล้ว']);
+        return redirect()->route('check_document.borrower_child_document.list',['borrower_document_id' => Crypt::encryptString($borrower_document_id)])->with(['success' => 'บันทึกข้อมูลเรียบร้อยแล้ว']);
     }
 
     public function checkDocumentResult($borrower_document_id, Request $request){
         $checker_id = $request->session()->get('user_id');
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
             ->where('borrower_uid', $borrower_document['user_id'])
@@ -650,7 +661,7 @@ class CheckDocumentController extends Controller
         if($useful_activities_custom_comments != null) array_push($useful_activities_comments, $useful_activities_custom_comments);
 
         return view(
-            'check_document.document_submission',
+            'check_document.document_result',
             compact(
                 'document',
                 'child_documents',
@@ -665,6 +676,7 @@ class CheckDocumentController extends Controller
 
     public function submitCheckDocument($borrower_document_id, Request $request){
         $checker_id = $request->session()->get('user_id');
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $request->validate([
             'status' => 'required|string|max:30',
@@ -715,7 +727,11 @@ class CheckDocumentController extends Controller
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
     {
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
+        if($borrower_document == null){
+            return redirect()->back()->withErrors('ไม่พบเอกสารของผู้กู้รายนี้');
+        }
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
             ->where('documents.id', $borrower_document['document_id'])
@@ -777,6 +793,7 @@ class CheckDocumentController extends Controller
 
     public function previewBorrowerFile($borrower_child_document_id)
     {
+        $borrower_child_document_id = Crypt::decryptString($borrower_child_document_id);
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id', '=', 'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
             ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')

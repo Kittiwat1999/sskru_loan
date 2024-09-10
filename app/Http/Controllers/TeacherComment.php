@@ -158,9 +158,9 @@ class TeacherComment extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     if ($row->teacher_status == 'wait-approve' || $row->teacher_status == 'response-reject') {
-                        $selectBtn = '<a href="' . route('teacher.comment.borrower.document', $row->id) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('teacher.comment.borrower.document', Crypt::encryptString($row->id)) . '" class="btn btn-primary mt-4">ตรวจเอกสาร</a>';
                     } elseif ($row->teacher_status == 'approved' || $row->teacher_status == 'rejected') {
-                        $selectBtn = '<a href="' . route('teacher.view.borrower.document', $row->id) . '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
+                        $selectBtn = '<a href="' . route('teacher.view.borrower.document', Crypt::encryptString($row->id)) . '" class="btn btn-primary mt-4">ดูเอกสาร</a>';
                     } elseif ($row->teacher_status == 'sending') {
                         $selectBtn = '<a href="#" class="btn btn-light mt-4">ผู้กู้ยืมกำลังดำเนินการ</a>';
                     } else {
@@ -182,6 +182,7 @@ class TeacherComment extends Controller
 
     public function commnetBorrowerDocument($borrower_document_id, Request $request)
     {
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
         $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
@@ -377,6 +378,7 @@ class TeacherComment extends Controller
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
     {
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $useful_activities = UsefulActivity::where('user_id', $borrower_document['user_id'])->get();
         $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');

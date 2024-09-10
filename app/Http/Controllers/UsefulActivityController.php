@@ -10,6 +10,7 @@ use App\Models\UsefulActivity;
 use App\Models\UsefulActivityStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -54,8 +55,9 @@ class UsefulActivityController extends Controller
         return $response;
     }
 
-    public function showUsefulActivityFile($useful_activity_id, $document_id, Request $request)
+    public function showUsefulActivityFile($useful_activity_id, Request $request)
     {
+        $useful_activity_id = Crypt::decryptString($useful_activity_id);
         $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
         $reqsonse = $this->displayFile($useful_activity_file['file_path'], $useful_activity_file->file_name);
         return $reqsonse;

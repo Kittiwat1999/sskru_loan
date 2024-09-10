@@ -14,6 +14,7 @@ use App\Models\Documents;
 use App\Models\UsefulActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -82,6 +83,7 @@ class BorrowerDocumentController extends Controller
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
     {
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)

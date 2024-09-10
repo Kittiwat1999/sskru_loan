@@ -141,7 +141,7 @@
                                             <td class="text-center">{{$useful_activity->hour_count}}</td>
                                             <td>{{$useful_activity->description}} </td>
                                             <td class="text-center">
-                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $document->id])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
+                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => Crypt::encryptString($useful_activity->id) ])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

@@ -42,9 +42,9 @@
                         @endif
                     </div>
                     @if($useful_activities_status['status'] == 'delivered' || $useful_activities_status['status'] == 'response-reject')
-                        <a class="btn btn-sm btn-primary" href="{{route('check_document.get.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}">ตรวจเอกสาร</a>
+                        <a class="btn btn-sm btn-primary" href="{{route('check_document.get.borrower.useful_activity', ['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}">ตรวจเอกสาร</a>
                     @else
-                        <a class="btn btn-sm btn-outline-primary" href="{{route('check_document.get.borrower.useful_activity', ['borrower_document_id' => $borrower_document['id'] ])}}">ตรวจแล้ว</a>
+                        <a class="btn btn-sm btn-outline-primary" href="{{route('check_document.get.borrower.useful_activity', ['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}">ตรวจแล้ว</a>
                     @endif
                 </li>
                 @endif
@@ -124,7 +124,7 @@
                     @if($checked_document < $document_to_check)
                         <button class="btn btn-secondary" disabled >สรุปผลการตรวจเอกสาร</button>
                     @else
-                        <a href="{{route('check_document.document.result',['borrower_document_id' => $borrower_document['id'] ])}}" class="btn btn-primary">สรุปผลการตรวจเอกสาร</a>
+                        <a href="{{route('check_document.document.result',['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}" class="btn btn-primary">สรุปผลการตรวจเอกสาร</a>
                     @endif
                 </div>
             </div>

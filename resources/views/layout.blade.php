@@ -166,6 +166,14 @@
                 <span>แก้ไขข้อมูล</span>
                 </a>
             </li><!-- End แก้ไขเอกสาร Page Nav -->
+
+            <li class="nav-item">
+                <a id="cache-comment" class="nav-link collapsed" href="{{url('/admin/cache-comment')}}">
+                <i class="bi bi-chat-square-text"></i>
+                <span>แคชและความคิดเห็น</span>
+                </a>
+            </li><!-- End แก้ไขเอกสาร Page Nav -->
+           
         @endif
 
         @if(($privilege == 'admin' || $privilege == "employee"))

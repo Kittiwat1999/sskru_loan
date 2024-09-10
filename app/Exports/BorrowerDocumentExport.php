@@ -20,7 +20,7 @@ class BorrowerDocumentExport implements FromCollection, WithMapping, WithHeading
     protected $sessionData;
     protected $status = [
         'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
-        'wait-teacher-comment' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
+        'wait-teacher-approve' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
         'wait-approve' => 'รออนุมัติ',
         'rejected' => 'ต้องแก้ไข',
         'approved' => 'อนุมัติแล้ว',
@@ -28,20 +28,10 @@ class BorrowerDocumentExport implements FromCollection, WithMapping, WithHeading
     ];
     protected $document;
 
-    public function __construct($sessionData)
+    public function __construct($sessionData, $document)
     {
         $this->sessionData = $sessionData;
-        $this->document = Documents::join('doc_types', 'documents.doctype_id' , '=', 'doc_types.id')
-            ->where('documents.doctype_id' ,$sessionData['select_doc_type'])
-            ->where('documents.year', $sessionData['select_year'])
-            ->where('documents.term', $sessionData['select_term'])
-            ->where('documents.isactive', true)
-            ->select(
-                'documents.year',
-                'documents.term',
-                'doc_types.doctype_title',
-            )
-            ->first() ?? null;;
+        $this->document = $document;
     }
 
     private function convert_date($inputDate)
@@ -87,9 +77,9 @@ class BorrowerDocumentExport implements FromCollection, WithMapping, WithHeading
                 // Add custom titles or headers
                 $event->sheet->setCellValue('A1', 'ชื่อเอกสาร');
                 $event->sheet->setCellValue('A2', 'สถานะเอกสาร');
-                $event->sheet->setCellValue('A3', 'วันที่เรียกราบงาน');
+                $event->sheet->setCellValue('A3', 'วันที่เรียกรายงาน');
                 $event->sheet->setCellValue('B1', 'รายการตรวจสอบ'.$this->document['doctype_title']. ' ' .$this->document['term'].'-'.$this->document['year']);
-                $event->sheet->setCellValue('B2', $this->status[$this->sessionData['select_status']]);
+                $event->sheet->setCellValue('B2', $this->status[$this->sessionData['status']]);
                 $event->sheet->setCellValue('B3', $this->convert_date_not_input());
 
                 // Format the custom headers
@@ -106,7 +96,7 @@ class BorrowerDocumentExport implements FromCollection, WithMapping, WithHeading
     }
 
     public function queryData($sessionData){
-        $document = Documents::where('doctype_id' ,$sessionData['select_doc_type'])->where('year', $sessionData['select_year'])->where('term', $sessionData['select_term'])->where('isactive', true)->first() ?? null;
+        $document = Documents::where('doctype_id' ,$sessionData['doc_type'])->where('year', $sessionData['year'])->where('term', $sessionData['term'])->where('isactive', true)->first() ?? null;
         // dd($sessionData);
         $query = Users::query()
             ->join('borrowers', 'users.id', '=', 'borrowers.user_id')
@@ -116,35 +106,35 @@ class BorrowerDocumentExport implements FromCollection, WithMapping, WithHeading
             ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
             ->join('majors', 'borrowers.major_id', '=', 'majors.id');
 
-        if($sessionData['select_grade'] == '*') {
+        if($sessionData['grade'] == '*') {
             $query->where('borrowers.student_id', 'like', '%');
         }else{
-            $query->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($sessionData['select_grade']) . '%');
+            $query->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($sessionData['grade']) . '%');
         }
 
-        if($sessionData['select_faculty'] == '*') {
+        if($sessionData['faculty'] == '*') {
             $query->where('faculties.id', 'like', '%');
         }else {
-            $query->where('faculties.id', $sessionData['select_faculty']);
+            $query->where('faculties.id', $sessionData['faculty']);
         }
 
-        if($sessionData['select_major'] == '*') {
+        if($sessionData['major'] == '*') {
             $query->where('majors.id', 'like', '%');
         }else {
-            $query->where('majors.id', $sessionData['select_major']);
+            $query->where('majors.id', $sessionData['major']);
         }
 
-        if($sessionData['select_start_date'] == null && $sessionData['select_end_date'] == null) {
+        if($sessionData['start_date'] == null && $sessionData['end_date'] == null) {
             $query->where('borrower_documents.delivered_date', 'like', '%');
-        }elseif ($sessionData['select_start_date'] == null && $sessionData['select_end_date'] !== null) {
-            $query->where('borrower_documents.delivered_date', '<', $this->convert_date($sessionData['select_end_date']));
-        }elseif ($sessionData['select_start_date'] !== null && $sessionData['select_end_date'] == null) {
-            $query->where('borrower_documents.delivered_date', '>', $this->convert_date($sessionData['select_start_date']));
-        }elseif ($sessionData['select_start_date'] !== null && $sessionData['select_end_date'] !== null) {
-            $query->whereBetween('borrower_documents.delivered_date', [$this->convert_date($sessionData['select_start_date']), $this->convert_date($sessionData['select_end_date'])]);
+        }elseif ($sessionData['start_date'] == null && $sessionData['end_date'] !== null) {
+            $query->where('borrower_documents.delivered_date', '<', $this->convert_date($sessionData['end_date']));
+        }elseif ($sessionData['start_date'] !== null && $sessionData['end_date'] == null) {
+            $query->where('borrower_documents.delivered_date', '>', $this->convert_date($sessionData['start_date']));
+        }elseif ($sessionData['start_date'] !== null && $sessionData['end_date'] !== null) {
+            $query->whereBetween('borrower_documents.delivered_date', [$this->convert_date($sessionData['start_date']), $this->convert_date($sessionData['end_date'])]);
         }
 
-        $query->where('borrower_documents.status', $sessionData['select_status']);
+        $query->where('borrower_documents.status', $sessionData['status']);
         $query->where('borrower_documents.document_id', $document['id']);
         $query->select(
             'users.prefix', 

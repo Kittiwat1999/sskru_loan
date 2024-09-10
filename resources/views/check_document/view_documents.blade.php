@@ -74,7 +74,7 @@
                         </h2>
                         <div id="collapse-child-document-{{$child_document->id}}" class="accordion-collapse collapse" aria-labelledby="child-document-{{$child_document->id}}" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe src="{{route('check.document.preview.borrower_child_document_file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                <iframe src="{{route('check.document.preview.borrower_child_document_file',['borrower_child_document_id' => Crypt::encryptString($child_document->borrower_child_document->id) ])}}"></iframe>
                                 @if($child_document->need_loan_balance)
                                     <div class="col-md-12 row mb-3 mx-0 px-0 mt-3">
                                         <label for="education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
@@ -141,7 +141,7 @@
                                             <td class="text-center">{{$useful_activity->hour_count}}</td>
                                             <td>{{$useful_activity->description}} </td>
                                             <td class="text-center">
-                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $document->id])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
+                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => Crypt::encryptString($useful_activity->id)])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

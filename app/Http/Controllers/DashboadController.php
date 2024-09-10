@@ -20,7 +20,7 @@ class DashboadController extends Controller
 {
     protected $status = [
         'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
-        'wait-teacher-comment' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
+        'wait-teacher-approve' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
         'wait-approve' => 'รออนุมัติ',
         'rejected' => 'ต้องแก้ไข',
         'approved' => 'อนุมัติแล้ว',
@@ -62,6 +62,20 @@ class DashboadController extends Controller
         $doc_types = DocTypes::where('isactive', true)->get();
         $faculties = Faculties::where('isactive', true)->get();
         $majors = Majors::where('isactive', true)->get();
+        $reset_dashboard_data = [
+            'doc_type' => null,
+            'status' => null,
+            'year' => null,
+            'term' => null,
+            'grade' => null,
+            'start_date' => null,
+            'end_date' => null,
+            'faculty' => null,
+            'major' => null
+        ];
+        $dashboard_data = $request->session()->get('dashboard_data');
+
+        $request->session()->put(['dashboard_data' => $dashboard_data ?? $reset_dashboard_data]);
         return view('admin.dashboard', compact('doc_types', 'faculties', 'majors'));
     }
 
@@ -77,36 +91,33 @@ class DashboadController extends Controller
     public function setData(Request $request)
     {
         $validatedData = $request->validate([
-            'select_doc_type' => 'required|integer', // assuming doct_type is an integer
-            'select_status' => 'required|string|in:approved,rejected,response-reject,sending,wait-approve,wait-teacher-approve', // validating that status is one of the expected values
-            'select_year' => 'required|digits:4|integer|min:2567', // assuming year is a 4-digit Thai year
-            'select_term' => 'required|integer|in:1,2', // assuming term is either 1 or 2
-            'select_grade' => 'nullable|string', // allowing '*' or other string values
-            'select_start_date' => 'nullable|date', // allowing null or valid date format
-            'select_end_date' => 'nullable|date|after_or_equal:start_date', // allowing null or valid date format, must be after start_date if both are provided
-            'select_faculty' => 'nullable|string', // allowing '*' or other string values
-            'select_major' => 'nullable|string', // allowing '*' or other string values
+            'doc_type' => 'required|integer', // assuming doct_type is an integer
+            'status' => 'required|string|in:approved,rejected,response-reject,sending,wait-approve,wait-teacher-approve', // validating that status is one of the expected values
+            'year' => 'required|digits:4|integer|min:2567', // assuming year is a 4-digit Thai year
+            'term' => 'required|integer|in:1,2', // assuming term is either 1 or 2
+            'grade' => 'nullable|string', // allowing '*' or other string values
+            'start_date' => 'nullable|date', // allowing null or valid date format
+            'end_date' => 'nullable|date|after_or_equal:start_date', // allowing null or valid date format, must be after start_date if both are provided
+            'faculty' => 'nullable|string', // allowing '*' or other string values
+            'major' => 'nullable|string', // allowing '*' or other string values
         ], [
-            'select_doct_type.required' => 'กรุณาเลือกประเภทเอกสาร', // custom Thai error messages as per your preference
-            'select_status.required' => 'กรุณาระบุสถานะ',
-            'select_year.required' => 'กรุณาระบุปี',
-            'select_term.required' => 'กรุณาระบุภาคการศึกษา',
-            'select_start_date.date' => 'วันที่เริ่มต้นต้องเป็นวันที่',
-            'select_end_date.date' => 'วันที่สิ้นสุดต้องเป็นวันที่',
-            'select_end_date.after_or_equal' => 'วันที่สิ้นสุดต้องมากกว่าหรือเท่ากับวันที่เริ่มต้น',
+            'doct_type.required' => 'กรุณาเลือกประเภทเอกสาร', // custom Thai error messages as per your preference
+            'status.required' => 'กรุณาระบุสถานะ',
+            'year.required' => 'กรุณาระบุปี',
+            'term.required' => 'กรุณาระบุภาคการศึกษา',
+            'start_date.date' => 'วันที่เริ่มต้นต้องเป็นวันที่',
+            'end_date.date' => 'วันที่สิ้นสุดต้องเป็นวันที่',
+            'end_date.after_or_equal' => 'วันที่สิ้นสุดต้องมากกว่าหรือเท่ากับวันที่เริ่มต้น',
         ]);
 
-        $request->session()->put($validatedData);
-        $doc_types = DocTypes::where('isactive', true)->get();
-        $faculties = Faculties::where('isactive', true)->get();
-        $majors = Majors::where('isactive', true)->get();
-        return view('admin.dashboard-post', compact('doc_types', 'faculties', 'majors'));
+        $request->session()->put(['dashboard_data' => $validatedData]);
+        return redirect('/admin/dashboard');
     }
 
     function getData(Request $request)
     {
-        $sessionData = $request->session()->all();
-        $document = Documents::where('doctype_id' ,$sessionData['select_doc_type'])->where('year', $sessionData['select_year'])->where('term', $sessionData['select_term'])->where('isactive', true)->first() ?? null;
+        $sessionData = $request->session()->get('dashboard_data');
+        $document = Documents::where('doctype_id' ,$sessionData['doc_type'])->where('year', $sessionData['year'])->where('term', $sessionData['term'])->where('isactive', true)->first() ?? null;
         if ($request->ajax()) {
             if ($document == null) {
                 return DataTables::of(collect([]))->make(true);  // Return empty data
@@ -164,35 +175,35 @@ class DashboadController extends Controller
             ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
             ->join('majors', 'borrowers.major_id', '=', 'majors.id');
 
-        if($sessionData['select_grade'] == '*') {
+        if($sessionData['grade'] == '*') {
             $query->where('borrowers.student_id', 'like', '%');
         }else{
-            $query->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($sessionData['select_grade']) . '%');
+            $query->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($sessionData['grade']) . '%');
         }
 
-        if($sessionData['select_faculty'] == '*') {
+        if($sessionData['faculty'] == '*') {
             $query->where('faculties.id', 'like', '%');
         }else {
-            $query->where('faculties.id', $sessionData['select_faculty']);
+            $query->where('faculties.id', $sessionData['faculty']);
         }
 
-        if($sessionData['select_major'] == '*') {
+        if($sessionData['major'] == '*') {
             $query->where('majors.id', 'like', '%');
         }else {
-            $query->where('majors.id', $sessionData['select_major']);
+            $query->where('majors.id', $sessionData['major']);
         }
 
-        if($sessionData['select_start_date'] == null && $sessionData['select_end_date'] == null) {
+        if($sessionData['start_date'] == null && $sessionData['end_date'] == null) {
             $query->where('borrower_documents.delivered_date', 'like', '%');
-        }elseif ($sessionData['select_start_date'] == null && $sessionData['select_end_date'] !== null) {
-            $query->where('borrower_documents.delivered_date', '<', $this->convert_date($sessionData['select_end_date']));
-        }elseif ($sessionData['select_start_date'] !== null && $sessionData['select_end_date'] == null) {
-            $query->where('borrower_documents.delivered_date', '>', $this->convert_date($sessionData['select_start_date']));
-        }elseif ($sessionData['select_start_date'] !== null && $sessionData['select_end_date'] !== null) {
-            $query->whereBetween('borrower_documents.delivered_date', [$this->convert_date($sessionData['select_start_date']), $this->convert_date($sessionData['select_end_date'])]);
+        }elseif ($sessionData['start_date'] == null && $sessionData['end_date'] !== null) {
+            $query->where('borrower_documents.delivered_date', '<', $this->convert_date($sessionData['end_date']));
+        }elseif ($sessionData['start_date'] !== null && $sessionData['end_date'] == null) {
+            $query->where('borrower_documents.delivered_date', '>', $this->convert_date($sessionData['start_date']));
+        }elseif ($sessionData['start_date'] !== null && $sessionData['end_date'] !== null) {
+            $query->whereBetween('borrower_documents.delivered_date', [$this->convert_date($sessionData['start_date']), $this->convert_date($sessionData['end_date'])]);
         }
 
-        $query->where('borrower_documents.status', $sessionData['select_status']);
+        $query->where('borrower_documents.status', $sessionData['status']);
         $query->where('borrower_documents.document_id', $document_id);
         $query->select(
             'users.prefix', 

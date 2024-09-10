@@ -606,7 +606,7 @@ class GenerateFile extends Controller
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['filename'])); // Import an existing PDF form
+            $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -737,7 +737,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['filename'])); // Import an existing PDF form
+        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
 
@@ -871,7 +871,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['filename'])); // Import an existing PDF form
+        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
 

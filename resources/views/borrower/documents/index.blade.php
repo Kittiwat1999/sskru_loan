@@ -71,7 +71,7 @@ index borrower
                                   <a href="{{route('borrower.upload.document.page', ['document_id' => $borrower_document['document_id']])}}" class="btn btn-sm btn-outline-danger">ปฏิเสธโดยอาจารย์ที่ปรึกษา</a>
                                 @endif
                               @else
-                                <a href="{{route('borrower.view.document.page',['borrower_document_id' => $borrower_document->id ])}}" class="btn btn-sm btn-outline-primary">ดูไฟล์ที่ส่ง</a>
+                                <a href="{{route('borrower.view.document.page',['borrower_document_id' => Crypt::encryptString($borrower_document->id) ])}}" class="btn btn-sm btn-outline-primary">ดูไฟล์ที่ส่ง</a>
                               @endif
                             </td>
                         </tr>
