@@ -23,9 +23,9 @@
                             @endif
                         </div>
                         @if($child_document['status'] == 'delivered' || $child_document['status'] == 'response-reject')
-                            <a class="btn btn-sm btn-primary" href="{{route('check_document.get.borrower_child_document', ['borrower_child_document_id' => $child_document['borrower_child_document_id'], 'borrower_document_id' => $borrower_document['id']] )}}">ตรวจเอกสาร</a>
+                            <a class="btn btn-sm btn-primary" href="{{route('check_document.get.borrower_child_document', ['borrower_child_document_id' => Crypt::encryptString($child_document['borrower_child_document_id']), 'borrower_document_id' => Crypt::encryptString($borrower_document['id'])] )}}">ตรวจเอกสาร</a>
                         @else
-                            <a class="btn btn-sm btn-outline-primary" href="{{route('check_document.get.borrower_child_document', ['borrower_child_document_id' => $child_document['borrower_child_document_id'], 'borrower_document_id' => $borrower_document['id']] )}}">ตรวจแล้ว</a>
+                            <a class="btn btn-sm btn-outline-primary" href="{{route('check_document.get.borrower_child_document', ['borrower_child_document_id' => Crypt::encryptString($child_document['borrower_child_document_id']), 'borrower_document_id' => Crypt::encryptString($borrower_document['id']) ] )}}">ตรวจแล้ว</a>
                         @endif
                     </li>
                 @endforeach

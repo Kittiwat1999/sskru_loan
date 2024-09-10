@@ -74,8 +74,18 @@
                         </h2>
                         <div id="collapse-child-document-{{$child_document->id}}" class="accordion-collapse collapse" aria-labelledby="child-document-{{$child_document->id}}" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe src="{{route('serach.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                <iframe title="myFrame" src="{{route('serach.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
                                 <div class="row">
+                                    @if($child_document->need_document_code)
+                                    <div class="col-md-12 row mb-4 mx-0 px-0 mt-3">
+                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" 
+                                                @disabled(true)
+                                                value="{{$child_document->borrower_child_document->document_code}}">
+                                        </div>
+                                    </div>
+                                    @endif
                                     @if($child_document->need_loan_balance)
                                     <div class="col-md-12 row mb-3 mx-0 px-0 mt-3">
                                         <label for="education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
@@ -147,7 +157,7 @@
                                             <td class="text-center">{{$useful_activity->hour_count}}</td>
                                             <td>{{$useful_activity->description}} </td>
                                             <td class="text-center">
-                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $document->id])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
+                                                <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => Crypt::encryptString($useful_activity->id) ,])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -247,15 +257,13 @@
     </div>
 </section>
 @endsection
-@section('scirpt')
+@section('script')
 <script>
     var student_id = @json($borrower->student_id);
     var birthday = @json($borrower['birthday']);
-    var status = @json($borrower_document['teacher_status']);
 
     ageCal(birthday);
     calculateGrade(student_id);
-    (status == 'approved') ? displayInputComment('approve') : displayInputComment('reject');
 
     function calculateGrade(student_id){
         const date = new Date().getFullYear() + 543;
@@ -279,28 +287,6 @@
         const inputText = document.getElementById('more_comment');
         inputText.disabled = !inputText.disabled;
         inputText.required = !inputText.required;
-    }
-
-    function displayInputComment(checkbox_value){
-        const input_comment = document.getElementById('input-comment');
-        const checkbox =  document.querySelectorAll('input[name="comments[]"]');
-        if(checkbox_value == 'approve'){
-            input_comment.classList.remove('d-none');
-            const reject_comment = document.getElementById('reject-comment');
-            reject_comment.disabled = true;
-            reject_comment.required = false;
-
-            checkbox.forEach((e) => {e.required = true});
-        }else{
-            input_comment.classList.add('d-none');
-            const reject_comment = document.getElementById('reject-comment');
-            reject_comment.disabled = false;
-            reject_comment.required = true;
-            const inputText = document.getElementById('more_comment');
-            inputText.disabled = true;
-            inputText.required = false;
-            checkbox.forEach((e) => {e.required = false});
-        }
     }
 
     function ageCal(birthday) {

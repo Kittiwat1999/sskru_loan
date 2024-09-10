@@ -65,6 +65,7 @@ class BorrowerDocumentController extends Controller
         $borrower_documents = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->join('borrower_documents', 'documents.id', '=', 'borrower_documents.document_id')
             ->where('borrower_documents.user_id', $user_id)
+            ->where('borrower_documents.status', '!=', 'sending')
             ->select(
                 'documents.year',
                 'documents.term',

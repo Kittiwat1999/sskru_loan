@@ -381,6 +381,8 @@ class CheckDocumentController extends Controller
 
     public function getBorrowerChildDocument($borrower_child_document_id, $borrower_document_id, Request $request)
     {
+        $borrower_child_document_id = Crypt::decryptString($borrower_child_document_id);
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_child_document = BorrowerChildDocument::find($borrower_child_document_id);
         $child_document = ChildDocuments::find($borrower_child_document['child_document_id']);        
         $comments_db = CommentsBorrowerChildDocument::where('borrower_child_document_id', $borrower_child_document_id)->where('comment_id', '!=', null)->pluck('comment_id')->toArray() ?? null;
@@ -401,6 +403,8 @@ class CheckDocumentController extends Controller
     public function postBorrowerChildDocument($borrower_child_document_id, $borrower_document_id, Request $request)
     {
         $checker_id = $request->session()->get('user_id');
+        $borrower_child_document_id = Crypt::decryptString($borrower_child_document_id);
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $borrower_child_document = BorrowerChildDocument::find($borrower_child_document_id);
         $request->validate([

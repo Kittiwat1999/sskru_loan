@@ -40,7 +40,7 @@
                   </div>
                 </div>
               </div>
-              <a href="{{route('borrower.upload.document.page',['document_id'=>$document->id])}}" id="a-{{$document->id}}" class="d-none"></a>
+              <a href="{{route('borrower.upload.document.page',['document_id' => Crypt::encryptString($document->id)])}}" id="a-{{$document->id}}" class="d-none"></a>
             @else
               <div class="col-md-4 col-sm-12">
                 <div class="card mb-3 card-menu-success">

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('checker_id')->foreignIdFor(Users::class)->nullable();
             $table->integer('education_fee')->default(0);
             $table->integer('living_exprenses')->default(0);
+            $table->string('document_code')->default('-');
             $table->string('status');
             $table->timestamps();
         });

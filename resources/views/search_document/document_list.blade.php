@@ -59,7 +59,7 @@ index borrower
                               @if($borrower_document['status'] == 'sending')
                               <button type="button" class="btn btn-light">ผู้กู้ยืมกำลังดำเนินการ</button>
                               @else
-                              <a href="{{route('serach.document.view.document.page',['borrower_document_id' => $borrower_document->id ])}}" class="btn btn-sm btn-primary">ดูไฟล์ที่ส่ง</a>
+                              <a href="{{route('serach.document.view.document.page',['borrower_document_id' => Crypt::encryptString($borrower_document->id) ])}}" class="btn btn-sm btn-primary">ดูไฟล์ที่ส่ง</a>
                               @endif
                             </td>
                             

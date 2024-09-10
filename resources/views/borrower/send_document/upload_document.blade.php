@@ -61,6 +61,34 @@
             </div>
             <form id="store-form-{{$child_document->id}}" action="{{route('borrower.upload.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
                 @csrf
+                @if($child_document->need_document_code)
+                    @if(!isset($child_document->borrower_child_document))
+                    <div class="col-md-12 row mb-4 mx-0 px-0">
+                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
+                            placeholder="รหัสด้านซ้ายบนของเอกสาร"
+                            />
+                            <div class="invalid-feedback">
+                                กรุณากรอกรหัสเอกสาร
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="col-md-12 row mb-4 mx-0 px-0">
+                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code"
+                                @required($child_document->need_loan_balance) 
+                                @disabled(true)
+                                value="{{$child_document->borrower_child_document->document_code}}">
+                            <div class="invalid-feedback">
+                                กรุณากรอกรหัสเอกสาร
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                @endif
                 @if($child_document->need_loan_balance)
                     @if(!isset($child_document->borrower_child_document))
                         <div class="col-md-12 row mb-3 mx-0 px-0">
@@ -172,6 +200,33 @@
                             <form id="edit-form-{{$child_document->id}}" action="{{route('borrower.edit.document',['document_id' => $document->id, 'child_document_id' => $child_document->id])}}" method="POST" enctype="multipart/form-data" class="row mx-0">
                                 @csrf
                                 @method('PUT')
+                                @if($child_document->need_document_code)
+                                    @if(!isset($child_document->borrower_child_document))
+                                    <div class="col-md-12 row mb-4 mx-0 px-0">
+                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
+                                            placeholder="รหัสด้านซ้ายบนของเอกสาร"
+                                            />
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกรหัสเอกสาร
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @else
+                                    <div class="col-md-12 row mb-4 mx-0 px-0">
+                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code"
+                                                @required($child_document->need_loan_balance) 
+                                                value="{{$child_document->borrower_child_document->document_code}}">
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกรหัสเอกสาร
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endif
                                 @if($child_document->need_loan_balance)
                                     @if(!isset($child_document->borrower_child_document))
                                         <div class="col-md-12 row mb-3 mx-0 px-0">
@@ -276,7 +331,7 @@
                                 <td class="text-center">{{$useful_activity->hour_count}}</td>
                                 <td>{{$useful_activity->description}} </td>
                                 <td class="text-center">
-                                    <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => $useful_activity->id , 'document_id' => $document->id])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
+                                    <a class="btn btn-danger" href="{{route('borrower.show.usefulactivity.file' ,['useful_activity_id' => Crypt::encryptString($useful_activity->id) ])}}" rel="noopener noreferrer" target="_blank"><i class="bi bi-journal-bookmark" ></i></a>
                                 </td>
                                 <td class="text-center">
                                     <div class="dropdown">
@@ -482,9 +537,9 @@
             </div>
             <div class="col-md-3 col-sm-12">
                 @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
-                    <a href="{{route('borrower.upload.document.result.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
+                    <a href="{{route('borrower.upload.document.result.page',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
                 @elseif(!$document->need_useful_activity && ((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count))
-                    <a href="{{route('borrower.upload.document.result.page',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
+                    <a href="{{route('borrower.upload.document.result.page',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
                 @else
                     <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
                 @endif

@@ -88,6 +88,7 @@ class SearchDocuments extends Controller
 
     public function listDocument($borrower_uid)
     {
+        $borrower_uid = Crypt::decryptString($borrower_uid);
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
             ->join('majors', 'borrowers.major_id', '=', 'majors.id')
@@ -121,6 +122,7 @@ class SearchDocuments extends Controller
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
     {
+        $borrower_document_id = Crypt::decryptString($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)

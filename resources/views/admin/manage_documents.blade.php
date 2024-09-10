@@ -7,24 +7,24 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">รายการหนังสือ</h5>
-                <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="doctype-table">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="doctype-table">
                         <thead>
                             <tr>
-                                <th class="text-center fw-bold">#</th>
+                                <th class="text-center fw-bold">ID</th>
                                 <th>หนังสือ</th>
-                                <th class="text-center">แก้ไข/ลบ</th>
+                                <th>action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($doc_types as $doc_type)
                             <tr>
-                                <td class="text-center fw-bold">{{$loop->index+1}}</td>
+                                <td class="text-center fw-bold">{{$doc_type['id']}}</td>
                                 <td>{{$doc_type->doctype_title}}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#editDocTypeModal{{$doc_type->id}}" ><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-light w-50" data-bs-toggle="modal" data-bs-target="#deleteDocTypeModal{{$doc_type->id}}" ><i class="bi bi-trash"></i></button>
+                                        <button type="button" class="btn btn-primary w-50" data-bs-toggle="modal" data-bs-target="#editDocTypeModal{{$doc_type->id}}" >แก้ไข</button>
+                                        <button class="btn btn-light w-50" data-bs-toggle="modal" data-bs-target="#deleteDocTypeModal{{$doc_type->id}}" >ลบ</button>
                                     </div>
 
                                     <!-- edit Modal -->
@@ -87,7 +87,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row mb-3">
+                <div class="row">
                     <div class="col-md-3">
                         <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#addDocTypeModal">
                             + เพิ่มหนังสือ
@@ -131,15 +131,14 @@
             <div class="card-body">
                 <h5 class="card-title">รายการเอกสาร</h5>
                 
-                <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="child-document-table">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="child-document-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
                                 <th>เอกสาร</th>
-                                <th class="text-center">ข้อมูลยอดเงินกู้</th>
                                 <th class="text-center">จัดการไฟล์</th>
-                                <th class="text-center">แก้ไข/ลบ</th>
+                                <th class="text-center">action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,21 +147,15 @@
                                 <td class="text-center fw-bold">{{$loop->index+1}}</td>
                                 <td>{{ Str::limit($child_document->child_document_title, $limit = 40, $end = '...') }}</td>
                                 <td class="text-center">
-                                    @if ($child_document->need_loan_balance)
-                                        <i class="bi bi-check-circle text-success fw-bold fs-5"></i>
-                                    @endif
-                                </td>
-                                <td class="text-center">
                                     <a href="{{route('admin.manage.file.document',['child_document_id' => $child_document->id])}}" class="btn btn-danger">จัดการไฟล์</a>                                    
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <button class="btn btn-primary" onclick="openEditModal({{$child_document}})"><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-light" data-bs-toggle="modal"   data-bs-target="#deleteDocChildModal{{$child_document->id}}"><i class="bi bi-trash"></i></button>
+                                        <button class="btn btn-primary" onclick="openEditModal({{$child_document}})">แก้ไข</button>
+                                        <button class="btn btn-light" data-bs-toggle="modal"   data-bs-target="#deleteDocChildModal{{$child_document->id}}">ลบ</button>
                                     </div>
 
                                     <div>
-
                                         <div class="modal fade" id="editChildDocModal" tabindex="-1" aria-hidden="true" style="display: none;">
                                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                                 <div class="modal-content">
@@ -213,7 +206,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row mb-3">
+                <div class="row">
                     <div class="col-md-3">
                         <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#addChildDocModal">
                             + เพิ่มเอกสาร
@@ -241,22 +234,33 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 mb-3">
-                                                <label for="need_loan_balance" class="form-label">ข้อมูลยอดเงินกู้</label>
+                                                <label for="need_document_code" class="form-label">รหัสเอกสาร</label>
+                                                <select id="need_document_code" class="form-select need-custom-validate" name="need_document_code">
+                                                    <option selected disabled value="" >เลือก...</option>
+                                                    <option value="true">ต้องกรอกรหัสเอกสาร</option>
+                                                    <option value="false">ไม่ต้องกรอกรหัสเอกสาร</option>
+                                                </select>
+                                                <div id="required_invalid" class="invalid-feedback">
+                                                    กรุณาเลือก รหัสเอกสาร
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label for="need_loan_balance" class="form-label">ยอดเงินกู้</label>
                                                 <select id="need_loan_balance" class="form-select need-custom-validate" name="need_loan_balance">
                                                     <option selected disabled value="" >เลือก...</option>
-                                                    <option value="true">ต้องการ</option>
-                                                    <option value="false">ไม่ต้องการ</option>
+                                                    <option value="true">ต้องการข้อมูลเงินกู้ยืม</option>
+                                                    <option value="false">ไม่ต้องการข้อมูลเงินกู้ยืม</option>
                                                 </select>
                                                 <div id="need_loan_balance_invalid" class="invalid-feedback">
-                                                    กรุณาเลือก ข้อมูลยอดเงิน
+                                                    กรุณาเลือก ข้อมูลยอดเงินกู้
                                                 </div>
                                             </div>
                                             <div class="col-12 mb-3">
                                                 <label for="isrequired" class="form-label">ตัวเลือกการส่งเอกสาร</label>
                                                 <select id="isrequired" class="form-select need-custom-validate" name="isrequired">
                                                     <option selected disabled value="" >เลือก...</option>
-                                                    <option value="true">ต้องมี</option>
-                                                    <option value="false">มีหรือไม่มีก็ได้</option>
+                                                    <option value="true">ต้องส่งเอกสาร</option>
+                                                    <option value="false">ส่งหรือไม่ก็ได้</option>
                                                 </select>
                                                 <div id="required_invalid" class="invalid-feedback">
                                                     กรุณาเลือก ตัวเลือกการส่งเอกสาร
@@ -284,15 +288,15 @@
             <div class="card-body">
                 <h5 class="card-title">รายการเอกสารแนบ</h5>
                 
-                <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="addon-document-table">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="addon-document-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
                                 <th>เอกสาร</th>
                                 <th class="text-center">สำหรับผู้กู้ที่อายุต่ำกว่า 20 ปี</th>
                                 <th class="text-center">จัดการไฟล์</th>
-                                <th class="text-center">แก้ไข/ลบ</th>
+                                <th class="text-center">action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -366,10 +370,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row mb-3">
+                <div class="row">
                     <div class="col-md-3">
                         <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#addAddOnDocumnetModal">
-                            + เพิ่มเอกสารส่วนเสริม
+                            + เพิ่มเอกสารแนบ
                           </button>
                     </div>
                     <div class="col-md-9"></div>
@@ -556,17 +560,24 @@
                         </div>
                     </div>
                     <div class="col-12 mb-3">
-                        <label for="need_laon_balance" class="form-label">ข้อมูลยอดเงินกู้</label>
+                        <label for="need_document_code" class="form-label">รหัสเอกสาร</label>
+                        <select id="need_document_code" class="form-select need-custom-validate" name="need_document_code">
+                            <option ${child_document.need_document_code ? 'selected' : '' } value="true">ต้องกรอกรหัสเอกสาร</option>
+                            <option ${!child_document.need_document_code ? 'selected' : '' } value="false">ไม่ต้องกรอกรหัสเอกสาร</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="need_laon_balance" class="form-label">ยอดเงินกู้</label>
                         <select class="form-select" name="need_loan_balance" required>
-                            <option ${child_document.need_loan_balance ? 'selected' : '' } value="true">ต้องการ</option>
-                            <option ${!child_document.need_loan_balance ? 'selected' : '' } value="false">ไม่ต้องการ</option>
+                            <option ${child_document.need_loan_balance ? 'selected' : '' } value="true">ต้องการข้อมูลเงินกู้ยืม</option>
+                            <option ${!child_document.need_loan_balance ? 'selected' : '' } value="false">ไม่ต้องการข้อมูลเงินกู้ยืม</option>
                         </select>
                     </div>
                     <div class="col-12 mb-3">
                         <label for="isrequired" class="form-label">ตัวเลือกการส่งเอกสาร</label>
                         <select class="form-select" name="isrequired" required>
-                            <option ${child_document.isrequired ? 'selected' : '' } value="true">ต้องมี</option>
-                            <option ${!child_document.isrequired ? 'selected' : '' } value="false">มีหรือไม่มีก็ได้</option>
+                            <option ${child_document.isrequired ? 'selected' : '' } value="true">ต้องส่งเอกสาร</option>
+                            <option ${!child_document.isrequired ? 'selected' : '' } value="false">ส่งหรือไม่ก็ได้</option>
                         </select>
                     </div>
                 </form> 
@@ -663,64 +674,5 @@
             return validate;
         }
 
-        $(document).ready(function() {
-            $('#doctype-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('#child-document-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('#addon-document-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
     </script>
 @endsection

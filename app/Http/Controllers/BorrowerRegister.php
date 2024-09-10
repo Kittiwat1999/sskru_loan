@@ -99,6 +99,7 @@ class BorrowerRegister extends Controller
         $child_document_required_count = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document_id)
             ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
+            ->where('doc_structures.child_document_id', '!=', 5) //id=5 คือ กยศ 103 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
             ->where('child_documents.isrequired', true)
             ->count();
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $user_id)->where('document_id', $document_id)->sum('hour_count') ?? 0;
@@ -336,8 +337,9 @@ class BorrowerRegister extends Controller
 
         $rules = [
             'document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
-            'education_fee' => 'string',
-            'living_exprenses' => 'string',
+            'document_code' => 'string|max:50',
+            'education_fee' => 'string|max:50',
+            'living_exprenses' => 'string|max:50',
         ];
         $messages = [
             'document_file.required' => 'กรุณาเลือกไฟล์',
@@ -345,8 +347,12 @@ class BorrowerRegister extends Controller
             'document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
             'document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
 
-            'education_fee.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
-            'living_exprenses.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
+            'document_code.string' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
+            'document_code.max' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :max',
+            'education_fee.string' => 'ประเภทข้อมูล ค่าเล่าเรียน นำเข้าไม่ถูกต้อง',
+            'education_fee.max' => 'ความยาวของ ค่าเล่าเรียน ต้องไม่เกิน :max',
+            'living_exprenses.string' => 'ประเภทข้อมูล ค่าครองชีพ นำเข้าไม่ถูกต้อง',
+            'living_exprenses.max' => 'ความยาวของ ค่าครองชีพ ต้องไม่เกิน :max',
         ];
         $request->validate($rules, $messages);
 
@@ -368,6 +374,7 @@ class BorrowerRegister extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
+        $borrower_child_document['document_code'] = isset($request->document_code) ? $request->document_code : '-';
         $borrower_child_document['status'] = 'delivered';
         //file
         $input_file = $request->file('document_file');
@@ -393,8 +400,9 @@ class BorrowerRegister extends Controller
     {
         $rules = [
             'document_file' => 'file|mimes:jpg,png,jpeg,pdf|max:2048',
-            'education_fee' => 'string',
-            'living_exprenses' => 'string',
+            'document_code' => 'string|max:50',
+            'education_fee' => 'string|max:50',
+            'living_exprenses' => 'string|max:50',
         ];
         $messages = [
             'document_file.required' => 'กรุณาเลือกไฟล์',
@@ -402,8 +410,12 @@ class BorrowerRegister extends Controller
             'document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
             'document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
 
-            'education_fee.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
-            'living_exprenses.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
+            'document_code.string' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
+            'document_code.max' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :max',
+            'education_fee.string' => 'ประเภทข้อมูล ค่าเล่าเรียน นำเข้าไม่ถูกต้อง',
+            'education_fee.max' => 'ความยาวของ ค่าเล่าเรียน ต้องไม่เกิน :max',
+            'living_exprenses.string' => 'ประเภทข้อมูล ค่าครองชีพ นำเข้าไม่ถูกต้อง',
+            'living_exprenses.max' => 'ความยาวของ ค่าครองชีพ ต้องไม่เกิน :max',
         ];
         $request->validate($rules, $messages);
 
@@ -424,6 +436,7 @@ class BorrowerRegister extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
+        $borrower_child_document['document_code'] = isset($request->document_code) ? $request->document_code : '-';
         if($borrower_child_document['status'] != 'approved'){
             if($borrower_child_document['status'] == 'rejected'){
                 $borrower_child_document['status'] = 'response-reject';

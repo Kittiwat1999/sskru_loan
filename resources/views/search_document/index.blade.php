@@ -40,7 +40,7 @@
                                 <span class="text-secondary fw-lighter">ชั้นปี: {{$borrower['grade']}}</span><br>
                             </td>
                             <td>
-                                <a href="{{route('serach.document.list.document',['borrower_uid' => $borrower['user_id']])}}" class="btn btn-primary">ดูเอกสารที่ส่ง</a></a>
+                                <a href="{{route('serach.document.list.document',['borrower_uid' => Crypt::encryptString($borrower['user_id']) ])}}" class="btn btn-primary">ดูเอกสารที่ส่ง</a></a>
                             </td>
                         </tr>
                         @empty

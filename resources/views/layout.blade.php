@@ -177,7 +177,7 @@
         @endif
 
         @if(($privilege == 'admin' || $privilege == "employee"))
-            <li class="nav-heading text-secondary">ตรวจเอกสาร</li>
+            <li class="nav-heading text-secondary">เอกสารผู้กู้ยืม</li>
 
             <li class="nav-item">
                 <a id="check_document" class="nav-link collapsed" href="{{url('check_document/index')}}">
@@ -186,14 +186,13 @@
                 </a>
             </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
 
-            <li class="nav-heading text-secondary">ค้นหาเอกสาร</li>
-
             <li class="nav-item">
                 <a id="search_document" class="nav-link collapsed" href="{{url('search_document')}}">
                 <i class="bi bi-file-earmark-break"></i>
                 <span>ค้นหาเอกสาร</span>
                 </a>
             </li><!-- End ค้นหาเอกสาร Page Nav -->
+
         @elseif($privilege == "borrower")
 
             <li class="nav-heading text-secondary">กรอกข้อมูลผู้กู้</li>

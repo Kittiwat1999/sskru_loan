@@ -20,6 +20,7 @@ use App\Models\Config;
 use App\Models\DocTypes;
 use App\Models\UsefulActivitiesComments;
 use App\Models\UsefulActivity;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -65,9 +66,9 @@ class SendDocumentController extends Controller
         return $buddhistDateTime->format('Y-m-d H:i:s');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower/borrower_information_not_complete');
         }
@@ -86,10 +87,11 @@ class SendDocumentController extends Controller
         return view('borrower.send_document.list_document', compact('documents'));
     }
 
-    public function uploadDocumentPage($document_id)
+    public function uploadDocumentPage(Request $request, $document_id)
     {
+        $document_id = Crypt::decryptString($document_id);
         $current_date = Carbon::today()->addYears(543);
-        $user_id = session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $budhist_date = Carbon::today()->addYears(543); // Get the current date and time and add year 543 its meen buddhist year
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
@@ -206,8 +208,9 @@ class SendDocumentController extends Controller
     {
         $rules = [
             'document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
-            'education_fee' => 'string',
-            'living_exprenses' => 'string',
+            'document_code' => 'string|max:50',
+            'education_fee' => 'string|max:50',
+            'living_exprenses' => 'string|max:50',
         ];
         $messages = [
             'document_file.required' => 'กรุณาเลือกไฟล์',
@@ -215,12 +218,16 @@ class SendDocumentController extends Controller
             'document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
             'document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
 
-            'education_fee.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
-            'living_exprenses.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
+            'document_code.string' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
+            'document_code.max' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :max',
+            'education_fee.string' => 'ประเภทข้อมูล ค่าเล่าเรียน นำเข้าไม่ถูกต้อง',
+            'education_fee.max' => 'ความยาวของ ค่าเล่าเรียน ต้องไม่เกิน :max',
+            'living_exprenses.string' => 'ประเภทข้อมูล ค่าครองชีพ นำเข้าไม่ถูกต้อง',
+            'living_exprenses.max' => 'ความยาวของ ค่าครองชีพ ต้องไม่เกิน :max',
         ];
         $request->validate($rules, $messages);
 
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.id', $document_id)
             ->select('doc_types.id', 'documents.year', 'documents.term')
@@ -238,6 +245,7 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
+        $borrower_child_document['document_code'] = isset($request->document_code) ? $request->document_code : '-';
         if($borrower_child_document['status'] != 'approved'){
             if($borrower_child_document['status'] == 'rejected'){
                 $borrower_child_document['status'] = 'response-reject';
@@ -270,8 +278,9 @@ class SendDocumentController extends Controller
     {
         $rules = [
             'document_file' => 'file|mimes:jpg,png,jpeg,pdf|max:2048',
-            'education_fee' => 'string',
-            'living_exprenses' => 'string',
+            'document_code' => 'string|max:50',
+            'education_fee' => 'string|max:50',
+            'living_exprenses' => 'string|max:50',
         ];
         $messages = [
             'document_file.required' => 'กรุณาเลือกไฟล์',
@@ -279,12 +288,16 @@ class SendDocumentController extends Controller
             'document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
             'document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
 
-            'education_fee.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
-            'living_exprenses.string' => 'ประเภทข้อมูลนำเข้าไม่ถูกต้อง',
+            'document_code.string' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
+            'document_code.max' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :max',
+            'education_fee.string' => 'ประเภทข้อมูล ค่าเล่าเรียน นำเข้าไม่ถูกต้อง',
+            'education_fee.max' => 'ความยาวของ ค่าเล่าเรียน ต้องไม่เกิน :max',
+            'living_exprenses.string' => 'ประเภทข้อมูล ค่าครองชีพ นำเข้าไม่ถูกต้อง',
+            'living_exprenses.max' => 'ความยาวของ ค่าครองชีพ ต้องไม่เกิน :max',
         ];
         $request->validate($rules, $messages);
 
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.id', $document_id)
             ->select('doc_types.id', 'documents.year', 'documents.term')
@@ -297,6 +310,7 @@ class SendDocumentController extends Controller
         $borrower_child_document['child_document_id'] = $child_document_id;
         $borrower_child_document['education_fee'] = isset($request->education_fee) ? str_replace(',', '', $request->education_fee) : 0;
         $borrower_child_document['living_exprenses'] = isset($request->living_exprenses) ? str_replace(',', '', $request->living_exprenses) : 0;
+        $borrower_child_document['document_code'] = isset($request->document_code) ? $request->document_code : '-';
         if($borrower_child_document['status'] != 'approved'){
             if($borrower_child_document['status'] == 'rejected'){
                 $borrower_child_document['status'] = 'response-reject';
@@ -327,9 +341,9 @@ class SendDocumentController extends Controller
         return redirect()->back()->with(['success' => 'แก้ไขไฟล์ ' . $child_document_title . ' เสร็จสิ้น']);
     }
 
-    public function previewBorrowerFile($borrower_child_document_id)
+    public function previewBorrowerFile(Request $request,$borrower_child_document_id)
     {
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id', '=', 'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
             ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
@@ -350,9 +364,10 @@ class SendDocumentController extends Controller
         return $response;
     }
 
-    public function result($document_id)
+    public function result(Request $request, $document_id)
     {
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
+        $document_id = Crypt::decryptString($document_id);
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')->where('documents.id', $document_id)->first();
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')->where('doc_structures.document_id', $document_id)->get();
         $child_document_required_count = 0;
@@ -383,9 +398,10 @@ class SendDocumentController extends Controller
         );
     }
 
-    public function submitDocument($document_id)
+    public function submitDocument(Request $request, $document_id)
     {
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
+        $document_id = Crypt::decryptString($document_id);
         $document = Documents::find($document_id);
         $borrower_document = BorrowerDocument::where('user_id', $user_id)->where('document_id', $document_id)->first();
         if ($document['neen_teacher_comment']) {

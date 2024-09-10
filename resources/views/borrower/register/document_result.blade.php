@@ -60,6 +60,7 @@
             </ul>
         </div>
     </div>
+    
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">สรุปการส่งเอกสาร</h5>
@@ -75,6 +76,11 @@
                                             <small class="text-warning">กรณีไม่มีให้ข้ามการอัพโหลดนี้</small>
                                         @endif
                                     </h6>
+                                    @if($child_document->need_document_code)
+                                            <div class="px-4">
+                                                <small class="text-dark"> รหัสเอกสาร: {{$child_document->borrower_child_document->document_code}}</small>
+                                            </div>
+                                        @endif
                                     @if($child_document->need_loan_balance)
                                         <div class="px-4">
                                             <small class="text-dark"> ค่าเล่าเรียนที่เบิก: {{number_format($child_document->borrower_child_document->education_fee)}}</small><br>

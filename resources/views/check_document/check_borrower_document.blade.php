@@ -32,13 +32,25 @@
         <div class="card-body">
             <h5 class="card-title">{{$child_document['child_document_title']}}</h5>
             <div class="container-fluid m-0 p-0 mb-3">
-                <iframe src="{{route("check.document.preview.borrower_child_document_file", ['borrower_child_document_id' => $borrower_child_document['id'] ])}}"></iframe>
+                <iframe src="{{route("check.document.preview.borrower_child_document_file", ['borrower_child_document_id' => Crypt::encryptString($borrower_child_document['id']) ])}}"></iframe>
             </div>
-            @if($child_document['need_loan_balance'])
+            @if($child_document['need_loan_balance'] || $child_document['need_document_code'])
             <div class="row m-0 p-0 border border-1 mb-3 pt-3">
                 <div class="col-12">
                     <label class="text-dark fw-bold mb-3" for="">ข้อมูลที่แนบมากับเอกสาร</label>
                 </div>
+                @if($child_document['need_document_code'])
+                <div class="col-md-12 row mb-4 mx-0 px-0">
+                    <label for="document_code" class="col-sm-2 col-form-label text-dark">รหัสเอกสาร</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="document_code" name="education_fee"
+                            @disabled(true)
+                            value="{{$borrower_child_document['document_code']}}"
+                            />
+                    </div>
+                </div>
+                @endif
+                @if($child_document['need_loan_balance'])
                 <div class="col-md-12 row mb-3 mx-0 px-0">
                     <label for="education-fee" class="col-sm-2 col-form-label text-dark">ค่าเล่าเรียน</label>
                     <div class="col-sm-10">
@@ -57,9 +69,10 @@
                             />
                     </div>
                 </div>
+                @endif
             </div>
             @endif
-            <form id="form-comment" class="border border-1 mb-4" action="{{route('check_document.post.borrower_child_document', ['borrower_child_document_id' => $borrower_child_document['id'], 'borrower_document_id' => $borrower_document_id] )}}" method="POST">
+            <form id="form-comment" class="border border-1 mb-4" action="{{route('check_document.post.borrower_child_document', ['borrower_child_document_id' => Crypt::encryptString($borrower_child_document['id']), 'borrower_document_id' => Crypt::encryptString($borrower_document_id) ] )}}" method="POST">
                 @csrf
                 <fieldset class="row mx-0 p-0 my-3">
                     <legend class="col-form-label col-sm-2 pt-0 fw-bold">ให้ความเห็น</legend>

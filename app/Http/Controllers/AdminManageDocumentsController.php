@@ -41,6 +41,7 @@ class AdminManageDocumentsController extends Controller
         // dd($request);
         $rules = [
             'child_document_title' => 'required|string|max:100',
+            'need_document_code' => 'required|string',
             'need_loan_balance' => 'required|string',
             'isrequired' => 'required|string',
         ];
@@ -48,6 +49,8 @@ class AdminManageDocumentsController extends Controller
             'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
             'child_document_title.string' => 'ชื่อเอกสาร มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            'need_document_code.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
+            'need_document_code.string' => 'ยอดเงินกู้ที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'need_loan_balance.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
             'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'isrequired.required' => 'กรุณาระบุว่าต้องการเอกสารหรือไม่',
@@ -58,6 +61,7 @@ class AdminManageDocumentsController extends Controller
         $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
         $child_document['isrequired'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
+        $child_document['need_document_code'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
         $child_document['isactive'] = true;
         $child_document->save();
         return redirect()->back()->with(['success' => 'เพิ่มข้อมูลเอกสารเรียบร้อยแล้ว']);
@@ -68,6 +72,7 @@ class AdminManageDocumentsController extends Controller
         // dd($request);
         $rules = [
             'child_document_title' => 'required|string|max:100',
+            'need_document_code' => 'required|string',
             'need_loan_balance' => 'required|string',
             'isrequired' => 'required|string',
         ];
@@ -76,6 +81,8 @@ class AdminManageDocumentsController extends Controller
             'child_document_title.required' => 'กรุณากรอกชื่อเอกสาร',
             'child_document_title.string' => 'ชื่อเอกสาร มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'child_document_title.max' => 'ชื่อเอกสารต้องมีความยาวไม่เกิน :max ตัวอักษร',
+            'need_document_code.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
+            'need_document_code.string' => 'ยอดเงินกู้ที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'need_loan_balance.required' => 'กรุณาระบุว่าต้องการยอดเงินกู้หรือไม่',
             'need_loan_balance.string' => 'ยอดเงินกู้ที่ต้องการ มีรูปแบบข้อมูลไม่ถูกต้อง (string)',
             'isrequired.required' => 'กรุณาระบุว่าต้องการเอกสารหรือไม่',
@@ -86,6 +93,7 @@ class AdminManageDocumentsController extends Controller
         $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
         $child_document['isrequired'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
+        $child_document['need_document_code'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
         $child_document->save();
         return redirect()->back()->with(['success' => 'แก้ใขข้อมูลเอกสาร' . $child_document['child_document_title'] . 'เรียบร้อยแล้ว']);
     }
