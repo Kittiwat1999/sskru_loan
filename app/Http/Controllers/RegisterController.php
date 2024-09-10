@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserMgeAccountRequest;
+use App\Models\Faculties;
+use App\Models\Majors;
 use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
 use App\Models\RegisterToken;
+use App\Models\TeacherAccounts;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -34,7 +37,10 @@ class RegisterController extends Controller
     public function register_teacher_page()
     {
         $users = Users::where('isactive', true)->get();
-        return view('register_teacher', compact('users'));
+        $faculties = Faculties::where('isactive', true)->get();
+        $majors = Majors::where('isactive', true)->get();
+        $teacheraccounts = TeacherAccounts::where('isactive', true)->get();
+        return view('register_teacher', compact('users','faculties','majors'));
     }
 
     public function register_teacher(UserMgeAccountRequest $request)
@@ -47,6 +53,13 @@ class RegisterController extends Controller
         $teacher_registering->password = Hash::make($request->password);
         $teacher_registering->privilege = 'teacher';
         $teacher_registering->save();
+
+        $teacher_account = new TeacherAccounts();
+        $teacher_account->user_id = $teacher_registering->id;
+        $teacher_account->faculty_id = $request->faculty;
+        $teacher_account->major_id = $request->major;
+        $teacher_account->save();
+
         return redirect('/register_success')->with(['success' => 'สร้างบัญชี ' . $teacher_registering->prefix . $teacher_registering->firstname . ' ' . $teacher_registering->lastname . ' เรียบร้อยแล้ว']);
     }
 }

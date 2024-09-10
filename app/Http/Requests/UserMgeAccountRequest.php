@@ -19,13 +19,15 @@ class UserMgeAccountRequest extends FormRequest
             'lastname' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|confirmed', // Add more complex rules as needed
+            'faculty' => 'required',
+            'major' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'prefix.required' => 'กรุณาเลือกคำนำหน้า',
+            'prefix.required' => 'กรุณาใส่คำนำหน้า',
             'firstname.required' => 'กรุณากรอกชื่อจริง',
             'firstname.string' => 'กรุณากรอกชื่อจริงเป็นข้อความ',
             'firstname.max' => 'กรุณากรอกชื่อจริงไม่เกิน :max ตัวอักษร',
@@ -40,6 +42,8 @@ class UserMgeAccountRequest extends FormRequest
             'password.string' => 'กรุณากรอกรหัสผ่านเป็นข้อความ',
             'password.min' => 'กรุณากรอกรหัสผ่านอย่างน้อย :min ตัวอักษร',
             'password.confirmed' => 'รหัสผ่านไม่ตรงกัน',
+            'faculty.required' => 'กรุณาเลือกคณะ',
+            'major.required' => 'กรุณาเลือกสาขา',
         ];
     }
 }

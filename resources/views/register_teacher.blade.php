@@ -100,16 +100,16 @@
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
                                         <input type="text" name="prefix" class="form-control" id="prefix" required>
                                         <div class="invalid-feedback">
-                                            กรุณาเลือกคำนำหน้า!
+                                            กรุณากรอกคำนำหน้า!
                                         </div>
                                     </div>
 
 
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
                                         <input type="text" name="firstname" class="form-control" id="firstname" required>
                                         <div class="invalid-feedback">
@@ -132,6 +132,32 @@
                                             กรุณากรอกอีเมล!
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <label for="faculty" class="col-form-label text-secondary">คณะ</label>
+                                        <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value)" required>
+                                            <option selected></option>
+                                            @foreach($faculties as $faculty)
+                                            <option value="{{$faculty['id']}}">{{$faculty['faculty_name']}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            กรุณาเลือกคณะ!
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="col-md-6">
+                                        <label for="major" class="col-form-label text-secondary">สาขา</label>
+                                        <select id="major" class="form-select" aria-label="Default select example" name="major" required>
+                                            <option selected></option>
+                                            @foreach($majors as $major)
+                                            <option value="{{$major['id']}}">{{$major['major_name']}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            กรุณาเลือกสาขา!
+                                        </div>
+                                      </div>
 
                                     <div class="col-md-7">
                                         <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
@@ -230,6 +256,29 @@
             } else {
                 confirmPassword.setAttribute("disabled", true);
             }
+        }
+
+        function getMajorByFacultyId(faculty_id){
+            fetch(`{{url('/admin/dashboard/${faculty_id}/get-major/')}}`)
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(majors => {
+                var major_element = document.getElementById('major');
+                major_element.innerHTML = `<option selected disabled value="admin"></option>`;
+                majors.forEach((major) => {
+                    var option = document.createElement('option');
+                    option.value = major.id;
+                    option.innerText = major.major_name;
+                    major_element.appendChild(option);
+                })
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
         }
   </script>
 
