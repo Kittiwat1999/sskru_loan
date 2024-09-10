@@ -51,7 +51,7 @@
                 </form>
                        
                 <div class="table-responsive">
-                    <table id="borrower-documents-table" class="table table-striped">
+                    <table id="borrower-documents-table" class="table table-striped w-100">
                         <thead>
                             <tr>
                                 <th scope="col">รหัสนักศึกษา</th>
