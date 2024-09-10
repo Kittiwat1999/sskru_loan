@@ -193,6 +193,9 @@ Route::put('/borrower/edit/main_parent/information',[MainParentInfomationControl
 
 Route::get('/register_student',[RegisterController::class,'index']);
 Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
+Route::get('/register_teacher/page',[RegisterController::class,'register_teacher_page']);
+Route::put('/register_teacher/teacher/register/',[RegisterController::class,'register_teacher'])->name('register.teacher');
+
 
 // Route::get('/', [AuthenticationController::class,'homePage']);
 Route::get('/login',[AuthenticationController::class,'loginPage'])->name('login');

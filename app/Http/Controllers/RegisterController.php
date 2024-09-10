@@ -30,4 +30,23 @@ class RegisterController extends Controller
         $student_registering->save();
         return redirect('/register_success')->with(['success' => 'สร้างบัญชี ' . $student_registering->prefix . $student_registering->firstname . ' ' . $student_registering->lastname . ' เรียบร้อยแล้ว']);
     }
+
+    public function register_teacher_page()
+    {
+        $users = Users::where('isactive', true)->get();
+        return view('register_teacher', compact('users'));
+    }
+
+    public function register_teacher(UserMgeAccountRequest $request)
+    {
+        $teacher_registering = new Users();
+        $teacher_registering->prefix = $request->prefix;
+        $teacher_registering->firstname = $request->firstname;
+        $teacher_registering->lastname = $request->lastname;
+        $teacher_registering->email = $request->email;
+        $teacher_registering->password = Hash::make($request->password);
+        $teacher_registering->privilege = 'teacher';
+        $teacher_registering->save();
+        return redirect('/register_success')->with(['success' => 'สร้างบัญชี ' . $teacher_registering->prefix . $teacher_registering->firstname . ' ' . $teacher_registering->lastname . ' เรียบร้อยแล้ว']);
+    }
 }
