@@ -93,12 +93,12 @@
                                     <form action="{{route('verify.email.post')}}" method="POST">
                                         @csrf
                                         <div class="otp-field mb-4">
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" required />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
-                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0 2px;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" required />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" disabled />
+                                            <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" disabled />
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mb-3">
