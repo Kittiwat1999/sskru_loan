@@ -66,9 +66,9 @@
                 <table id="borrower-documents-table" class="table table-striped w-100">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">รหัสนักศึกษา</th>
-                            <th scope="col">ข้อมูลผู้กู้</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">ชื่อ-สกุล</th>
+                            <th scope="col">คณะ-สาขา</th>
                             <th scope="col">วันที่ส่งเอกสาร</th>
                             <th class="text-center"></th>
                         </tr>
@@ -91,7 +91,7 @@
                 },
                 columns: [
                     { data: 'id', name: 'id' },
-                    { data: 'student_id', name: 'student_id' },
+                    { data: 'fullname', name: 'fullname' },
                     { data: 'information', name: 'information' },
                     { data: 'delivered_date', name: 'delivered_date' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }

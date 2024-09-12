@@ -11,7 +11,7 @@ use App\Models\Parents;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Session;
 
-class DownloadDocumentController extends Controller
+class BorrowerDownloadDocument extends Controller
 {
     public function deleteFile($file_path, $file_name)
     {

@@ -577,8 +577,7 @@ class BorrowerRegister extends Controller
         foreach ($register_document_for_add as $register_document_id) {
             BorrowerRegisterDocument::create(['user_id' => $user_id, 'register_document_id' => $register_document_id]);
         }
-
-
+        
         return redirect('/borrower/borrower_register/recheck')->with(['success' => 'บันทึกข้อมูลเสร็จสิ้น']);
     }
 

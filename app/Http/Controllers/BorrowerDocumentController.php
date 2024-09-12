@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class BorrowerDocumentController extends Controller
 {
@@ -82,10 +83,29 @@ class BorrowerDocumentController extends Controller
         return view('borrower.documents.index', compact('borrower_documents'));
     }
 
+    private function dectyptParam($enctypted_param)
+    {
+        try {
+            return Crypt::decryptString($enctypted_param);
+        } catch (DecryptException $e) {
+            return null; 
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    private function checkDataNotNull($data){
+        if (!$data) {
+            abort(404);
+        }
+    }
+
     public function viewBorrowerDocument($borrower_document_id, Request $request)
     {
-        $borrower_document_id = Crypt::decryptString($borrower_document_id);
+        $borrower_document_id = $this->dectyptParam($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $this->checkDataNotNull($borrower_document);
+
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
             ->where('documents.id', $borrower_document['document_id'])

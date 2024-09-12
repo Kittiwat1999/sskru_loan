@@ -35,7 +35,7 @@
                                 <span>{{$borrower['prefix']}}{{$borrower['firstname']}} {{$borrower['lastname']}}</span><br>
                             </td>
                             <td>
-                                <span class="text-secondary fw-lighter">{{$borrower['faculty_name']}}</span><br>
+                                <span class="text-dark fw-lighter">{{$borrower['faculty_name']}}</span><br>
                                 <span class="text-secondary fw-lighter">{{$borrower['major_name']}}</span><br>
                                 <span class="text-secondary fw-lighter">ชั้นปี: {{$borrower['grade']}}</span><br>
                             </td>

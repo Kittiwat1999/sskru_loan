@@ -109,36 +109,33 @@ class TeacherComment extends Controller
         $select_status = $request->session()->get('select_status', 'wait-approve');
         $faculty_id = $request->session()->get('faculty_id');
         $major_id = $request->session()->get('major_id');
+        $query = Users::query()
+                    ->join('borrowers', 'users.id', '=', 'borrowers.user_id')
+                    ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
+                    ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
+                    ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+                    ->join('majors', 'borrowers.major_id', '=', 'majors.id');
 
-        if ($select_grade == 'all') {
-            $borrower_documents = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
-                ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
-                ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
-                ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
-                ->join('majors', 'borrowers.major_id', '=', 'majors.id')
-                ->where('documents.id', 1)
-                ->where('borrower_documents.teacher_status', $select_status)
-                ->where('borrowers.faculty_id', $faculty_id)
-                ->where('borrowers.major_id', $major_id)
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.teacher_status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
-                ->orderBy('delivered_date', 'asc')
-                ->get();
-        } else {
-            $borrower_documents = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
-                ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
-                ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
-                ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
-                ->join('majors', 'borrowers.major_id', '=', 'majors.id')
-                ->where('documents.id', 1)
-                ->where('borrower_documents.teacher_status', $select_status)
-                ->where('borrowers.faculty_id', $faculty_id)
-                ->where('borrowers.major_id', $major_id)
-                ->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade) . '%')
-                ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.teacher_status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
-                ->orderBy('delivered_date', 'asc')
-                ->get();
+        if($select_grade != 'all'){
+            $query->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade) . '%');
         }
-        return $borrower_documents;
+
+        $query->where('documents.id', 1)
+            ->where('borrower_documents.teacher_status', $select_status)
+            ->where('borrowers.faculty_id', $faculty_id)
+            ->where('borrowers.major_id', $major_id)
+            ->select(
+                'users.prefix', 
+                'users.firstname', 
+                'users.lastname', 
+                'borrowers.student_id', 
+                'borrower_documents.id', 
+                'borrower_documents.teacher_status', 
+                'borrower_documents.delivered_date', 
+                'faculties.faculty_name', 
+                'majors.major_name')
+            ->orderBy('delivered_date', 'asc');
+        return $query->get();
     }
 
     public function getBorrowerDocuments(Request $request)
@@ -147,11 +144,14 @@ class TeacherComment extends Controller
             $data = $this->multipleQuery($request);
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('fullname', function ($row) {
+                    return '<span class="text-dark fw-lighter">' . $row->prefix . $row->firstname . ' ' . $row->lastname . '</span><br>
+                    <small class="text-secondary fw-lighter">'. $row->student_id .'</small>';
+                })
                 ->addColumn('information', function ($row) {
-                    return '<span>' . $row->prefix . $row->firstname . ' ' . $row->lastname . '</span><br>
-                    <small class="text-secondary fw-lighter">' . $row->faculty_name . '</small><br>
-                    <small class="text-secondary fw-lighter">' . $row->major_name . '</small><br>
-                    <small class="text-secondary fw-lighter">' . 'ชั้นปี : ' . $this->calculateGrade($row->student_id) . '</small>';
+                    return '<span class="text-dark fw-lighter">' . $row->faculty_name . '</span><br>
+                        <small class="text-secondary fw-lighter">' . $row->major_name . '</small><br>
+                        <small class="text-secondary fw-lighter">' . 'ชั้นปี ' . $this->calculateGrade($row->student_id) . '</small>';
                 })
                 ->addColumn('delivered_date', function ($row) {
                     return $this->convert_to_dmy_date($row->delivered_date);
@@ -168,7 +168,7 @@ class TeacherComment extends Controller
                     }
                     return $selectBtn;
                 })
-                ->rawColumns(['information', 'deliverd_date', 'action'])
+                ->rawColumns(['fullname','information', 'deliverd_date', 'action'])
                 ->make(true);
         }
     }

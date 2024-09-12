@@ -8,7 +8,7 @@ use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BorrowerDocumentController;
 use App\Http\Controllers\SendDocumentController;
-use App\Http\Controllers\DownloadDocumentController;
+use App\Http\Controllers\BorrowerDownloadDocument;
 use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\BorrowerRegister;
 use App\Http\Controllers\CacheAndCommentController;
@@ -193,6 +193,7 @@ Route::put('/borrower/edit/main_parent/information',[MainParentInfomationControl
 
 Route::get('/register_student',[RegisterController::class,'index']);
 Route::put('/register_student/student/register/',[RegisterController::class,'register_student'])->name('register.student');
+
 Route::get('/register_teacher/page',[RegisterController::class,'register_teacher_page']);
 Route::put('/register_teacher/teacher/register/',[RegisterController::class,'register_teacher'])->name('register.teacher');
 
@@ -235,13 +236,13 @@ Route::put('/borrower/usefulactivity/edit/{useful_activity_id}',[UsefulActivityC
 Route::delete('/borrower/usefulactivity/delete/{useful_activity_id}',[UsefulActivityController::class,'deleteUsefulActivity'])->name('borrower.delete.usefulactivity');
 Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}',[UsefulActivityController::class,'showUsefulActivityFile'])->name('borrower.show.usefulactivity.file');
 
-Route::get('/borrower/download_document',[DownloadDocumentController::class,'index']);
+//borrower download docuemnt
+Route::get('/borrower/download_document',[BorrowerDownloadDocument::class,'index']);
+Route::get('/borrower/download_document/recheck_document/{child_document_id}',[BorrowerDownloadDocument::class,'recheck_document'])->name('borrower.recheck.document');
+Route::get('/borrower/download_document/response_document/{child_document_id}',[BorrowerDownloadDocument::class,'response_file'])->name('borrower.response.document');
 
-Route::get('/borrower/download_document/recheck_document/{child_document_id}',[DownloadDocumentController::class,'recheck_document'])->name('borrower.recheck.document');
-Route::get('/borrower/download_document/response_document/{child_document_id}',[DownloadDocumentController::class,'response_file'])->name('borrower.response.document');
-
-Route::get('/borrower/download_document/recheck_document/parent/{parent_id}',[DownloadDocumentController::class,'recheck_parent_document'])->name('borrower.recheck.parent.document');
-Route::get('/borrower/download_document/response_document/parent/{parent_id}',[DownloadDocumentController::class,'response_parent_file'])->name('borrower.response.parent.document');
+Route::get('/borrower/download_document/recheck_document/parent/{parent_id}',[BorrowerDownloadDocument::class,'recheck_parent_document'])->name('borrower.recheck.parent.document');
+Route::get('/borrower/download_document/response_document/parent/{parent_id}',[BorrowerDownloadDocument::class,'response_parent_file'])->name('borrower.response.parent.document');
 
 //test generate file
 Route::get('/generate_rabrongraidai',[GenerateFile::class,'generate_rabrongraidai']);
@@ -292,4 +293,12 @@ Route::get('/check_document/check_documents_test',function () {
 });
 Route::get('/check_document/documents',function () {
     return view('check_document/documents');
+});
+
+Route::get('/errors/400', function (){
+    return view('errors.400');
+});
+
+Route::get('/errors/500', function (){
+    return view('errors.500');
 });
