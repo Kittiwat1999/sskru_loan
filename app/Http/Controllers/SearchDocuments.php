@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
+use iio\libmergepdf\Merger;
 
 class SearchDocuments extends Controller
 {
@@ -56,6 +58,24 @@ class SearchDocuments extends Controller
         $beginYear = intval($firstTwoDigits . substr($student_id, 0, 2));
         $grade = ($buddhistCurrentYear - $beginYear) + 1;
         return $grade;
+    }
+
+    private function checkDataNotNull($data)
+    {
+        if (!$data) {
+            abort(404);
+        }
+    }
+
+    private function dectyptParam($enctypted_param)
+    {
+        try {
+            return Crypt::decryptString($enctypted_param);
+        } catch (DecryptException $e) {
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function index()
@@ -122,8 +142,9 @@ class SearchDocuments extends Controller
 
     public function viewBorrowerDocument($borrower_document_id, Request $request)
     {
-        $borrower_document_id = Crypt::decryptString($borrower_document_id);
+        $borrower_document_id = $this->dectyptParam($borrower_document_id);
         $borrower_document = BorrowerDocument::find($borrower_document_id);
+        $this->checkDataNotNull($borrower_document);
         $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
             ->where('documents.isactive', true)
             ->where('documents.id', $borrower_document['document_id'])
@@ -206,5 +227,40 @@ class SearchDocuments extends Controller
         $user_id = $request->session()->get('user_id', '1');
         $generator = new GenerateFile();
         return $generator->teacherCommentDocument103($user_id, $document_id);
+    }
+
+    public function downloadBorrderDocuments($borrower_uid, $document_id)
+    {
+        $borrower_uid = Crypt::decryptString($borrower_uid);
+        $document_id = Crypt::decryptString($document_id);
+        $student_id = Borrower::where('user_id', $borrower_uid)->value('student_id');
+
+        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
+            ->where('documents.id', $document_id)
+            ->select('doc_types.doctype_title', 'documents.year', 'documents.term')
+            ->first();
+        
+        $borrower_child_documents = DocStructure::join('documents', 'doc_structures.document_id', '=', 'documents.id')
+            ->join('borrower_child_documents', 'doc_structures.child_document_id', '=', 'borrower_child_documents.child_document_id')
+            ->where('doc_structures.document_id', $document_id)
+            ->where('borrower_child_documents.document_id', $document_id)
+            ->where('borrower_child_documents.user_id', $borrower_uid)
+            ->select('borrower_child_documents.borrower_file_id')
+            ->get();
+        
+        $merger = new Merger(); //merger instant
+
+        foreach($borrower_child_documents as $item)
+        {
+            $borrower_file = BorrowerFiles::find($item['borrower_file_id']);
+            $file_path = storage_path($borrower_file['file_path']. '/' .$borrower_file['file_name']);
+            $merger->addFile($file_path); //stack file
+        }
+
+        $createdPdf = $merger->merge();
+
+        return response($createdPdf)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="'.$student_id. ' '.$document['doctype_title'].' '.$document['year'].'-'.$document['term'].'.pdf"');
     }
 }

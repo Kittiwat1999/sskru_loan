@@ -135,6 +135,7 @@ class TeacherComment extends Controller
                 'faculties.faculty_name', 
                 'majors.major_name')
             ->orderBy('delivered_date', 'asc');
+        
         return $query->get();
     }
 
@@ -146,7 +147,7 @@ class TeacherComment extends Controller
                 ->addIndexColumn()
                 ->addColumn('fullname', function ($row) {
                     return '<span class="text-dark fw-lighter">' . $row->prefix . $row->firstname . ' ' . $row->lastname . '</span><br>
-                    <small class="text-secondary fw-lighter">'. $row->student_id .'</small>';
+                        <small class="text-secondary fw-lighter">'. $row->student_id .'</small>';
                 })
                 ->addColumn('information', function ($row) {
                     return '<span class="text-dark fw-lighter">' . $row->faculty_name . '</span><br>

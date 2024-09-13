@@ -58,7 +58,7 @@
 <section class="section Editing">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">ดูเอกสาร</h5>
+            <h5 class="card-title">รายการเอกสาร {{$document['doctype_title']}} {{$document['year'].'/'.$document['term']}}</h5>
             <div class="accordion mb-3" id="accordion">
                 @foreach($child_documents as $child_document)
                     @if($child_document->borrower_child_document != null)
@@ -250,8 +250,13 @@
                     <div id="grade" class="col-md-3"></div>
                 </div>
             </div>
-            <div class="text-start">
-                <a href="{{route('serach.document.list.document', ['borrower_uid' => $borrower_document->user_id])}}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
+            <div class="row mt-4">
+                <div class="text-start col-6 ">
+                    <a href="{{ route('serach.document.list.document', [ 'borrower_uid' => Crypt::encryptString($borrower_document->user_id) ]) }}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
+                </div>
+                <div class="text-end col-6 ">
+                    <a href="{{ route('search.document.download.document',[ 'borrower_uid' => Crypt::encryptString($borrower['user_id']), 'document_id' => Crypt::encryptString($document['id']) ]) }}" class="btn btn-danger w-25">ดาวน์โหลด</a>
+                </div>
             </div>
         </div>
     </div>

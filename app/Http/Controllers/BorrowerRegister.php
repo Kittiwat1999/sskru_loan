@@ -876,7 +876,6 @@ class BorrowerRegister extends Controller
             File::makeDirectory($path, 0755, true);
         }
         $final_path = $path . '/' . $custom_filename;
-        // dd($temp_path, $final_path);
         File::move($temp_path, $final_path);
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']) ?? new BorrowerFiles();;
         $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);

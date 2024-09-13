@@ -130,9 +130,7 @@ class CheckDocumentController extends Controller
         $documents = Documents::join('doc_types', 'documents.doctype_id', '=', 'doc_types.id')
             ->where('documents.isactive', true)
             ->select('documents.*', 'doc_types.doctype_title')
-            // ->orderBy('documents.created_at', 'desc')
             ->get();
-        // dd($documents);
         foreach ($documents as $document) {
             $document['last_access'] = Users::where('id', $document['last_access'])->value('firstname');
         }

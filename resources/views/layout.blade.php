@@ -181,7 +181,7 @@
 
             <li class="nav-item">
                 <a id="check_document" class="nav-link collapsed" href="{{url('check_document/index')}}">
-                <i class="bi bi-file-earmark-medical"></i>
+                <i class="bi bi-clipboard2-check"></i>
                 <span>ตรวจเอกสาร</span>
                 </a>
             </li><!-- End คำขอกู้เกินหลักสูตร Page Nav -->
