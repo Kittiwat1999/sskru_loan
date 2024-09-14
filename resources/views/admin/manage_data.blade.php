@@ -7,7 +7,7 @@
             <div class="card-body">
                 <h5 class="card-title">คณะ</h5>
                 <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="faculty-table">
+                    <table class="table" id="faculty-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
@@ -124,11 +124,11 @@
             <div class="card-body">
                 <h5 class="card-title">ประเภทผู้กู้</h5>
                 <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="apprearance-type-table">
+                    <table class="table" id="apprearance-type-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
-                                <th class="text-center">ประเภทผู้กู้</th>
+                                <th>ประเภทผู้กู้</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                             <tbody>
@@ -237,11 +237,11 @@
             <div class="card-body">
                 <h5 class="card-title">คุณสมบัติผู้กู้</h5>
                 <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="property-table">
+                    <table class="table" id="property-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
-                                <th class="text-center">คุณสมบัติผู้กู้</th>
+                                <th>คุณสมบัติผู้กู้</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                             <tbody>
@@ -350,11 +350,11 @@
             <div class="card-body">
                 <h5 class="card-title">เหตุผลจำเป็นของการกู้ยืม</h5>
                 <div class="table-responsive mb-3">
-                    <table class="table table-striped table-bordered" id="nessessity-table">
+                    <table class="table" id="nessessity-table">
                         <thead>
                             <tr>
                                 <th class="text-center fw-bold">#</th>
-                                <th class="text-center">เหตุผลจำเป็นของการกู้ยืม</th>
+                                <th>เหตุผลจำเป็นของการกู้ยืม</th>
                                 <th class="text-center">แก้ไข/ลบ</th>
                             </tr>
                             <tbody>
@@ -462,86 +462,3 @@
     </section>
 @endsection
 
-@section('script')
-    <script>
-        $(document).ready(function() {
-            $('#faculty-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('#apprearance-type-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('#property-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('#nessessity-table').DataTable({
-                "language": {
-                    "sProcessing": "กำลังประมวลผล...",
-                    "sLengthMenu": "แสดง _MENU_ รายการ",
-                    "sZeroRecords": "ไม่พบข้อมูล",
-                    "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                    "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                    "sSearch": "ค้นหา:",
-                    "oPaginate": {
-                        "sFirst": "แรก",
-                        "sPrevious": "ก่อนหน้า",
-                        "sNext": "ถัดไป",
-                        "sLast": "สุดท้าย"
-                    }
-                }
-            });
-        });
-    </script>
-@endsection

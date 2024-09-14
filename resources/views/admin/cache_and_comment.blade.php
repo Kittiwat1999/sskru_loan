@@ -179,7 +179,7 @@
             </section>
             <section class="row">
                 <div class="col-md-3 col-sm-12">
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addTeacherCommentModal">
+                    <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#addTeacherCommentModal">
                         เพิ่มความคิดเห็น
                     </button>
                 </div>
@@ -300,7 +300,7 @@
             </section>
             <section class="row">
                 <div class="col-md-3 col-sm-12">
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+                    <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#addCommentModal">
                         เพิ่มความคิดเห็น
                     </button>
                 </div>

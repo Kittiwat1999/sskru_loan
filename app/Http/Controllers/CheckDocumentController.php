@@ -139,12 +139,16 @@ class CheckDocumentController extends Controller
 
     public function selectDocument($document_id, Request $request)
     {
-        $request->session()->put(['check_document' => [
-            'select_status' =>  $request->session()->get('select_status') ?? 'wait-approve',
-            'select_faculty' => $request->session()->get('select_faculty') ?? 'all',
-            'select_major' => $request->session()->get('select_major') ?? 'all',
-            'select_grade' => $request->session()->get('select_grade') ?? 'all',
-        ]]);
+        $sessionData = $request->session()->get('check_document');
+
+        $resetSessionData = [
+            'select_status' => 'wait-approve',
+            'select_faculty' => 'all',
+            'select_major' => 'all',
+            'select_grade' => 'all',
+        ];
+        $request->session()->put(['check_document' => $sessionData ?? $resetSessionData]);
+
         $document = Documents::join('doc_types', 'documents.doctype_id', '=', 'doc_types.id')
             ->where('documents.isactive', true)
             ->where('documents.id', $document_id)
@@ -155,6 +159,7 @@ class CheckDocumentController extends Controller
         }
         $faculties = Faculties::where('isactive', true)->get();
         $majors = Majors::where('isactive', true)->get();
+
         return view('check_document.select_check_document', compact('document', 'faculties', 'majors'));
     }
 
@@ -170,7 +175,7 @@ class CheckDocumentController extends Controller
 
     public function selectStatusDocument($document_id, Request $request)
     {
-        $request->session()->put(['check_document' =>[
+        $request->session()->put(['check_document' => [
             'select_status' => $request->status,
             'select_faculty' => $request->faculty ?? 'all',
             'select_major' => $request->major ?? 'all',
@@ -182,7 +187,6 @@ class CheckDocumentController extends Controller
     public function multipleQuery($document_id, $request)
     {
         $sessionData = $request->session()->get('check_document');
-
         $query = Users::query()
             ->join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
@@ -266,6 +270,7 @@ class CheckDocumentController extends Controller
             ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $borrower_document['document_id'])
             ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->where('borrower_child_documents.document_id', $borrower_document['document_id'])
             ->select(
                 'child_documents.id',
                 'child_documents.child_document_title as title',
@@ -329,7 +334,6 @@ class CheckDocumentController extends Controller
 
     public function getBorrowerChildDocument($borrower_child_document_id, $borrower_document_id, Request $request)
     {
-
         $borrower_child_document_id = $this->dectyptParam($borrower_child_document_id);
         $borrower_child_document = BorrowerChildDocument::find($borrower_child_document_id);
         $this->checkDataNotNull($borrower_child_document);
@@ -564,6 +568,7 @@ class CheckDocumentController extends Controller
             ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $borrower_document['document_id'])
             ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->where('borrower_child_documents.document_id', $borrower_document['document_id'])
             ->select(
                 'child_documents.id',
                 'child_documents.child_document_title as title',

@@ -6,10 +6,7 @@
     <div class="card">
         <div class="card-body">
             @php
-                $select_status = Session::get('select_status');
-                $select_faculty = Session::get('select_faculty');
-                $select_major = Session::get('select_major');
-                $select_grade = Session::get('select_grade');
+                $sessionData = Session::get('check_document');
             @endphp
             
             <form class="row mb-3" action="{{route('check_document.select.status', ['document_id' => $document->id])}}" method="POST">
@@ -17,42 +14,42 @@
                 <div class="col-md-4 my-3">
                     <label for="status" class="col-form-label text-secondary">สถานะเอกสาร</label>
                     <select id="status" class="form-select" aria-label="Default select example" name="status">
-                        <option @selected($select_status == 'wait-approve') value="wait-approve">รออนุมัติ</option>
-                        <option @selected($select_status == 'wait-teacher-approve') value="wait-teacher-approve">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
-                        <option @selected($select_status == 'approved') value="approved">อนุมัติแล้ว</option>
-                        <option @selected($select_status == 'rejected') value="rejected">ต้องแก้ไข</option>
-                        <option @selected($select_status == 'response-reject') value="response-reject">แก้ไขแล้ว</option>
-                        <option @selected($select_status == 'sending') value="sending">ผู้กู้ยืมกำลังดำเนินการ</option>
+                        <option @selected($sessionData['select_status'] == 'wait-approve') value="wait-approve">รออนุมัติ</option>
+                        <option @selected($sessionData['select_status'] == 'wait-teacher-approve') value="wait-teacher-approve">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
+                        <option @selected($sessionData['select_status'] == 'approved') value="approved">อนุมัติแล้ว</option>
+                        <option @selected($sessionData['select_status'] == 'rejected') value="rejected">ต้องแก้ไข</option>
+                        <option @selected($sessionData['select_status'] == 'response-reject') value="response-reject">แก้ไขแล้ว</option>
+                        <option @selected($sessionData['select_status'] == 'sending') value="sending">ผู้กู้ยืมกำลังดำเนินการ</option>
                     </select>
                 </div>
                 <div class="col-md-8"></div>
                 <div class="col-md-4">
                     <label for="borrower-type" class="col-form-label text-secondary">คณะ</label>
                     <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajors(this.value)">
-                        <option @selected($select_faculty == 'all') value="all">ทั้งหมด</option>
+                        <option @selected($sessionData['select_faculty'] == 'all') value="all">ทั้งหมด</option>
                         @foreach($faculties as $faculty)
-                            <option @selected($select_faculty == $faculty->id) value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
+                            <option @selected($sessionData['select_faculty'] == $faculty->id) value="{{$faculty->id}}">{{$faculty->faculty_name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="borrower-type" class="col-form-label text-secondary">สาขา</label>
                     <select id="major" class="form-select" aria-label="Default select example" name="major">
-                        <option selected value="all">ทั้งหมด</option>
+                        <option @selected($sessionData['select_major'] == 'all') value="all">ทั้งหมด</option>
                         @foreach($majors as $major)
-                            <option @selected($select_major == $major->id) value="{{$major->id}}">{{$major->major_name}}</option>
+                            <option @selected($sessionData['select_major'] == $major->id) value="{{$major->id}}">{{$major->major_name}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-2">
                     <label for="grade" class="col-form-label text-secondary">ชั้นปี</label>
                     <select id="grade" class="form-select" aria-label="Default select example" name="grade">
-                        <option @selected($select_grade == 'all') value="all">ทั้งหมด</option>
-                        <option @selected($select_grade == '1') value="1">1</option>
-                        <option @selected($select_grade == '2') value="2">2</option>
-                        <option @selected($select_grade == '3') value="3">3</option>
-                        <option @selected($select_grade == '4') value="4">4</option>
-                        <option @selected($select_grade == '5') value="5">5</option>
+                        <option @selected($sessionData['select_grade'] == 'all') value="all">ทั้งหมด</option>
+                        <option @selected($sessionData['select_grade'] == '1') value="1">1</option>
+                        <option @selected($sessionData['select_grade'] == '2') value="2">2</option>
+                        <option @selected($sessionData['select_grade'] == '3') value="3">3</option>
+                        <option @selected($sessionData['select_grade'] == '4') value="4">4</option>
+                        <option @selected($sessionData['select_grade'] == '5') value="5">5</option>
                     </select>
                 </div>
 

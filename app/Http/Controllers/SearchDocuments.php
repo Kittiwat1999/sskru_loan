@@ -249,7 +249,6 @@ class SearchDocuments extends Controller
             ->get();
         
         $merger = new Merger(); //merger instant
-
         foreach($borrower_child_documents as $item)
         {
             $borrower_file = BorrowerFiles::find($item['borrower_file_id']);

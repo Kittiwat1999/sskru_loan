@@ -12,6 +12,7 @@
             <div class="col-md-8">
                 <h1 class="display-1 text-danger">500</h1>
                 <h2 class="mb-4">Internal Server Error</h2>
+                <a class="btn" href="{{url('/')}}">Back to home</a>
                 <p class="lead">
                     <!-- Display the error message if passed -->
                     {{ $errors ?? 'The request could not be understood by the server due to malformed syntax.' }}
