@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\AdminManageAccountController;
 use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
 use App\Http\Controllers\AdminManageDataController;
@@ -12,12 +12,9 @@ use App\Http\Controllers\BorrowerDownloadDocument;
 use App\Http\Controllers\BorrowerInforamtionController;
 use App\Http\Controllers\BorrowerRegister;
 use App\Http\Controllers\CacheAndCommentController;
-use App\Http\Controllers\CheckBorrowerInformation;
 use App\Http\Controllers\CheckDocumentController;
 use App\Http\Controllers\DashboadController;
 use App\Http\Controllers\ExportBorrowerDocumentController;
-use App\Http\Controllers\GenerateFile;
-use App\Http\Controllers\GenerateDocController;
 use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
 use App\Http\Controllers\RegisterController;
@@ -26,7 +23,11 @@ use App\Http\Controllers\SearchDocuments;
 use App\Http\Controllers\TeacherComment;
 use App\Http\Controllers\UsefulActivityController;
 use App\Http\Controllers\UsersProfileController;
+// use App\Http\Controllers\CheckBorrowerInformation;
+// use App\Http\Controllers\GenerateFile;
+// use App\Http\Controllers\GenerateDocController;
 
+//admin
 Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
     //dashboard
     Route::get('/admin/dashboard', [DashboadController::class, 'index']);
@@ -56,14 +57,14 @@ Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
     Route::delete('/admin/document_scheduler/deletedata/{document_id}', [AdminDocumentSchedulerController::class, 'deleteDocSchedulerData'])->name('admin.doc.scheduler.deletedata');
     
     //manage account 
-    Route::get('/admin/manage_account', [UsersController::class, 'index'])->name('admin_manage_account');
-    Route::get('/admin/manage_account/select_privilege/{select_privilege}', [UsersController::class, 'admin_getUsersDataByPrivilege'])->name('admin.manageaccount.privilege');
-    Route::get('/admin/manage_account/get-users', [UsersController::class, 'getUsers'])->name('admin.get.users');
-    Route::get('/admin/get_user_by_id/{user_id}', [UsersController::class, 'admin_get_user_by_id'])->name('admin.get_ser_by_id');
-    Route::get('/admin/deleteUser/{id}', [UsersController::class, 'admin_deleteUser'])->name('admin.deleteUser');
-    Route::post('/admin/createUser', [UsersController::class, 'admin_createUser'])->name('admin.createUser');
-    Route::post('/admin/editAccount/{user_id}', [UsersController::class, 'admin_editAccount'])->name('admin.editAccount');
-    Route::get('/admin/manage_account/get_major_by_faculty_id/{faculty_id}', [UsersController::class, 'get_major_by_faculty_id']);
+    Route::get('/admin/manage_account', [AdminManageAccountController::class, 'index'])->name('admin_manage_account');
+    Route::get('/admin/manage_account/select_privilege/{select_privilege}', [AdminManageAccountController::class, 'admin_getUsersDataByPrivilege'])->name('admin.manageaccount.privilege');
+    Route::get('/admin/manage_account/get-users', [AdminManageAccountController::class, 'getUsers'])->name('admin.get.users');
+    Route::get('/admin/get_user_by_id/{user_id}', [AdminManageAccountController::class, 'admin_get_user_by_id'])->name('admin.get_ser_by_id');
+    Route::get('/admin/deleteUser/{id}', [AdminManageAccountController::class, 'admin_deleteUser'])->name('admin.deleteUser');
+    Route::post('/admin/createUser', [AdminManageAccountController::class, 'admin_createUser'])->name('admin.createUser');
+    Route::post('/admin/editAccount/{user_id}', [AdminManageAccountController::class, 'admin_editAccount'])->name('admin.editAccount');
+    Route::get('/admin/manage_account/get_major_by_faculty_id/{faculty_id}', [AdminManageAccountController::class, 'get_major_by_faculty_id']);
     
     //manage document page
     Route::get('/admin/manage_documents', [AdminManageDocumentsController::class, 'manage_documents'])->name('admin.manage.documents');
@@ -81,7 +82,6 @@ Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
     Route::put('/admin/manage_documents/store_document', [AdminManageDocumentsController::class, 'sotoreDocument'])->name('admin.store.document');
     Route::post('/admin/manage_documents/edit_document/{doc_type_id}', [AdminManageDocumentsController::class, 'editDocument'])->name('admin.edit.document');
     Route::delete('/admin/manage_documents/delete_document/{doc_type_id}', [AdminManageDocumentsController::class, 'deleteDocument'])->name('admin.delete.document');
-    
     Route::post('/admin/manage_documents/update_useful_activity_hour', [AdminManageDocumentsController::class, 'updateUsefulActivitytHour'])->name('admin.update.useful.hour');
     
     //child doc files
@@ -128,7 +128,8 @@ Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
     Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}', [AdminManageDataController::class, 'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
     Route::put('/admin/manage_data/major/edit/{major_id}', [AdminManageDataController::class, 'edit_major'])->name('admin.manage.data.edit.major');
 });
-
+//end-admin
+//admin,employee
 Route::middleware(['session.expire', 'privilege:admin,employee'])->group(function () {
     //search document
     Route::get('/search_document', function () {
@@ -160,9 +161,9 @@ Route::middleware(['session.expire', 'privilege:admin,employee'])->group(functio
     Route::post('/check_document/borrower_document/submit/{borrower_document_id}', [CheckDocumentController::class, 'submitCheckDocument'])->name('check_document.document.submit');
     Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}', [CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.borrower_child_document_file');
 });
-
+//end - admin,employee
+//teacher
 Route::middleware(['session.expire', 'privilege:teacher'])->group(function () {
-    //teacher
     Route::get('/teacher/index', [TeacherComment::class, 'index'])->name('teacher.index');
     Route::post('/teacher/select-option', [TeacherComment::class, 'selectOption'])->name('teacher.select.option');
     Route::get('/teacher/get_borrower_documents', [TeacherComment::class, 'getBorrowerDocuments'])->name('teacher.get.borrower.document');
@@ -174,9 +175,10 @@ Route::middleware(['session.expire', 'privilege:teacher'])->group(function () {
     Route::get('/teacher/borrower_document/preview/teacher-comment/{borrower_document_id}/{borrower_uid}', [TeacherComment::class, 'generateFile103'])->name('teacher.comment.preview.teacher.comment');
 
 });
+//end - teacher
 
+//borrower
 Route::middleware(['session.expire', 'privilege:borrower'])->group(function () {
-    //borrower
     Route::get('/borrower/borrower_document/index', [BorrowerDocumentController::class, 'index']);
     Route::get('/borrower/borrower_document/document/{borrower_document_id}', [BorrowerDocumentController::class, 'viewBorrowerDocument'])->name('borrower.view.document.page');
     Route::get('/borrower/borrower_document/preview/borrower_file/{borrower_child_document_id}', [BorrowerDocumentController::class, 'previewBorrowerFile'])->name('borrower.document.preview.file');
@@ -220,7 +222,6 @@ Route::middleware(['session.expire', 'privilege:borrower'])->group(function () {
     Route::get('/borrower/download_document', [BorrowerDownloadDocument::class, 'index']);
     Route::get('/borrower/download_document/recheck_document/{child_document_id}', [BorrowerDownloadDocument::class, 'recheck_document'])->name('borrower.recheck.document');
     Route::get('/borrower/download_document/response_document/{child_document_id}', [BorrowerDownloadDocument::class, 'response_file'])->name('borrower.response.document');
-
     Route::get('/borrower/download_document/recheck_document/parent/{parent_id}', [BorrowerDownloadDocument::class, 'recheck_parent_document'])->name('borrower.recheck.parent.document');
     Route::get('/borrower/download_document/response_document/parent/{parent_id}', [BorrowerDownloadDocument::class, 'response_parent_file'])->name('borrower.response.parent.document');
     
@@ -243,7 +244,7 @@ Route::middleware(['session.expire', 'privilege:borrower'])->group(function () {
     //preview file
     Route::get('/borrower/borrower_register/recheck/document/{document_id}/{child_document_id}', [BorrowerRegister::class, 'showFile101'])->name('borrower.register.generate.document');
     Route::get('/borrower/borrower_register/recheck/teacher-comment/{borrower_document_id}', [BorrowerRegister::class, 'generateFile103'])->name('borrower.register.generate.teacher.comment');
-
+    //status
     Route::get('/borrower/borrower_register/status', [BorrowerRegister::class, 'status'])->name('borrower.register.status');
 });
 
@@ -252,7 +253,6 @@ Route::middleware(['session.expire'])->group(function () {
     Route::put('/users_profile/edit', [UsersProfileController::class, 'edit_profile'])->name('users.profile.edit');
     Route::post('/users_profile/password/change', [UsersProfileController::class, 'change_password'])->name('users.password.change');
 });
-
 
 Route::get('/register_student', [RegisterController::class, 'index']);
 Route::put('/register_student/student/register/', [RegisterController::class, 'register_student'])->name('register.student');
@@ -264,6 +264,8 @@ Route::get('/', [AuthenticationController::class, 'index']);
 Route::get('/login', [AuthenticationController::class, 'loginPage'])->name('login');
 Route::post('/post/login', [AuthenticationController::class, 'login'])->name('post.login');
 Route::get('/signout', [AuthenticationController::class, 'signout']);
+Route::post('/verify_email/post', [AuthenticationController::class, 'email_confirm'])->name('verify.email.post');
+Route::get('/send_email', [AuthenticationController::class, 'send_email'])->name('send.email');
 
 Route::get('/register_success', function () {
     return view('register_success');
@@ -292,9 +294,6 @@ Route::get('/reset_password_success', function () {
 Route::get('/verify_email', function () {
     return view('/verify_email');
 });
-
-Route::post('/verify_email/post', [AuthenticationController::class, 'email_confirm'])->name('verify.email.post');
-Route::get('/send_email', [AuthenticationController::class, 'send_email'])->name('send.email');
 
 Route::get('/errors/400', function () {
     return view('errors.400');

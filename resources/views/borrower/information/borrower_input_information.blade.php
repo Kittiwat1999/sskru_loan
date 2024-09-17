@@ -506,12 +506,17 @@
         document.getElementById('grade').value = grade;
     }
 
-    $("#borrower_birthday").datetimepicker({
-        disabled:false,
-        format: 'd-m-Y', 
-        timepicker: false, 
-        yearOffset: 543, 
-        closeOnDateSelect: true,
-    });
+    $(document).ready(function () {
+        $.datetimepicker.setLocale('th'); 
+
+        $("#borrower_birthday").datetimepicker({
+            disabled:false,
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+    })
+
 </script>
 @endsection

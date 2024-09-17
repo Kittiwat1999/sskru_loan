@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-ยื่นกู้รายใหม่
+ท่านยังไม่ได้กรอกข้อมูล
 @endsection
 <style>
     .card-body {

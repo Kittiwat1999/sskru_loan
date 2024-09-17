@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserMgeAccountRequest;
+use App\Http\Requests\StudentRegisterRequest;
+use App\Http\Requests\TeacherRegisterRequest;
 use App\Models\Faculties;
 use App\Models\Majors;
 use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
-use App\Models\RegisterToken;
 use App\Models\TeacherAccounts;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+
 
 class RegisterController extends Controller
 {
@@ -21,7 +19,7 @@ class RegisterController extends Controller
         return view('register_student', compact('users'));
     }
 
-    public function register_student(UserMgeAccountRequest $request)
+    public function register_student(StudentRegisterRequest $request)
     {
         $student_registering = new Users();
         $student_registering->prefix = $request->prefix;
@@ -43,7 +41,7 @@ class RegisterController extends Controller
         return view('register_teacher', compact('users','faculties','majors'));
     }
 
-    public function register_teacher(UserMgeAccountRequest $request)
+    public function register_teacher(TeacherRegisterRequest $request)
     {
         $teacher_registering = new Users();
         $teacher_registering->prefix = $request->prefix;

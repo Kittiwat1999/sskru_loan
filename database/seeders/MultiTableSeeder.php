@@ -32,7 +32,6 @@ class MultiTableSeeder extends Seeder
         $this->seedChildDocuments();
         $this->seedConfig();
         $this->seedDocuments();
-        $this->seedDocStructure();
         $this->seedAddOnDocument();
         $this->seedAddonStructure();
         $this->seedChildDocumentFiles();
@@ -50,9 +49,9 @@ class MultiTableSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'prefix' => 'นาย',
-                'firstname' => 'กิตติวัฒน์',
-                'lastname' => 'เทียนเพ็ชร',
-                'email'=>'th.kittiwat1999@gmail.com',
+                'firstname' => 'ขยัน',
+                'lastname' => 'รักเรียน',
+                'email'=>'student-test@gmail.com',
                 'password'=>Hash::make('1234567890'),
                 'privilege' =>'borrower',
                 'isactive'=>true,
@@ -64,7 +63,7 @@ class MultiTableSeeder extends Seeder
                 'prefix' => 'นาย',
                 'firstname' => 'อาจารย์',
                 'lastname' => 'ที่ปรึกษา',
-                'email'=>'th.kittiwat-ooo@gmail.com',
+                'email'=>'teacher-test@gmail.com',
                 'password'=>Hash::make('1234567890'),
                 'privilege' =>'teacher',
                 'isactive'=>true,
@@ -74,9 +73,9 @@ class MultiTableSeeder extends Seeder
             ],
             [
                 'prefix' => 'นาย',
-                'firstname' => 'emp',
-                'lastname' => 'loyee',
-                'email'=>'employee@gmail.com',
+                'firstname' => 'พนักงาน',
+                'lastname' => 'ตรวจเอกสาร',
+                'email'=>'employee-test@gmail.com',
                 'password'=>Hash::make('1234567890'),
                 'privilege' =>'employee',
                 'isactive'=>true,
@@ -86,9 +85,9 @@ class MultiTableSeeder extends Seeder
             ],
             [
                 'prefix' => 'นาย',
-                'firstname' => 'admin',
-                'lastname' => 'nistator',
-                'email'=>'admin@gmail.com',
+                'firstname' => 'แอด',
+                'lastname' => 'มิน',
+                'email'=>'admin-test@gmail.com',
                 'password'=>Hash::make('1234567890'),
                 'privilege' =>'admin',
                 'isactive'=>true,
@@ -177,13 +176,13 @@ class MultiTableSeeder extends Seeder
                 'address_id' => 1,
                 'borrower_appearance_id' => 1,
                 'birthday' => '2542-04-26',
-                'citizen_id' => Crypt::encryptString('1-3304-00570-61-6'),
-                'student_id' => '6410014103',
+                'citizen_id' => Crypt::encryptString('1-1111-11111-11-1'),
+                'student_id' => '6400000000',
                 'faculty_id' => 6,
                 'major_id' => 41,
                 'gpa' => 3.08,
                 'marital_status' => json_encode(["status"=>"อยู่ด้วยกัน","file_name"=>""]),
-                'phone' => '0931037881',
+                'phone' => '0999999999',
                 'created_at' => '2024-03-20 19:40:05',
                 'updated_at' => '2024-03-20 19:48:08',
             ],
@@ -194,9 +193,9 @@ class MultiTableSeeder extends Seeder
     {
         DB::table('addresses')->insert([
             'id' => 1,
-            'village' => 'ก่อ',
-            'house_no' => '44',
-            'village_no' => '7',
+            'village' => 'ทดสอบ',
+            'house_no' => '1',
+            'village_no' => '1',
             'street' => '-',
             'road' => '-',
             'tambon' => 'บึงมะลู',
@@ -218,12 +217,12 @@ class MultiTableSeeder extends Seeder
                 'borrower_relational' => 'บิดา',
                 'nationality' => 'ไทย',
                 'prefix' => 'นาย',
-                'firstname' => 'ฉลอง',
-                'lastname' => 'เทียนเพ็ชร',
+                'firstname' => 'บิดา',
+                'lastname' => 'ทดสอบ',
                 'birthday' => '2505-01-20',
-                'citizen_id' => Crypt::encryptString('1-3394-04958-64-4'),
-                'phone' => '+66931037881',
-                'email' => 'chalong@gmail.com',
+                'citizen_id' => Crypt::encryptString('1-1111-11111-11-1'),
+                'phone' => '0999999999',
+                'email' => 'bidha@gmail.com',
                 'occupation' => 'รับจ้าง',
                 'place_of_work' => 'ที่ทำงาน',
                 'income' => '100,000',
@@ -239,15 +238,15 @@ class MultiTableSeeder extends Seeder
                 'borrower_relational' => 'มารดา',
                 'nationality' => 'ไทย',
                 'prefix' => 'นางสาว',
-                'firstname' => 'จงรักษ์',
-                'lastname' => 'นาคยอง',
+                'firstname' => 'มารดา',
+                'lastname' => 'ทดสอบ',
                 'birthday' => '2521-08-20',
                 'citizen_id' => Crypt::encryptString('1-0394-33458-64-7'),
-                'phone' => '+66931037881',
-                'email' => 'jongrak@gmail.com',
+                'phone' => '0999999999',
+                'email' => 'manda@gmail.com',
                 'occupation' => 'รับจ้าง',
                 'place_of_work' => 'ที่ทำงาน',
-                'income' => '10,000',
+                'income' => '100,000',
                 'alive' => 1,
                 'is_main_parent' => 0,
                 'created_at' => '2024-03-20 19:40:05',
@@ -309,17 +308,6 @@ class MultiTableSeeder extends Seeder
     private function seedDocuments(){ 
         DB::table('documents')->insert([
             ['doctype_id'=>'1','last_access'=>'1','year'=>'2567','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'1','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
-        ]);
-    }
-
-    private function seedDocStructure(){
-        DB::table('doc_structures')->insert([
-            ['document_id'=>'1','child_document_id'=>'1'],
-            ['document_id'=>'1','child_document_id'=>'4'],
-            ['document_id'=>'1','child_document_id'=>'5'],
-            ['document_id'=>'1','child_document_id'=>'11'],
-            // ['document_id'=>'1','child_document_id'=>'4'],
-            // ['document_id'=>'1','child_document_id'=>'5'],
         ]);
     }
 

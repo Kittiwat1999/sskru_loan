@@ -363,13 +363,17 @@
             }else{
                 parent3_area.innerHTML = input_parent3();
             }
-            $("#parent3_birthday").datetimepicker({
-                disabled:false,
-                format: 'd-m-Y', 
-                timepicker: false, 
-                yearOffset: 543, 
-                closeOnDateSelect: true,
-            });
+            $(document).ready(function () {
+                $.datetimepicker.setLocale('th'); 
+
+                $("#parent3_birthday").datetimepicker({
+                    disabled:false,
+                    format: 'd-m-Y', 
+                    timepicker: false, 
+                    yearOffset: 543, 
+                    closeOnDateSelect: true,
+                });
+            })
         }else{
             parent3_area.innerHTML = '';
         }

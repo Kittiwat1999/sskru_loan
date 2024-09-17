@@ -12,7 +12,7 @@ use App\Models\Majors;
 use App\Models\TeacherAccounts;
 use Illuminate\Support\Facades\Hash;
 
-class UsersController extends Controller
+class AdminManageAccountController extends Controller
 {
     protected $privilege = [
         'admin' => 'แอดมิน',

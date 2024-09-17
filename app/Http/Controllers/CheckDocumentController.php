@@ -255,10 +255,6 @@ class CheckDocumentController extends Controller
         $borrower_document = BorrowerDocument::find($borrower_document_id);
         $this->checkDataNotNull($borrower_document);
 
-        if($borrower_document['checking']){
-            return redirect()->back()->withErrors('เอกสารอยู่ระหว่างการตรวจ');
-        }
-
         $useful_activities_status = UsefulActivityStatus::where('document_id', $borrower_document['document_id'])
             ->where('borrower_uid', $borrower_document['user_id'])
             ->first();

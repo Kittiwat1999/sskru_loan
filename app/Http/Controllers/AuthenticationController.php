@@ -36,6 +36,7 @@ class AuthenticationController extends Controller
     {
         $credentials = $request->only('email', 'password');
         $user = Users::where('email', $request->email)->first();
+        $currentTime = now();
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -45,6 +46,7 @@ class AuthenticationController extends Controller
                 $request->session()->put('privilege', $user['privilege']);
                 $request->session()->put('firstname', $user['firstname']);
                 $request->session()->put('lastname', $user['lastname']);
+                $request->session()->put('last_activity_time', $currentTime);
                 return $this->homePage($request);
             } else {
                 $this->send_email();
@@ -92,6 +94,8 @@ class AuthenticationController extends Controller
         $user_email = Session::get('email');
         $user = Users::where('email', $user_email)->first();
         $register_token = RegisterToken::where('email', $user['email'])->first();
+        $currentTime = now();
+
         if (Hash::check($code . $user['email'], $register_token['token']) and $now->lt($register_token['expired'])) {
             $student_registering = Users::where('email', $user['email'])->first();
             $student_registering['activated'] = true;
@@ -100,6 +104,8 @@ class AuthenticationController extends Controller
             $request->session()->put('privilege', $user['privilege']);
             $request->session()->put('firstname', $user['firstname']);
             $request->session()->put('lastname', $user['lastname']);
+            $request->session()->put('last_activity_time', $currentTime);
+
             return redirect('/email_comfirm_success');
         } else {
             return back()->withErrors('รหัสยืนยันตัวตนไม่ถูกต้อง หรือรหัสอาจหมดอายุไปแล้ว');
@@ -115,7 +121,7 @@ class AuthenticationController extends Controller
                 //auto login
                 return $this->homePage($request);
             } else {
-                //go verify email page
+                //verify email page
                 $request->session()->regenerate();
                 $request->session()->put('email', $user['email']);
                 $this->send_email();
@@ -123,7 +129,6 @@ class AuthenticationController extends Controller
             }
         } else {
             //go login
-
             return $this->loginPage($request);
         }
     }

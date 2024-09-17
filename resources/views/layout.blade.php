@@ -37,7 +37,7 @@
     <link href="{{asset('assets/vendor/DataTables/datatables.min.css')}}" rel="stylesheet">
 
     <!-- jquery -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
     <!-- jquery datetimepicker -->
     <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.20/build/jquery.datetimepicker.min.css">

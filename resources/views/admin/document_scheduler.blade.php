@@ -438,20 +438,24 @@ admin document scheduler
             `;
         modalcontent.innerHTML = modalcontent.innerHTML.replace('PLACEHOLDER_DOCUMENT_ID', document_data.id);
         modal.show();
+        
+        $(document).ready(function () {
+            $.datetimepicker.setLocale('th'); 
 
-        $('#edit_start_date').datetimepicker({
-            format: 'd-m-Y', 
-            timepicker: false, 
-            yearOffset: 543, 
-            closeOnDateSelect: true 
-        });
+            $('#edit_start_date').datetimepicker({
+                format: 'd-m-Y', 
+                timepicker: false, 
+                yearOffset: 543, 
+                closeOnDateSelect: true 
+            });
 
-        $('#edit_end_date').datetimepicker({
-            format: 'd-m-Y', 
-            timepicker: false, 
-            yearOffset: 543, 
-            closeOnDateSelect: true 
-        });
+            $('#edit_end_date').datetimepicker({
+                format: 'd-m-Y', 
+                timepicker: false, 
+                yearOffset: 543, 
+                closeOnDateSelect: true 
+            });
+        })
     }
 
     //format date form Y-m-d to d-m-Y

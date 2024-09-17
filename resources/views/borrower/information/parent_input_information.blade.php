@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title')
-กรอหข้อมูลผู้ปกครอง
+กรอกข้อมูลผู้ปกครอง
 @endsection
 @section('content')
 <section class="main-content">
@@ -719,19 +719,23 @@
             });
     }
 
-    $("#parent1_birthday").datetimepicker({
-        disabled:false,
-        format: 'd-m-Y', 
-        timepicker: false, 
-        yearOffset: 543, 
-        closeOnDateSelect: true,
-    });
-    $("#parent2_birthday").datetimepicker({
-        disabled:false,
-        format: 'd-m-Y', 
-        timepicker: false, 
-        yearOffset: 543, 
-        closeOnDateSelect: true,
-    });
+    $(document).ready(function () {
+        $.datetimepicker.setLocale('th'); 
+
+        $("#parent1_birthday").datetimepicker({
+            disabled:false,
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+        $("#parent2_birthday").datetimepicker({
+            disabled:false,
+            format: 'd-m-Y', 
+            timepicker: false, 
+            yearOffset: 543, 
+            closeOnDateSelect: true,
+        });
+    })
 </script>
 @endsection
