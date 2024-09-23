@@ -25,7 +25,7 @@ class SessionExpire
 
             // If the session has expired, log out the user
             if ($lastActivity && $currentTime->diffInMinutes($lastActivity) > $this->timeout) {
-                return redirect('/signout')->withErrors('Your session has expired due to inactivity.');
+                return redirect('/expired_page');
             }
 
             // Update the last activity time
