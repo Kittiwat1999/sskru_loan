@@ -315,3 +315,7 @@ Route::get('/errors/404', function () {
 // Route::get('/teachers_comment', [GenerateFile::class, 'teachers_comment']);
 
 // Route::get('/borrower_101', [GenerateDocController::class, 'borrower_101']);
+
+Route::get('/expired_page', function () {
+    return view('/expired_page');
+});
