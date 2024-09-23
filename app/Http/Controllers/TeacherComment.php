@@ -113,6 +113,7 @@ class TeacherComment extends Controller
                     ->join('borrowers', 'users.id', '=', 'borrowers.user_id')
                     ->join('borrower_documents', 'users.id', '=', 'borrower_documents.user_id')
                     ->join('documents', 'documents.id', '=', 'borrower_documents.document_id')
+                    ->join('doc_types', 'documents.doctype_id', '=', 'doc_types.id')
                     ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
                     ->join('majors', 'borrowers.major_id', '=', 'majors.id');
 
@@ -120,7 +121,7 @@ class TeacherComment extends Controller
             $query->where('borrowers.student_id', 'like', $this->getBorrowerBeginYear($select_grade) . '%');
         }
 
-        $query->where('documents.id', 1)
+        $query->where('doc_types.id', 1)
             ->where('borrower_documents.teacher_status', $select_status)
             ->where('borrowers.faculty_id', $faculty_id)
             ->where('borrowers.major_id', $major_id)
@@ -279,8 +280,8 @@ class TeacherComment extends Controller
             $comments_Db = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', '!=', null)->pluck('teacher_comment_id')->toArray();
             $comments_Req = $request->comments ?? [];
             $custom_comment = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', null)->first() ?? new TeacherCommentDocuments();
-            $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->first();
-            $borrower_child_document_103 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 5)->first();
+            $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 4)->where('user_id', $borrower_document['user_id'])->first();
+            $borrower_child_document_103 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])->where('child_document_id', 5)->where('user_id', $borrower_document['user_id'])->first();
             $comments_for_delete = array_diff($comments_Db, $comments_Req);
             $comments_for_add = array_diff($comments_Req, $comments_Db);
 

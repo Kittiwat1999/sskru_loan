@@ -125,7 +125,7 @@ class SendDocumentController extends Controller
             ->value('custom_comment') ?? null;
 
         if($useful_activities_custom_comments != null) array_push($useful_activities_comments, $useful_activities_custom_comments);
-        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
+        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->where('user_id', $user_id)->count();
         $child_documents = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document_id)
             ->get();
@@ -383,7 +383,7 @@ class SendDocumentController extends Controller
 
         $borrower_useful_activities_hours_sum = UsefulActivity::where('user_id', $user_id)->where('document_id', $document_id)->sum('hour_count') ?? 0;
         $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
-        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->count();
+        $borrower_child_document_delivered_count = BorrowerChildDocument::where('document_id', $document_id)->where('user_id', $user_id)->count();
 
         return view(
             'borrower.send_document.document_result',

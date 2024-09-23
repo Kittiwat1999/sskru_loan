@@ -162,7 +162,7 @@ class AdminManageDataController extends Controller
     public function edit_apprearancetype(Request $request, $apprearancetype_id)
     {
         $request->validate([
-            'apprearancetype_title' => 'required|string|max:50',
+            'apprearancetype_title' => 'required|string|max:100',
         ], [
             "apprearancetype_title.required" => 'กรุณากรอกประเภทผู้กู้',
             "apprearancetype_title.string" => 'รูปแบบข้อมูลที่ส่งมาไม่ถูกต้อง',

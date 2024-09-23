@@ -216,7 +216,6 @@ Route::middleware(['session.expire', 'privilege:borrower'])->group(function () {
     Route::post('/borrower/usefulactivity/store/{document_id}', [UsefulActivityController::class, 'storeUsefulActivity'])->name('borrower.store.usefulactivity');
     Route::put('/borrower/usefulactivity/edit/{useful_activity_id}', [UsefulActivityController::class, 'editUsefulActivity'])->name('borrower.edit.usefulactivity');
     Route::delete('/borrower/usefulactivity/delete/{useful_activity_id}', [UsefulActivityController::class, 'deleteUsefulActivity'])->name('borrower.delete.usefulactivity');
-    Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}', [UsefulActivityController::class, 'showUsefulActivityFile'])->name('borrower.show.usefulactivity.file');
 
     //borrower download docuemnt
     Route::get('/borrower/download_document', [BorrowerDownloadDocument::class, 'index']);
@@ -252,6 +251,9 @@ Route::middleware(['session.expire'])->group(function () {
     Route::get('/users_profile', [UsersProfileController::class, 'index']);
     Route::put('/users_profile/edit', [UsersProfileController::class, 'edit_profile'])->name('users.profile.edit');
     Route::post('/users_profile/password/change', [UsersProfileController::class, 'change_password'])->name('users.password.change');
+
+    //useful activity
+    Route::get('/borrower/usefulactivities/file/get/{useful_activity_id}', [UsefulActivityController::class, 'showUsefulActivityFile'])->name('borrower.show.usefulactivity.file');
 });
 
 Route::get('/register_student', [RegisterController::class, 'index']);

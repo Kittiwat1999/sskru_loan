@@ -51,19 +51,21 @@
                             <span class="text-warning">* ตรวจสอบข้อมูลให้ครบถ้วนทุกครั้งก่อนส่งเอกสาร</span>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3 mb-3">
-                        <a href="{{route('borrower.upload.document.page',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-outline-dark w-100"><i class="bi bi-arrow-left"></i> ย้อนกลับ </a>
+                    <div class="col-12 d-flex justify-content-between">
+                        <div class="mb-3">
+                            <a href="{{route('borrower.upload.document.page',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-outline-dark w-100"><i class="bi bi-arrow-left"></i> ย้อนกลับ </a>
+                        </div>
+                        <div class="">
+                            @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
+                                <a href="{{route('borrower.upload.document.submit',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-primary w-100" > ส่งเอกสาร <i class="bi bi-arrow-up"></i></a>
+                            @elseif(!$document->need_useful_activity)
+                                <a href="{{route('borrower.upload.document.submit',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-primary w-100" > ส่งเอกสาร <i class="bi bi-arrow-up"></i></a>
+                            @else
+                                <button type="button" class="btn btn-secondary w-100" disabled> ส่งเอกสาร <i class="bi bi-arrow-up"></i></button>
+                            @endif
+                        </div>
                     </div>
-                    <div class="col-md-6 col-sm-0"></div>
-                    <div class="col-sm-6 col-md-3 text-end">
-                        @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
-                            <a href="{{route('borrower.upload.document.submit',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-primary w-100" > ส่งเอกสาร <i class="bi bi-arrow-up"></i></a>
-                        @elseif(!$document->need_useful_activity)
-                            <a href="{{route('borrower.upload.document.submit',['document_id' => Crypt::encryptString($document->id)])}}" class="btn btn-primary w-100" > ส่งเอกสาร <i class="bi bi-arrow-up"></i></a>
-                        @else
-                            <button type="button" class="btn btn-secondary w-100" disabled> ส่งเอกสาร <i class="bi bi-arrow-up"></i></button>
-                        @endif
-                    </div>
+                    
                 </div>
             </div>
         </div>

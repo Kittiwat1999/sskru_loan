@@ -194,7 +194,7 @@
                         <div class="col-6"></div>
                         <div class="col-6">
                             <label for="edit-firstname" class="col-form-label">ชื่อ</label>
-                            <input type="text" name="edit-firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
+                            <input type="text" name="firstname" class="form-control need-custom-validate" value="${user.firstname}" required>
                             <div class="invalid-feedback">
                                 กรุณากรอกชื่อ
                             </div>
@@ -222,7 +222,7 @@
                         </div>
                         <div class="col-12">
                             <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
-                            <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilege" required onchange="user_privilege(this.value,'edit-faculty','edit-major')" ${(user.privilege == 'borrower') ? 'disabled' : '' }>
+                            <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilege" required onchange="user_privilege(this.value,'edit-faculty','edit-major')" ${(user.privilege == 'borrower') ? 'readonly' : '' }>
                                 <option ${(user.privilege == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
                                 <option ${(user.privilege == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
                                 <option ${(user.privilege == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>

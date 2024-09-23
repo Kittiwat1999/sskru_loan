@@ -669,6 +669,7 @@ class CheckDocumentController extends Controller
         if ($request->status == 'approved' && $have_borrower_child_document_101) {
             $borrower_child_document_101 = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])
                 ->where('child_document_id', 4)
+                ->where('user_id', $borrower_document['user_id'])
                 ->first();
 
             //sign borrower 101

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminMgeAccountRequest;
 use Illuminate\Http\Request;
 use App\Models\Users;
-use App\HTTP\Requests\AdminMgeAccountRequest;
 use App\Models\Borrower;
 use App\Models\Faculties;
 use Yajra\DataTables\Facades\DataTables;

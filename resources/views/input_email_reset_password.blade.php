@@ -106,7 +106,7 @@
                                                 <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
                                             </div>
                                     <div class="d-flex justify-content-end">
-                                        <a href="{{url('/login_student')}}" class="text-light btn btn-secondary me-2">ยกเลิก</a>
+                                        <a href="{{url('/')}}" class="text-light btn btn-secondary me-2">ยกเลิก</a>
                                         <button type="submit" class="btn btn-primary">ยืนยัน</button>
                                     </div>
                                 </form>

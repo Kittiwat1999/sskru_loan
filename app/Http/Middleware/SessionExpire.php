@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class SessionExpire
 {
     // Define the session lifetime in minutes
-    protected $timeout = 60; // Example: 60 minutes
+    protected $timeout = 20; // Expired in : 20 minutes
 
     /**
      * Handle an incoming request.

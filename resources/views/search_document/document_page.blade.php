@@ -250,12 +250,12 @@
                     <div id="grade" class="col-md-3"></div>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="text-start col-6 ">
-                    <a href="{{ route('serach.document.list.document', [ 'borrower_uid' => Crypt::encryptString($borrower_document->user_id) ]) }}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
+            <div class="d-flex justify-content-between">
+                <div class="">
+                    <a href="{{ route('serach.document.list.document', [ 'borrower_uid' => Crypt::encryptString($borrower_document->user_id) ]) }}" class="btn btn-secondary">ย้อนกลับ</a>
                 </div>
-                <div class="text-end col-6 ">
-                    <a href="{{ route('search.document.download.document',[ 'borrower_uid' => Crypt::encryptString($borrower['user_id']), 'document_id' => Crypt::encryptString($document['id']) ]) }}" class="btn btn-danger w-25">ดาวน์โหลด</a>
+                <div class="">
+                    <a href="{{ route('search.document.download.document',[ 'borrower_uid' => Crypt::encryptString($borrower['user_id']), 'document_id' => Crypt::encryptString($document['id']) ]) }}" class="btn btn-danger">ดาวน์โหลด</a>
                 </div>
             </div>
         </div>

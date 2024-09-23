@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\GenerateFile;
+use App\Models\Borrower;
 use App\Models\Parents;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Session;
@@ -50,7 +51,7 @@ class BorrowerDownloadDocument extends Controller
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower/borrower_information_not_complete');
         }
-        $borrower_id = Session::get('borrower_id', '1');
+        $borrower_id = Borrower::where('user_id', $user_id)->value('id');
         $child_documents = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
             ->where('child_documents.isactive', true)
             ->where('child_documents.id', '!=', '2')

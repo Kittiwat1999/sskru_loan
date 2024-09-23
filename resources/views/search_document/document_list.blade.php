@@ -32,7 +32,11 @@ index borrower
                             </td>
                             <td>
                               <span class="text-secondary">
-                                {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $borrower_document->delivered_date)->format('d-m-Y H:i:s')}}
+                                @if($borrower_document->delivered_date == null)
+                                  -
+                                @else
+                                  {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $borrower_document->delivered_date)->format('d-m-Y H:i:s')}}
+                                @endif
                               </span>
                             </td>
                             <td>

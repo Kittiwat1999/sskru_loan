@@ -133,7 +133,7 @@ class GenerateFile extends Controller
 
             //date
             $gregorianDate = Carbon::now();
-            $buddhistYear = $gregorianDate->year + 543;
+            // $buddhistYear = $gregorianDate->year + 543;
             //tick apb
             $tick_alp = public_path('icon_png/tick.png');
             // Set the font and add text at specific locations
@@ -141,10 +141,10 @@ class GenerateFile extends Controller
             $pdf->SetFont('THSarabunNew', '', 14);
 
             //write date
-            $pdf->Text(118, 42, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(140, 42, $month);
-            $pdf->Text(172, 42, $buddhistYear);
+            // $pdf->Text(118, 42, $gregorianDate->day);
+            // $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            // $pdf->Text(140, 42, $month);
+            // $pdf->Text(172, 42, $buddhistYear);
 
             $borrower_name_input = 85; //length of input (name>..................<)
             $fullname_borrower_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']); //length of string(prefix,firstname,lastname)
@@ -313,23 +313,23 @@ class GenerateFile extends Controller
 
             //date
             $gregorianDate = Carbon::now();
-            $buddhistYear = $gregorianDate->year + 543;
+            // $buddhistYear = $gregorianDate->year + 543;
 
             // Set the font and add text at specific locations
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
             $pdf->SetFont('THSarabunNew', '', 14);
 
             //Write at
-            $write_at_input = 36;
-            $write_at_length = strlen($address['village']);
-            $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
-            $pdf->Text($write_at_x, 42, $address['village']);
+            // $write_at_input = 36;
+            // $write_at_length = strlen($address['village']);
+            // $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
+            // $pdf->Text($write_at_x, 42, $address['village']);
 
             //write date
-            $pdf->Text(114, 50, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(139, 50, $month);
-            $pdf->Text(173, 50, $buddhistYear);
+            // $pdf->Text(114, 50, $gregorianDate->day);
+            // $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            // $pdf->Text(139, 50, $month);
+            // $pdf->Text(173, 50, $buddhistYear);
 
             $name_input = 80;
             $fullname_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
@@ -457,16 +457,16 @@ class GenerateFile extends Controller
             $pdf->SetFont('THSarabunNew', '', 14);
 
             //Write at
-            $write_at_input = 36;
-            $write_at_length = strlen($address['village']);
-            $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
-            $pdf->Text($write_at_x, 42, $address['village']);
+            // $write_at_input = 36;
+            // $write_at_length = strlen($address['village']);
+            // $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
+            // $pdf->Text($write_at_x, 42, $address['village']);
 
             //write date
-            $pdf->Text(114, 50, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(139, 50, $month);
-            $pdf->Text(173, 50, $buddhistYear);
+            // $pdf->Text(114, 50, $gregorianDate->day);
+            // $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            // $pdf->Text(139, 50, $month);
+            // $pdf->Text(173, 50, $buddhistYear);
 
             $name_input = 80;
             $fullname_length = strlen($parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
@@ -723,7 +723,7 @@ class GenerateFile extends Controller
             $teacher['major_name'] = iconv('UTF-8', 'cp874', $major);
 
             foreach ($teacher_comments as $teacher_comment) {
-                $strconcat_teacher_comments .= $teacher_comment->comment;
+                $strconcat_teacher_comments .= $teacher_comment->comment . ' ';
             }
             $strconcat_teacher_comments .= $teacher_other_comment->custom_comment ?? '';
             $strconcat_teacher_comments = iconv('UTF-8', 'cp874', $strconcat_teacher_comments);
@@ -857,7 +857,7 @@ class GenerateFile extends Controller
             $teacher['major_name'] = iconv('UTF-8', 'cp874', $major);
 
             foreach ($teacher_comments as $teacher_comment) {
-                $strconcat_teacher_comments .= $teacher_comment->comment;
+                $strconcat_teacher_comments .= $teacher_comment->comment . ' ';
             }
             $strconcat_teacher_comments .= $teacher_other_comment->custom_comment ?? '';
             $strconcat_teacher_comments = iconv('UTF-8', 'cp874', $strconcat_teacher_comments);
@@ -1743,7 +1743,6 @@ class GenerateFile extends Controller
 
     public function teacherCommentDocument101($user_id, $borrower_file_101_id)
     {
-
         $borrower_file = BorrowerFiles::find($borrower_file_101_id);
         $teacher = Users::find($user_id);
         $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
@@ -1835,7 +1834,7 @@ class GenerateFile extends Controller
         $checker_firstname_input = 37;
         $checker_firstname_length = strlen($checker['firstname']);
         $checker_firstname_x = 123+($checker_firstname_input/2 - $checker_firstname_length/2)-2;
-        $pdf->Text($checker_firstname_x, 204,$checker['lastname']);
+        $pdf->Text($checker_firstname_x, 204,$checker['firstname']);
 
         $checker_fullname_input = 61;
         $checker_fullname_length = strlen($checker['prefix'].$checker['firstname'].'   '.$checker['lastname']);

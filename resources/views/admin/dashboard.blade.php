@@ -129,7 +129,9 @@ dashboard
 @endsection
 @section('script')
 <script>
-  termInput();
+  var year = @json($sessionData['year']);
+  if(!year)year_default();
+
   function getMajorByFacultyId(faculty_id){
     fetch(`{{url('/admin/dashboard/${faculty_id}/get-major/')}}`)
     .then(response => {
@@ -153,7 +155,7 @@ dashboard
     });
   }
 
-  function termInput(){
+  function year_default(){
     const d = new Date();
     var year = d.getFullYear();
     const input_year = document.getElementById('year');

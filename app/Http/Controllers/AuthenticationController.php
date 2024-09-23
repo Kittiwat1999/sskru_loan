@@ -108,7 +108,7 @@ class AuthenticationController extends Controller
 
             return redirect('/email_comfirm_success');
         } else {
-            return back()->withErrors('รหัสยืนยันตัวตนไม่ถูกต้อง หรือรหัสอาจหมดอายุไปแล้ว');
+            return redirect('/verify_email')->withErrors('รหัสยืนยันตัวตนไม่ถูกต้อง หรือรหัสอาจหมดอายุไปแล้ว');
         }
     }
 

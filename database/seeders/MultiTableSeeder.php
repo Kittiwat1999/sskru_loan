@@ -31,7 +31,6 @@ class MultiTableSeeder extends Seeder
         $this->seedBorrowerProperties();
         $this->seedChildDocuments();
         $this->seedConfig();
-        $this->seedDocuments();
         $this->seedAddOnDocument();
         $this->seedAddonStructure();
         $this->seedChildDocumentFiles();
@@ -303,11 +302,6 @@ class MultiTableSeeder extends Seeder
             ['variable'=>'addon_document_example_files_path','value'=>'addon_document_example_files'],
             ['variable'=>'useful_activity_file_path','value'=>'useful_activitiy_files'],
             ['variable'=>'marital_file_path','value'=>'marital'],
-        ]);
-    }
-    private function seedDocuments(){ 
-        DB::table('documents')->insert([
-            ['doctype_id'=>'1','last_access'=>'1','year'=>'2567','term'=>'2','need_useful_activity'=>'1','need_teacher_comment'=>'1','start_date'=>'2567-08-8','end_date'=>'2567-10-10'],
         ]);
     }
 
