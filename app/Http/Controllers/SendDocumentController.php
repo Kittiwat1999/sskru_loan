@@ -207,8 +207,8 @@ class SendDocumentController extends Controller
     public function uploadDocument($document_id, $child_document_id, Request $request)
     {
         $rules = [
-            'document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
-            'document_code' => 'digits:4|integer',
+            'document_file' => 'required|file|mimes:jpg,png,jpeg,pdf|max:5120',
+            'document_code' => 'max:4|string',
             'education_fee' => 'string|max:50',
             'living_exprenses' => 'string|max:50',
         ];
@@ -218,8 +218,8 @@ class SendDocumentController extends Controller
             'document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
             'document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
 
-            'document_code.intager' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
-            'document_code.digits' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :digits',
+            'document_code.string' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
+            'document_code.max' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :max',
             'education_fee.string' => 'ประเภทข้อมูล ค่าเล่าเรียน นำเข้าไม่ถูกต้อง',
             'education_fee.max' => 'ความยาวของ ค่าเล่าเรียน ต้องไม่เกิน :max',
             'living_exprenses.string' => 'ประเภทข้อมูล ค่าครองชีพ นำเข้าไม่ถูกต้อง',
@@ -277,8 +277,8 @@ class SendDocumentController extends Controller
     public function editDocument($document_id, $child_document_id, Request $request)
     {
         $rules = [
-            'document_file' => 'file|mimes:jpg,png,jpeg,pdf|max:2048',
-            'document_code' => 'digits:4|integer',
+            'document_file' => 'file|mimes:jpg,png,jpeg,pdf|max:5120',
+            'document_code' => 'max:4|string',
             'education_fee' => 'string|max:50',
             'living_exprenses' => 'string|max:50',
         ];
@@ -288,8 +288,8 @@ class SendDocumentController extends Controller
             'document_file.mimes' => 'ไฟล์ที่เลือกต้องเป็นประเภท: jpg, jpeg, png, pdf',
             'document_file.max' => 'ไฟล์ที่เลือกต้องมีขนาดไม่เกิน :max KB',
 
-            'document_code.integer' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
-            'document_code.digits' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :digits',
+            'document_code.string' => 'ประเภทข้อมูล รหัสเอกสาร นำเข้าไม่ถูกต้อง',
+            'document_code.max' => 'ความยาวของ รหัสเอกสาร ต้องไม่เกิน :max',
             'education_fee.string' => 'ประเภทข้อมูล ค่าเล่าเรียน นำเข้าไม่ถูกต้อง',
             'education_fee.max' => 'ความยาวของ ค่าเล่าเรียน ต้องไม่เกิน :max',
             'living_exprenses.string' => 'ประเภทข้อมูล ค่าครองชีพ นำเข้าไม่ถูกต้อง',

@@ -64,7 +64,7 @@
                 @if($child_document->need_document_code)
                     @if(!isset($child_document->borrower_child_document))
                     <div class="col-md-12 row mb-4 mx-0 px-0">
-                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร 4 ตัวท้าย</label>
                         <div class="col-sm-7">
                             <input type="number" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
                             />
@@ -75,7 +75,7 @@
                     </div>
                     @else
                     <div class="col-md-12 row mb-4 mx-0 px-0">
-                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร 4 ตัวท้าย</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code"
                                 @required($child_document->need_loan_balance) 
@@ -102,7 +102,7 @@
                         <div class="col-md-12 row mb-3 mx-0 px-0">
                             <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพ</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" required>
+                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" placeholder="18,000" required >
                                 <div class="invalid-feedback">
                                     กรุณากรอกค่าครองชีพรวม
                                 </div>
@@ -202,7 +202,7 @@
                                 @if($child_document->need_document_code)
                                     @if(!isset($child_document->borrower_child_document))
                                     <div class="col-md-12 row mb-4 mx-0 px-0">
-                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร 4 ตัวท้าย</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
                                             />
@@ -213,7 +213,7 @@
                                     </div>
                                     @else
                                     <div class="col-md-12 row mb-4 mx-0 px-0">
-                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
+                                        <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">หัสเอกสาร 4 ตัวท้าย</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code"
                                                 @required($child_document->need_loan_balance) 
@@ -230,7 +230,7 @@
                                         <div class="col-md-12 row mb-3 mx-0 px-0">
                                             <label for="edit-education-fee-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าเล่าเรียน</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="edit-education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)">
+                                                <input type="text" class="form-control" id="edit-education-fee-{{$child_document->id}}" name="education_fee" oninput="formatNumber(this)" >
                                                 <div class="invalid-feedback">
                                                     กรุณากรอกค่าเล่าเรียน
                                                 </div>
@@ -239,7 +239,7 @@
                                         <div class="col-md-12 row mb-3 mx-0 px-0">
                                             <label for="edit-living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)">
+                                                <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" placeholder="18,000">
                                                 <div class="invalid-feedback">
                                                     กรุณากรอกค่าครองชีพรวม
                                                 </div>

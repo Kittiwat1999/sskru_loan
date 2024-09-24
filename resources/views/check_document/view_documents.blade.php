@@ -244,8 +244,13 @@
                     <div id="grade" class="col-md-3"></div>
                 </div>
             </div>
-            <div class="text-start">
-                <a href="{{route('check_document.select_document', ['document_id' => $document->id])}}" class="btn btn-secondary col-4 col-md-3">ย้อนกลับ</a>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <a href="{{route('check_document.select_document', ['document_id' => $document->id])}}" class="btn btn-secondary">ย้อนกลับ</a>
+                </div>
+                <div>
+                    <a href="{{route('check_document.document.download', ['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ]) }}" class="btn btn-outline-danger" >ดาวน์โหลดเอกสาร</a>
+                </div>
             </div>
         </div>
     </div>

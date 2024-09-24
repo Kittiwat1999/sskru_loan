@@ -61,7 +61,7 @@ class MainParentInfomationController extends Controller
         } else {
             //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย
             if (isset($request->address_with_borrower)) {
-                $main_parent_address_id = $borrower->address_id;
+                $parent3_address_id = $borrower->address_id;
             } else {
 
                 $request->validate([

@@ -158,6 +158,7 @@ Route::middleware(['session.expire', 'privilege:admin,employee'])->group(functio
     Route::get('/check_document/get_useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'getBorrowerUsefulActivities'])->name('check_document.get.borrower.useful_activity');
     Route::post('/check_document/post_useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'postBorrowerUsefulActivities'])->name('check_document.post.borrower.useful_activity');
     Route::get('/check_document/borrower_document/result/{borrower_document_id}', [CheckDocumentController::class, 'checkDocumentResult'])->name('check_document.document.result');
+    Route::get('/check_document/borrower_document/download/{borrower_document_id}', [CheckDocumentController::class, 'downloadBorrderDocuments'])->name('check_document.document.download');
     Route::post('/check_document/borrower_document/submit/{borrower_document_id}', [CheckDocumentController::class, 'submitCheckDocument'])->name('check_document.document.submit');
     Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}', [CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.borrower_child_document_file');
 });

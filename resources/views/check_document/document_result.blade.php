@@ -42,8 +42,8 @@
                 @endif
             </ul>
 
-            <div class="row mb-3 px-2">
-                <div class="text-end">
+            <div class="row mb-3 px-0">
+                <div class="col-6 text-start">
                     <span class="text-dark">ผลการตรวจเอกสาร :</span>
                     @if($result_status == 'approved')
                         <span class="text-success fw-bold">อนุมัติ</span>
@@ -51,6 +51,11 @@
                     @elseif($result_status == 'rejected')
                         <span class="text-danger fw-bold">ไม่อนุมัติ</span>
                         <span class="text-danger" >ต้องแก้ไขเอกสารบางรายการ</span>
+                    @endif
+                </div>
+                <div class="col-6 text-end">
+                    @if($result_status == 'approved')
+                        <a href="{{route('check_document.document.download', ['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ]) }}" class="btn btn-outline-danger" >ดาวน์โหลดเอกสาร</a>
                     @endif
                 </div>
             </div>

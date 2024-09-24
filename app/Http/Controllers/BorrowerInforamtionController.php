@@ -124,7 +124,7 @@ class BorrowerInforamtionController extends Controller
     public function borrower_edit_information_page()
     {
         $user_id = Session::get('user_id', '1');
-        $borrower_id = Session::get('borrower_id', '1');
+        $borrower = Borrower::where('user_id', $user_id)->first();
 
         $borrower =  Users::join('borrowers', function ($join) use ($user_id) {
             $join->on('users.id', '=', 'borrowers.user_id')
@@ -136,9 +136,9 @@ class BorrowerInforamtionController extends Controller
         $borrower_apprearance_types = BorrowerApprearanceType::where('isactive', true)->get();
         $nessessities = Nessessities::where('isactive', true)->get();
         $properties = Properties::where('isactive', true)->get();
-        $borrower_nessessities = BorrowerNessessities::where('borrower_id', $borrower_id)->where('nessessity_id', "!=", null)->pluck('nessessity_id')->toArray();
-        $borrower_nessessity_other = BorrowerNessessities::where('borrower_id', $borrower_id)->where('nessessity_id', "=", null)->first() ?? null;
-        $borrower_properties = BorrowerProperties::where('borrower_id', $borrower_id)->pluck('property_id')->toArray();
+        $borrower_nessessities = BorrowerNessessities::where('borrower_id', $borrower['id'])->where('nessessity_id', "!=", null)->pluck('nessessity_id')->toArray();
+        $borrower_nessessity_other = BorrowerNessessities::where('borrower_id', $borrower['id'])->where('nessessity_id', "=", null)->first() ?? null;
+        $borrower_properties = BorrowerProperties::where('borrower_id', $borrower['id'])->pluck('property_id')->toArray();
         $user = Users::where('id', $user_id)->first();
         $borrower['citizen_id'] = Crypt::decryptString($borrower['citizen_id']);
         $address = Address::find($borrower['address_id']);
