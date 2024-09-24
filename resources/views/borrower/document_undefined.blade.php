@@ -2,6 +2,7 @@
 @section('title')
 ยื่นกู้รายใหม่
 @endsection
+@section('style')
 <style>
     .card-body {
         display: flex;
@@ -15,6 +16,7 @@
         margin-top: 80px;
     }
 </style>
+@endsection
 @section('content')
 <section class="section Editing d-flex flex-column align-items-center py-4">
     <div class="card col-md-7 col-12 mt-4">

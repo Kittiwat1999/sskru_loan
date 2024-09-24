@@ -60,4 +60,10 @@ class RegisterController extends Controller
 
         return redirect('/register_success')->with(['success' => 'สร้างบัญชี ' . $teacher_registering->prefix . $teacher_registering->firstname . ' ' . $teacher_registering->lastname . ' เรียบร้อยแล้ว']);
     }
+
+    public function getMajorsByFacultyId($faculty_id)
+    {
+        $majors = Majors::where('isactive', true)->where('faculty_id', $faculty_id)->get();
+        return json_encode($majors);
+    }
 }

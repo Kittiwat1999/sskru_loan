@@ -261,6 +261,7 @@ Route::put('/register_student/student/register/', [RegisterController::class, 'r
 
 Route::get('/register_teacher/page', [RegisterController::class, 'register_teacher_page']);
 Route::put('/register_teacher/teacher/register/', [RegisterController::class, 'register_teacher'])->name('register.teacher');
+Route::get('/register_teacher/getMajorsByFacultyId/{faculty_id}', [RegisterController::class, 'getMajorsByFacultyId']);
 
 Route::get('/', [AuthenticationController::class, 'index']);
 Route::get('/login', [AuthenticationController::class, 'loginPage'])->name('login');

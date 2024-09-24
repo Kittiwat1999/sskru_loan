@@ -66,8 +66,7 @@
                     <div class="col-md-12 row mb-4 mx-0 px-0">
                         <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
-                            placeholder="รหัสด้านซ้ายบนของเอกสาร"
+                            <input type="number" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
                             />
                             <div class="invalid-feedback">
                                 กรุณากรอกรหัสเอกสาร
@@ -206,7 +205,6 @@
                                         <label for="document-code-{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">รหัสเอกสาร</label>
                                         <div class="col-sm-7">
                                             <input type="text" class="form-control" id="document-code-{{$child_document->id}}" name="document_code" required
-                                            placeholder="รหัสด้านซ้ายบนของเอกสาร"
                                             />
                                             <div class="invalid-feedback">
                                                 กรุณากรอกรหัสเอกสาร
@@ -286,7 +284,7 @@
                                 </div>
                                 @if($child_document->need_loan_balance)
                                     <div class="col-md-12 mx-0 px-0">
-                                        <span class="text-warning"> หากแก้ไขเฉพาะค่าเล่าเรียนหรือค่าครองชีพไม่ต้องอัพโหลดไฟล์</span>
+                                        <span class="text-warning"> หากแก้ไขเฉพาะ รหัสเอกสาร ค่าเล่าเรียน หรือ ค่าครองชีพ ไม่ต้องอัพโหลดไฟล์</span>
                                     </div>
                                 @endif
                             </form>

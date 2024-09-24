@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Borrower;
+use App\Models\BorrowerChildDocument;
 use App\Models\BorrowerDocument;
 use App\Models\BorrowerFiles;
 use App\Models\Config;
@@ -233,12 +234,8 @@ class SearchDocuments extends Controller
     {
         $borrower_uid = Crypt::decryptString($borrower_uid);
         $document_id = Crypt::decryptString($document_id);
-        $student_id = Borrower::where('user_id', $borrower_uid)->value('student_id');
-
-        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
-            ->where('documents.id', $document_id)
-            ->select('doc_types.doctype_title', 'documents.year', 'documents.term')
-            ->first();
+        $borrower = Users::find($borrower_uid);
+        $borrower_fullname = $borrower['firstname'] .' ' . $borrower['lastname'];
         
         $borrower_child_documents = DocStructure::join('documents', 'doc_structures.document_id', '=', 'documents.id')
             ->join('borrower_child_documents', 'doc_structures.child_document_id', '=', 'borrower_child_documents.child_document_id')
@@ -247,6 +244,11 @@ class SearchDocuments extends Controller
             ->where('borrower_child_documents.user_id', $borrower_uid)
             ->select('borrower_child_documents.borrower_file_id')
             ->get();
+
+        $borrower_document_code = BorrowerChildDocument::where('document_id', $document_id)
+            ->where('user_id', $borrower_uid)
+            ->where('document_code', '!=', '-')
+            ->value('document_code');
         
         $merger = new Merger(); //merger instant
         foreach($borrower_child_documents as $item)
@@ -260,6 +262,6 @@ class SearchDocuments extends Controller
 
         return response($createdPdf)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="'.$student_id. ' '.$document['doctype_title'].' '.$document['year'].'-'.$document['term'].'.pdf"');
+            ->header('Content-Disposition', 'attachment; filename="' .$borrower_document_code .' '. $borrower_fullname .'.pdf"');
     }
 }

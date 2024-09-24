@@ -259,7 +259,7 @@
         }
 
         function getMajorByFacultyId(faculty_id){
-            fetch(`{{url('/admin/dashboard/${faculty_id}/get-major/')}}`)
+            fetch(`{{url('/register_teacher/getMajorsByFacultyId/${faculty_id}')}}`)
             .then(response => {
                 if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
