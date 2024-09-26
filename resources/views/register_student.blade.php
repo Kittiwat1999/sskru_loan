@@ -100,7 +100,7 @@
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-3 col-lg-2">
                                         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
                                         <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
                                             <option class="text-center" selected></option>
@@ -114,7 +114,7 @@
                                     </div>
 
 
-                                    <div class="col-md-5">
+                                    <div class="col-md-4 col-lg-5">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
                                         <input type="text" name="firstname" class="form-control" id="firstname" required>
                                         <div class="invalid-feedback">

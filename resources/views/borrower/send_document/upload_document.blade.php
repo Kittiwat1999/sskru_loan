@@ -102,7 +102,7 @@
                         <div class="col-md-12 row mb-3 mx-0 px-0">
                             <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" placeholder="18,000" required >
+                                <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" required >
                                 <div class="invalid-feedback">
                                     กรุณากรอกค่าครองชีพรวม
                                 </div>
@@ -242,7 +242,7 @@
                                         <div class="col-md-12 row mb-3 mx-0 px-0">
                                             <label for="edit-living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" placeholder="18,000">
+                                                <input type="text" class="form-control" id="edit-living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)">
                                                 <div class="invalid-feedback">
                                                     กรุณากรอกค่าครองชีพรวม
                                                 </div>
