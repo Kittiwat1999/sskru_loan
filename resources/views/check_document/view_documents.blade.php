@@ -246,7 +246,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <div>
-                    <a href="{{route('check_document.select_document', ['document_id' => $document->id])}}" class="btn btn-secondary">ย้อนกลับ</a>
+                    <a href="{{route('check_document.select_document', ['document_id' => $document->id] )}}" class="btn btn-secondary">ย้อนกลับ</a>
                 </div>
                 <div>
                     <a href="{{route('check_document.document.download', ['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ]) }}" class="btn btn-outline-danger" >ดาวน์โหลดเอกสาร</a>
