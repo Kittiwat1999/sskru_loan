@@ -96,7 +96,7 @@
                     <!-- <p class="text-center small">Enter your username & password to login</p> -->
                   </div>
 
-                  <form action="{{route('post.login')}}" class="row g-3 needs-validation" novalidate method="POST" id="login-form">
+                  <form id="login-form" action="{{route('post.login')}}" class="row g-3 needs-validation" novalidate method="POST" id="login-form">
                     @csrf
                     <div class="col-12">
                       <label for="email" class="col-form-label text-secondary">อีเมลล์</label>
@@ -110,21 +110,19 @@
                       <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                       <input type="password" name="password" class="form-control" id="password" required>
                       <div class="invalid-feedback">กรุณากรอกรหัสผ่าน!</div>
+                      <div class="text-start mt-2">
+                        <a href="{{url('/reset_password/email')}}" class="text-secondary"><small>ลืมรหัสผ่าน</small></a>
                     </div>
-
-                    <div align="right">
-                      <div class="container">
-                        <a href="{{url('/reset_password/email')}}">ลืมรหัสผ่าน</a>
-                      </div>
                     </div>
 
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">ล็อกอิน</button>
+                      <button id="submit-button" class="btn btn-primary w-100" type="submit">ล็อกอิน</button>
                     </div>
 
                     <div class="col-12">
-                      <p class="small mb-0" align="center">นักศึกษา&nbsp;<a
-                          href="{{url('/register_student')}}">ลงทะเบียน</a>&nbsp;เข้าใช้ระบบ</p>
+                      <p class="mb-0" align="center">นักศึกษา
+                        <a href="{{url('/register_student')}}">ลงทะเบียน</a> เข้าใช้ระบบ
+                      </p>
                     </div>
 
                   </form>
@@ -166,5 +164,11 @@
   <script src="{{asset('assets/js/main.js')}}"></script>
 
 </body>
-
+<script>
+  const form_login = document.getElementById('login-form');
+  form_login.addEventListener("submit", () => {
+    const submit_button = document.getElementById('submit-button');
+    submit_button.disabled = true;
+  });
+</script>
 </html>

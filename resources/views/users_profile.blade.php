@@ -135,7 +135,9 @@
                                             <label for="new_password_confirmation" class="col-md-4 col-lg-3 col-form-label">ยืนยันรหัสผ่านใหม่</label>
                                             <div class="col-md-8 col-lg-9">
                                                 <input name="new_password_confirmation" type="password" class="form-control" id="new_password_confirmation" required>
-                                                <span id="passwordError" class="text-danger"></span>
+                                                <div class="mt-2">
+                                                    <span id="passwordStatus"></span>
+                                                </div>
                                             </div>
                                             <div class="invalid-feedback">กรุณายืนยันรหัสผ่านใหม่</div>
                                         </div>
@@ -159,23 +161,29 @@
 
 @section('script')
     <script>
+        document.getElementById("new_password").addEventListener("input", validatePassword);
+        document.getElementById("new_password_confirmation").addEventListener("input", validatePassword);
         function validatePassword() {
             var password = document.getElementById("new_password").value;
             var confirm_password = document.getElementById("new_password_confirmation").value;
-            var passwordError = document.getElementById("passwordError");
+            var passwordStatus = document.getElementById("passwordStatus");
 
             if (password === "") {
-                passwordError.innerHTML = "กรุณากรอกข้อมูลรหัสผ่านก่อน";
-                return false;
-            } else if (password === "" || confirm_password === "") {
-                passwordError.innerHTML = "กรุณายืนยันรหัสผ่าน";
-                return false;
+                passwordStatus.innerHTML = "กรุณากรอกข้อมูลรหัสผ่านก่อน";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
+            } else if (confirm_password === "") {
+                passwordStatus.innerHTML = "กรุณายืนยันรหัสผ่าน";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
             } else if (password !== confirm_password) {
-                passwordError.innerHTML = "รหัสผ่านไม่ตรงกัน";
-                return false;
+                passwordStatus.innerHTML = "รหัสผ่านไม่ตรงกัน";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
             } else {
-                passwordError.innerHTML = "";
-                return true;
+                passwordStatus.innerHTML = "รหัสผ่านตรงกัน";
+                passwordStatus.classList.remove("text-danger");
+                passwordStatus.classList.add("text-success");
             }
         }
     </script>

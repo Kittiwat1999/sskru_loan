@@ -85,26 +85,3 @@ index borrower
 
 </section>
 @endsection
-@section('script')
-<script>
-  $(document).ready(function() {
-        $('#borrower-document-table').DataTable({
-            language: {
-                "sProcessing": "กำลังประมวลผล...",
-                "sLengthMenu": "แสดง _MENU_ รายการ",
-                "sZeroRecords": "ไม่พบข้อมูล",
-                "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-                "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
-                "sInfoFiltered": "(กรองจาก _MAX_ รายการทั้งหมด)",
-                "sSearch": "ค้นหา:",
-                "oPaginate": {
-                    "sFirst": "แรก",
-                    "sPrevious": "ก่อนหน้า",
-                    "sNext": "ถัดไป",
-                    "sLast": "สุดท้าย"
-                }
-            },
-        });
-    });
-</script>
-@endsection

@@ -153,7 +153,7 @@
                                                 <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
                                             </div>
                                             <div class="col-md-6 col-12 mt-2 mt-md-1 mx-md-3">
-                                                <span id="passwordStatus" class="text-danger"></span>
+                                                <span id="passwordStatus"></span>
                                             </div>
                                         </div>
                                         <div class="invalid-feedback">
