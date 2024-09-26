@@ -100,7 +100,7 @@
                             </div>
                         </div>
                         <div class="col-md-12 row mb-3 mx-0 px-0">
-                            <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพ</label>
+                            <label for="living-exprenses{{$child_document->id}}" class="col-sm-2 col-form-label text-secondary">ค่าครองชีพรวม</label>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" id="living-exprenses{{$child_document->id}}" name="living_exprenses" oninput="formatNumber(this)" placeholder="18,000" required >
                                 <div class="invalid-feedback">
@@ -139,13 +139,16 @@
                     <div class="col-md-12 row mx-0 px-0">
                         <label class="col-sm-2 col-form-label text-secondary" for="file-{{$child_document->id}}" >เลือกไฟล์</label>
                         <div class="col-sm-7 mb-3">
-                            <input class="form-control" type="file" name="document_file" id="file-{{$child_document->id}}" accept=".pdf" required>
+                            <input class="form-control" type="file" name="document_file" id="file-{{$child_document->id}}" accept=".pdf" required onchange="validateFileSize(this.id, {{ $child_document->id}}, 'input')">
                             <div class="invalid-feedback">
                                 กรุณาเลือกไฟล์
                             </div>
+                            <div id="input-invalid-file-{{$child_document->id}}" class="invalid-feedback">
+                                ขนาดไฟล์ต้องไม่เกิน 5mb
+                            </div>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <button type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}')" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
+                            <button id="input-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}')" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
                         </div>
                     </div>
                 @else
@@ -273,13 +276,16 @@
                                 <div class="col-md-12 row mx-0 px-0">
                                     <label class="col-sm-2 col-form-label text-secondary" for="edit-file-{{$child_document->id}}" >เลือกไฟล์</label>
                                     <div class="col-sm-7 mb-3">
-                                        <input class="form-control" type="file" name="document_file" id="edit-file-{{$child_document->id}}" accept=".pdf">
+                                        <input class="form-control" type="file" name="document_file" id="edit-file-{{$child_document->id}}" accept=".pdf" onchange="validateFileSize(this.id, {{$child_document->id}}, 'edit')">
                                         <div class="invalid-feedback">
                                             กรุณาเลือกไฟล์
                                         </div>
+                                        <div id="edit-invalid-file-{{$child_document->id}}" class="invalid-feedback">
+                                            ขนาดไฟล์ต้องไม่เกิน 5mb
+                                        </div>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <button type="button" class="btn btn-primary w-100" onclick="formValidate('edit-form-{{$child_document->id}}')" ><i class="bi bi-arrow-down"></i> บันทึก</button>
+                                        <button id="edit-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('edit-form-{{$child_document->id}}')" ><i class="bi bi-arrow-down"></i> บันทึก</button>
                                     </div>
                                 </div>
                                 @if($child_document->need_loan_balance)
@@ -721,6 +727,21 @@
         }
 
         return validator;
+    }
+
+    function validateFileSize(input_id, child_document_id, type_input_button){
+        var input_file = document.getElementById(input_id);
+        var form_button = document.getElementById(type_input_button+'-form-button-'+child_document_id);
+        var invalid_element = document.getElementById(type_input_button + '-invalid-file-' + child_document_id);
+        var filesize_max = 5;
+        file_size_mb = input_file.files[0].size / 1000000;
+        if (file_size_mb > filesize_max){
+            form_button.disabled = true;
+            if(invalid_element)invalid_element.classList.add('d-inline');
+        }else{
+            form_button.disabled = false;
+            if(invalid_element)invalid_element.classList.remove('d-inline');
+        }
     }
 </script>
 @endsection

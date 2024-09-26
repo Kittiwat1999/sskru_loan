@@ -15,7 +15,7 @@
                     <div class="col-md-4 mb-3">
                         <select id="select-level-show" class="form-select" aria-label="Default select example" name="privilege" required onchange="getUsersByPrivilege(this.value)">
                             <option {{($select_privilege == "admin") ? 'selected' : '' }} value="admin">แอดมิน</option>
-                            <option {{($select_privilege == "employee") ? 'selected' : '' }} value="employee">พนักงานทุนฯ</option>
+                            <option {{($select_privilege == "employee") ? 'selected' : '' }} value="employee">ผู้ปฏิบัติงาน</option>
                             <option {{($select_privilege == "teacher") ? 'selected' : '' }} value="teacher">อาจารย์ที่ปรึกษา</option>
                             <option {{($select_privilege == "borrower") ? 'selected' : '' }} value="borrower">ผู้กู้ยืม</option>
                         </select>
@@ -76,7 +76,7 @@
                                                 <select id="privilege" class="form-select" aria-label="Default select example" name="privilege" required onchange="user_privilege(this.value,'input-faculty','major')">
                                                     <option selected disabled value="">เลือกประเภทผู้ใช้..</option>
                                                     <option value="admin">แอดมิน</option>
-                                                    <option value="employee">พนักงานทุนฯ</option>
+                                                    <option value="employee">ผู้ปฏิบัติงาน</option>
                                                     <option value="teacher">อาจารย์ที่ปรึกษา</option>
                                                     <option value="borrower">ผู้กู้</option>
                                                 </select>
@@ -224,7 +224,7 @@
                             <label for="borrower-type" class="col-form-label text-secondary">ระดับผู้ใช้</label>
                             <select id="select-level-user" class="form-select" aria-label="Default select example" name="privilege" required onchange="user_privilege(this.value,'edit-faculty','edit-major')" ${(user.privilege == 'borrower') ? 'readonly' : '' }>
                                 <option ${(user.privilege == 'admin') ? 'selected':'' } value="admin">แอดมิน</option>
-                                <option ${(user.privilege == 'employee') ? 'selected':'' } value="employee">พนักงานทุนฯ</option>
+                                <option ${(user.privilege == 'employee') ? 'selected':'' } value="employee">ผู้ปฏิบัติงาน</option>
                                 <option ${(user.privilege == 'teacher') ? 'selected':'' } value="teacher">อาจารย์ที่ปรึกษา</option>
                                 <option ${(user.privilege == 'borrower') ? 'selected':'' } value="borrower">ผู้กู้ยืม</option>
                             </select>

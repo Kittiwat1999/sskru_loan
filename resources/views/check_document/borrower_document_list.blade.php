@@ -124,7 +124,7 @@
                     @if($checked_document < $document_to_check)
                         <button class="btn btn-secondary" disabled >สรุปผลการตรวจเอกสาร</button>
                     @else
-                        <a href="{{route('check_document.document.result',['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}" class="btn btn-primary">สรุปผลการตรวจเอกสาร</a>
+                        <a href="{{route('check_document.document.result',['borrower_document_id' => Crypt::encryptString($borrower_document['id']) ])}}" class="btn btn-primary">ถัดไป</a>
                     @endif
                 </div>
             </div>

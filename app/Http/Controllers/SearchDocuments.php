@@ -85,11 +85,11 @@ class SearchDocuments extends Controller
     }
     public function serachBorrowerDocuments(Request $request)
     {
-        $input_id = $request->student_id;
+        $firstname = $request->firstname;
         $borrowers = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
             ->join('majors', 'borrowers.major_id', '=', 'majors.id')
-            ->where('borrowers.student_id', 'like', $input_id . '%')
+            ->where('users.firstname', 'like', $firstname . '%')
             ->select(
                 'users.prefix',
                 'users.id as user_id',
@@ -97,14 +97,14 @@ class SearchDocuments extends Controller
                 'users.lastname',
                 'borrowers.student_id',
                 'faculties.faculty_name',
-                'majors.major_name'
+                'majors.major_name',
             )
             ->get();
 
         foreach ($borrowers as $borrower) {
             $borrower['grade'] = $this->calculateGrade($borrower['student_id']);
         }
-        return view('search_document.index', compact('borrowers', 'input_id'));
+        return view('search_document.index', compact('borrowers', 'firstname'));
     }
 
     public function listDocument($borrower_uid)

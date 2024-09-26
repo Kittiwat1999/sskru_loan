@@ -16,7 +16,7 @@ class AdminManageAccountController extends Controller
 {
     protected $privilege = [
         'admin' => 'แอดมิน',
-        'employee' => 'พนักงานทุนฯ',
+        'employee' => 'ผู้ปฏิบัติงาน',
         'teacher' => 'อาจารย์ที่ปรึกษา',
         'borrower' => 'ผู้กู้',
     ];
