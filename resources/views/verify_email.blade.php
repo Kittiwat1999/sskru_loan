@@ -90,7 +90,7 @@
                                     <h4>ยืนยันตัวตน</h4>
                                     <p>รหัสยืนยัน (OTP) ที่ได้รับทางอีเมล {{session('email')}}</p>
 
-                                    <form action="{{route('verify.email.post')}}" method="POST">
+                                    <form id="otp-form" action="{{route('verify.email.post')}}" method="POST">
                                         @csrf
                                         <div class="otp-field mb-4">
                                             <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" required />
@@ -101,7 +101,7 @@
                                             <input type="number" class="form-control" style="display: inline-block; width: 15%; margin: 0;" name="code[]" maxlength="1" disabled />
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary mb-3">
+                                        <button id="submit-button" type="submit" class="btn btn-primary mb-3">
                                             ยืนยัน
                                         </button>
                                     </form>
@@ -140,6 +140,9 @@
         const resendLink = document.getElementById("resend-otp-link");
         const countdownTimer = document.getElementById("countdown-timer");
         let countdown;
+
+        const otpForm = document.getElementById('otp-form');
+        const sumbitButton = document.getElementById('submit-button');
 
         window.addEventListener("load", () => inputs[0].focus());
         button.setAttribute("disabled", "disabled");
@@ -229,6 +232,11 @@
                 }
             }, 1000);
         }
+
+        otpForm.addEventListener('submit', () => {
+            sumbitButton.disabled = true;
+        })
+        
     </script>
 
 </body>

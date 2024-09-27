@@ -81,7 +81,7 @@
                     <div class="row justify-content-center">
 
                         <div class="d-flex justify-content-center py-4">
-                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                            <a href="{{url('/')}}" class="logo d-flex align-items-center w-auto">
                             <img src="assets/img/logo.png" alt="">
                             <span class="d-none d-lg-block">SSKRU Loan</span>
                             </a>
@@ -140,7 +140,13 @@
 
                                     <div class="col-md-7">
                                         <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
-                                        <input type="password" name="password" class="form-control" id="password" required oninput="checkPasswordFilled()">
+                                        <div class="input-group">
+                                            <input type="password" name="password" class="form-control" id="password" required oninput="checkPasswordFilled()">
+                                            <button class="btn btn-outline-secondary" type="button"
+                                                id="togglePassword">
+                                                <i class="bi bi-eye-slash"></i>
+                                            </button>
+                                        </div>
                                         <div class="invalid-feedback">
                                             กรุณากรอกรหัสผ่าน!
                                         </div>
@@ -150,7 +156,13 @@
                                         <label for="password_confirmation" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
                                         <div class="d-flex flex-column flex-md-row justify-content-between">
                                             <div class="col-12 text-start">
-                                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
+                                                <div class="input-group">
+                                                    <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="toggleConfPassword">
+                                                        <i class="bi bi-eye-slash"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div class="col-md-6 col-12 mt-2 mt-md-1 mx-md-3">
                                                 <span id="passwordStatus"></span>
@@ -160,9 +172,8 @@
                                             กรุณายืนยันรหัสผ่าน!
                                         </div>
                                     </div>
-
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-primary w-25" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
                                     </div>
 
                                 </form>
@@ -199,8 +210,28 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
   <script>
-        document.getElementById("password").addEventListener("input", validatePassword);
-        document.getElementById("password_confirmation").addEventListener("input", validatePassword);
+        const password = document.getElementById('password');
+        const confPassword = document.getElementById('password_confirmation');
+        const togglePasswordButton = document.getElementById('togglePassword');
+        const toggleConfPasswordButton = document.getElementById('toggleConfPassword');
+
+        password.addEventListener("input", validatePassword);
+        confPassword.addEventListener("input", validatePassword);
+
+        togglePasswordButton.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+        });
+
+        toggleConfPasswordButton.addEventListener('click', function() {
+            const type = confPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            confPassword.setAttribute('type', type);
+
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+        });
+
         function validatePassword() {
             var password = document.getElementById("password").value;
             var confirm_password = document.getElementById("password_confirmation").value;
@@ -222,6 +253,12 @@
                 passwordStatus.innerHTML = "รหัสผ่านตรงกัน";
                 passwordStatus.classList.remove("text-danger");
                 passwordStatus.classList.add("text-success");
+            }
+
+            if(password.length < 8){
+                passwordStatus.innerHTML = "รหัสผ่านต้องมีอย่างน้อย 8 ตัว";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
             }
         }
 

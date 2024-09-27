@@ -88,28 +88,26 @@
                     </div><!-- End Logo -->
 
                     <div class="card mb-3 col-md-6">
-
                         <div class="card-body">
-
                             <div class="pt-4 pb-2">
                                 <h5 class="card-title text-center pb-0 fs-4">กู้คืนรหัสผ่าน</h5>
                                 <p class="text-center small">กรุณากรอกอีเมล</p>
                             </div>
 
-                                <form id="form-email" action="{{route('check_email.reset_password')}}" method="POST">
-                                    @csrf
-                                            <div class="row mb-3">
-                                                <label for="email" class="col-md-4 col-lg-2 col-form-label">อีเมล</label>
-                                                <div class="col-md-8 col-lg-10">
-                                                    <input name="email" type="email" class="form-control" id="email" required>
-                                                </div>
-                                                <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
-                                            </div>
-                                    <div class="d-flex justify-content-end">
-                                        <a href="{{url('/')}}" class="text-light btn btn-secondary me-2">ยกเลิก</a>
-                                        <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                            <form id="form-email" action="{{route('check_email.reset_password')}}" method="POST">
+                                @csrf
+                                <div class="row mb-3">
+                                    <label for="email" class="col-md-4 col-lg-2 col-form-label">อีเมล</label>
+                                    <div class="col-md-8 col-lg-10">
+                                        <input name="email" type="email" class="form-control" id="email" required>
                                     </div>
-                                </form>
+                                    <div class="invalid-feedback">กรุณากรอกอีเมล!</div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <a href="{{url('/')}}" class="text-light btn btn-secondary me-2">ยกเลิก</a>
+                                    <button id="submit-button" type="submit" class="btn btn-primary">ยืนยัน</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -126,23 +124,31 @@
         </section>
 
     </div>
-  </main><!-- End #main -->
+</main><!-- End #main -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/chart.js/chart.umd.js')}}"></script>
-  <script src="{{asset('assets/vendor/echarts/echarts.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/quill/quill.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/simple-datatables/simple-datatables.js')}}"></script>
-  <script src="{{asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
+    <!-- Vendor JS Files -->
+    <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/chart.js/chart.umd.js')}}"></script>
+    <script src="{{asset('assets/vendor/echarts/echarts.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/quill/quill.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/simple-datatables/simple-datatables.js')}}"></script>
+    <script src="{{asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
 
-  <!-- Template Main JS File -->
-  <script src="{{asset('assets/js/main.js')}}"></script>
+    <!-- Template Main JS File -->
+    <script src="{{asset('assets/js/main.js')}}"></script>
+
+    <script>
+        const formEmail = document.getElementById('form-email');
+        const sumbitButton = document.getElementById('submit-button');
+        formEmail.addEventListener('submit', () => {
+            sumbitButton.disabled = true;
+        });
+    </script>
 
 </body>
 

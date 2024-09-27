@@ -118,7 +118,13 @@
                                         <div class="row mb-3">
                                             <label for="current_password" class="col-md-4 col-lg-3 col-form-label">รหัสผ่านปัจจุบัน</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="current_password" type="password" class="form-control" id="current_password" required>
+                                                <div class="input-group">
+                                                    <input name="current_password" type="password" class="form-control" id="current_password" required>
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="toggleCurrentPassword">
+                                                        <i class="bi bi-eye-slash"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div class="invalid-feedback">กรุณากรอกรหัสผ่านปัจจุบัน</div>
                                         </div>
@@ -126,7 +132,13 @@
                                         <div class="row mb-3">
                                             <label for="new_password" class="col-md-4 col-lg-3 col-form-label">รหัสผ่านใหม่</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="new_password" type="password" class="form-control" id="new_password" required>
+                                                <div class="input-group">
+                                                    <input name="new_password" type="password" class="form-control" id="new_password" required>
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="toggleNewPassword">
+                                                        <i class="bi bi-eye-slash"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div class="invalid-feedback">กรุณากรอกรหัสผ่านใหม่</div>
                                         </div>
@@ -134,7 +146,13 @@
                                         <div class="row mb-3">
                                             <label for="new_password_confirmation" class="col-md-4 col-lg-3 col-form-label">ยืนยันรหัสผ่านใหม่</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="new_password_confirmation" type="password" class="form-control" id="new_password_confirmation" required>
+                                                <div class="input-group">
+                                                    <input name="new_password_confirmation" type="password" class="form-control" id="new_password_confirmation" required>
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="toggleConfPassword">
+                                                        <i class="bi bi-eye-slash"></i>
+                                                    </button>
+                                                </div>
                                                 <div class="mt-2">
                                                     <span id="passwordStatus"></span>
                                                 </div>
@@ -161,8 +179,37 @@
 
 @section('script')
     <script>
-        document.getElementById("new_password").addEventListener("input", validatePassword);
-        document.getElementById("new_password_confirmation").addEventListener("input", validatePassword);
+        const currentPassword = document.getElementById('current_password');
+        const newPassword = document.getElementById('new_password');
+        const newConfPassword = document.getElementById('new_password_confirmation');
+        const toggleCurrentPasswordButton = document.getElementById('toggleCurrentPassword');
+        const togglePasswordButton = document.getElementById('toggleNewPassword');
+        const toggleConfPasswordButton = document.getElementById('toggleConfPassword');
+        
+        newPassword.addEventListener("input", validatePassword);
+        newConfPassword.addEventListener("input", validatePassword);
+
+        toggleCurrentPasswordButton.addEventListener('click', function() {
+            const type = currentPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            currentPassword.setAttribute('type', type);
+
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+        });
+
+        togglePasswordButton.addEventListener('click', function() {
+            const type = newPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            newPassword.setAttribute('type', type);
+
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+        });
+
+        toggleConfPasswordButton.addEventListener('click', function() {
+            const type = newConfPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            newConfPassword.setAttribute('type', type);
+
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+        });
+
         function validatePassword() {
             var password = document.getElementById("new_password").value;
             var confirm_password = document.getElementById("new_password_confirmation").value;
@@ -184,6 +231,12 @@
                 passwordStatus.innerHTML = "รหัสผ่านตรงกัน";
                 passwordStatus.classList.remove("text-danger");
                 passwordStatus.classList.add("text-success");
+            }
+
+            if (password.length < 8){
+                passwordStatus.innerHTML = "รหัสผ่านต้องมีอย่างน้อย 8 ตัว";
+                passwordStatus.classList.remove("text-success");
+                passwordStatus.classList.add("text-danger");
             }
         }
     </script>
