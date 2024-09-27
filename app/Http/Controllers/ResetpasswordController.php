@@ -32,14 +32,14 @@ class ResetpasswordController extends Controller
         ]);
 
         $user = Users::where('email', $request->email)->first();
-        Session::put('user_id', $user['id']);
-        $this->send_email();
+        $request->session()->put('email', $user['email']);
+        $this->send_email($request);
         return redirect('/verify_reset_password')->with(['success' => 'ส่งรหัสยืนยัน' . 'เรียบร้อยแล้ว']);
     }
 
     public function change_password(Request $request)
     {
-        $user_id = Session::get('user_id');
+        $email = $request->session()->get('email');
         // ตรวจสอบข้อมูลที่ส่งมา
         $request->validate([
             'new_password' => 'required|string|min:8|confirmed',
@@ -50,17 +50,17 @@ class ResetpasswordController extends Controller
             "new_password.confirmed" => 'รหัสผ่านไม่ตรงกัน',
         ]);
 
-        $user = Users::find($user_id);
+        $user = Users::where('email', $email)->first();
         $user['password'] = Hash::make($request->new_password);
         $user->save();
-
-        return view('reset_password_success')->with(['success' => 'รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว']);
+        $request->session()->regenerate();
+        return redirect('/reset_password_success')->with(['success' => 'รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว']);
     }
 
-    public function send_email()
+    public function send_email($request)
     {
-        $user_id = Session::get('user_id');
-        $user = Users::find($user_id);
+        $email = $request->session()->get('email');
+        $user = Users::where('email', $email)->first();
         $code = rand(100000, 999999);
         $password_reset_token = PasswordResetToken::where('email', $user['email'])->first();
         $password_reset_token = $password_reset_token ?? new PasswordResetToken();
@@ -90,13 +90,10 @@ class ResetpasswordController extends Controller
         );
         $code = implode('', $request->code);
         $now = Carbon::now();
-        $user_id = Session::get('user_id');
-        $user = Users::find($user_id);
+        $email = $request->session()->get('email');
+        $user = Users::where('email', $email)->first();
         $password_reset_token = PasswordResetToken::where('email', $user['email'])->first();
         if (Hash::check($code . $user['email'], $password_reset_token['token']) and $now->lt($password_reset_token['expired'])) {
-            $student_registering = Users::where('email', $user['email'])->first();
-            $student_registering['activated'] = true;
-            $student_registering->save();
             return view('change_password');
         } else {
             return back()->withErrors('รหัสยืนยันตัวตนไม่ถูกต้อง หรือรหัสอาจหมดอายุไปแล้ว');

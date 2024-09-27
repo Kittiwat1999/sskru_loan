@@ -96,7 +96,7 @@
                                 <p class="text-center small">กรุณากรอกอีเมล</p>
                             </div>
 
-                                <form action="{{route('check_email.reset_password')}}" method="POST">
+                                <form id="form-email" action="{{route('check_email.reset_password')}}" method="POST">
                                     @csrf
                                             <div class="row mb-3">
                                                 <label for="email" class="col-md-4 col-lg-2 col-form-label">อีเมล</label>

@@ -162,7 +162,6 @@
                                     </div>
 
                                     <div class="d-flex justify-content-end">
-                                        <a href="{{ url('/login_student') }}" class="btn btn-secondary w-25 me-2" style="color: white;">ล็อกอิน</a>
                                         <button class="btn btn-primary w-25" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
                                     </div>
 

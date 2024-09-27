@@ -307,7 +307,7 @@
     {{-- กิจกรรมจิตอาสา --}}
     @if($document->need_useful_activity)
     <div class="card mb-3">
-        <div class="card-b ody">
+        <div class="card-body">
             <h5 class="card-title">กิจกรรมจิตอาสา {{$useful_activities_hours}} ชั่วโมง</h5> 
             <div class="table-responsive">
 
@@ -472,18 +472,21 @@
                                     กรุณากรอกลักษณะของกิจกรรม
                                 </div>
                             </div>
-                            <div class="col-sm-12 mb-3">
-                                <label class="form-label" for="useful_activity_file">แนบไฟล์หลักฐาน</label>
-                                <input class="form-control" type="file" name="useful_activity_file" id="useful_activity_file" accept=".png, .jpg, .jpeg, .pdf" required>
+                            <div class="col-sm-12">
+                                <label class="form-label" for="add-useful-activity-file">แนบไฟล์หลักฐาน</label>
+                                <input class="form-control" type="file" name="useful_activity_file" id="add-useful-activity-file" accept=".png, .jpg, .jpeg, .pdf" required onchange="validateUsefulActivityFileSize(this.id, 'add')">
                                 <div class="invalid-feedback">
                                     กรุณาแนบไฟล์หลักฐาน
+                                </div>
+                                <div id="add-invalid-useful-activity-file" class="invalid-feedback">
+                                    ขนาดไฟล์ต้องไม่เกิน 5mb
                                 </div>
                             </div>
                         </form> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                        <button type="button" class="btn btn-primary" onclick="formValidate('add-useful-activity-form')">บันทึก</button>
+                        <button id="add-useful-activity-button" type="button" class="btn btn-primary" onclick="formValidate('add-useful-activity-form')">บันทึก</button>
                     </div>
                 </div>
                 </div>
@@ -587,7 +590,7 @@
                                     <input type="text" name="start_date" id="edit-start-date" class="form-control" value="${convertIsoToCustomFormat(useful_activity.start_date)}"
                                     placeholder="วว/ดด/ปปปป ชม" required />
                                     <div class="invalid-feedback">
-                                        กรุณากรอกวันเกิด
+                                        กรุณากรอกวันที่เริ่มต้น
                                     </div>
                                 </div>
                             </div>
@@ -598,7 +601,7 @@
                                     <input type="text" name="end_date" id="edit-end-date" class="form-control" value="${convertIsoToCustomFormat(useful_activity.end_date)}"
                                     placeholder="วว/ดด/ปปปป ชม" required />
                                     <div class="invalid-feedback">
-                                        กรุณากรอกวันเกิด
+                                        กรุณากรอกวันที่สิ้นสุด
                                     </div>
                                 </div>
                             </div>
@@ -611,15 +614,21 @@
                             <label class="form-label" for="edit_description">ลักษณะของกิจกรรม</label>
                             <input class="form-control" type="text" name="description" id="edit_description" value="${useful_activity.description}" required>
                         </div>
-                        <div class="col-sm-12 mb-3">
-                            <label class="form-label" for="edit_useful_activity_file">แนบไฟล์หลักฐาน</label>
-                            <input class="form-control" type="file" name="useful_activity_file" id="edit_useful_activity_file" accept=".png, .jpg, .jpeg, .pdf">
+                        <div class="col-sm-12">
+                            <label class="form-label" for="edit-useful-activity-${useful_activity.id}">แนบไฟล์หลักฐาน</label>
+                            <input class="form-control" type="file" name="useful_activity_file" id="edit-useful-activity-${useful_activity.id}" accept=".png, .jpg, .jpeg, .pdf" onchange="validateUsefulActivityFileSize(this.id, 'edit')">
+                            <div id="edit-invalid-useful-activity-file" class="invalid-feedback">
+                                ขนาดไฟล์ต้องไม่เกิน 5mb
+                            </div>
+                            <div>
+                                <p class="text-warning">หากไม่ได้แก้ไขไฟล์ ไม่ต้องอัพโหลดไฟล์</p>
+                            </div>
                         </div>
                     </form> 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                    <button type="button" class="btn btn-primary" onclick="formValidate('edit-useful-activity')">บันทึก</button>
+                    <button id="edit-useful-activity-button" type="button" class="btn btn-primary" onclick="formValidate('edit-useful-activity')">บันทึก</button>
                 </div>
    
         `;
@@ -738,10 +747,27 @@
         if (file_size_mb > filesize_max){
             form_button.disabled = true;
             if(invalid_element)invalid_element.classList.add('d-inline');
-        }else{
+        }else {
             form_button.disabled = false;
             if(invalid_element)invalid_element.classList.remove('d-inline');
         }
     }
+
+    function validateUsefulActivityFileSize(input_id, type_input_button){
+        let input_file = document.getElementById(input_id);
+        var form_button = document.getElementById(type_input_button + '-useful-activity-button');
+        var invalid_element = document.getElementById(type_input_button + '-invalid-useful-activity-file');
+
+        let filesize_max = 5;
+        file_size_mb = input_file.files[0].size / 1000000;
+        if (file_size_mb > filesize_max){
+            form_button.disabled = true;
+            if(invalid_element)invalid_element.classList.add('d-inline');
+        }else {
+            form_button.disabled = false;
+            if(invalid_element)invalid_element.classList.remove('d-inline');
+        }
+    }
+
 </script>
 @endsection

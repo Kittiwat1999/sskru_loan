@@ -96,27 +96,32 @@
                     <!-- <p class="text-center small">Enter your username & password to login</p> -->
                   </div>
 
-                  <form id="login-form" action="{{route('post.login')}}" class="row g-3 needs-validation" novalidate method="POST" id="login-form">
+                  <form id="login-form" action="{{route('post.login')}}" class="row g-3" novalidate method="POST" id="login-form">
                     @csrf
                     <div class="col-12">
                       <label for="email" class="col-form-label text-secondary">อีเมลล์</label>
                       <div class="input-group has-validation">
                         <input type="text" name="email" class="form-control" id="email" required>
-                        <div class="invalid-feedback">กรุณากรอกอีเมลล์!</div>
+                        <div id="invalid-email" class="invalid-feedback">กรุณากรอกอีเมลล์!</div>
                       </div>
                     </div>
 
                     <div class="col-12">
                       <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
-                      <input type="password" name="password" class="form-control" id="password" required>
-                      <div class="invalid-feedback">กรุณากรอกรหัสผ่าน!</div>
+                      <div class="input-group">
+                          <input type="password" id="password" class="form-control" name="password">
+                          <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <i class="bi bi-eye"></i> <!-- Optional: Use Bootstrap Icons -->
+                          </button>
+                      </div>
+                        <div id="invalid-password" class="invalid-feedback">กรุณากรอกรหัสผ่าน!</div>
                       <div class="text-start mt-2">
                         <a href="{{url('/reset_password/email')}}" class="text-secondary"><small>ลืมรหัสผ่าน</small></a>
-                    </div>
+                      </div>
                     </div>
 
                     <div class="col-12">
-                      <button id="submit-button" class="btn btn-primary w-100" type="submit">ล็อกอิน</button>
+                      <button id="submit-button" class="btn btn-primary w-100" type="button">ล็อกอิน</button>
                     </div>
 
                     <div class="col-12">
@@ -165,10 +170,50 @@
 
 </body>
 <script>
-  const form_login = document.getElementById('login-form');
-  form_login.addEventListener("submit", () => {
-    const submit_button = document.getElementById('submit-button');
-    submit_button.disabled = true;
+  const login_button = document.getElementById('submit-button');
+  const passwordInput = document.getElementById('password');
+  const togglePasswordButton = document.getElementById('togglePassword');
+  const login_form = document.getElementById('login-form');
+
+  togglePasswordButton.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      this.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
   });
+
+  login_button.addEventListener('click', function (event) {
+    var email = login_form.querySelector('#email');
+    var password = login_form.querySelector('#password');
+    var invalid_email = document.getElementById('invalid-email');
+    var invalid_password = document.getElementById('invalid-password');
+    var validator = true;
+
+    if (email.value == '') {
+      validator = false;
+      email.classList.add('is-invalid');
+      if(invalid_email)invalid_email.classList.add('d-inline');
+    } else {
+      email.classList.remove('is-invalid');
+      email.classList.add('is-valid'); // Optional, for valid feedback
+      if(invalid_email)invalid_email.classList.remove('d-inline');
+    }
+
+    if (password.value == '') {
+      validator = false;
+      password.classList.add('is-invalid');
+      if(invalid_password)invalid_password.classList.add('d-inline');
+    } else {
+      password.classList.remove('is-invalid');
+      password.classList.add('is-valid'); // Optional, for valid feedback
+      if(invalid_password)invalid_password.classList.remove('d-inline');
+    }
+    if(validator){
+      login_form.submit()
+      login_button.disabled = true;
+    }
+  });
+
+  
 </script>
 </html>
