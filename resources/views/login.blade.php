@@ -8,6 +8,7 @@
     <title>เข้าสู่ระบบ</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
     <!-- Favicons -->
     <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">

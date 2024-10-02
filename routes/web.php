@@ -141,7 +141,7 @@ Route::middleware(['session.expire', 'privilege:admin,employee'])->group(functio
     Route::get('/search_document/document/{borrower_document_id}', [SearchDocuments::class, 'viewBorrowerDocument'])->name('serach.document.view.document.page');
     Route::get('/search_document/preview/borrower_file/{borrower_child_document_id}', [SearchDocuments::class, 'previewBorrowerFile'])->name('serach.document.preview.file');
     Route::get('/search_document/preview/teacher-comment/{document_id}', [SearchDocuments::class, 'generateFile103'])->name('serach.document.preview.teacher.comment');
-    Route::get('/search_document/download_document/{borrower_uid}/{document_id}', [SearchDocuments::class, 'downloadBorrderDocuments'])->name('search.document.download.document');
+    Route::get('/search_document/download_document/{borrower_uid}/{document_id}', [SearchDocuments::class, 'downloadBorrowerDocuments'])->name('search.document.download.document');
     
     Route::get('/check_document/index', [CheckDocumentController::class, 'index']);
     Route::get('/check_document/select_document/{document_id}', [CheckDocumentController::class, 'selectDocument'])->name('check_document.select_document');
@@ -158,7 +158,7 @@ Route::middleware(['session.expire', 'privilege:admin,employee'])->group(functio
     Route::get('/check_document/get_useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'getBorrowerUsefulActivities'])->name('check_document.get.borrower.useful_activity');
     Route::post('/check_document/post_useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'postBorrowerUsefulActivities'])->name('check_document.post.borrower.useful_activity');
     Route::get('/check_document/borrower_document/result/{borrower_document_id}', [CheckDocumentController::class, 'checkDocumentResult'])->name('check_document.document.result');
-    Route::get('/check_document/borrower_document/download/{borrower_document_id}', [CheckDocumentController::class, 'downloadBorrderDocuments'])->name('check_document.document.download');
+    Route::get('/check_document/borrower_document/download/{borrower_document_id}', [CheckDocumentController::class, 'downloadBorrowerDocuments'])->name('check_document.document.download');
     Route::post('/check_document/borrower_document/submit/{borrower_document_id}', [CheckDocumentController::class, 'submitCheckDocument'])->name('check_document.document.submit');
     Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}', [CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.borrower_child_document_file');
 });

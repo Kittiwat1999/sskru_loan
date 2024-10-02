@@ -69,8 +69,8 @@ class AdminManageAccountController extends Controller
         } else if ($user->privilege == 'borrower') {
             $borrower_account = Borrower::where('user_id', $user->id)->first();
             $majors = Majors::where('faculty_id', $borrower_account->faculty_id)->get();
-            $user->faculty_id = $borrower_account->faculty_id;
-            $user->major_id = $borrower_account->major_id;
+            $user->faculty_id = $borrower_account->faculty_id ?? '';
+            $user->major_id = $borrower_account->major_id ?? '';
         }
 
         return response()->json([

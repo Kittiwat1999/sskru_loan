@@ -9,7 +9,7 @@
                 <div class="search-bar">
                     <form class="search-form d-flex align-items-center" method="GET" action="{{route('search.document.borrower.student_id')}}">
                         @csrf
-                        <input type="text" name="firstname" placeholder="กรอกชื่อนักศึกษา" title="" value="{{isset($firstname) ? $firstname : '' }}">
+                        <input type="text" name="fullname" placeholder="กรอกชื่อนักศึกษา" title="" value="{{isset($fullname) ? $fullname : '' }}">
                         <button class="btn btn-sm btn-primary" type="submit" title="Search"><i class="bi bi-search"></i></button>
                     </form>
                 </div><!-- End Search Bar -->
