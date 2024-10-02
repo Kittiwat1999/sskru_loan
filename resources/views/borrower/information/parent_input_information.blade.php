@@ -330,6 +330,7 @@
                                 <div class="invalid-feedback">
                                     กรุณาเลือกไฟล์
                                 </div>
+                                <div id="invalid-devorce-file" class="invalid-feedback">ไฟล์ต้องมีขนาดไม่เกิน 5mb</div>
                             </div>
                         </div>
                     </div>
@@ -355,7 +356,7 @@
                 <div class="col-12 row m-0 p-0">
                     <div class="col-md-8 col-sm-12"></div>
                     <div class="col-md-4 col-sm-12">
-                        <button type="button" class="btn btn-primary w-100" onclick="submitForm('parent-form')">บันทึกข้อมูล</button>
+                        <button id="form-button" type="button" class="btn btn-primary w-100" onclick="submitForm('parent-form')">บันทึกข้อมูล</button>
                     </div>
                 </div>
             </form>
@@ -718,6 +719,22 @@
                 console.error('Fetch error:', error);
             });
     }
+
+    const devorceFile = document.getElementById('devorceFile');
+    devorceFile.addEventListener('change', () => {
+        var form_button = document.getElementById('form-button');
+        var invalid_element = document.getElementById('invalid-devorce-file');
+
+        let filesize_max = 5;
+        file_size_mb = devorceFile.files[0].size / 1000000;
+        if (file_size_mb > filesize_max){
+            form_button.disabled = true;
+            if(invalid_element)invalid_element.classList.add('d-inline');
+        }else {
+            form_button.disabled = false;
+            if(invalid_element)invalid_element.classList.remove('d-inline');
+        }
+    });
 
     $(document).ready(function () {
         $.datetimepicker.setLocale('th'); 

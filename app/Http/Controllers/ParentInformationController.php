@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use setasign\Fpdi\Fpdi;
+use iio\libmergepdf\Merger;
 
 class ParentInformationController extends Controller
 {
@@ -336,6 +338,15 @@ class ParentInformationController extends Controller
                 $error = ['devorce_file' => 'ประเภทไฟล์ต้องเป็น .pdf เท่านั้น'];
                 return $error;
             }
+            //check file supported
+            $merger = new Merger(); 
+            try {
+                $merger->addFile($file);
+                $merger->merge();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            }
+
             $new_file_name = $this->storeFile($marital_status_path . '/' . $user_id, $file);
             $marital_status = ['status' => 'หย่า', 'file_name' => $new_file_name,];
         }
@@ -619,6 +630,17 @@ class ParentInformationController extends Controller
             $marital_status = ['status' => 'แยกกันอยู่ตามอาชีพ', 'file_name' => ''];
         } else if ($request->marital_status == "หย่า") {
 
+            
+            $file = $request->file('devorce_file');
+            //check file supported
+            $merger = new Merger(); 
+            try {
+                $merger->addFile($file);
+                $merger->merge();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            }
+            
             //check if have new file delete old file
             if ($request->file('devorce_file') != null) {
                 $this->deleteFile($marital_status_path . '/' . $user_id, $marital_db->file_name);
@@ -635,7 +657,6 @@ class ParentInformationController extends Controller
                     ->withInput();
             }
 
-            $file = $request->file('devorce_file');
             $file_name = $file->getClientOriginalName();
             $spit_filename = explode('.', $file_name);
             $file_extenstion = last($spit_filename);
@@ -644,6 +665,7 @@ class ParentInformationController extends Controller
                 $error = ['devorce_file' => 'ประเภทไฟล์ต้องเป็น .pdf เท่านั้น'];
                 return $error;
             }
+
 
             $file_name = $this->storeFile($marital_status_path . '/' . $user_id, $file);
             $marital_status = ['status' => 'หย่า', 'file_name' => $file_name];

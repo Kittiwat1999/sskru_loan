@@ -29,7 +29,8 @@ use iio\libmergepdf\Merger;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
-use League\CommonMark\Extension\SmartPunct\EllipsesParser;
+use setasign\Fpdi\Fpdi;
+
 
 class BorrowerRegister extends Controller
 {
@@ -378,6 +379,14 @@ class BorrowerRegister extends Controller
         $borrower_child_document['status'] = 'delivered';
         //file
         $input_file = $request->file('document_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($input_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+
         $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
         $file_name = $this->storeFile($file_path, $input_file);
         $borrower_file = new BorrowerFiles();
@@ -448,6 +457,14 @@ class BorrowerRegister extends Controller
         //file
         if ($request->file('document_file') != null) {
             $input_file = $request->file('document_file');
+            $merger = new Merger(); 
+            try {
+                $merger->addFile($input_file);
+                $merger->merge();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            }
+            
             $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
             $file_name = $this->storeFile($file_path, $input_file);
             $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']) ?? new BorrowerFiles();;

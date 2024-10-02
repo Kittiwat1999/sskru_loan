@@ -800,44 +800,8 @@ class CheckDocumentController extends Controller
         $generator = new GenerateFile();
         return $generator->teacherCommentDocument103($borrower_uid, $borrower_document_id);
     }
-
+    
     public function downloadBorrowerDocuments($borrower_document_id)
-    {
-        $borrower_document_id = Crypt::decryptString($borrower_document_id);
-
-        $borrower_document = BorrowerDocument::find($borrower_document_id);
-        $borrower = Users::find($borrower_document['user_id']);
-        $borrower_fullname = $borrower['firstname'] .' ' . $borrower['lastname'];
-        
-        $borrower_child_document = DocStructure::join('documents', 'doc_structures.document_id', '=', 'documents.id')
-            ->join('borrower_child_documents', 'doc_structures.child_document_id', '=', 'borrower_child_documents.child_document_id')
-            ->where('doc_structures.document_id', $borrower_document['document_id'])
-            ->where('borrower_child_documents.document_id', $borrower_document['document_id'])
-            ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
-            ->select('borrower_child_documents.borrower_file_id')
-            ->first();
-
-        $borrower_document_code = BorrowerChildDocument::where('document_id', $borrower_document['document_id'])
-            ->where('user_id', $borrower_document['user_id'])
-            ->where('document_code', '!=', '-')
-            ->value('document_code');
-        
-
-        $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $file_path = storage_path($borrower_file['file_path']. '/' .$borrower_file['file_name']);
-        if (File::exists($file_path)) {
-            // Get the file content
-            $fileContent = file_get_contents($file_path);
-            $customName = $borrower_document_code .' '. $borrower_fullname .'.pdf';
-            return response($fileContent)
-                ->header('Content-Type', 'application/pdf')  // Set the MIME type for PDF (adjust as needed)
-                ->header('Content-Disposition', 'attachment; filename="' . $customName . '"');  // Set the custom file name
-        } else {
-            return response()->json(['error' => 'File not found'], 404);
-        }
-    }
-
-    public function real_downloadBorrowerDocuments($borrower_document_id)
     {
         $borrower_document_id = Crypt::decryptString($borrower_document_id);
 

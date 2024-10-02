@@ -23,8 +23,7 @@ use App\Models\UsefulActivity;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Session;
-use League\CommonMark\Node\Block\Document;
+use setasign\Fpdi\Fpdi;
 
 class SendDocumentController extends Controller
 {
@@ -100,7 +99,7 @@ class SendDocumentController extends Controller
             ->where('documents.end_date', '>=', $current_date)
             ->first();
         if ($document == null) {
-            return redirect()->back()->withErrors('ไม่น่ารักเลยนะ');
+            return redirect()->back()->withErrors('ระบบปิดรับเอกสารแล้ว');
         }
 
         if (Carbon::parse($document['end_date']) < $budhist_date || $budhist_date < Carbon::parse($document['start_date'])) {
@@ -256,6 +255,14 @@ class SendDocumentController extends Controller
         }
         //file
         $input_file = $request->file('document_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($input_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+
         $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
         $file_name = $this->storeFile($file_path, $input_file);
         $borrower_file = new BorrowerFiles();
@@ -322,6 +329,14 @@ class SendDocumentController extends Controller
         //file
         if ($request->file('document_file') != null) {
             $input_file = $request->file('document_file');
+            $merger = new Merger(); 
+            try {
+                $merger->addFile($input_file);
+                $merger->merge();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            }
+
             $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
             $file_name = $this->storeFile($file_path, $input_file);
             $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);

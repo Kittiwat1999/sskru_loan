@@ -18,7 +18,7 @@ class AdminManageAccountController extends Controller
         'admin' => 'แอดมิน',
         'employee' => 'ผู้ปฏิบัติงาน',
         'teacher' => 'อาจารย์ที่ปรึกษา',
-        'borrower' => 'ผู้กู้',
+        'borrower' => 'ผู้กู้ยืม',
     ];
 
     function index(Request $request)
