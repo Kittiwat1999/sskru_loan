@@ -14,10 +14,42 @@ use App\Models\DocTypes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
-
+use iio\libmergepdf\Merger;
 
 class AdminManageDocumentsController extends Controller
 {
+
+    
+    public function deleteFile($file_path, $file_name)
+    {
+        $path = public_path($file_path . '/' . $file_name);
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+    }
+
+    private function storeFile($file_path, $file)
+    {
+        $path = public_path($file_path);
+        !file_exists($path) && mkdir($path, 0775, true);
+        $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
+        $file->move($path, $name);
+        return $name;
+    }
+
+    public function displayFile($file_path, $file_name)
+    {
+        $path = public_path($file_path . '/' . $file_name);
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    }
+
     public function manage_documents(Request $request)
     {
         $doc_types = DocTypes::where('isactive', true)->get();
@@ -122,6 +154,13 @@ class AdminManageDocumentsController extends Controller
         $child_document_files_path = Config::where('variable', 'child_document_files_path')->value('value');
         $child_document = ChildDocuments::find($child_document_id);
         $child_documnet_file = $request->file('child_documnet_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($child_documnet_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
         $file_name = $this->storeFile($child_document_files_path, $child_documnet_file);
         $child_document_file = new ChildDocumentFiles();
         $child_document_file['child_document_id'] = $child_document['id'];
@@ -176,6 +215,14 @@ class AdminManageDocumentsController extends Controller
         $request->validate($rules, $messages);
         $child_document_example_files_path = Config::where('variable', 'child_document_example_files_path')->value('value');
         $get_example_file = $request->file('example_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($get_example_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+
         $file_name = $this->storeFile($child_document_example_files_path, $get_example_file);
         $example_file = new ChildDocumentExampleFiles();
         $example_file['child_document_id'] = $child_document_id;
@@ -207,6 +254,14 @@ class AdminManageDocumentsController extends Controller
         $request->validate($rules, $messages);
         $child_document_example_files_path = Config::where('variable', 'child_document_example_files_path')->value('value');
         $get_minors_example_file = $request->file('example_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($get_minors_example_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+
         $file_name = $this->storeFile($child_document_example_files_path, $get_minors_example_file);
         $minors_example_file = new ChildDocumentExampleFiles();
         $minors_example_file['child_document_id'] = $child_document_id;
@@ -328,6 +383,14 @@ class AdminManageDocumentsController extends Controller
         $addon_document_files_path = Config::where('variable', 'addon_document_files_path')->value('value');
         $addon_document = AddOnDocument::find($addon_document_id);
         $get_addon_document_file = $request->file('addon_document_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($get_addon_document_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+
         $file_name = $this->storeFile($addon_document_files_path, $get_addon_document_file);
         $addon_document_file = new AddOnDocumentFile();
         $addon_document_file['addon_document_id'] = $addon_document['id'];
@@ -382,6 +445,14 @@ class AdminManageDocumentsController extends Controller
         $request->validate($rules, $messages);
         $addon_document_example_files_path = Config::where('variable', 'addon_document_example_files_path')->value('value');
         $get_addon_example_file = $request->file('addon_example_file');
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($get_addon_example_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+
         $file_name = $this->storeFile($addon_document_example_files_path, $get_addon_example_file);
         $addon_example_file = new AddOnDocumentExampleFile();
         $addon_example_file['addon_document_id'] = $addon_document_id;
@@ -402,36 +473,6 @@ class AdminManageDocumentsController extends Controller
         $this->deleteFile($addon_example_file->file_path, $addon_example_file->file_name);
         $addon_example_file->delete();
         return redirect()->back()->with(['success' => 'ลบไฟล์เสร็จสิ้น']);
-    }
-
-    public function deleteFile($file_path, $file_name)
-    {
-        $path = public_path($file_path . '/' . $file_name);
-        if (File::exists($path)) {
-            File::delete($path);
-        }
-    }
-
-    private function storeFile($file_path, $file)
-    {
-        $path = public_path($file_path);
-        !file_exists($path) && mkdir($path, 0777, true);
-        $name = now()->format('Y-m-d_H-i-s') . '_' . $file->getClientOriginalName();
-        $file->move($path, $name);
-        return $name;
-    }
-
-    public function displayFile($file_path, $file_name)
-    {
-        $path = public_path($file_path . '/' . $file_name);
-        if (!File::exists($path)) {
-            abort(404);
-        }
-        $file = File::get($path);
-        $type = File::mimeType($path);
-        $response = Response::make($file, 200);
-        $response->header("Content-Type", $type);
-        return $response;
     }
 
     public function updateUsefulActivitytHour(Request $request)
