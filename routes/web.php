@@ -260,7 +260,7 @@ Route::middleware(['session.expire'])->group(function () {
 Route::get('/register_student', [RegisterController::class, 'index']);
 Route::put('/register_student/student/register/', [RegisterController::class, 'register_student'])->name('register.student');
 
-Route::get('/register_teacher/page', [RegisterController::class, 'register_teacher_page']);
+Route::get('/register_teacher', [RegisterController::class, 'register_teacher_page']);
 Route::put('/register_teacher/teacher/register/', [RegisterController::class, 'register_teacher'])->name('register.teacher');
 Route::get('/register_teacher/getMajorsByFacultyId/{faculty_id}', [RegisterController::class, 'getMajorsByFacultyId']);
 

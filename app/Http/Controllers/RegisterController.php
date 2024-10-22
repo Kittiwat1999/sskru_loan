@@ -34,11 +34,10 @@ class RegisterController extends Controller
 
     public function register_teacher_page()
     {
-        $users = Users::where('isactive', true)->get();
         $faculties = Faculties::where('isactive', true)->get();
         $majors = Majors::where('isactive', true)->get();
         $teacheraccounts = TeacherAccounts::where('isactive', true)->get();
-        return view('register_teacher', compact('users','faculties','majors'));
+        return view('register_teacher', compact('faculties','majors'));
     }
 
     public function register_teacher(TeacherRegisterRequest $request)
