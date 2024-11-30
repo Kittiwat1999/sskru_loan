@@ -215,7 +215,7 @@
                         </div>
                         <div class="col-6">
                             <label for="password" class="col-form-label">รหัสผ่าน</label>
-                            <input id="input-password" type="password" name="password" class="form-control" value="">
+                            <input id="input-password" type="password" name="password" class="form-control">
                             <div class="invalid-feedback">
                                 กรุณากรอกรหัสผ่าน
                             </div>
