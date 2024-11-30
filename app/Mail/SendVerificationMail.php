@@ -54,7 +54,13 @@ class SendVerificationMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Test Email from Laravel')
-                    ->view('emails.verification');
+        return $this->subject('รหัสยืนยันสำหรับการเข้าสู่ระบบ')
+                    ->from('sskru_loan@gmail.com', 'SSKRU-Loan')
+                    ->view('emails.verification')
+                    ->with([
+                        'code' => $this->code,
+                        'companyName' => 'SSKRU-Loan',
+                        'supportEmail' => 'chawalit1907@gmail.com',
+                    ]);
     }
 }

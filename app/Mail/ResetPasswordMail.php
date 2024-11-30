@@ -53,7 +53,13 @@ class ResetPasswordMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Test Email from Laravel')
-                    ->view('emails.reset_password');
+        return $this->subject('รหัสยืนยันสำหรับแก้ไขรหัสผ่าน')
+            ->from('sskru_loan@gmail.com', 'SSKRU-Loan')
+            ->view('emails.reset_password')
+            ->with([
+                'code' => $this->code,
+                'companyName' => 'SSKRU-Loan',
+                'supportEmail' => 'chawalit1907@gmail.com',
+            ]);
     }
 }
