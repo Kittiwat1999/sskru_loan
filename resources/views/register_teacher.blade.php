@@ -307,7 +307,7 @@
             })
             .then(majors => {
                 var major_element = document.getElementById('major');
-                major_element.innerHTML = `<option selected disabled value="admin"></option>`;
+                major_element.innerHTML = `<option selected disabled value=""></option>`;
                 majors.forEach((major) => {
                     var option = document.createElement('option');
                     option.value = major.id;
