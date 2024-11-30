@@ -74,6 +74,15 @@
     }
 
     function addressWithZipcode(zip_code_input, caller){
+        // disable input
+        document.getElementById(`${caller}_province`).disabled = true;
+        document.getElementById(`${caller}_tambon`).disabled = true;
+        document.getElementById(`${caller}_aumphure`).disabled = true;
+        //show loading msg
+        document.getElementById(`${caller}_province`).placeholder = 'กำลังดึงข้อมูล...';
+        document.getElementById(`${caller}_tambon`).placeholder = 'กำลังดึงข้อมูล...';
+        document.getElementById(`${caller}_aumphure`).placeholder = 'กำลังดึงข้อมูล...';
+        
         fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
         .then(response => {
             if (!response.ok) {
@@ -147,6 +156,13 @@
                 for(province of provinces){
                     if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
                 }
+
+                //enable input
+                setTimeout(() => {
+                    document.getElementById(`${caller}_province`).disabled = false;
+                    document.getElementById(`${caller}_tambon`).disabled = false;
+                    document.getElementById(`${caller}_aumphure`).disabled = false;
+                }, 1000);
                 
             })
             .catch(error => {

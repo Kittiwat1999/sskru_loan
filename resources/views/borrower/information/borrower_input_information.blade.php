@@ -339,6 +339,14 @@
     }
 
     function addressWithZipcode(zip_code_input, caller){
+        // disable input
+        document.getElementById(`${caller}_province`).disabled = true;
+        document.getElementById(`${caller}_tambon`).disabled = true;
+        document.getElementById(`${caller}_aumphure`).disabled = true;
+        //show loading msg
+        document.getElementById(`${caller}_province`).placeholder = 'กำลังดึงข้อมูล...';
+        document.getElementById(`${caller}_tambon`).placeholder = 'กำลังดึงข้อมูล...';
+        document.getElementById(`${caller}_aumphure`).placeholder = 'กำลังดึงข้อมูล...';
         fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
         .then(response => {
             if (!response.ok) {
@@ -361,7 +369,7 @@
             }
             // console.log(tambons);
             var selectElement = document.getElementById(`${caller}_tambon`);
-            selectElement.innerHTML ='<option disabled selected value="">เลือกตำบล</option>';
+            selectElement.innerHTML ='<option disabled selected value="">---------------</option>';
             for(tb of tambons){
                 var newOption = document.createElement('option');
                 newOption.value = tb;
@@ -388,8 +396,9 @@
                 var province_id = '';
                 for(aumphure of aumphures){
                     if(amphure_id == aumphure.id){
-                    document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
-                    if(province_id == '')province_id = aumphure.province_id;
+                        document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
+                    if(province_id == '')
+                        province_id = aumphure.province_id;
                     }
                 }
                 getProvince(province_id,caller);
@@ -412,6 +421,13 @@
                 for(province of provinces){
                     if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
                 }
+
+                //enable input
+                setTimeout(() => {
+                    document.getElementById(`${caller}_province`).disabled = false;
+                    document.getElementById(`${caller}_tambon`).disabled = false;
+                    document.getElementById(`${caller}_aumphure`).disabled = false;
+                }, 1000);
                 
             })
             .catch(error => {
