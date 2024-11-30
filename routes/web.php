@@ -321,3 +321,7 @@ Route::get('/errors/404', function () {
 Route::get('/expired_page', function () {
     return view('/expired_page');
 });
+
+Route::get('/input_thai_id', function () {
+    return view('/input_thai_id');
+});
