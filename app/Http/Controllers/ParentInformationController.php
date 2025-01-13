@@ -58,9 +58,9 @@ class ParentInformationController extends Controller
         return $response;
     }
 
-    public function display_marital_status_file($file_name)
+    public function display_marital_status_file(Request $request, $file_name)
     {
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id', '1');
         $marital_status_path = Config::where('variable', 'marital_file_path')->value('value');
         $reqsonse = $this->displayFile($marital_status_path . '/' . $user_id, $file_name);
         return $reqsonse;
@@ -71,9 +71,9 @@ class ParentInformationController extends Controller
         return view('borrower.information.parent_input_information');
     }
 
-    public function borrower_edit_parent_information_page()
+    public function borrower_edit_parent_information_page(Request $request,)
     {
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id', '1');
         $borrower = Borrower::where('user_id', $user_id)->select('id', 'marital_status', 'student_id', 'address_id')->first();
         $parent = Parents::where('borrower_id', $borrower['id'])->where('main_parent_only', false)->get();
         $borrower_id = $borrower['id'];
@@ -104,7 +104,7 @@ class ParentInformationController extends Controller
     {
         // dd($request);
         date_default_timezone_set("Asia/Bangkok");
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id', '1');
         $borrower = Borrower::where('user_id', $user_id)->first();
 
         //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย
@@ -361,8 +361,9 @@ class ParentInformationController extends Controller
 
     public function borrower_edit_parent_information(ParentInformationRequest $request)
     {
+        // dd($request->all());
         date_default_timezone_set("Asia/Bangkok");
-        $user_id = Session::get('user_id', '1');
+        $user_id = $request->session()->get('user_id', '1');
         $borrower = Borrower::where('user_id', $user_id)->first();
         $parents_db = Parents::where('borrower_id', $borrower->id)->get();
         $marital_db = json_decode($borrower->marital_status);
@@ -539,7 +540,7 @@ class ParentInformationController extends Controller
             $parent2['firstname'] = $request->parent2_firstname;
             $parent2['lastname'] = $request->parent2_lastname;
             $parent2['birthday'] = $this->convert_date($request->parent2_birthday);
-            $parent2['citizen_id'] = Crypt::encryptString($request->parent1_citizen_id);
+            $parent2['citizen_id'] = Crypt::encryptString($request->parent2_citizen_id);
             $parent2['phone'] = $request->parent2_phone;
             $parent2['email'] = $request->parent2_email;
             $parent2['occupation'] = $request->parent2_occupation;

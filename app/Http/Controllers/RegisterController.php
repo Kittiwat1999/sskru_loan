@@ -28,7 +28,7 @@ class RegisterController extends Controller
         $student_registering->email = $request->email;
         $student_registering->password = Hash::make($request->password);
         $student_registering->privilege = 'borrower';
-        //$student_registering->activated = true; //เปิดใช้งานบรรทัดนี้หากมีผู้ลงทะเบียนใช้เยอะๆเพราะถ้าส่งเมล์ไปมากๆจะถูกมองเป็นสแปม
+        $student_registering->activated = true; //เปิดใช้งานบรรทัดนี้หากมีผู้ลงทะเบียนใช้เยอะๆเพราะถ้าส่งเมล์ไปมากๆจะถูกมองเป็นสแปม
         $student_registering->save();
         return redirect('/register_success')->with(['success' => 'สร้างบัญชี ' . $student_registering->prefix . $student_registering->firstname . ' ' . $student_registering->lastname . ' เรียบร้อยแล้ว']);
     }
@@ -50,6 +50,7 @@ class RegisterController extends Controller
         $teacher_registering->email = $request->email;
         $teacher_registering->password = Hash::make($request->password);
         $teacher_registering->privilege = 'teacher';
+        $teacher_registering->activated = true; //เปิดใช้งานบรรทัดนี้หากมีผู้ลงทะเบียนใช้เยอะๆเพราะถ้าส่งเมล์ไปมากๆจะถูกมองเป็นสแปม
         $teacher_registering->save();
 
         $teacher_account = new TeacherAccounts();
