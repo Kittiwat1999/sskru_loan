@@ -321,7 +321,12 @@ class ParentInformationController extends Controller
 
             $file_validator = Validator::make($request->all(), [
                 "devorce_file" => 'required|file|max:2048|mimes:pdf',
-            ]);
+                ],[
+                    'devorce_file.required' => 'ไม่ได้อัพโหลดใบหย่า',
+                    'devorce_file.file' => 'ข้อมูลนำเข้าไม่ถูกต้อง',
+                    'devorce_file.max' => 'ไฟล์ต้องมีขนาดไม่เกิน 2048kb',
+                    'devorce_file.mimes' => 'ไฟล์ต้องเป็น pdf',
+                ]);
 
             // Check if validation fails
             if ($file_validator->fails()) {
@@ -649,6 +654,11 @@ class ParentInformationController extends Controller
 
             $file_validator = Validator::make($request->all(), [
                 "devorce_file" => 'required|file|max:2048|mimes:pdf',
+            ],[
+                'devorce_file.required' => 'ไม่ได้อัพโหลดใบหย่า',
+                'devorce_file.file' => 'ข้อมูลนำเข้าไม่ถูกต้อง',
+                'devorce_file.max' => 'ไฟล์ต้องมีขนาดไม่เกิน 2048kb',
+                'devorce_file.mimes' => 'ไฟล์ต้องเป็น pdf',
             ]);
 
             if ($file_validator->fails()) {

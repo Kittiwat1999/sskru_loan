@@ -330,7 +330,7 @@
                                 <div class="invalid-feedback">
                                     กรุณาเลือกไฟล์
                                 </div>
-                                <div id="invalid-devorce-file" class="invalid-feedback">ไฟล์ต้องมีขนาดไม่เกิน 5mb</div>
+                                <div id="invalid-devorce-file" class="invalid-feedback">ไฟล์ต้องมีขนาดไม่เกิน 2mb</div>
                             </div>
                         </div>
                     </div>
@@ -741,11 +741,11 @@
     devorceFile.addEventListener('change', () => {
         var form_button = document.getElementById('form-button');
         var invalid_element = document.getElementById('invalid-devorce-file');
+        let filesize_max = 2;
+        let file_size_mb = devorceFile.files[0].size / 1000000;
 
-        let filesize_max = 5;
-        file_size_mb = devorceFile.files[0].size / 1000000;
+        form_button.disabled = true;
         if (file_size_mb > filesize_max){
-            form_button.disabled = true;
             if(invalid_element)invalid_element.classList.add('d-inline');
         }else {
             form_button.disabled = false;
