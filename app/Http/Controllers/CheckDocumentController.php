@@ -444,8 +444,8 @@ class CheckDocumentController extends Controller
             ->where('document_id', $borrower_document['document_id'])
             ->sum('hour_count') ?? 0;
         $useful_activities_hours = Config::where('variable', 'useful_activity_hour')->value('value');
-        $comments_db = UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('comment_id', '!=', null)->pluck('comment_id')->toArray() ?? null;
-        $custom_comment = UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('comment_id', null)->first() ?? null;
+        $comments_db = UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('borrower_uid', $borrower_document['user_id'])->where('comment_id', '!=', null)->pluck('comment_id')->toArray() ?? null;
+        $custom_comment = UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('borrower_uid', $borrower_document['user_id'])->where('comment_id', null)->first() ?? null;
         $comments = Comments::where('isactive', true)->get();
         return view(
             'check_document.check_borrower_useful_activity',
