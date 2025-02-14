@@ -54,13 +54,29 @@ class UsefulActivityController extends Controller
         $response->header("Content-Type", $type);
         return $response;
     }
+    
+    public function displayDefaultFile()
+    {
+        $path = storage_path('default-image.png');
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    }
 
     public function showUsefulActivityFile($useful_activity_id, Request $request)
     {
         $useful_activity_id = Crypt::decryptString($useful_activity_id);
-        $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
-        $reqsonse = $this->displayFile($useful_activity_file['file_path'], $useful_activity_file->file_name);
-        return $reqsonse;
+        $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first() ?? null;
+        if($useful_activity_file != null) {
+            return $this->displayFile($useful_activity_file['file_path'], $useful_activity_file->file_name);
+        }else{
+            return $this->displayDefaultFile();
+        }
     }
 
     public function storeUsefulActivity($document_id, UsefulActivityRequest $request)
