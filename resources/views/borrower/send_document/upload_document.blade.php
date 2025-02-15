@@ -148,7 +148,7 @@
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <button id="input-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}')" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
+                            <button id="input-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}', this)" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
                         </div>
                     </div>
                 @else
@@ -285,7 +285,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
-                                        <button id="edit-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('edit-form-{{$child_document->id}}')" ><i class="bi bi-arrow-down"></i> บันทึก</button>
+                                        <button id="edit-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('edit-form-{{$child_document->id}}', this)" ><i class="bi bi-arrow-down"></i> บันทึก</button>
                                     </div>
                                 </div>
                                 @if($child_document->need_loan_balance)
@@ -486,7 +486,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                        <button id="add-useful-activity-button" type="button" class="btn btn-primary" onclick="formValidate('add-useful-activity-form')">บันทึก</button>
+                        <button id="add-useful-activity-button" type="button" class="btn btn-primary" onclick="formValidate('add-useful-activity-form', this)">บันทึก</button>
                     </div>
                 </div>
                 </div>
@@ -628,7 +628,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                    <button id="edit-useful-activity-button" type="button" class="btn btn-primary" onclick="formValidate('edit-useful-activity')">บันทึก</button>
+                    <button id="edit-useful-activity-button" type="button" class="btn btn-primary" onclick="formValidate('edit-useful-activity', this)">บันทึก</button>
                 </div>
    
         `;
@@ -688,10 +688,12 @@
         input.value = formatted;
     }
 
-    async function formValidate(form_id){
+    async function formValidate(form_id, submit_btn){
+        const form = document.getElementById(form_id);
+        submit_btn.disabled = true;
+
         var validate = await validateData(form_id);
         if(validate){
-            var form = document.getElementById(form_id);
             form.submit();
         }
     }

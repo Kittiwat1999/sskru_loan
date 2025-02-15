@@ -68,13 +68,13 @@ class UsefulActivityController extends Controller
         return $response;
     }
 
-    public function showUsefulActivityFile($useful_activity_id, Request $request)
+    public function showUsefulActivityFile($useful_activity_id)
     {
         $useful_activity_id = Crypt::decryptString($useful_activity_id);
         $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first() ?? null;
         if($useful_activity_file != null) {
-            return $this->displayFile($useful_activity_file['file_path'], $useful_activity_file->file_name);
-        }else{
+            return $this->displayFile($useful_activity_file['file_path'], $useful_activity_file['file_name']);
+        } else {
             return $this->displayDefaultFile();
         }
     }
@@ -178,8 +178,9 @@ class UsefulActivityController extends Controller
             $file_path = $useful_activity_file_path . '/' . $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $user_id;
             $input_file = $request->file('useful_activity_file');
             $file_name = $this->storeFile($file_path, $input_file);
-            $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
-            $this->deleteFile($file_path, $useful_activity_file['file_name']);
+            $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first() ?? new UsefulActivitiyFile();
+            $this->deleteFile($useful_activity_file['file_path'], $useful_activity_file['file_name']);
+            $useful_activity_file['useful_activity_id'] = $useful_activity['id'];
             $useful_activity_file['description'] = $useful_activity['activity_name'];
             $useful_activity_file['original_name'] = $input_file->getClientOriginalName();
             $useful_activity_file['file_path'] = $file_path;
@@ -201,9 +202,11 @@ class UsefulActivityController extends Controller
         $user_id = $request->session()->get('user_id', '1');
         $useful_activity = UsefulActivity::find($useful_activity_id);
         $useful_activity_name = $useful_activity['activity_name'];
-        $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first();
-        $this->deleteFile($useful_activity_file['file_path'], $useful_activity_file['file_name']);
-        $useful_activity_file->delete();
+        $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first() ?? null;
+        if($useful_activity_file != null){
+            $this->deleteFile($useful_activity_file['file_path'], $useful_activity_file['file_name']);
+            $useful_activity_file->delete();
+        }
         $useful_activity->delete();
 
         return redirect()->back()->with(['success' => 'ลบข้อมูลกิจกรรมจิตอาสา' . $useful_activity_name . ' เรียบร้อยแล้ว']);

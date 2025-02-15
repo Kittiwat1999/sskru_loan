@@ -782,7 +782,6 @@ class CheckDocumentController extends Controller
 
     public function previewBorrowerFile($borrower_child_document_id)
     {
-        
         $borrower_child_document_id = $this->dectyptParam($borrower_child_document_id);
         $borrower_child_document = Documents::join('borrower_child_documents', 'documents.id', '=', 'borrower_child_documents.document_id')
             ->where('borrower_child_documents.id', $borrower_child_document_id)
