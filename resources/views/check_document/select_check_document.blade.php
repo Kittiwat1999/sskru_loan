@@ -17,8 +17,8 @@
                         <option @selected($sessionData['select_status'] == 'wait-approve') value="wait-approve">รออนุมัติ</option>
                         <option @selected($sessionData['select_status'] == 'wait-teacher-approve') value="wait-teacher-approve">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
                         <option @selected($sessionData['select_status'] == 'approved') value="approved">อนุมัติแล้ว</option>
-                        <option @selected($sessionData['select_status'] == 'rejected') value="rejected">ต้องแก้ไข</option>
-                        <option @selected($sessionData['select_status'] == 'response-reject') value="response-reject">แก้ไขแล้ว</option>
+                        <option @selected($sessionData['select_status'] == 'rejected') value="rejected">ผู้กู้ยืมต้องแก้ไข</option>
+                        <option @selected($sessionData['select_status'] == 'response-reject') value="response-reject">ผู้กู้ยืมแก้ไขแล้ว</option>
                         <option @selected($sessionData['select_status'] == 'sending') value="sending">ผู้กู้ยืมกำลังดำเนินการ</option>
                     </select>
                 </div>

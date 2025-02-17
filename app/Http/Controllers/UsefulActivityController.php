@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
+use iio\libmergepdf\Merger;
 
 
 class UsefulActivityController extends Controller
@@ -121,6 +122,16 @@ class UsefulActivityController extends Controller
         $useful_activity_file_path = Config::where('variable', 'useful_activity_file_path')->value('value');
         $file_path = $useful_activity_file_path . '/' . $document['term'] . '-' . $document['year'] . '/' . $document_id . '/' . $user_id;
         $input_file = $request->file('useful_activity_file');
+
+        //file
+        $merger = new Merger(); 
+        try {
+            $merger->addFile($input_file);
+            $merger->merge();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        }
+        
         $file_name = $this->storeFile($file_path, $input_file);
         $useful_activity_file = new UsefulActivitiyFile();
         $useful_activity_file['useful_activity_id'] = $useful_activity['id'];
@@ -177,6 +188,15 @@ class UsefulActivityController extends Controller
             $useful_activity_file_path = Config::where('variable', 'useful_activity_file_path')->value('value');
             $file_path = $useful_activity_file_path . '/' . $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $user_id;
             $input_file = $request->file('useful_activity_file');
+            //file
+            $merger = new Merger(); 
+            try {
+                $merger->addFile($input_file);
+                $merger->merge();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            }
+
             $file_name = $this->storeFile($file_path, $input_file);
             $useful_activity_file = UsefulActivitiyFile::where('useful_activity_id', $useful_activity_id)->first() ?? new UsefulActivitiyFile();
             $this->deleteFile($useful_activity_file['file_path'], $useful_activity_file['file_name']);
