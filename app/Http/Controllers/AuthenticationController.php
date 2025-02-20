@@ -36,6 +36,12 @@ class AuthenticationController extends Controller
     {
         $credentials = $request->only('email', 'password');
         $user = Users::where('email', $request->email)->first();
+        if($user['isactive'] == false){
+            return back()->withErrors([
+                'msg' => 'อีเมลล์หรือรหัสผ่านไม่ถูกต้อง',
+            ])->onlyInput('email');
+        }
+
         $currentTime = now();
 
         if (Auth::attempt($credentials)) {
@@ -54,8 +60,8 @@ class AuthenticationController extends Controller
             }
         }
         return back()->withErrors([
-            'username' => 'อีเมลล์หรือรหัสผ่านไม่ถูกต้อง',
-        ])->onlyInput('username');
+            'msg' => 'อีเมลล์หรือรหัสผ่านไม่ถูกต้อง',
+        ])->onlyInput('email');
     }
 
     public function send_email()
