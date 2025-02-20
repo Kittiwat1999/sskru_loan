@@ -66,67 +66,71 @@ Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
     Route::post('/admin/editAccount/{user_id}', [AdminManageAccountController::class, 'admin_editAccount'])->name('admin.editAccount');
     Route::get('/admin/manage_account/get_major_by_faculty_id/{faculty_id}', [AdminManageAccountController::class, 'get_major_by_faculty_id']);
     
-    //manage document page
-    Route::get('/admin/manage_documents', [AdminManageDocumentsController::class, 'manage_documents'])->name('admin.manage.documents');
-    // child document crud
-    Route::put('/admin/manage_documents/store_child_document', [AdminManageDocumentsController::class, 'storeChildDocument'])->name('admin.store.child_document');
-    Route::post('/admin/manage_documents/edit_child_document/{child_document_id}', [AdminManageDocumentsController::class, 'editChildDocument'])->name('admin.edit.child_document');
-    Route::delete('/admin/manage_documents/delete_child_document/{child_document_id}', [AdminManageDocumentsController::class, 'deleteChildDocument'])->name('admin.delete.child_document');
+    Route::controller(AdminManageDocumentsController::class)->group(function () {
+        //manage document page
+        Route::get('/admin/manage_documents', 'manage_documents')->name('admin.manage.documents');
+        // child document crud
+        Route::put('/admin/manage_documents/store_child_document', 'storeChildDocument')->name('admin.store.child_document');
+        Route::post('/admin/manage_documents/edit_child_document/{child_document_id}', 'editChildDocument')->name('admin.edit.child_document');
+        Route::delete('/admin/manage_documents/delete_child_document/{child_document_id}', 'deleteChildDocument')->name('admin.delete.child_document');
+        
+        // addon crud
+        Route::post('/admin/manage_documents/store_addon_document', 'store_addon_document')->name('admin.store.addon_document');
+        Route::put('/admin/manage_documents/edit_addon_document/{addon_document_id}', 'edit_addon_document')->name('admin.edit.addon_document');
+        Route::delete('/admin/manage_documents/delete_addon_document/{addon_document_id}', 'delete_addon_document')->name('admin.delete.addon_document');
+        
+        //document crud
+        Route::put('/admin/manage_documents/store_document', 'sotoreDocument')->name('admin.store.document');
+        Route::post('/admin/manage_documents/edit_document/{doc_type_id}', 'editDocument')->name('admin.edit.document');
+        Route::delete('/admin/manage_documents/delete_document/{doc_type_id}', 'deleteDocument')->name('admin.delete.document');
+        Route::post('/admin/manage_documents/update_useful_activity_hour', 'updateUsefulActivitytHour')->name('admin.update.useful.hour');
+        
+        //child doc files
+        Route::get('/admin/manage_documents/files/{child_document_id}', 'mange_file_page')->name('admin.manage.file.document');
+        //crud downlaod file
+        Route::post('/admin/manage_child_document/file/store/{child_document_id}', 'store_child_document_file')->name('admin.store.child.document.file');
+        Route::delete('/admin/manage_child_document/file/delete/{child_document_file_id}', 'delete_child_document_file')->name('admin.delete.child.document.file');
+        Route::put('/admin/manage_child_document/update/generate_file/{child_document_id}', 'update_child_document_generate_file')->name('admim.child.document.update.generatefile');
+        //crud example file
+        Route::post('/admin/manage_child_document/example_file/store/{child_document_id}', 'store_example_file')->name('admin.store.example.file');
+        Route::delete('/admin/manage_child_document/example_file/delete/{example_file_id}', 'delete_example_file')->name('admin.delete.example.file');
+        Route::post('/admin/manage_child_document/minors_example_file/store/{child_document_id}', 'stroe_minors_example_file')->name('admin.store.minors.example.file');
+        //document add-on file
+        Route::put('/admin/manage_child_document/child_document/update/addon/{child_document_id}', 'update_child_document_addon')->name('admim.child.document.update.addon');
+        
+        // addon file
+        Route::get('/admin/manage_documents/addon/files/{addon_document_id}', 'mange_addon_file_page')->name('admin.manage.addon.file.document');
+        //crud download file
+        Route::post('/admin/manage_addon_document/file/store/{addon_document_id}', 'store_addon_document_file')->name('admin.store.addon.document.file');
+        Route::delete('/admin/manage_addon_document/file/delete/{addon_document_file_id}', 'delete_addon_document_file')->name('admin.delete.addon.document.file');
+        Route::put('/admin/manage_addon_document/update/generate_file/{addon_document_id}', 'update_addon_document_generate_file')->name('admim.addon.document.update.generatefile');
+        //crud example file
+        Route::post('/admin/manage_addon_document/example_addon_file/store/{addon_document_id}', 'store_example_addon_file')->name('admin.store.example.addon.file');
+        Route::delete('/admin/manage_addon_document/example_addon_file/delete/{example_addon_file_id}', 'delete_example_addon_file')->name('admin.delete.example.addon.file');
+        //admin manage account display all file
+        Route::get('/admin/manage_documents/deisplayfile/file/{file_path}/{file_name}', 'displayFile')->name('admin.display.file');
+    });
     
-    // addon crud
-    Route::post('/admin/manage_documents/store_addon_document', [AdminManageDocumentsController::class, 'store_addon_document'])->name('admin.store.addon_document');
-    Route::put('/admin/manage_documents/edit_addon_document/{addon_document_id}', [AdminManageDocumentsController::class, 'edit_addon_document'])->name('admin.edit.addon_document');
-    Route::delete('/admin/manage_documents/delete_addon_document/{addon_document_id}', [AdminManageDocumentsController::class, 'delete_addon_document'])->name('admin.delete.addon_document');
-    
-    //document crud
-    Route::put('/admin/manage_documents/store_document', [AdminManageDocumentsController::class, 'sotoreDocument'])->name('admin.store.document');
-    Route::post('/admin/manage_documents/edit_document/{doc_type_id}', [AdminManageDocumentsController::class, 'editDocument'])->name('admin.edit.document');
-    Route::delete('/admin/manage_documents/delete_document/{doc_type_id}', [AdminManageDocumentsController::class, 'deleteDocument'])->name('admin.delete.document');
-    Route::post('/admin/manage_documents/update_useful_activity_hour', [AdminManageDocumentsController::class, 'updateUsefulActivitytHour'])->name('admin.update.useful.hour');
-    
-    //child doc files
-    Route::get('/admin/manage_documents/files/{child_document_id}', [AdminManageDocumentsController::class, 'mange_file_page'])->name('admin.manage.file.document');
-    //crud downlaod file
-    Route::post('/admin/manage_child_document/file/store/{child_document_id}', [AdminManageDocumentsController::class, 'store_child_document_file'])->name('admin.store.child.document.file');
-    Route::delete('/admin/manage_child_document/file/delete/{child_document_file_id}', [AdminManageDocumentsController::class, 'delete_child_document_file'])->name('admin.delete.child.document.file');
-    Route::put('/admin/manage_child_document/update/generate_file/{child_document_id}', [AdminManageDocumentsController::class, 'update_child_document_generate_file'])->name('admim.child.document.update.generatefile');
-    //crud example file
-    Route::post('/admin/manage_child_document/example_file/store/{child_document_id}', [AdminManageDocumentsController::class, 'store_example_file'])->name('admin.store.example.file');
-    Route::delete('/admin/manage_child_document/example_file/delete/{example_file_id}', [AdminManageDocumentsController::class, 'delete_example_file'])->name('admin.delete.example.file');
-    Route::post('/admin/manage_child_document/minors_example_file/store/{child_document_id}', [AdminManageDocumentsController::class, 'stroe_minors_example_file'])->name('admin.store.minors.example.file');
-    //document add-on file
-    Route::put('/admin/manage_child_document/child_document/update/addon/{child_document_id}', [AdminManageDocumentsController::class, 'update_child_document_addon'])->name('admim.child.document.update.addon');
-    
-    // addon file
-    Route::get('/admin/manage_documents/addon/files/{addon_document_id}', [AdminManageDocumentsController::class, 'mange_addon_file_page'])->name('admin.manage.addon.file.document');
-    //crud download file
-    Route::post('/admin/manage_addon_document/file/store/{addon_document_id}', [AdminManageDocumentsController::class, 'store_addon_document_file'])->name('admin.store.addon.document.file');
-    Route::delete('/admin/manage_addon_document/file/delete/{addon_document_file_id}', [AdminManageDocumentsController::class, 'delete_addon_document_file'])->name('admin.delete.addon.document.file');
-    Route::put('/admin/manage_addon_document/update/generate_file/{addon_document_id}', [AdminManageDocumentsController::class, 'update_addon_document_generate_file'])->name('admim.addon.document.update.generatefile');
-    //crud example file
-    Route::post('/admin/manage_addon_document/example_addon_file/store/{addon_document_id}', [AdminManageDocumentsController::class, 'store_example_addon_file'])->name('admin.store.example.addon.file');
-    Route::delete('/admin/manage_addon_document/example_addon_file/delete/{example_addon_file_id}', [AdminManageDocumentsController::class, 'delete_example_addon_file'])->name('admin.delete.example.addon.file');
-    //admin manage account display all file
-    Route::get('/admin/manage_documents/deisplayfile/file/{file_path}/{file_name}', [AdminManageDocumentsController::class, 'displayFile'])->name('admin.display.file');
-    
-    //admin manage data
-    Route::get('/admin/manage_data', [AdminManageDataController::class, 'index']);
-    Route::get('/admin/manage_data/major/{faculty_id}', [AdminManageDataController::class, 'major_page'])->name('admin.manage.data.major');
-    Route::delete('/admin/manage_data/faculty/delete/{faculty_id}', [AdminManageDataController::class, 'delete_faculty'])->name('admin.manage.data.delete.faculty');
-    Route::delete('/admin/manage_data/apprearancetype/delete/{apprearancetype_id}', [AdminManageDataController::class, 'delete_apprearancetype'])->name('admin.manage.data.delete.apprearancetype');
-    Route::delete('/admin/manage_data/property/delete/{property_id}', [AdminManageDataController::class, 'delete_property'])->name('admin.manage.data.delete.property');
-    Route::delete('/admin/manage_data/nessessity/delete/{nessessity_id}', [AdminManageDataController::class, 'delete_nessessity'])->name('admin.manage.data.delete.nessessity');
-    Route::delete('/admin/manage_data/major/delete/{major_id}', [AdminManageDataController::class, 'delete_major'])->name('admin.manage.data.delete.major');
-    Route::post('/admin/manage_data/faculty/add/', [AdminManageDataController::class, 'add_faculty'])->name('admin.manage.data.add.faculty');
-    Route::post('/admin/manage_data/apprearancetype/add/', [AdminManageDataController::class, 'add_apprearancetype'])->name('admin.manage.data.add.apprearancetype');
-    Route::post('/admin/manage_data/property/add/', [AdminManageDataController::class, 'add_property'])->name('admin.manage.data.add.property');
-    Route::post('/admin/manage_data/nessessity/add/', [AdminManageDataController::class, 'add_nessessity'])->name('admin.manage.data.add.nessessity');
-    Route::post('/admin/manage_data/major/add/{faculty_id}', [AdminManageDataController::class, 'add_major'])->name('admin.manage.data.add.major');
-    Route::put('/admin/manage_data/faculty/edit/{faculty_id}', [AdminManageDataController::class, 'edit_faculty'])->name('admin.manage.data.edit.faculty');
-    Route::put('/admin/manage_data/apprearancetype/edit/{apprearancetype_id}', [AdminManageDataController::class, 'edit_apprearancetype'])->name('admin.manage.data.edit.apprearancetype');
-    Route::put('/admin/manage_data/property/edit/{property_id}', [AdminManageDataController::class, 'edit_property'])->name('admin.manage.data.edit.property');
-    Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}', [AdminManageDataController::class, 'edit_nessessity'])->name('admin.manage.data.edit.nessessity');
-    Route::put('/admin/manage_data/major/edit/{major_id}', [AdminManageDataController::class, 'edit_major'])->name('admin.manage.data.edit.major');
+    Route::controller(AdminManageDataController::class)->group(function () {
+        //admin manage data
+        Route::get('/admin/manage_data', 'index');
+        Route::get('/admin/manage_data/major/{faculty_id}', 'major_page')->name('admin.manage.data.major');
+        Route::delete('/admin/manage_data/faculty/delete/{faculty_id}', 'delete_faculty')->name('admin.manage.data.delete.faculty');
+        Route::delete('/admin/manage_data/apprearancetype/delete/{apprearancetype_id}', 'delete_apprearancetype')->name('admin.manage.data.delete.apprearancetype');
+        Route::delete('/admin/manage_data/property/delete/{property_id}', 'delete_property')->name('admin.manage.data.delete.property');
+        Route::delete('/admin/manage_data/nessessity/delete/{nessessity_id}', 'delete_nessessity')->name('admin.manage.data.delete.nessessity');
+        Route::delete('/admin/manage_data/major/delete/{major_id}', 'delete_major')->name('admin.manage.data.delete.major');
+        Route::post('/admin/manage_data/faculty/add/', 'add_faculty')->name('admin.manage.data.add.faculty');
+        Route::post('/admin/manage_data/apprearancetype/add/', 'add_apprearancetype')->name('admin.manage.data.add.apprearancetype');
+        Route::post('/admin/manage_data/property/add/', 'add_property')->name('admin.manage.data.add.property');
+        Route::post('/admin/manage_data/nessessity/add/', 'add_nessessity')->name('admin.manage.data.add.nessessity');
+        Route::post('/admin/manage_data/major/add/{faculty_id}', 'add_major')->name('admin.manage.data.add.major');
+        Route::put('/admin/manage_data/faculty/edit/{faculty_id}', 'edit_faculty')->name('admin.manage.data.edit.faculty');
+        Route::put('/admin/manage_data/apprearancetype/edit/{apprearancetype_id}', 'edit_apprearancetype')->name('admin.manage.data.edit.apprearancetype');
+        Route::put('/admin/manage_data/property/edit/{property_id}', 'edit_property')->name('admin.manage.data.edit.property');
+        Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}', 'edit_nessessity')->name('admin.manage.data.edit.nessessity');
+        Route::put('/admin/manage_data/major/edit/{major_id}', 'edit_major')->name('admin.manage.data.edit.major');
+    });
 });
 //end-admin
 //admin,employee
@@ -143,24 +147,26 @@ Route::middleware(['session.expire', 'privilege:admin,employee'])->group(functio
     Route::get('/search_document/preview/teacher-comment/{document_id}', [SearchDocuments::class, 'generateFile103'])->name('serach.document.preview.teacher.comment');
     Route::get('/search_document/download_document/{borrower_uid}/{document_id}', [SearchDocuments::class, 'downloadBorrowerDocuments'])->name('search.document.download.document');
     
-    Route::get('/check_document/index', [CheckDocumentController::class, 'index']);
-    Route::get('/check_document/select_document/{document_id}', [CheckDocumentController::class, 'selectDocument'])->name('check_document.select_document');
-    Route::get('/check_document/select_document/borrower_documents/get/{document_id}', [CheckDocumentController::class, 'getBorrowerDocuments'])->name('select_document.borrower_documents.get');
-    Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}', [CheckDocumentController::class, 'selectMajorByFacultyId']);
-    // Route::get('/check_document/select_document/test-data/{document_id}', [CheckDocumentController::class, 'multipleQuery']);
-    Route::post('/check_document/select_document/post/status/{document_id}', [CheckDocumentController::class, 'selectStatusDocument'])->name('check_document.select.status');
-    
-    Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', [CheckDocumentController::class, 'viewBorrowerDocument'])->name('check_document.view.borrower.document');
-    
-    Route::get('/check_document/borrower_child_document_list/{borrower_document_id}', [CheckDocumentController::class, 'borrowerChildDocumentList'])->name('check_document.borrower_child_document.list');
-    Route::get('/check_document/borrower_child_document/get/{borrower_child_document_id}/{borrower_document_id}', [CheckDocumentController::class, 'getBorrowerChildDocument'])->name('check_document.get.borrower_child_document');
-    Route::post('/check_document/borrower_child_document/post/{borrower_child_document_id}/{borrower_document_id}', [CheckDocumentController::class, 'postBorrowerChildDocument'])->name('check_document.post.borrower_child_document');
-    Route::get('/check_document/get_useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'getBorrowerUsefulActivities'])->name('check_document.get.borrower.useful_activity');
-    Route::post('/check_document/post_useful_activity/{borrower_document_id}', [CheckDocumentController::class, 'postBorrowerUsefulActivities'])->name('check_document.post.borrower.useful_activity');
-    Route::get('/check_document/borrower_document/result/{borrower_document_id}', [CheckDocumentController::class, 'checkDocumentResult'])->name('check_document.document.result');
-    Route::get('/check_document/borrower_document/download/{borrower_document_id}', [CheckDocumentController::class, 'downloadBorrowerDocuments'])->name('check_document.document.download');
-    Route::post('/check_document/borrower_document/submit/{borrower_document_id}', [CheckDocumentController::class, 'submitCheckDocument'])->name('check_document.document.submit');
-    Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}', [CheckDocumentController::class, 'previewBorrowerFile'])->name('check.document.preview.borrower_child_document_file');
+    Route::controller(CheckDocumentController::class)->group(function (){
+        Route::get('/check_document/index', 'index');
+        Route::get('/check_document/select_document/{document_id}', 'selectDocument')->name('check_document.select_document');
+        Route::get('/check_document/select_document/borrower_documents/get/{document_id}', 'getBorrowerDocuments')->name('select_document.borrower_documents.get');
+        Route::get('/check_document/select_document/get-major-by-faculty-id/{faculty_id}', 'selectMajorByFacultyId');
+        // Route::get('/check_document/select_document/test-data/{document_id}', 'multipleQuery');
+        Route::post('/check_document/select_document/post/status/{document_id}', 'selectStatusDocument')->name('check_document.select.status');
+        
+        Route::get('/check_document/check_borrower_document/view/{borrower_document_id}', 'viewBorrowerDocument')->name('check_document.view.borrower.document');
+        
+        Route::get('/check_document/borrower_child_document_list/{borrower_document_id}', 'borrowerChildDocumentList')->name('check_document.borrower_child_document.list');
+        Route::get('/check_document/borrower_child_document/get/{borrower_child_document_id}/{borrower_document_id}', 'getBorrowerChildDocument')->name('check_document.get.borrower_child_document');
+        Route::post('/check_document/borrower_child_document/post/{borrower_child_document_id}/{borrower_document_id}', 'postBorrowerChildDocument')->name('check_document.post.borrower_child_document');
+        Route::get('/check_document/get_useful_activity/{borrower_document_id}', 'getBorrowerUsefulActivities')->name('check_document.get.borrower.useful_activity');
+        Route::post('/check_document/post_useful_activity/{borrower_document_id}', 'postBorrowerUsefulActivities')->name('check_document.post.borrower.useful_activity');
+        Route::get('/check_document/borrower_document/result/{borrower_document_id}', 'checkDocumentResult')->name('check_document.document.result');
+        Route::get('/check_document/borrower_document/download/{borrower_document_id}', 'downloadBorrowerDocuments')->name('check_document.document.download');
+        Route::post('/check_document/borrower_document/submit/{borrower_document_id}', 'submitCheckDocument')->name('check_document.document.submit');
+        Route::get('/check_document/check_borrower_document/preview/borrower_file/{borrower_child_document_id}', 'previewBorrowerFile')->name('check.document.preview.borrower_child_document_file');
+    });
 });
 //end - admin,employee
 //teacher
