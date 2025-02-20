@@ -79,7 +79,7 @@
                             <div class="row">
                                 <label for="addon_document_file" class="col-sm-2 col-form-label">เลือกไฟล์</label>
                                 <div class="col-sm-10">
-                                    <input type="file" class="form-control" name="addon_document_file" id="addon_document_file" accept="jpg,pdf,jpeg,png">
+                                    <input type="file" class="form-control" name="addon_document_file" id="addon_document_file" accept="jpg,pdf,jpeg,png" onchange="validateFileSize('downloadFileForm')">
                                     <div class="invalid-feedback">
                                         กรุณาอัพโหลดไฟล์
                                     </div>
@@ -140,7 +140,7 @@
                         <div class="row mb-3">
                             <label for="addon_example_file" class="col-sm-2 col-form-label">เลือกไฟล์</label>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control" name="addon_example_file" id="addon_example_file" accept="jpg,pdf,jpeg,png">
+                                <input type="file" class="form-control" name="addon_example_file" id="addon_example_file" accept="jpg,pdf,jpeg,png" onchange="validateFileSize('exampleFileForm')">
                                 <div class="invalid-feedback">
                                     กรุณาอัพโหลดไฟล์
                                 </div>
@@ -185,7 +185,10 @@
         if(inputFile.files.length == 0){
             validator = false;
             var invalid_element = inputFile.nextElementSibling;
-            if(invalid_element)invalid_element.classList.add('d-inline');
+            if(invalid_element){
+                invalid_element.innerText = 'กรุณากรอกคำอธิบาย';
+                invalid_element.classList.add('d-inline');
+            }
         }else{
             var invalid_element = inputFile.nextElementSibling;
             if(invalid_element)invalid_element.classList.remove('d-inline');
@@ -220,13 +223,37 @@
         if(inputFile.files.length == 0){
             validator = false;
             var invalid_element = inputFile.nextElementSibling;
-            if(invalid_element)invalid_element.classList.add('d-inline');
+            if(invalid_element)
+            {
+                invalid_element.innerText = 'กรุณากรอกคำอธิบาย';
+                invalid_element.classList.add('d-inline');
+            }
         }else{
             var invalid_element = inputFile.nextElementSibling;
             if(invalid_element)invalid_element.classList.remove('d-inline');
         }
 
         return validator;
+    }
+
+    function validateFileSize(formId){
+        const form = document.getElementById(formId);
+        const inputFile = form.querySelector('input[type="file"]');
+        const inputButton = form.querySelector('button');
+        const invalidElemnt = inputFile.nextElementSibling;
+        const filesize_max = 5;
+
+        file_size_mb = inputFile.files[0].size / 1000000;
+        if (file_size_mb > filesize_max){
+            inputButton.disabled = true;
+            if(invalidElemnt){
+                invalidElemnt.innerText = 'ขนาดไฟล์ต้องไม่เกิน 5mb'
+                invalidElemnt.classList.add('d-inline');
+            }
+        }else {
+            inputButton.disabled = false;
+            if(invalidElemnt)invalidElemnt.classList.remove('d-inline');
+        }
     }
 </script>
 @endsection

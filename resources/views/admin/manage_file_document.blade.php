@@ -79,7 +79,7 @@
                             <div class="row">
                                 <label for="child_documnet_file" class="col-sm-2 col-form-label">เลือกไฟล์</label>
                                 <div class="col-sm-10">
-                                    <input type="file" class="form-control" name="child_documnet_file" id="child_documnet_file" accept="jpg,pdf,jpeg,png">
+                                    <input type="file" class="form-control" name="child_documnet_file" id="child_documnet_file" accept="jpg,pdf,jpeg,png" onchange="validateFileSize('downloadFileForm')">
                                     <div class="invalid-feedback">
                                         กรุณาอัพโหลดไฟล์
                                     </div>
@@ -140,7 +140,7 @@
                         <div class="row mb-3">
                             <label for="example_file" class="col-sm-2 col-form-label">เลือกไฟล์</label>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control" name="example_file" id="example_file" accept="jpg,pdf,jpeg,png">
+                                <input type="file" class="form-control" name="example_file" accept="jpg,pdf,jpeg,png" onchange="validateFileSize('exampleFileForm')">
                                 <div class="invalid-feedback">
                                     กรุณาอัพโหลดไฟล์
                                 </div>
@@ -157,7 +157,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <button type="button" class="btn btn-primary w-100 h-100" onclick="example_file_submit('exampleFileForm')">อัพโหลด</button>
+                        <button type="button" class="btn btn-primary w-100 h-100" onclick="example_file_submit('exampleFileForm', this)">อัพโหลด</button>
                     </div>
                 </form>
             </section>
@@ -208,7 +208,7 @@
                         <div class="row mb-3">
                             <label for="example_file" class="col-sm-2 col-form-label">เลือกไฟล์</label>
                             <div class="col-sm-10">
-                                <input type="file" class="form-control" name="example_file" id="example_file" accept="jpg,pdf,jpeg,png">
+                                <input type="file" class="form-control" name="example_file" accept="jpg,pdf,jpeg,png" onchange="validateFileSize('exampleFileMinorsFileForm')">
                                 <div class="invalid-feedback">
                                     กรุณาอัพโหลดไฟล์
                                 </div>
@@ -288,7 +288,7 @@
 @endsection
 @section('script')
 <script>
-    async function example_file_submit(formId){
+    async function example_file_submit(formId, button){
         var formValidate = await validate_example_file(formId);
         if(formValidate){
             const form = document.getElementById(formId);
@@ -298,14 +298,17 @@
 
     async function validate_example_file(formId){
         var exampleForm = document.getElementById(formId);
-        var inputFile = exampleForm.querySelector('#example_file');
-        var inputDescription = exampleForm.querySelector('#description');
+        var inputFile = exampleForm.querySelector('input[type="file"]');
+        var inputDescription = exampleForm.querySelector('input[type="text"]');
         var validator = true;
 
         if(inputFile.files.length == 0){
             validator = false;
             var invalid_element = inputFile.nextElementSibling;
-            if(invalid_element)invalid_element.classList.add('d-inline');
+            if(invalid_element){
+                invalid_element.innerText = 'กรุณาอัพโหลดไฟล์';
+                invalid_element.classList.add('d-inline');
+            }
         }else{
             var invalid_element = inputFile.nextElementSibling;
             if(invalid_element)invalid_element.classList.remove('d-inline');
@@ -339,14 +342,35 @@
 
         if(inputFile.files.length == 0){
             validator = false;
-            var invalid_element = inputFile.nextElementSibling;
-            if(invalid_element)invalid_element.classList.add('d-inline');
+            var invalidElement = inputFile.nextElementSibling;
+            if(invalidElement)invalidElement.classList.add('d-inline');
         }else{
-            var invalid_element = inputFile.nextElementSibling;
-            if(invalid_element)invalid_element.classList.remove('d-inline');
+            var invalidElement = inputFile.nextElementSibling;
+            if(invalidElement)invalidElement.classList.remove('d-inline');
         }
 
         return validator;
     }
+
+    function validateFileSize(formId){
+        const form = document.getElementById(formId);
+        const inputFile = form.querySelector('input[type="file"]');
+        const inputButton = form.querySelector('button');
+        const invalidElemnt = inputFile.nextElementSibling;
+        const filesize_max = 5;
+
+        file_size_mb = inputFile.files[0].size / 1000000;
+        if (file_size_mb > filesize_max){
+            inputButton.disabled = true;
+            if(invalidElemnt){
+                invalidElemnt.innerText = 'ขนาดไฟล์ต้องไม่เกิน 5mb'
+                invalidElemnt.classList.add('d-inline');
+            }
+        }else {
+            inputButton.disabled = false;
+            if(invalidElemnt)invalidElemnt.classList.remove('d-inline');
+        }
+    }
+
 </script>
 @endsection
