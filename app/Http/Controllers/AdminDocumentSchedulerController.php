@@ -45,7 +45,7 @@ class AdminDocumentSchedulerController extends Controller
 
     public function putDocSchedulerData(AdminDocumentSchedulerRequest $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $check_exists_document = Documents::where('doctype_id' ,$request->doc_type)->where('year', $request->year)->where('term', $request->term)->where('isactive', true)->exists();
         if($check_exists_document){
             return redirect()->back()->withErrors('เอกสารนี้มีอยู่แล้ว');
@@ -83,7 +83,7 @@ class AdminDocumentSchedulerController extends Controller
     public function postDocSchedulerData(AdminDocumentSchedulerRequest $request, $document_id)
     {
         // dd(in_array(5, $request->child_documents));
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = Documents::find($document_id);
         $document['doctype_id'] = $request->doctype_id;
         $document['last_access'] = $user_id;
