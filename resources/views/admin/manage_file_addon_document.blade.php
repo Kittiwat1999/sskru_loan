@@ -186,7 +186,7 @@
             validator = false;
             var invalid_element = inputFile.nextElementSibling;
             if(invalid_element){
-                invalid_element.innerText = 'กรุณากรอกคำอธิบาย';
+                invalid_element.innerText = 'กรุณาอัพโหลดไฟล์';
                 invalid_element.classList.add('d-inline');
             }
         }else{
@@ -225,7 +225,7 @@
             var invalid_element = inputFile.nextElementSibling;
             if(invalid_element)
             {
-                invalid_element.innerText = 'กรุณากรอกคำอธิบาย';
+                invalid_element.innerText = 'กรุณาอัพโหลดไฟล์';
                 invalid_element.classList.add('d-inline');
             }
         }else{
