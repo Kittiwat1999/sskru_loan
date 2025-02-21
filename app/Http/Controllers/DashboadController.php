@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Crypt;
 class DashboadController extends Controller
 {
     protected $status = [
-        'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
+        'approved' => 'อนุมัติแล้ว',
         'wait-teacher-approve' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
         'wait-approve' => 'รออนุมัติ',
-        'rejected' => 'ต้องแก้ไข',
-        'approved' => 'อนุมัติแล้ว',
-        'response-reject' => 'แก้ใขแล้ว',
+        'rejected' => 'ผู้กู้ยืมต้องแก้ไข',
+        'response-reject' => 'ผู้กู้ยืมแก้ใขแล้ว',
+        'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
     ];
 
     private function convert_date($inputDate)
