@@ -93,6 +93,7 @@
                     { data: 'delivered_date', name: 'delivered_date' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
+                order: [[4, "desc"]], 
                 buttons: [],
                 responsive: true,
                 language: {
