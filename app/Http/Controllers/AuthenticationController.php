@@ -120,8 +120,17 @@ class AuthenticationController extends Controller
 
     public function index(Request $request)
     {
-        $user_id = $request->session()->get('user_id');
+        // $user_id = $request->session()->get('user_id');
+        $user_id = $request->session()->get('user_id', 4);
         $user = Users::find($user_id) ?? null;
+
+        $currentTime = now();
+        $request->session()->put('user_id', $user['id']);
+        $request->session()->put('privilege', $user['privilege']);
+        $request->session()->put('firstname', $user['firstname']);
+        $request->session()->put('lastname', $user['lastname']);
+        $request->session()->put('last_activity_time', $currentTime);
+
         if ($user != null) {
             if ($user['activated']) {
                 //auto login

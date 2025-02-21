@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminManageAccountController;
 use App\Http\Controllers\AdminManageDocumentsController;
 use App\Http\Controllers\AdminDocumentSchedulerController;
+use App\Http\Controllers\AdminManageBorrowerData;
 use App\Http\Controllers\AdminManageDataController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BorrowerDocumentController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\BorrowerRegister;
 use App\Http\Controllers\CacheAndCommentController;
 use App\Http\Controllers\CheckDocumentController;
 use App\Http\Controllers\DashboadController;
+use App\Http\Controllers\ExportAndEditBorrowerDataController;
 use App\Http\Controllers\ExportBorrowerDocumentController;
 use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
@@ -131,6 +133,10 @@ Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
         Route::put('/admin/manage_data/nessessity/edit/{nessessity_id}', 'edit_nessessity')->name('admin.manage.data.edit.nessessity');
         Route::put('/admin/manage_data/major/edit/{major_id}', 'edit_major')->name('admin.manage.data.edit.major');
     });
+
+    Route::get('/admin/borrowers_data', [AdminManageBorrowerData::class, 'index']);
+    Route::post('/admin/borrowers_data/export', [AdminManageBorrowerData::class, 'exportBorrowers'])->name('admin.borrowers_data.export');
+    Route::post('/admin/borrowers_data/import', [AdminManageBorrowerData::class, 'importCsv'])->name('admin.borrowers_data.import');
 });
 //end-admin
 //admin,employee

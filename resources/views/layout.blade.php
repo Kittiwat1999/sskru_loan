@@ -173,6 +173,13 @@
                 <span>แคชและความคิดเห็น</span>
                 </a>
             </li><!-- End แก้ไขเอกสาร Page Nav -->
+
+            <li class="nav-item">
+                <a id="borrowers_data" class="nav-link collapsed" href="{{url('/admin/borrowers_data')}}">
+                <i class="bi bi-database"></i>
+                <span>อัพเดตข้อมูลผู้กู้</span>
+                </a>
+            </li><!-- End แก้ไขเอกสาร Page Nav -->
            
         @endif
 
