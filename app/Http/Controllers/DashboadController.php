@@ -20,7 +20,7 @@ class DashboadController extends Controller
 {
     protected $status = [
         'approved' => 'อนุมัติแล้ว',
-        'wait-teacher-approve' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
+        'wait-teacher-approve' => 'รออาจารย์ที่ปรึกษาให้ความคิดเห็น',
         'wait-approve' => 'รออนุมัติ',
         'rejected' => 'ผู้กู้ยืมต้องแก้ไข',
         'response-reject' => 'ผู้กู้ยืมแก้ใขแล้ว',

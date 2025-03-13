@@ -15,7 +15,7 @@
                     <label for="status" class="col-form-label text-secondary">สถานะเอกสาร</label>
                     <select id="status" class="form-select" aria-label="Default select example" name="status">
                         <option @selected($sessionData['select_status'] == 'wait-approve') value="wait-approve">รออนุมัติ</option>
-                        <option @selected($sessionData['select_status'] == 'wait-teacher-approve') value="wait-teacher-approve">รออารจารย์ที่ปรึกษาให้ความเห็น</option>
+                        <option @selected($sessionData['select_status'] == 'wait-teacher-approve') value="wait-teacher-approve">รออาจารย์ที่ปรึกษาให้ความคิดเห็น</option>
                         <option @selected($sessionData['select_status'] == 'approved') value="approved">อนุมัติแล้ว</option>
                         <option @selected($sessionData['select_status'] == 'rejected') value="rejected">ผู้กู้ยืมต้องแก้ไข</option>
                         <option @selected($sessionData['select_status'] == 'response-reject') value="response-reject">ผู้กู้ยืมแก้ไขแล้ว</option>

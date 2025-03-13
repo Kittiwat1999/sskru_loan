@@ -34,7 +34,7 @@ class CheckDocumentController extends Controller
 {
     protected $status = [
         'sending' => 'ผู้กู้ยืมกำลังดำเนินการ',
-        'wait-teacher-approve' => 'รออารจารย์ที่ปรึกษาให้ความเห็น',
+        'wait-teacher-approve' => 'รออาจารย์ที่ปรึกษาให้ความคิดเห็น',
         'wait-approve' => 'รออนุมัติ',
         'rejected' => 'ต้องแก้ไข',
         'approved' => 'อนุมัติแล้ว',
