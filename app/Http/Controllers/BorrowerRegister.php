@@ -96,7 +96,6 @@ class BorrowerRegister extends Controller
 
     function checkStep($document_id, $user_id)
     {
-
         $child_document_required_count = DocStructure::join('child_documents', 'doc_structures.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $document_id)
             ->where('doc_structures.child_document_id', '!=', 4) //id=4 คือ กยศ 101 ที่ระบบจะออกให้เองผู้กู้ไม้ต้องอัพโหลด
@@ -138,7 +137,7 @@ class BorrowerRegister extends Controller
 
     public function index(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
@@ -172,7 +171,7 @@ class BorrowerRegister extends Controller
 
     public function registerType(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
@@ -193,7 +192,7 @@ class BorrowerRegister extends Controller
 
     public function storeRegisterType(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
         }
@@ -218,7 +217,7 @@ class BorrowerRegister extends Controller
 
     public function uploadDocumentPage(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
@@ -509,10 +508,9 @@ class BorrowerRegister extends Controller
         return $response;
     }
 
-
     public function result(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         $marital_status = json_decode(Borrower::where('user_id', $user_id)->value('marital_status'));
         // dd($marital_status);
@@ -566,7 +564,7 @@ class BorrowerRegister extends Controller
 
     public function storeBorrowerRegisterDocument(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if ($document == null) {
             return view('borrower.document_undefined');
@@ -600,7 +598,7 @@ class BorrowerRegister extends Controller
 
     public function recheckDocument(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
@@ -659,7 +657,7 @@ class BorrowerRegister extends Controller
 
     public function submitDocument(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
@@ -721,7 +719,7 @@ class BorrowerRegister extends Controller
 
     public function showFile101($document_id, $child_document_id, Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $child_document = ChildDocuments::join('child_document_files', 'child_documents.id', '=', 'child_document_files.child_document_id')
             ->where('child_documents.isactive', true)
             ->where('child_documents.id', $child_document_id)
@@ -733,7 +731,7 @@ class BorrowerRegister extends Controller
 
     public function generateFile103(Request $request, $borrower_document_id)
     {
-        $borrower_uid = $request->session()->get('user_id', '1');
+        $borrower_uid = $request->session()->get('user_id');
         $generator = new GenerateFile();
         return $generator->teacherCommentDocument103($borrower_uid, $borrower_document_id);
     }
@@ -951,7 +949,7 @@ class BorrowerRegister extends Controller
 
     public function status(Request $request)
     {
-        $user_id = $request->session()->get('user_id', '1');
+        $user_id = $request->session()->get('user_id');
         $document = $this->checkActiveDocument();
         if (!CheckBorrowerInformation::check($user_id)) {
             return view('borrower.borrower_information_not_complete');
