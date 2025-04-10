@@ -143,7 +143,7 @@
             </form>
             <div class="row m-0 p-0">
                 <div class="text-start col-6 m-0 p-0">
-                    <a href="{{route('check_document.borrower_child_document.list',['borrower_document_id' => $borrower_document_id ])}}" class="btn btn-light w-25">ย้อนกลับ</a>
+                    <a href="{{route('check_document.borrower_child_document.list',['borrower_document_id' => Crypt::encryptString($borrower_document_id) ])}}" class="btn btn-light w-25">ย้อนกลับ</a>
                 </div>
                 <div class="text-end col-6 m-0 p-0">
                     <button type="button" class="btn btn-primary col-4 col-md-2" onclick="submitForm('form-comment')">บันทึก</button>
