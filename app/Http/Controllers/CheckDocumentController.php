@@ -212,6 +212,7 @@ class CheckDocumentController extends Controller
             ->where('borrower_documents.status', $sessionData['select_status'])
             ->where('borrower_documents.checking', false)
             ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.student_id', 'borrower_documents.id', 'borrower_documents.status', 'borrower_documents.delivered_date', 'faculties.faculty_name', 'majors.major_name')
+            ->distinct()
             ->orderBy('delivered_date', 'asc');
 
         return $query->get();

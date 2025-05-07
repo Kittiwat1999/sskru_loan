@@ -90,7 +90,7 @@ class SearchDocuments extends Controller
         $borrowers = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
             ->join('majors', 'borrowers.major_id', '=', 'majors.id')
-            ->where(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', $fullname . '%')
+            ->where(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', '%' . $fullname . '%')
             ->select(
                 'users.prefix',
                 'users.id as user_id',
@@ -100,6 +100,7 @@ class SearchDocuments extends Controller
                 'faculties.faculty_name',
                 'majors.major_name',
             )
+            ->distinct()
             ->get();
 
         foreach ($borrowers as $borrower) {

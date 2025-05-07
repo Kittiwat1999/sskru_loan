@@ -33,6 +33,7 @@ class CacheAndCommentController extends Controller
             'documents.year',
             'doc_types.doctype_title',
         )
+        ->distinct()
         ->get();
         return $borrower_documents;
     }
