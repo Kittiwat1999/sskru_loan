@@ -117,17 +117,23 @@
 
                                     <div class="col-md-4 col-lg-5">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
-                                        <input type="text" name="firstname" class="form-control" id="firstname" required>
+                                        <input type="text" class="form-control" name="firstname" id="firstname" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกชื่อ!
                                         </div>
+                                        <div class="text-danger d-none firstname-invalid-thai">
+                                            ชื่อต้องเป็นภาษาไทย!
+                                        </div>
                                     </div>
-
+                                    
                                     <div class="col-md-5">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
-                                        <input type="text" name="lastname" class="form-control" id="lastname" required>
+                                        <input type="text" class="form-control" name="lastname" id="lastname" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกนามสกุล!
+                                        </div>
+                                        <div class="text-danger d-none lastname-invalid-thai">
+                                            นามสกุลต้องเป็นภาษาไทย!
                                         </div>
                                     </div>
 
@@ -196,21 +202,22 @@
         </div>
     </main><!-- End #main -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/chart.js/chart.umd.js')}}"></script>
-  <script src="{{asset('assets/vendor/echarts/echarts.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/quill/quill.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/simple-datatables/simple-datatables.js')}}"></script>
-  <script src="{{asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
-  <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
+    <!-- Vendor JS Files -->
+    <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/chart.js/chart.umd.js')}}"></script>
+    <script src="{{asset('assets/vendor/echarts/echarts.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/quill/quill.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/simple-datatables/simple-datatables.js')}}"></script>
+    <script src="{{asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
 
-  <!-- Template Main JS File -->
-  <script src="{{asset('assets/js/main.js')}}"></script>
-  <script>
+    <!-- Template Main JS File -->
+    <script src="{{asset('assets/js/main.js')}}"></script>
+    <script>
+
         const password = document.getElementById('password');
         const confPassword = document.getElementById('password_confirmation');
         const togglePasswordButton = document.getElementById('togglePassword');
@@ -273,7 +280,63 @@
                 confirmPassword.setAttribute("disabled", true);
             }
         }
-  </script>
+
+        function disbledSubmitBtn() {
+            const submitBtn = document.querySelector("button[type='submit']");
+            submitBtn.disabled = true;
+        }
+        
+        function enabledSubmitBtn() {
+            const submitBtn = document.querySelector("button[type='submit']");
+            submitBtn.disabled = false;
+        }
+
+        function showInvalidThaiLanguage(targetId) {
+            const invalidElement = document.querySelector(`.${targetId}-invalid-thai`);
+            if(invalidElement.classList.contains('d-none')){
+                invalidElement.classList.remove('d-none');
+            }
+        }
+        
+        function hideInvalidThaiLanguage(targetId) {
+            const invalidElement = document.querySelector(`.${targetId}-invalid-thai`);
+            if(!invalidElement.classList.contains('d-none')){
+                invalidElement.classList.add('d-none');
+            }
+        }
+
+        //filter the input firstname and lastname 
+        document.querySelector("#firstname").addEventListener('keyup', (event) => {
+            const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
+            const firstNameValue = event.target.value;
+            
+            if(firstNameValue != ''){
+                if (thaiRegex.test(firstNameValue)){
+                    enabledSubmitBtn();
+                    hideInvalidThaiLanguage(event.target.id)
+                } else {
+                    disbledSubmitBtn();     
+                    showInvalidThaiLanguage(event.target.id);
+                }
+            }
+        });
+        
+        document.querySelector("lastname").addEventListener('keyup', (event) => {
+            const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
+            const lastNameValue = event.target.value;
+            
+            if(lastNameValue != ''){
+                if (thaiRegex.test(lastNameValue)){
+                    enabledSubmitBtn();
+                    hideInvalidThaiLanguage(event.target.id)
+                } else {
+                    disbledSubmitBtn();     
+                    showInvalidThaiLanguage(event.target.id);
+                }
+            }
+        });
+
+    </script>
 
 </body>
 
