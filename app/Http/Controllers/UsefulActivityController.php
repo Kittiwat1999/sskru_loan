@@ -125,11 +125,13 @@ class UsefulActivityController extends Controller
 
         //file
         $merger = new Merger(); 
-        try {
-            $merger->addFile($input_file);
-            $merger->merge();
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+        if(last(explode('.', $input_file->getClientOriginalName())) == 'pdf'){
+            try {
+                $merger->addFile($input_file);
+                $merger->merge();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            }
         }
         
         $file_name = $this->storeFile($file_path, $input_file);
@@ -190,11 +192,13 @@ class UsefulActivityController extends Controller
             $input_file = $request->file('useful_activity_file');
             //file
             $merger = new Merger(); 
-            try {
-                $merger->addFile($input_file);
-                $merger->merge();
-            } catch (\Exception $e) {
-                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+            if(last(explode('.', $input_file->getClientOriginalName())) == 'pdf'){
+                try {
+                    $merger->addFile($input_file);
+                    $merger->merge();
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+                }
             }
 
             $file_name = $this->storeFile($file_path, $input_file);
