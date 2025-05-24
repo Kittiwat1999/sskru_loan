@@ -9,6 +9,7 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="เข้าสู่ระบบเพื่อใช้งานระบบกู้ยืมเงินเพื่อการศึกษา (กยศ.) ของมหาวิทยาลัยราชภัฏศรีสะเกษ นักศึกษาสามารถลงทะเบียน ยื่นคำขอ ตรวจสอบสถานะ และติดตามผลได้ง่าย ๆ ผ่านระบบออนไลน์ ปลอดภัย ใช้งานได้ตลอด 24 ชั่วโมง">
 
     <!-- Favicons -->
     <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
@@ -84,20 +85,21 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-                            <div class="d-flex justify-content-center py-4">
-                                <a href="{{ url('/') }}" class="logo d-flex align-items-center w-auto">
-                                    <img src="{{ asset('assets/img/logo.png') }}" alt="">
-                                    <span class="d-none d-lg-block">SSKRU Loan</span>
-                                </a>
-                            </div><!-- End Logo -->
-
+                            
                             <div class="card mb-3">
-
+                                
                                 <div class="card-body">
-
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">เข้าสู่ระบบ</h5>
+                                    
+                                    <div class="pt-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <a href="{{ url('/') }}" class="logo d-flex align-items-center w-auto">
+                                                <img src="{{ asset('assets/img/logo.png') }}" alt="">
+                                                <span class="d-none d-lg-block">SSKRU LOAN</span>
+                                            </a>
+                                        </div><!-- End Logo -->
+                                        <h5 class="text-center text-secondary py-0">เข้าสู่ระบบ</h5>
                                         <!-- <p class="text-center small">Enter your username & password to login</p> -->
+                                        
                                     </div>
 
                                     <form id="login-form" action="{{ route('post.login') }}" class="row g-3" novalidate
@@ -125,7 +127,7 @@
                                             <div id="invalid-password" class="invalid-feedback">กรุณากรอกรหัสผ่าน!</div>
                                             <div class="text-start mt-2">
                                                 <a href="{{ url('/reset_password/email') }}"
-                                                    class="text-secondary"><small>ลืมรหัสผ่าน</small></a>
+                                                    class="text-secondary text-decoration-underline"><small>ลืมรหัสผ่าน....</small></a>
                                             </div>
                                         </div>
 
@@ -136,19 +138,26 @@
 
                                         <div class="col-12">
                                             <p class="mb-0" align="center">นักศึกษา
-                                                <a href="{{ url('/register_student') }}">ลงทะเบียน</a> เข้าใช้ระบบ
+                                                <a href="{{ url('/register_student') }}" class="text-decoration-underline">ลงทะเบียนเข้าใช้งานระบบ</a>
                                             </p>
+                                            
+                                        </div>
+                                        <div class="col-12 text-center">
+                                            <small>ระบบกู้ยืมเพื่อการศึกษา</small><br>
+                                            <small>มหาวิทยาลัยราชภัฏศรีสะเกษ</small>
+                                            <small>เข้าสู่ระบบเพื่อยื่นคำขอกู้ยืม กยศ. ตรวจสอบสถานะ และติดตามผลการอนุมัติ</small>
                                         </div>
                                     </form>
                                 </div>
                             </div>
 
                             <div class="credits">
+                                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                                
                                 <!-- All the links in the footer should remain intact. -->
                                 <!-- You can delete the links only if you purchased the pro version. -->
                                 <!-- Licensing information: https://bootstrapmade.com/license/ -->
                                 <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
                             </div>
 
                         </div>
