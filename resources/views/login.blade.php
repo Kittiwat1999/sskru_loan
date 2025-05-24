@@ -103,7 +103,7 @@
                                     </div>
 
                                     <form id="login-form" action="{{ route('post.login') }}" class="row g-3" novalidate
-                                        method="POST" id="login-form">
+                                        method="POST">
                                         @csrf
                                         <div class="col-12">
                                             <label for="email" class="col-form-label text-secondary">อีเมลล์</label>
@@ -132,7 +132,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <button id="submit-button" class="btn btn-primary w-100"
+                                            <button type="submit" id="submit-button" class="btn btn-primary w-100"
                                                 type="button">ล็อกอิน</button>
                                         </div>
 
@@ -199,13 +199,20 @@
         this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
     });
 
-    login_button.addEventListener('click', function(event) {
+    login_form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        if(validationSubmitForm(this)){
+            this.submit();
+        }
+    });
+
+    function validationSubmitForm (login_form) {
         var email = login_form.querySelector('#email');
         var password = login_form.querySelector('#password');
         var invalid_email = document.getElementById('invalid-email');
         var invalid_password = document.getElementById('invalid-password');
         var validator = true;
-
+    
         if (email.value == '') {
             validator = false;
             email.classList.add('is-invalid');
@@ -215,7 +222,7 @@
             email.classList.add('is-valid'); // Optional, for valid feedback
             if (invalid_email) invalid_email.classList.remove('d-inline');
         }
-
+    
         if (password.value == '') {
             validator = false;
             password.classList.add('is-invalid');
@@ -225,11 +232,13 @@
             password.classList.add('is-valid'); // Optional, for valid feedback
             if (invalid_password) invalid_password.classList.remove('d-inline');
         }
+
         if (validator) {
-            login_form.submit()
-            this.disabled = true;
+            return true;
         }
-    });
+
+        return false;
+    }
 </script>
 
 </html>
