@@ -309,7 +309,7 @@
         document.querySelector("#firstname").addEventListener('keyup', (event) => {
             const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
             const firstNameValue = event.target.value;
-            
+
             if(firstNameValue != ''){
                 if (thaiRegex.test(firstNameValue)){
                     enabledSubmitBtn();
@@ -321,7 +321,7 @@
             }
         });
         
-        document.querySelector("lastname").addEventListener('keyup', (event) => {
+        document.querySelector("#lastname").addEventListener('keyup', (event) => {
             const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
             const lastNameValue = event.target.value;
             
