@@ -311,7 +311,7 @@
             <div class="col-12 row m-0 p-0">
                 <div class="col-md-9 col-sm-12"></div>
                 <div class="col-md-3 col-sm-12">
-                    <button type="button" class="btn btn-primary w-100" onclick="submitForm('comment-form')">บันทึก</button>
+                    <button type="button" id="submit-button" class="btn btn-primary w-100" onclick="submitForm('comment-form')">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -357,7 +357,12 @@
     }
 
     async function submitForm(form_id){
+        const submitButton = document.querySelector('#submit-button');
         var validation = await validateForm(form_id) 
+
+        console.log(submitButton);
+        submitButton.disabled = true;
+        submitButton.innerText = 'กำลังบันทึกข้อมูล...';
 
         if(validation){
             const form = document.getElementById(form_id);
