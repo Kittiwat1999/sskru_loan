@@ -145,6 +145,8 @@ Route::middleware(['session.expire', 'privilege:admin,employee'])->group(functio
         return view('search_document');
     })->name('search_document');
     Route::get('/search_document', [SearchDocuments::class, 'index']);
+    
+    Route::get('/search', [SearchDocuments::class, 'search'])->name('search');
     Route::get('/search_document/get_student_id', [SearchDocuments::class, 'serachBorrowerDocuments'])->name('search.document.borrower.student_id');
     Route::get('/search_document/list_document/{borrower_uid}', [SearchDocuments::class, 'listDocument'])->name('serach.document.list.document');
     Route::get('/search_document/document/{borrower_document_id}', [SearchDocuments::class, 'viewBorrowerDocument'])->name('serach.document.view.document.page');

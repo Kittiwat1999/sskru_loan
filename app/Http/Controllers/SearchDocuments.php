@@ -84,6 +84,42 @@ class SearchDocuments extends Controller
     {
         return view('search_document.index');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
+        $borrowers = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
+            ->join('faculties', 'borrowers.faculty_id', '=', 'faculties.id')
+            ->join('majors', 'borrowers.major_id', '=', 'majors.id')
+            ->where(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', '%' . $query . '%')
+            ->select(
+                'users.prefix',
+                'users.id as user_id',
+                'users.firstname',
+                'users.lastname',
+                'borrowers.student_id',
+                'faculties.faculty_name',
+                'majors.major_name',
+            )
+            ->distinct()
+            ->limit(10)
+            ->get()
+            ->map(function ($borrower) {
+                return [
+                    'prefix' => $borrower->prefix,
+                    'user_id' => $borrower->user_id,
+                    'firstname' => $borrower->firstname,
+                    'lastname' => $borrower->lastname,
+                    'student_id' => $borrower->student_id,
+                    'faculty_name' => $borrower->faculty_name,
+                    'major_name' => $borrower->major_name,
+                    'encrypted_id' => Crypt::encryptString($borrower->user_id),
+                ];
+            });
+        // ส่งกลับ partial view หรือ JSON ก็ได้
+        return response()->json($borrowers);
+    }
+
     public function serachBorrowerDocuments(Request $request)
     {
         $fullname = $request->fullname;
@@ -101,6 +137,7 @@ class SearchDocuments extends Controller
                 'majors.major_name',
             )
             ->distinct()
+            ->limit(10)
             ->get();
 
         foreach ($borrowers as $borrower) {
