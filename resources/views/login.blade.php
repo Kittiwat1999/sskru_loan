@@ -200,7 +200,10 @@
     });
 
     login_form.addEventListener('submit', function(event) {
+        login_button.disabled = true;
+        login_button.innerText = 'กำลังล็อกอิน...';
         event.preventDefault();
+        
         if(validationSubmitForm(this)){
             this.submit();
         }
