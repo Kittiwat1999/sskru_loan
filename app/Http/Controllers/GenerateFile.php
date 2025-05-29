@@ -319,11 +319,11 @@ class GenerateFile extends Controller
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
             $pdf->SetFont('THSarabunNew', '', 14);
 
-            //Write address
-            // $write_at_input = 36;
-            // $write_at_length = strlen($address['village']);
-            // $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
-            // $pdf->Text($write_at_x, 42, $address['village']);
+            // Write address
+            $write_at_input = 36;
+            $write_at_length = strlen($address['village']);
+            $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
+            $pdf->Text($write_at_x, 42, $address['village']);
 
             // write date
             $pdf->Text(114, 50, $gregorianDate->day);
@@ -352,9 +352,9 @@ class GenerateFile extends Controller
             $pdf->Text($house_no_x, 79, $address['house_no']);
 
             $village_input = 12;
-            $village_length = strlen($address['village']);
+            $village_length = strlen($address['village_no']);
             $village_x = 89 + ($village_input / 2 - $village_length / 2) - 1;
-            $pdf->Text($village_x, 79, $address['village']);
+            $pdf->Text($village_x, 79, $address['village_no']);
 
             $tambon_input = 31;
             $tambon_length = strlen($address['tambon']);
@@ -457,10 +457,10 @@ class GenerateFile extends Controller
             $pdf->SetFont('THSarabunNew', '', 14);
 
             //Write at
-            // $write_at_input = 36;
-            // $write_at_length = strlen($address['village']);
-            // $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
-            // $pdf->Text($write_at_x, 42, $address['village']);
+            $write_at_input = 36;
+            $write_at_length = strlen($address['village']);
+            $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
+            $pdf->Text($write_at_x, 42, $address['village']);
 
             // write date
             $pdf->Text(114, 50, $gregorianDate->day);
@@ -489,9 +489,9 @@ class GenerateFile extends Controller
             $pdf->Text($house_no_x, 79, $address['house_no']);
 
             $village_input = 12;
-            $village_length = strlen($address['village']);
+            $village_length = strlen($address['village_no']);
             $village_x = 89 + ($village_input / 2 - $village_length / 2) - 1;
-            $pdf->Text($village_x, 79, $address['village']);
+            $pdf->Text($village_x, 79, $address['village_no']);
 
             $tambon_input = 31;
             $tambon_length = strlen($address['tambon']);
