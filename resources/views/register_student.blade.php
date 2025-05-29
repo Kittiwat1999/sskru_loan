@@ -117,7 +117,7 @@
 
                                     <div class="col-md-4 col-lg-5">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
-                                        <input type="text" class="form-control" name="firstname" id="firstname" required>
+                                        <input type="text" class="form-control" name="firstname" id="firstname" onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกชื่อ!
                                         </div>
@@ -128,7 +128,7 @@
                                     
                                     <div class="col-md-5">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
-                                        <input type="text" class="form-control" name="lastname" id="lastname" required>
+                                        <input type="text" class="form-control" name="lastname" id="lastname" onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกนามสกุล!
                                         </div>
@@ -305,36 +305,33 @@
             }
         }
 
-        //filter the input firstname and lastname 
-        document.querySelector("#firstname").addEventListener('keyup', (event) => {
+        function checkThaiLanguage() {
             const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
-            const firstNameValue = event.target.value;
+            const inputFirstname = document.querySelector("#firstname");
+            const inputLastname = document.querySelector("#lastname");
 
-            if(firstNameValue != ''){
-                if (thaiRegex.test(firstNameValue)){
-                    enabledSubmitBtn();
-                    hideInvalidThaiLanguage(event.target.id)
+            if(inputFirstname.value != ''){
+                if (thaiRegex.test(inputFirstname.value)){
+                    hideInvalidThaiLanguage(inputFirstname.id)
                 } else {
-                    disbledSubmitBtn();     
-                    showInvalidThaiLanguage(event.target.id);
+                    showInvalidThaiLanguage(inputFirstname.id);
                 }
             }
-        });
-        
-        document.querySelector("#lastname").addEventListener('keyup', (event) => {
-            const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
-            const lastNameValue = event.target.value;
-            
-            if(lastNameValue != ''){
-                if (thaiRegex.test(lastNameValue)){
-                    enabledSubmitBtn();
-                    hideInvalidThaiLanguage(event.target.id)
+
+            if(inputLastname.value != ''){
+                if (thaiRegex.test(inputLastname.value)){
+                    hideInvalidThaiLanguage(inputLastname.id)
                 } else {
-                    disbledSubmitBtn();     
-                    showInvalidThaiLanguage(event.target.id);
+                    showInvalidThaiLanguage(inputLastname.id);
                 }
             }
-        });
+
+            if(thaiRegex.test(inputLastname.value) && thaiRegex.test(inputFirstname.value)) {
+                enabledSubmitBtn();
+            }else{
+                disbledSubmitBtn();
+            }
+        }
 
     </script>
 

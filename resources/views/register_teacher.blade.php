@@ -112,17 +112,23 @@
 
                                     <div class="col-md-4">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
-                                        <input type="text" name="firstname" class="form-control" id="firstname" required>
+                                        <input type="text" name="firstname" class="form-control" id="firstname" onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกชื่อ!
+                                        </div>
+                                        <div class="text-danger d-none firstname-invalid-thai">
+                                            ชื่อต้องเป็นภาษาไทย!
                                         </div>
                                     </div>
 
                                     <div class="col-md-5">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
-                                        <input type="text" name="lastname" class="form-control" id="lastname" required>
+                                        <input type="text" name="lastname" class="form-control" id="lastname" onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกนามสกุล!
+                                        </div>
+                                        <div class="text-danger d-none lastname-invalid-thai">
+                                            นามสกุลต้องเป็นภาษาไทย!
                                         </div>
                                     </div>
 
@@ -318,6 +324,58 @@
             .catch(error => {
                 console.error('Fetch error:', error);
             });
+        }
+
+        function disbledSubmitBtn() {
+            const submitBtn = document.querySelector("button[type='submit']");
+            submitBtn.disabled = true;
+        }
+        
+        function enabledSubmitBtn() {
+            const submitBtn = document.querySelector("button[type='submit']");
+            submitBtn.disabled = false;
+        }
+
+        function showInvalidThaiLanguage(targetId) {
+            const invalidElement = document.querySelector(`.${targetId}-invalid-thai`);
+            if(invalidElement.classList.contains('d-none')){
+                invalidElement.classList.remove('d-none');
+            }
+        }
+        
+        function hideInvalidThaiLanguage(targetId) {
+            const invalidElement = document.querySelector(`.${targetId}-invalid-thai`);
+            if(!invalidElement.classList.contains('d-none')){
+                invalidElement.classList.add('d-none');
+            }
+        }
+
+        function checkThaiLanguage() {
+            const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
+            const inputFirstname = document.querySelector("#firstname");
+            const inputLastname = document.querySelector("#lastname");
+
+            if(inputFirstname.value != ''){
+                if (thaiRegex.test(inputFirstname.value)){
+                    hideInvalidThaiLanguage(inputFirstname.id)
+                } else {
+                    showInvalidThaiLanguage(inputFirstname.id);
+                }
+            }
+
+            if(inputLastname.value != ''){
+                if (thaiRegex.test(inputLastname.value)){
+                    hideInvalidThaiLanguage(inputLastname.id)
+                } else {
+                    showInvalidThaiLanguage(inputLastname.id);
+                }
+            }
+
+            if(thaiRegex.test(inputLastname.value) && thaiRegex.test(inputFirstname.value)) {
+                enabledSubmitBtn();
+            }else{
+                disbledSubmitBtn();
+            }
         }
   </script>
 
