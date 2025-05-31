@@ -55,6 +55,8 @@ index borrower
                                 <span class="badge bg-warning">รออาจารย์ที่ปรึกษาอนุมัติ</span>
                             @elseif($borrower_document['status'] == "rejected")
                                 <span class="badge bg-danger text-light">ต้องแก้ไข</span>
+                            @elseif($borrower_document['status'] == 'response-reject')
+                                <span class="badge bg-warning">ส่งแก้ไขเอกสาร</span>
                             @elseif($borrower_document['status'] == "approved")
                                 <span class="badge bg-success text-light">อนุมัติแล้ว</span>
                             @endif
