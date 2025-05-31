@@ -276,8 +276,11 @@ class CheckDocumentController extends Controller
                 'borrower_child_documents.id as borrower_child_document_id',
                 'borrower_child_documents.status',
             )
+            ->distinct()
             ->orderBy('child_documents.id', 'asc')
             ->get();
+
+            // dd($child_documents);
         $borrower = Borrower::join('users', 'users.id', '=', 'borrowers.user_id')
             ->join('faculties', 'faculties.id', '=', 'borrowers.faculty_id')
             ->join('majors', 'majors.id', '=', 'borrowers.major_id')
@@ -509,6 +512,7 @@ class CheckDocumentController extends Controller
                 ->first() ?? new UsefulActivitiesComments();
             $comments_for_delete = array_diff($comments_db, $comments_req);
             $comments_for_add = array_diff($comments_req, $comments_db);
+
             foreach ($comments_for_add as $comment_id) {
                 $comment_borrower_child_document = new UsefulActivitiesComments();
                 $comment_borrower_child_document['document_id'] = $borrower_document['document_id'];
@@ -537,7 +541,7 @@ class CheckDocumentController extends Controller
             $useful_activities_status['checker_id'] = $checker_id;
             $useful_activities_status->save();
         } else {
-            UsefulActivitiesComments::where('document_id', $borrower_document['id'])->where('borrower_uid', $borrower_document['user_id'])->delete();
+            UsefulActivitiesComments::where('document_id', $borrower_document['document_id'])->where('borrower_uid', $borrower_document['user_id'])->delete();
             $useful_activities_status['status'] = 'approved';
             $useful_activities_status['checker_id'] = $checker_id;
             $useful_activities_status->save();
@@ -604,6 +608,7 @@ class CheckDocumentController extends Controller
             ->join('borrower_child_documents', 'borrower_child_documents.child_document_id', '=', 'child_documents.id')
             ->where('doc_structures.document_id', $borrower_document['document_id'])
             ->where('borrower_child_documents.user_id', $borrower_document['user_id'])
+            ->where('borrower_child_documents.document_id', $borrower_document['document_id'])
             ->where('borrower_child_documents.checker_id', '!=', null)
             ->pluck('borrower_child_documents.status')
             ->toArray();
@@ -611,6 +616,7 @@ class CheckDocumentController extends Controller
         if ($document['need_useful_activity']) {
             array_push($list_status, $useful_activities_status['status']);
         }
+
         (in_array('rejected', $list_status)) ? $result_status = 'rejected' : $result_status = 'approved';
 
         foreach ($child_documents as $child_document) {
