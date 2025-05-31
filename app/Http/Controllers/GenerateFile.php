@@ -582,6 +582,7 @@ class GenerateFile extends Controller
             $faculty = str_replace("วิทยาลัย", "", $teacher['faculty_name']);
             $major = str_replace("สาขาวิชา", "", $teacher['major_name']);
             $commented_date = $teacher_comments[0]['updated_at'] ?? $teacher_other_comment['updated_at'];
+
             $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
             $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
             $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
@@ -850,7 +851,10 @@ class GenerateFile extends Controller
             $faculty = str_replace("วิทยาลัย", "", $teacher['faculty_name']);
             $major = str_replace("สาขาวิชา", "", $teacher['major_name']);
             $commented_date = $teacher_comments[0]['updated_at'] ?? $teacher_other_comment['updated_at'];
-            $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
+
+            $cleanText = mb_convert_encoding($teacher['prefix'], 'UTF-8', 'auto');
+
+            $teacher['prefix'] = iconv('UTF-8', 'cp874', $cleanText);
             $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
             $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
             $teacher['faculty_name'] = iconv('UTF-8', 'cp874', $faculty);
@@ -1009,7 +1013,7 @@ class GenerateFile extends Controller
         $borrower['faculty'] = iconv('UTF-8', 'cp874', $faculty);
         $borrower['major'] = iconv('UTF-8', 'cp874', $major);
         $maritalstatus = json_decode($borrower['marital_status']);
-        $borrower['marital_status'] = $maritalstatus->status;
+        $borrower['marital_status'] = iconv('UTF-8', 'cp874', $maritalstatus->status);
 
         $borrower_address['tambon'] = iconv('UTF-8', 'cp874', $borrower_address['tambon']);
         $borrower_address['aumphure'] = iconv('UTF-8', 'cp874', $borrower_address['aumphure']);
@@ -1411,7 +1415,7 @@ class GenerateFile extends Controller
         $borrower['faculty'] = iconv('UTF-8', 'cp874', $faculty);
         $borrower['major'] = iconv('UTF-8', 'cp874', $major);
         $maritalstatus = json_decode($borrower['marital_status']);
-        $borrower['marital_status'] = $maritalstatus->status;
+        $borrower['marital_status'] = iconv('UTF-8', 'cp874', $maritalstatus->status);
 
         $borrower_address['tambon'] = iconv('UTF-8', 'cp874', $borrower_address['tambon']);
         $borrower_address['aumphure'] = iconv('UTF-8', 'cp874', $borrower_address['aumphure']);
@@ -1745,6 +1749,7 @@ class GenerateFile extends Controller
     {
         $borrower_file = BorrowerFiles::find($borrower_file_101_id);
         $teacher = Users::find($user_id);
+
         $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
         $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
         $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
