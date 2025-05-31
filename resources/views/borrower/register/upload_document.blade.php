@@ -187,7 +187,7 @@
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <button id="input-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}')" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
+                            <button id="input-form-button-{{$child_document->id}}" type="button" class="btn btn-primary w-100" onclick="formValidate('store-form-{{$child_document->id}}', this.id)" ><i class="bi bi-arrow-up"></i> อัพโหลดเอกสาร</button>
                         </div>
                     </div>
                 @else
@@ -580,13 +580,16 @@
                 @endif
             </div>
             <div class="col-md-3 col-sm-12">
-                @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
-                    <a href="{{route('borrower.register.result',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
-                @elseif(!$document->need_useful_activity)
-                    <a href="{{route('borrower.register.result',['document_id' => $document->id])}}" class="btn btn-primary w-100" > ถัดไป <i class="bi bi-arrow-right"></i></a>
-                @else
-                    <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
-                @endif
+                <form action="{{route('borrower.register.result',['document_id' => $document->id])}}" id="submitUploadForm" method="post">
+                    @csrf
+                    @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
+                        <button id="submitUploadDocument" class="btn btn-primary w-100" onclick="submitUploadDocForm('submitUploadForm', this.id)">ถัดไป <i class="bi bi-arrow-right"></i></button>
+                    @elseif(!$document->need_useful_activity)
+                        <button id="submitUploadDocument" class="btn btn-primary w-100" onclick="submitUploadDocForm('submitUploadForm', this.id)">ถัดไป <i class="bi bi-arrow-right"></i></button>
+                    @else
+                        <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
+                    @endif
+                </form>
             </div>
         </div>
     </div>
@@ -725,11 +728,16 @@
         input.value = formatted;
     }
 
-    async function formValidate(form_id){
+    async function formValidate(form_id, button_id = ''){
         var validate = await validateData(form_id);
+        const submit_button = document.querySelector(`#${button_id}`);
+
+        if (submit_button) submit_button.disabled = true;
         if(validate){
             var form = document.getElementById(form_id);
             form.submit();
+        }else{
+            if (submit_button) submit_button.disabled = false;
         }
     }
 
@@ -804,6 +812,14 @@
             form_button.disabled = false;
             if(invalid_element)invalid_element.classList.remove('d-inline');
         }
+    }
+
+    function submitUploadDocForm(formId, buttonId) {
+        const form = document.querySelector(`#${formId}`);
+        const submitButton = document.querySelector(`#${buttonId}`);
+
+        submitButton.disabled = true;
+        form.submit();
     }
 </script>
 @endsection

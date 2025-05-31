@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="text-end pt-3">
-                    <button type="button" class="btn btn-primary w-25" onclick="submitForm()">ถัดไป</button>
+                    <button type="button" id="submitRegisterTypeId" class="btn btn-primary w-25" onclick="submitForm(this.id)">ถัดไป</button>
                 </div>
             </form>
         </div>
@@ -114,13 +114,17 @@
             }
         }
 
-        async function submitForm(){
+        async function submitForm(button_id){
             var validated = await formValidate();
+            const submit_button =  document.getElementById(button_id);
+            
+            submit_button.disabled = true;
             console.log(validated);
             if(validated){
                 const form = document.getElementById('register-type-form');
                 form.submit();
             }else{
+                submit_button.disabled = false;
                 window.scrollTo(0, 0);
             }
         }

@@ -171,7 +171,7 @@
                 @endforeach
             </form>
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary mt-3 w-25" onclick="submitForm('register-document-form')">ถัดไป</button>
+                <button type="button" id="formSubmitBtnDocResult" class="btn btn-primary mt-3 w-25" onclick="submitForm('register-document-form', this.id)">ถัดไป</button>
             </div>
         </div>
     </div>
@@ -180,9 +180,12 @@
 @endsection
 @section('script')
     <script>
-        async function submitForm(form_id){
+        async function submitForm(form_id, button_id){
             var validation = await validateForm(form_id) 
+            const submit_button = document.querySelector(`#${button_id}`);
 
+            submit_button.disabled = true;
+            
             if(validation){
                 const form = document.getElementById(form_id);
                 form.submit();
@@ -190,6 +193,8 @@
                 alert('ยังไม่ระบุเอกสารที่ส่ง');
                 var invalid_element = document.getElementById('invalid-checkbox');
                 if(invalid_element)invalid_element.classList.add('d-inline');
+                
+                submit_button.disabled = false;
                 window.scrollTo(0,0);
             }
         }

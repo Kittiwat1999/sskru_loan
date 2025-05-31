@@ -104,7 +104,11 @@
         <div class="card-body row mx-0">
             <div class="col-md-9 col-sm-12"></div>
             <div class="col-md-3 col-sm-12 text-end">
-                <a href="{{route('borrower.register.sumit.document')}}" class="btn btn-primary mt-3 w-100">ส่งเอกสาร</a>
+                <form action="{{route('borrower.register.sumit.document')}}" id="formRecheckDoc" method="post">
+                    @csrf
+                    <button id="submitRecheckDocButton" class="btn btn-primary mt-3 w-100" onclick="formSubmit('formRecheckDoc', this.id)">ส่งเอกสาร</button>
+                </form>
+                {{-- <a href="{{route('borrower.register.sumit.document')}}" class="btn btn-primary mt-3 w-100">ส่งเอกสาร</a> --}}
             </div>
         </div>
     </div>
@@ -119,6 +123,14 @@
         var pdfURL = iframe.src;
         
         window.open(pdfURL, '_blank');
+    }
+
+    function formSubmit(formId, buttonId) {
+        const form = document.querySelector(`#${formId}`);
+        const submitButton = form.querySelector(`#${buttonId}`);
+        submitButton.disabled = true;
+
+        form.submit();
     }
 
 </script>
