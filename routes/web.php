@@ -250,10 +250,10 @@ Route::middleware(['session.expire', 'privilege:borrower'])->group(function () {
     Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}', [BorrowerRegister::class, 'editDocument'])->name('borrower.register.edit.document');
     Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}', [BorrowerRegister::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
     //result
-    Route::get('/borrower/borrower_register/result/page', [BorrowerRegister::class, 'result'])->name('borrower.register.result');
+    Route::post('/borrower/borrower_register/result/page', [BorrowerRegister::class, 'result'])->name('borrower.register.result');
     Route::post('/borrower/borrower_register/result/store/', [BorrowerRegister::class, 'storeBorrowerRegisterDocument'])->name('borrower.register.result.store');
     Route::get('/borrower/borrower_register/recheck', [BorrowerRegister::class, 'recheckDocument'])->name('borrower.register.recheck');
-    Route::get('/borrower/borrower_register/sumit/document', [BorrowerRegister::class, 'submitDocument'])->name('borrower.register.sumit.document');
+    Route::post('/borrower/borrower_register/sumit/document', [BorrowerRegister::class, 'submitDocument'])->name('borrower.register.sumit.document');
     //preview file
     Route::get('/borrower/borrower_register/recheck/document/{document_id}/{child_document_id}', [BorrowerRegister::class, 'showFile101'])->name('borrower.register.generate.document');
     Route::get('/borrower/borrower_register/recheck/teacher-comment/{borrower_document_id}', [BorrowerRegister::class, 'generateFile103'])->name('borrower.register.generate.teacher.comment');
