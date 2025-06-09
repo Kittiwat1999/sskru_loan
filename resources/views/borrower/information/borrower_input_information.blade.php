@@ -287,7 +287,7 @@
                 <div class="col-12 row m-0 p-0">
                     <div class="col-md-8 col-sm-12"></div>
                     <div class="col-md-4 col-sm-12">
-                        <button type="button" class="btn btn-primary w-100" onclick="submitForm('borrower-information-form')">บันทึกข้อมูล</button>
+                        <button id="submit-form" type="button" class="btn btn-primary w-100" onclick="submitForm('borrower-information-form', this.id)">บันทึกข้อมูล</button>
                     </div>
                 </div>
             </form>
@@ -460,11 +460,14 @@
         if(invalid_element)invalid_element.classList.remove('d-inline');
     }
 
-    async function submitForm(form_id){
+    async function submitForm(form_id, buttonId){
+        const submitButton = document.querySelector(`#${buttonId}`);
+        submitButton.disabled = true;
         var validator = await validateForm(form_id);
         if(validator){
             document.getElementById(form_id).submit();
-        }else{
+        }else{;
+            submitButton.disabled = false;
             alert('ดูเหมือนว่าท่านยังกรอกข้อมูลไม่ครบ! กรุณาตรวจสอบอีกครั้ง');
             window.scrollTo(0,0);
         }

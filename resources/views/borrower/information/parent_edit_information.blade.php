@@ -643,7 +643,7 @@
                 <div class="col-12 row m-0 p-0">
                     <div class="col-md-8 col-sm-12"></div>
                     <div class="col-md-4 col-sm-12">
-                        <button id="form-button" type="button" class="btn btn-primary w-100" onclick="submitForm('parent-form')">บันทึกข้อมูล</button>
+                        <button id="form-button" type="button" class="btn btn-primary w-100" onclick="submitForm('parent-form', this.id)">บันทึกข้อมูล</button>
                     </div>
                 </div>
             </form>
@@ -837,11 +837,16 @@
         }
     }
 
-    async function submitForm(formId){
+    async function submitForm(formId, buttonId){
+        const submitButyon = document.querySelector(`#${buttonId}`);
+        submitButyon.disabled = true;
+        
         var validator = await validateForm(formId);
+        
         if(validator){
             document.getElementById(formId).submit();
         }else{
+            submitButyon.disabled = false;
             alert('ดูเหมือนว่าท่านยังกรอกข้อมูลไม่ครบ! กรุณาตรวจสอบอีกครั้ง');
             window.scrollTo(0,0);
         }

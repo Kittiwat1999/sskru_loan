@@ -43,7 +43,7 @@
                 <div class="col-12 row m-0 p-0">
                     <div class="col-md-8 col-sm-12"></div>
                     <div class="col-md-4 col-sm-12">
-                        <button type="button" class="btn btn-primary w-100" onclick="submitForm('main-parent-form')">บันทึกข้อมูล</button>
+                        <button id="submit-button" type="button" class="btn btn-primary w-100" onclick="submitForm('main-parent-form', this.id)">บันทึกข้อมูล</button>
                     </div>
                 </div>
             </form>
@@ -254,11 +254,15 @@
         input.value = formatted;
     }
 
-    async function submitForm(formId){
+    async function submitForm(formId, buttonId){
+        const submitButton = document.querySelector(`#${buttonId}`);
+        submitButton.disabled = true;
         var validator = await validateForm(formId);
+        
         if(validator){
             document.getElementById(formId).submit();
         }else{
+            submitButton.disabled = false;
             alert('ดูเหมือนว่าท่านยังกรอกข้อมูลไม่ครบ! กรุณาตรวจสอบอีกครั้ง');
             window.scrollTo(0,0);
         }
