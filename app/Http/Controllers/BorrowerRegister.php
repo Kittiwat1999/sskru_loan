@@ -687,7 +687,7 @@ class BorrowerRegister extends Controller
             $generator = new GenerateFile();
             $_101temp_path = $generator->saveBorrowerDocument101($user_id, $child_document_101, $document['id']);
             $this->saveDocument101($document, $user_id, $_101temp_path);
-            $_103temp_path = $generator->saveDocument103($user_id, $child_document_103);
+            $_103temp_path = $generator->saveDocument103($user_id, $borrower_document['id']);
             $this->saveDocument103($document, $user_id, $_103temp_path);
         }
 

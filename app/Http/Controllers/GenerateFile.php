@@ -712,7 +712,8 @@ class GenerateFile extends Controller
         $teacher_other_comment = TeacherCommentDocuments::where('borrower_document_id', $borrower_document_id)->where('teacher_comment_id', null)->first() ?? null;
         $strconcat_teacher_comments = '';
 
-        if (($teacher_comments != null || $teacher_other_comment != null) && $teacher != null) {
+
+        if ((isset($teacher_comments)|| $teacher_other_comment != null) && $teacher != null) {
             $faculty = str_replace("คณะ", "", $teacher['faculty_name']);
             $faculty = str_replace("วิทยาลัย", "", $teacher['faculty_name']);
             $major = str_replace("สาขาวิชา", "", $teacher['major_name']);
@@ -1013,7 +1014,7 @@ class GenerateFile extends Controller
         $borrower['faculty'] = iconv('UTF-8', 'cp874', $faculty);
         $borrower['major'] = iconv('UTF-8', 'cp874', $major);
         $maritalstatus = json_decode($borrower['marital_status']);
-        $borrower['marital_status'] = iconv('UTF-8', 'cp874', $maritalstatus->status);
+        $borrower['marital_status'] = $maritalstatus->status;
 
         $borrower_address['tambon'] = iconv('UTF-8', 'cp874', $borrower_address['tambon']);
         $borrower_address['aumphure'] = iconv('UTF-8', 'cp874', $borrower_address['aumphure']);
@@ -1231,9 +1232,10 @@ class GenerateFile extends Controller
             } else {
                 $pdf->Image($tick_alp, 33, 175, 4, 4);
                 // $other_input = 130;
-                $other_length = strlen($borrower['marital_status']);
+                $ohter_status = iconv('UTF-8', 'cp874', $borrower['marital_status']);
+                $other_length = strlen($ohter_status);
                 $other_x = 55 + ($other_length / 2) - 6;
-                $pdf->Text($other_x, 177, $borrower['marital_status']);
+                $pdf->Text($other_x, 177, $ohter_status);
             }
 
             if (isset($parents[0])) {
