@@ -580,16 +580,20 @@
                 @endif
             </div>
             <div class="col-md-3 col-sm-12">
-                <form action="{{route('borrower.register.result',['document_id' => $document->id])}}" id="submitUploadForm" method="post">
-                    @csrf
-                    @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
-                        <button id="submitUploadDocument" class="btn btn-primary w-100" onclick="submitUploadDocForm('submitUploadForm', this.id)">ถัดไป <i class="bi bi-arrow-right"></i></button>
-                    @elseif(!$document->need_useful_activity)
-                        <button id="submitUploadDocument" class="btn btn-primary w-100" onclick="submitUploadDocForm('submitUploadForm', this.id)">ถัดไป <i class="bi bi-arrow-right"></i></button>
-                    @else
-                        <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
-                    @endif
-                </form>
+                
+                @if(((int) $borrower_child_document_delivered_count >= (int) $child_document_required_count) && ((int) $borrower_useful_activities_hours_sum >= (int) $useful_activities_hours))
+                    <a href="{{route('borrower.register.result',['document_id' => $document->id])}}"
+                        id="submitUploadDocument" class="btn btn-primary w-100" onclick="disabledLinkButton(this.id)">
+                        ถัดไป <i class="bi bi-arrow-right"></i>
+                    </a>
+                @elseif(!$document->need_useful_activity)
+                    <a href="{{route('borrower.register.result',['document_id' => $document->id])}}"
+                        id="submitUploadDocument" class="btn btn-primary w-100" onclick="disabledLinkButton(this.id)">
+                        ถัดไป <i class="bi bi-arrow-right"></i>
+                    </a>
+                @else
+                    <button type="button" class="btn btn-secondary w-100" disabled> ถัดไป <i class="bi bi-arrow-right"></i></button>
+                @endif
             </div>
         </div>
     </div>
@@ -814,12 +818,9 @@
         }
     }
 
-    function submitUploadDocForm(formId, buttonId) {
-        const form = document.querySelector(`#${formId}`);
+    function disabledLinkButton(buttonId) {
         const submitButton = document.querySelector(`#${buttonId}`);
-
-        submitButton.disabled = true;
-        form.submit();
+        submitButton.classList.add('disabled');
     }
 </script>
 @endsection
