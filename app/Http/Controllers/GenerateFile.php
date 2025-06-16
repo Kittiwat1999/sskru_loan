@@ -616,7 +616,7 @@ class GenerateFile extends Controller
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
             $pdf->SetFont('THSarabunNew', '', 12);
 
-            $position = iconv('UTF-8', 'cp874', 'อาจาร์ที่ปรึกษา');
+            $position = iconv('UTF-8', 'cp874', 'อาจารย์ที่ปรึกษา');
             //date
             if ($commented) {
                 $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $commented_date);
@@ -747,7 +747,7 @@ class GenerateFile extends Controller
         $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
         $pdf->SetFont('THSarabunNew', '', 12);
 
-        $position = iconv('UTF-8', 'cp874', 'อาจาร์ที่ปรึกษา');
+        $position = iconv('UTF-8', 'cp874', 'อาจารย์ที่ปรึกษา');
         //date
         if ($commented) {
             $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $commented_date);
@@ -884,7 +884,7 @@ class GenerateFile extends Controller
         $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
         $pdf->SetFont('THSarabunNew', '', 12);
 
-        $position = iconv('UTF-8', 'cp874', 'อาจาร์ที่ปรึกษา');
+        $position = iconv('UTF-8', 'cp874', 'อาจารย์ที่ปรึกษา');
         //date
         if ($commented) {
             $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $commented_date);
