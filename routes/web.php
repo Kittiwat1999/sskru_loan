@@ -250,7 +250,7 @@ Route::middleware(['session.expire', 'privilege:borrower'])->group(function () {
     Route::put('/borrower/borrower_register/edit_file/{document_id}/{child_document_id}', [BorrowerRegister::class, 'editDocument'])->name('borrower.register.edit.document');
     Route::get('/borrower/borrower_register/previe/borrower_file/{borrower_child_document_id}', [BorrowerRegister::class, 'previewBorrowerFile'])->name('borrower.register.preview.file');
     //result
-    Route::post('/borrower/borrower_register/result/page', [BorrowerRegister::class, 'result'])->name('borrower.register.result');
+    Route::get('/borrower/borrower_register/result/page', [BorrowerRegister::class, 'result'])->name('borrower.register.result');
     Route::post('/borrower/borrower_register/result/store/', [BorrowerRegister::class, 'storeBorrowerRegisterDocument'])->name('borrower.register.result.store');
     Route::get('/borrower/borrower_register/recheck', [BorrowerRegister::class, 'recheckDocument'])->name('borrower.register.recheck');
     Route::post('/borrower/borrower_register/sumit/document', [BorrowerRegister::class, 'submitDocument'])->name('borrower.register.sumit.document');
