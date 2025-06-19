@@ -93,7 +93,7 @@
                             <div class="card-body">
 
                                 <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">สร้างบัญชีผู้ใช้</h5>
+                                    <h5 class="card-title text-center pb-0 fs-4">สร้างบัญชีผู้ใช้สำหรับอาจารย์ที่ปรึกษา</h5>
                                     <p class="text-center small">กรุณากรอกรายละเอียด เพื่อสร้างบัญชีผู้ใช้</p>
                                 </div>
 
