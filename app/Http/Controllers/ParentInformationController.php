@@ -366,7 +366,7 @@ class ParentInformationController extends Controller
 
     public function borrower_edit_parent_information(ParentInformationRequest $request)
     {
-        // dd($request->all());
+        // dd($request);
         date_default_timezone_set("Asia/Bangkok");
         $user_id = $request->session()->get('user_id', '1');
         $borrower = Borrower::where('user_id', $user_id)->first();
@@ -635,55 +635,52 @@ class ParentInformationController extends Controller
         } else if ($request->marital_status == "แยกกันอยู่ตามอาชีพ") {
             $marital_status = ['status' => 'แยกกันอยู่ตามอาชีพ', 'file_name' => ''];
         } else if ($request->marital_status == "หย่า") {
-
-            
             $file = $request->file('devorce_file');
-            //check file supported
-            $merger = new Merger(); 
-            try {
-                $merger->addFile($file);
-                $merger->merge();
-            } catch (\Exception $e) {
-                return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
-            }
-            
             //check if have new file delete old file
             if ($request->file('devorce_file') != null) {
                 $this->deleteFile($marital_status_path . '/' . $user_id, $marital_db->file_name);
+                //check file supported
+                $merger = new Merger(); 
+                try {
+                    $merger->addFile($file);
+                    $merger->merge();
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
+                }
+    
+                $file_validator = Validator::make($request->all(), [
+                    "devorce_file" => 'required|file|max:2048|mimes:pdf',
+                ],[
+                    'devorce_file.required' => 'ไม่ได้อัพโหลดใบหย่า',
+                    'devorce_file.file' => 'ข้อมูลนำเข้าไม่ถูกต้อง',
+                    'devorce_file.max' => 'ไฟล์ต้องมีขนาดไม่เกิน 2048kb',
+                    'devorce_file.mimes' => 'ไฟล์ต้องเป็น pdf',
+                ]);
+
+                if ($file_validator->fails()) {
+                    return redirect()
+                        ->back()
+                        ->withErrors($file_validator)
+                        ->withInput();
+                }
+    
+                $file_name = $file->getClientOriginalName();
+                $spit_filename = explode('.', $file_name);
+                $file_extenstion = last($spit_filename);
+    
+                if ($file_extenstion != 'pdf') {
+                    $error = ['devorce_file' => 'ประเภทไฟล์ต้องเป็น .pdf เท่านั้น'];
+                    return $error;
+                }
+    
+                $file_name = $this->storeFile($marital_status_path . '/' . $user_id, $file);
+                $marital_status = ['status' => 'หย่า', 'file_name' => $file_name];
             }
-
-            $file_validator = Validator::make($request->all(), [
-                "devorce_file" => 'required|file|max:2048|mimes:pdf',
-            ],[
-                'devorce_file.required' => 'ไม่ได้อัพโหลดใบหย่า',
-                'devorce_file.file' => 'ข้อมูลนำเข้าไม่ถูกต้อง',
-                'devorce_file.max' => 'ไฟล์ต้องมีขนาดไม่เกิน 2048kb',
-                'devorce_file.mimes' => 'ไฟล์ต้องเป็น pdf',
-            ]);
-
-            if ($file_validator->fails()) {
-                return redirect()
-                    ->back()
-                    ->withErrors($file_validator)
-                    ->withInput();
-            }
-
-            $file_name = $file->getClientOriginalName();
-            $spit_filename = explode('.', $file_name);
-            $file_extenstion = last($spit_filename);
-
-            if ($file_extenstion != 'pdf') {
-                $error = ['devorce_file' => 'ประเภทไฟล์ต้องเป็น .pdf เท่านั้น'];
-                return $error;
-            }
-
-
-            $file_name = $this->storeFile($marital_status_path . '/' . $user_id, $file);
-            $marital_status = ['status' => 'หย่า', 'file_name' => $file_name];
         }
+
         $parent1->save();
         if ($parent2_have_data) $parent2->save();
-        $borrower['marital_status'] = json_encode($marital_status);
+        $borrower['marital_status'] = json_encode($marital_status ?? $marital_db);
         $borrower->save();
 
         return redirect('/borrower/information/information_list')->with(['success' => 'บันทึกข้อมูลผู้ปกครองเรียบร้อยแล้ว']);
