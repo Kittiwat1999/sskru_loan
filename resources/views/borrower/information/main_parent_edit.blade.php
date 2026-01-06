@@ -56,13 +56,10 @@
 <script>
     var isset_parent3;
     var address_with_borrower;
-    var tambon;
     @if(!empty($parent3))
         isset_parent3 = @json($parent3 != null);
         address_with_borrower = @json($address_with_borrower);
         if(isset_parent3)SelctMainParent('parent3');
-        tambon = @json($parent3_address->tambon);
-        tambonFormPostcode('parent3',tambon);
     @endif
     function addressWithBorrower() {
         address_currently_with_borrower = document.getElementById('address_currently_with_borrower');
@@ -81,133 +78,6 @@
                 e.value = "";
             });
         }
-    }
-
-    function addressWithZipcode(zip_code_input, caller){
-        // disable input
-        document.getElementById(`${caller}_province`).disabled = true;
-        document.getElementById(`${caller}_tambon`).disabled = true;
-        document.getElementById(`${caller}_aumphure`).disabled = true;
-        //show loading msg
-        document.getElementById(`${caller}_province`).placeholder = 'กำลังดึงข้อมูล...';
-        document.getElementById(`${caller}_tambon`).placeholder = 'กำลังดึงข้อมูล...';
-        document.getElementById(`${caller}_aumphure`).placeholder = 'กำลังดึงข้อมูล...';
-        
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data.length == 0){
-                console.log('no data');
-            }
-            var tambons = [];
-            var aumphureId = '';
-            for(tambon of data){
-                if(zip_code_input == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                    if(aumphureId == '')aumphureId = tambon.amphure_id;
-                }
-            }
-            // console.log(tambons);
-            var selectElement = document.getElementById(`${caller}_tambon`);
-            selectElement.innerHTML ='<option disabled selected value="">เลือกตำบล</option>';
-            for(tb of tambons){
-                var newOption = document.createElement('option');
-                newOption.value = tb;
-                newOption.text = tb;
-                selectElement.add(newOption);
-            }
-            getAumphure(aumphureId,caller)
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-    }
-
-    function getAumphure(amphure_id,caller){
-        // console.log(amphure_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(aumphures => {
-                var province_id = '';
-                for(aumphure of aumphures){
-                    if(amphure_id == aumphure.id){
-                    document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
-                    if(province_id == '')province_id = aumphure.province_id;
-                    }
-                }
-                getProvince(province_id,caller);
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function getProvince(province_id,caller){
-        // console.log(province_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(provinces => {
-                for(province of provinces){
-                    if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
-                }
-
-                //enable input
-                setTimeout(() => {
-                    document.getElementById(`${caller}_province`).disabled = false;
-                    document.getElementById(`${caller}_tambon`).disabled = false;
-                    document.getElementById(`${caller}_aumphure`).disabled = false;
-                }, 1000);
-                
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function tambonFormPostcode(caller,tambon_db){
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            
-            let getpostcodeforminput = document.querySelector(`#${caller}_postcode`).value;
-            let tambons = [];
-            for(tambon of data){
-                if(getpostcodeforminput == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                }
-            }
-            // console.log(tambons);
-            const selectElement = document.getElementById(`${caller}_tambon`);
-            for(tb of tambons){
-                selectElement.innerHTML += `<option ${ (tambon_db == tb) ? 'selected' : '' } value="${tb}">${tb}</option>`;
-            }
-
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
     }
 
     function enableInputCountry(parentNo,isthai){
@@ -643,7 +513,7 @@
 
         <div class="col-md-3 mb-3">
             <label for="parent3_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-            <input type="text" class="form-control for-address_with_borrower" id="parent3_postcode" name="parent3_postcode" onblur="addressWithZipcode(this.value,'parent3')" required>
+            <input type="text" class="form-control for-address_with_borrower" id="parent3_postcode" name="parent3_postcode" required>
             <div class="invalid-feedback">
                 กรุณากรอกรหัสไปรษณีย์
             </div>
@@ -668,9 +538,7 @@
 
         <div class="col-md-5 mb-3">
             <label for="parent3_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-            <select id="parent3_tambon" name="parent3_tambon" class="form-select for-address_with_borrower" aria-label="Default select example" required>
-                <option disabled selected value="">เลือกตำบล</option>
-            </select>
+            <input type="text" class="form-control for-address_with_borrower" id="parent3_tambon" name="parent3_tambon" required>
             <div class="invalid-feedback">
                 กรุณากรอกตำบล
             </div>
@@ -922,7 +790,7 @@
         
                 <div class="col-md-5 mb-3">
                     <label for="parent3_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control for-address_with_borrower" id="parent3_postcode" name="parent3_postcode" onblur="addressWithZipcode(this.value,'parent3')" required value="{{$parent3_address->postcode}}">
+                    <input type="text" class="form-control for-address_with_borrower" id="parent3_postcode" name="parent3_postcode" required value="{{$parent3_address->postcode}}">
                     <div class="invalid-feedback">
                         กรุณากรอกรหัสไปรษณีย์
                     </div>
@@ -947,9 +815,7 @@
         
                 <div class="col-md-5 mb-3">
                     <label for="parent3_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-                    <select id="parent3_tambon" name="parent3_tambon" class="form-select for-address_with_borrower" aria-label="Default select example" required>
-                        <option disabled selected value="">เลือกตำบล</option>
-                    </select>
+                    <input type="text" class="form-control for-address_with_borrower" id="parent3_tambon" name="parent3_tambon" required value="{{$parent3_address->tambon}}">
                     <div class="invalid-feedback">
                         กรุณากรอกตำบล
                     </div>

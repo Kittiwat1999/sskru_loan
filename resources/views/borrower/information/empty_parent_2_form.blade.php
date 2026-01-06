@@ -237,7 +237,7 @@
 
 <div class="col-md-3 mb-3">
     <label for="parent2_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-    <input type="text" class="form-control" id="parent2_postcode" name="parent2_postcode" onblur="addressWithZipcode(this.value,'parent2')" required>
+    <input type="text" class="form-control" id="parent2_postcode" name="parent2_postcode" required>
     <div class="invalid-feedback">
         กรุณากรอกรหัสไปรษณีย์
     </div>
@@ -262,9 +262,7 @@
 
 <div class="col-md-5 mb-3">
     <label for="parent2_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-    <select id="parent2_tambon" name="parent2_tambon" class="form-select" aria-label="Default select example" required>
-        <option disabled selected value="">เลือกตำบล</option>
-    </select>
+    <input type="text" class="form-control" id="parent2_tambon" name="parent2_tambon" required>
     <div class="invalid-feedback">
         กรุณากรอกตำบล
     </div>

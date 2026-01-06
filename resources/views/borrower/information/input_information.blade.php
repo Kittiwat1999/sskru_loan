@@ -173,7 +173,7 @@
 
     <div class="col-md-3">
         <label for="postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-        <input type="text" class="form-control" id="borrower_postcode" name="postcode" required onblur="addressWithZipcode(this.value,'borrower')">
+        <input type="text" class="form-control" id="borrower_postcode" name="postcode" required>
         @error('postcode')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -198,9 +198,7 @@
 
     <div class="col-md-5">
     <label for="tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-        <select id="borrower_tambon" name="tambon" class="form-select" required aria-label="Default select example">
-            
-        </select>
+        <input type="text" class="form-control" id="borrower_tambon" required name="tambon">
         @error('tambon')
             <span class="text-danger">{{ $message }}</span>
         @enderror
@@ -819,7 +817,7 @@
 
         <div class="col-md-3">
             <label for="main_parent_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-            <input type="text" class="form-control fake-class" id="main_parent_postcode" name="main_parent_postcode" onblur="addressWithZipcode(this.value,'main_parent')" required>
+            <input type="text" class="form-control fake-class" id="main_parent_postcode" name="main_parent_postcode" required>
             @error('main_parent_postcode')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
@@ -844,9 +842,7 @@
 
         <div class="col-md-5">
         <label for="main_parent_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-            <select id="main_parent_tambon" name="main_parent_tambon" class="form-select fake-class" aria-label="Default select example" required>
-                <option disabled selected value="">เลือกตำบล</option>
-            </select>
+            <input type="text" class="form-control fake-class" id="main_parent_tambon" name="main_parent_tambon" required>
             @error('main_parent_tambon')
                 <span class="text-danger">{{ $message }}</span>
             @enderror

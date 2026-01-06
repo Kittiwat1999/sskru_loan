@@ -245,7 +245,7 @@
         
                 <div class="col-md-3 mb-3">
                     <label for="parent1_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control" id="parent1_postcode" name="parent1_postcode" onblur="addressWithZipcode(this.value,'parent1')" required value="{{$parent1_address['postcode']}}">
+                    <input type="text" class="form-control" id="parent1_postcode" name="parent1_postcode" required value="{{$parent1_address['postcode']}}">
                     <div class="invalid-feedback">
                         กรุณากรอกรหัสไปรษณีย์
                     </div>
@@ -267,12 +267,10 @@
                         กรุณากรอกอำเภอ
                     </div>
                 </div>
-                {{$parent1_address['tambon']}}
+
                 <div class="col-md-5 mb-3">
                     <label for="parent1_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-                    <select id="parent1_tambon" name="parent1_tambon" class="form-select" aria-label="Default select example" required>
-                        <option disabled selected value="">เลือกตำบล</option>
-                    </select>
+                    <input type="text" class="form-control" id="parent1_tambon" name="parent1_tambon" required value="{{$parent1_address['tambon']}}">
                     <div class="invalid-feedback">
                         กรุณากรอกตำบล
                     </div>
@@ -531,7 +529,7 @@
                 
                 <div class="col-md-3 mb-3">
                     <label for="parent2_postcode" class="form-label text-secondary">รหัสไปรษณีย์</label>
-                    <input type="text" class="form-control" id="parent2_postcode" name="parent2_postcode" onblur="addressWithZipcode(this.value,'parent2')" required value="{{$parent2_address['postcode']}}">
+                    <input type="text" class="form-control" id="parent2_postcode" name="parent2_postcode" required value="{{$parent2_address['postcode']}}">
                     <div class="invalid-feedback">
                         กรุณากรอกรหัสไปรษณีย์
                     </div>
@@ -556,9 +554,7 @@
                 
                 <div class="col-md-5 mb-3">
                     <label for="parent2_tambon" class="col-md-12 col-form-label text-secondary">ตำบล</label>
-                    <select id="parent2_tambon" name="parent2_tambon" class="form-select" aria-label="Default select example" required>
-                        <option disabled selected value="">เลือกตำบล</option>
-                    </select>
+                    <input type="text" class="form-control" id="parent2_tambon" name="parent2_tambon" required value="{{$parent2_address['tambon']}}">
                     <div class="invalid-feedback">
                         กรุณากรอกตำบล
                     </div>
@@ -666,12 +662,6 @@
 
     var parent2_address_with_borrower = @json(($parent2_address['with_borrower'] != null) ? $parent2_address['with_borrower'] : null);
     if(parent2_address_with_borrower != null)disableInputAddress('parent2');
-
-    var parent1_tambon = @json($parent1_address['tambon']);
-    if(parent1_tambon)tambonFormPostcode('parent1',parent1_tambon);
-
-    var parent2_tambon = @json(isset($parent2_address['tambon']) ? $parent2_address['tambon'] : null);
-    if(parent2_tambon != null)tambonFormPostcode('parent2',parent2_tambon);
 
     function enableInputCountry(parentNo,isthai){
         if(isthai == `${parentNo}_not_thai`){
@@ -950,134 +940,6 @@
                 e.required = true;
             });
         }
-    }
-
-    function addressWithZipcode(zip_code_input, caller){
-
-        // disable input
-        document.getElementById(`${caller}_province`).disabled = true;
-        document.getElementById(`${caller}_tambon`).disabled = true;
-        document.getElementById(`${caller}_aumphure`).disabled = true;
-        //show loading msg
-        document.getElementById(`${caller}_province`).placeholder = 'กำลังดึงข้อมูล...';
-        document.getElementById(`${caller}_tambon`).placeholder = 'กำลังดึงข้อมูล...';
-        document.getElementById(`${caller}_aumphure`).placeholder = 'กำลังดึงข้อมูล...';
-        
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data.length == 0){
-                console.log('no data');
-            }
-            var tambons = [];
-            var aumphureId = '';
-            for(tambon of data){
-                if(zip_code_input == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                    if(aumphureId == '')aumphureId = tambon.amphure_id;
-                }
-            }
-            // console.log(tambons);
-            var selectElement = document.getElementById(`${caller}_tambon`);
-            selectElement.innerHTML ='<option disabled selected value="">เลือกตำบล</option>';
-            for(tb of tambons){
-                var newOption = document.createElement('option');
-                newOption.value = tb;
-                newOption.text = tb;
-                selectElement.add(newOption);
-            }
-            getAumphure(aumphureId,caller)
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-    }
-
-    function getAumphure(amphure_id,caller){
-        // console.log(amphure_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(aumphures => {
-                var province_id = '';
-                for(aumphure of aumphures){
-                    if(amphure_id == aumphure.id){
-                    document.getElementById(`${caller}_aumphure`).value = aumphure.name_th;
-                    if(province_id == '')province_id = aumphure.province_id;
-                    }
-                }
-                getProvince(province_id,caller);
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function getProvince(province_id,caller){
-        // console.log(province_id);
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(provinces => {
-                for(province of provinces){
-                    if(province_id == province.id)document.getElementById(`${caller}_province`).value = province.name_th;
-                }
-
-                //enable input
-                setTimeout(() => {
-                    document.getElementById(`${caller}_province`).disabled = false;
-                    document.getElementById(`${caller}_tambon`).disabled = false;
-                    document.getElementById(`${caller}_aumphure`).disabled = false;
-                }, 1000);
-                
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
-    }
-
-    function tambonFormPostcode(caller,tambon_db){
-        fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            
-            let getpostcodeforminput = document.querySelector(`#${caller}_postcode`).value;
-            let tambons = [];
-            for(tambon of data){
-                if(getpostcodeforminput == tambon.zip_code){
-                    // console.log(tambon.name_th)
-                    tambons.push(tambon.name_th.toString());
-                }
-            }
-            // console.log(tambons);
-            const selectElement = document.getElementById(`${caller}_tambon`);
-            for(tb of tambons){
-                selectElement.innerHTML += `<option ${ (tambon_db == tb) ? 'selected' : '' } value="${tb}">${tb}</option>`;
-            }
-
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
     }
 
     const devorceFile = document.getElementById('devorceFile');
