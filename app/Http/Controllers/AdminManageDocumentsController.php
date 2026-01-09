@@ -125,7 +125,7 @@ class AdminManageDocumentsController extends Controller
         $child_document['child_document_title'] = $request->child_document_title;
         $child_document['need_loan_balance'] = filter_var($request->need_loan_balance, FILTER_VALIDATE_BOOLEAN);
         $child_document['isrequired'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
-        $child_document['need_document_code'] = filter_var($request->isrequired, FILTER_VALIDATE_BOOLEAN);
+        $child_document['need_document_code'] = filter_var($request->need_document_code, FILTER_VALIDATE_BOOLEAN);
         $child_document->save();
         return redirect()->back()->with(['success' => 'แก้ใขข้อมูลเอกสาร' . $child_document['child_document_title'] . 'เรียบร้อยแล้ว']);
     }

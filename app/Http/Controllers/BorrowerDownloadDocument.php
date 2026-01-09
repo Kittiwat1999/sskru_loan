@@ -58,7 +58,7 @@ class BorrowerDownloadDocument extends Controller
             ->where('child_documents.id', '!=', '4')
             ->select('child_documents.child_document_title', 'child_documents.id',)
             ->get();
-        // dd($documents);
+        // dd($child_documents);
         $parents = Parents::where('borrower_id', $borrower_id)->get();
         return view('borrower.download_document.download_document', compact('child_documents', 'parents'));
     }
