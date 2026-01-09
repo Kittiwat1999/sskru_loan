@@ -263,7 +263,7 @@ class SendDocumentController extends Controller
             return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
         }
 
-        $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
+        $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $user_id;
         $file_name = $this->storeFile($file_path, $input_file);
         $borrower_file = new BorrowerFiles();
         $borrower_file['user_id'] = $user_id;
@@ -337,7 +337,7 @@ class SendDocumentController extends Controller
                 return redirect()->back()->withErrors('ไฟล์ PDF ไม่รองรับเทคนิคการบีบอัดนี้ ลองเปลี่ยนเครื่องมือแสกน PDF');
             }
 
-            $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/' . $child_document_id . '/' . $user_id;
+            $file_path = $document['term'] . '-' . $document['year'] . '/' . $document['id'] . '/'  . $user_id;
             $file_name = $this->storeFile($file_path, $input_file);
             $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
             $this->deleteFile($borrower_file['file_path'], $borrower_file['file_name']);
@@ -363,18 +363,9 @@ class SendDocumentController extends Controller
             ->where('borrower_child_documents.id', $borrower_child_document_id)
             ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
             ->first();
-        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
-            ->where('documents.id', $borrower_child_document['document_id'])
-            ->select('doc_types.id', 'documents.year', 'documents.term')
-            ->first();
 
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $response = $this->displayFile(
-            $document['term'] . '-' . $document['year']
-                . '/' . $document['id']
-                . '/' . $borrower_child_document['child_document_id']
-                . '/' . $user_id,
-            $borrower_file['file_name']
+        $response = $this->displayFile($borrower_file['file_path'], $borrower_file['file_name']
         );
         return $response;
     }
