@@ -444,7 +444,7 @@ class GenerateFile extends Controller
     public function generate_yinyorm_parent($parent_id, $user_id, $document)
     {
         $parent = Parents::where('id', $parent_id)
-            ->select('prefix', 'firstname', 'lastname', 'email', 'birthday', 'citizen_id', 'phone', 'address_id', 'borrower_id')
+            ->select('prefix', 'firstname', 'lastname', 'email', 'birthday', 'citizen_id', 'phone', 'address_id', 'borrower_id', 'borrower_relational')
             ->first();
 
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
@@ -460,6 +460,7 @@ class GenerateFile extends Controller
         $parent['citizen_id'] = $this->utf8_to_cp874(Crypt::decryptString($parent['citizen_id']));
         $parent['phone'] = $this->utf8_to_cp874($parent['phone']);
         $parent['email'] = $this->utf8_to_cp874($parent['email']);
+        $parent['borrower_relational'] = $this->utf8_to_cp874($parent['borrower_relational']);
 
         $address = Address::find($parent['address_id']);
         $address['house_no'] = $this->utf8_to_cp874($address['house_no']);
@@ -569,9 +570,14 @@ class GenerateFile extends Controller
             $signature_x = 103 + ($signature / 2 - $fullname_length / 2) - 3;
             $pdf->Text($signature_x, 245, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
 
-
             $tick_alp = public_path('icon_png/tick.png');
-            $pdf->Image($tick_alp, 90, 99, 4, 4);
+            if ($parent['borrower_relational'] == $this->utf8_to_cp874('บิดา')) {
+                $pdf->Image($tick_alp, 90, 99, 4, 4);
+            } else if ($parent['borrower_relational'] == $this->utf8_to_cp874('มารดา')) {
+                $pdf->Image($tick_alp, 90, 99, 4, 4);
+            } else {
+                $pdf->Image($tick_alp, 90, 99, 4, 4);
+            }
 
             $filename = 'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง' . '.pdf';
             // Encode the filename
