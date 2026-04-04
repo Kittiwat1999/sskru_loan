@@ -71,7 +71,7 @@ class ParentInformationController extends Controller
         return view('borrower.information.parent_input_information');
     }
 
-    public function borrower_edit_parent_information_page(Request $request,)
+    public function borrower_edit_parent_information_page(Request $request)
     {
         $user_id = $request->session()->get('user_id', '1');
         $borrower = Borrower::where('user_id', $user_id)->select('id', 'marital_status', 'student_id', 'address_id')->first();

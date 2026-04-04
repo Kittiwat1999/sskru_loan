@@ -73,51 +73,105 @@ class GenerateFile extends Controller
         return $grade;
     }
 
+    function utf8_to_cp874($value) : string {
+        return iconv('UTF-8', 'cp874', $value);
+    }
+
     public function generate_rabrongraidai($user_id, $document)
     {
+        $father_address = [];
+        $mother_address = [];
+        $parent_address = [];
+        
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $user_id)
-            ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.birthday', 'borrowers.id')
+            ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.birthday', 'borrowers.id', 'borrowers.address_id', 'borrowers.citizen_id', 'borrowers.phone')
             ->first();
-        $father = Parents::where('borrower_id', $borrower['id'])->where('borrower_relational', 'บิดา')->select('prefix', 'firstname', 'lastname', 'occupation', 'place_of_work', 'phone', 'income', 'alive')->first();
-        $mother = Parents::where('borrower_id', $borrower['id'])->where('borrower_relational', 'มารดา')->select('prefix', 'firstname', 'lastname', 'occupation', 'place_of_work', 'phone', 'income', 'alive')->first();
-        $parent = Parents::where('borrower_id', $borrower['id'])->where('borrower_relational', '!=', 'มารดา')->where('borrower_relational', '!=', 'บิดา')->select('prefix', 'firstname', 'lastname', 'occupation', 'place_of_work', 'phone', 'income', 'alive', 'borrower_relational')->first();
+        $borrower_address = Address::where('id', $borrower['address_id'])->first();
+        $father = Parents::where('borrower_id', $borrower['id'])->where('borrower_relational', 'บิดา')->select('prefix', 'firstname', 'lastname', 'occupation', 'place_of_work', 'phone', 'income', 'alive', 'address_id', 'citizen_id')->first();
+        $mother = Parents::where('borrower_id', $borrower['id'])->where('borrower_relational', 'มารดา')->select('prefix', 'firstname', 'lastname', 'occupation', 'place_of_work', 'phone', 'income', 'alive', 'address_id', 'citizen_id')->first();
+        $parent = Parents::where('borrower_id', $borrower['id'])->where('borrower_relational', '!=', 'มารดา')->where('borrower_relational', '!=', 'บิดา')->select('prefix', 'firstname', 'lastname', 'occupation', 'place_of_work', 'phone', 'income', 'alive', 'borrower_relational', 'address_id', 'citizen_id')->first();
 
+        $borrower = $borrower ? $borrower->toArray() : [];
+        $borrower_address = $borrower_address ? $borrower_address->toArray() : [];
+        $father = $father ? $father->toArray() : [];
+        $mother = $mother ? $mother->toArray() : [];
+        $parent = $parent ? $parent->toArray() : [];
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['birthday'] = iconv('UTF-8', 'cp874', $borrower['birthday']);
+        foreach ($borrower as $key => $value) {
+            if($key == 'citizen_id'){
+                $borrower[$key] = $this->utf8_to_cp874(Crypt::decryptString($borrower['citizen_id']));
+                continue;
+            }
+
+            $borrower[$key] = $this->utf8_to_cp874($value);
+        }
+
+        foreach($borrower_address as $key => $value) {
+            $borrower_address[$key] = $this->utf8_to_cp874($value);
+        }
+
+        $borrower['address'] = $borrower_address;
 
         if ($father != null) {
-            $father['prefix'] = iconv('UTF-8', 'cp874', $father['prefix']);
-            $father['firstname'] = iconv('UTF-8', 'cp874', $father['firstname']);
-            $father['lastname'] = iconv('UTF-8', 'cp874', $father['lastname']);
-            $father['occupation'] = iconv('UTF-8', 'cp874', $father['occupation']);
-            $father['place_of_work'] = iconv('UTF-8', 'cp874', $father['place_of_work']);
-            $father['phone'] = iconv('UTF-8', 'cp874', $father['phone']);
-            $father['income'] = iconv('UTF-8', 'cp874', $father['income']);
+            $father_address = Address::where('id',$father['address_id'])->first();
+            $father_address = $father_address ? $father_address->toArray() : [];
+            foreach($father as $key => $value) {
+                if($key == 'citizen_id'){
+                    $father[$key] = $this->utf8_to_cp874(Crypt::decryptString($father['citizen_id']));
+                    continue;
+                } else if ($key == 'alive' || $key == 'income') {
+                    continue;
+                }
+                $father[$key] = $this->utf8_to_cp874($value);
+            }
+
+            foreach($father_address as $key => $value) {
+                $father_address[$key] = $this->utf8_to_cp874($value);
+            }
+
+            $father['address'] = $father_address;
         }
 
         if ($mother != null) {
-            $mother['prefix'] = iconv('UTF-8', 'cp874', $mother['prefix']);
-            $mother['firstname'] = iconv('UTF-8', 'cp874', $mother['firstname']);
-            $mother['lastname'] = iconv('UTF-8', 'cp874', $mother['lastname']);
-            $mother['occupation'] = iconv('UTF-8', 'cp874', $mother['occupation']);
-            $mother['place_of_work'] = iconv('UTF-8', 'cp874', $mother['place_of_work']);
-            $mother['phone'] = iconv('UTF-8', 'cp874', $mother['phone']);
-            $mother['income'] = iconv('UTF-8', 'cp874', $mother['income']);
+            $mother_address = Address::where('id',$mother['address_id'])->first();
+            $mother_address = $mother_address ? $mother_address->toArray() : [];
+            foreach($mother as $key => $value) {
+                if($key == 'citizen_id'){
+                    $mother[$key] = $this->utf8_to_cp874(Crypt::decryptString($mother['citizen_id']));
+                    continue;
+                } else if ($key == 'alive' || $key == 'income') {
+                    continue;
+                }
+
+                $mother[$key] = $this->utf8_to_cp874($value);
+            }
+
+            foreach($mother_address as $key => $value) {
+                $mother_address[$key] = $this->utf8_to_cp874($value);
+            }
+
+            $mother['address'] = $mother_address;
         }
 
         if ($parent != null) {
-            $parent['prefix'] = iconv('UTF-8', 'cp874', $parent['prefix']);
-            $parent['firstname'] = iconv('UTF-8', 'cp874', $parent['firstname']);
-            $parent['lastname'] = iconv('UTF-8', 'cp874', $parent['lastname']);
-            $parent['occupation'] = iconv('UTF-8', 'cp874', $parent['occupation']);
-            $parent['place_of_work'] = iconv('UTF-8', 'cp874', $parent['place_of_work']);
-            $parent['phone'] = iconv('UTF-8', 'cp874', $parent['phone']);
-            $parent['income'] = iconv('UTF-8', 'cp874', $parent['income']);
-            $parent['borrower_relational'] = iconv('UTF-8', 'cp874', $parent['borrower_relational']);
+            $parent_address = Address::where('id', $parent['address_id'])->first();
+            $parent_address = $parent_address ? $parent_address->toArray() : [];
+            foreach($parent as $key => $value) {
+                if($key == 'citizen_id'){
+                    $parent[$key] = $this->utf8_to_cp874(Crypt::decryptString($parent['citizen_id']));
+                    continue;
+                } else if ($key == 'alive' || $key == 'income') {
+                    continue;
+                }
+                $parent[$key] = $this->utf8_to_cp874($value);
+            }
+
+            foreach($parent_address as $key => $value) {
+                $parent_address[$key] = $this->utf8_to_cp874($value);
+            }
+
+            $parent['address'] = $parent_address;
         }
 
         // Create a StreamedResponse
@@ -127,7 +181,7 @@ class GenerateFile extends Controller
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path($document['file_path'] . '/' . $document['file_name'])); // Import an existing PDF form
+            $page_count =  $pdf->setSourceFile(public_path($document['file_path'] . '/' . $document['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -141,130 +195,112 @@ class GenerateFile extends Controller
             $pdf->SetFont('THSarabunNew', '', 14);
 
             //write date
-            $pdf->Text(118, 42, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(140, 42, $month);
-            $pdf->Text(172, 42, $buddhistYear);
+            $pdf->Text(120, 48.5, $gregorianDate->day);
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
+            $pdf->Text(140, 48.5, $month);
+            $pdf->Text(172, 48.5, $buddhistYear);
 
-            $borrower_name_input = 85; //length of input (name>..................<)
-            $fullname_borrower_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']); //length of string(prefix,firstname,lastname)
-            $borrower_name_x = 77 + ($borrower_name_input / 2 - $fullname_borrower_length / 2) - 6; // x position in tamplate = first_x_position_of_input_line(name.......... , first "." is value of this) + (length_of_input/2 - length_of_string/2) - be_incorrect
-            $pdf->Text($borrower_name_x, 68.5, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(62, 90.5, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(145, 90.5, $borrower['citizen_id']);
+            $pdf->Text(42, 102, $borrower['address']['house_no']);
+            $pdf->Text(64, 102, $borrower['address']['village_no']);
+            $pdf->Text(85, 102, $borrower['address']['street']);
+            $pdf->Text(110, 102, $borrower['address']['road']);
+            $pdf->Text(158, 102, $borrower['address']['tambon']);
+            $pdf->Text(43, 107.5, $borrower['address']['aumphure']);
+            $pdf->Text(80, 107.5, $borrower['address']['province']);
+            $pdf->Text(126, 107.5, $borrower['address']['postcode']);
+            $pdf->Text(153, 107.5, $borrower['phone']);
+
 
             $total_income = 0;
-            //father
+            // father
             if ($father != null) {
-                $father_name_input = 75;
-                $fullname_father_length = strlen($father['prefix'] . $father['firstname'] . '   ' . $father['lastname']);
-                $father_name_x = 58 + ($father_name_input / 2 - $fullname_father_length / 2) - 3;
-                $pdf->Text($father_name_x, 76, $father['prefix'] . $father['firstname'] . '   ' . $father['lastname']);
-
-                $father_occupation_input = 51;
-                $father_occupation_length = strlen($father['occupation']);
-                $father_occupation_x = 49 + ($father_occupation_input / 2 - $father_occupation_length / 2) - 2;
-                $pdf->Text($father_occupation_x, 84, $father['occupation']);
-
-                $father_place_of_work_input = 61;
-                $father_place_of_work_length = strlen($father['place_of_work']);
-                $father_place_of_work_x = 123 + ($father_place_of_work_input / 2 - $father_place_of_work_length / 2) - 2;
-                $pdf->Text($father_place_of_work_x, 84, $father['place_of_work']);
-
-                $father_phone_input = 61;
-                $father_phone_length = strlen($father['phone']);
-                $father_phone_x = 39 + ($father_phone_input / 2 - $father_phone_length / 2) - 2;
-                $pdf->Text($father_phone_x, 91, $father['phone']);
-
-                $father_input = 55;
-                $father_income_length = strlen($father['income']);
-                $father_income_x = 120 + ($father_input / 2 - $father_income_length / 2) - 2;
-                $pdf->Text($father_income_x, 91, $father['income']);
-
-                $total_income += (int) str_replace(',', '', $father['income']);
+                $pdf->Text(75, 152.5, $father['prefix'] . $father['firstname'] . '   ' . $father['lastname']);
+                $pdf->Text(154, 152.5, $father['citizen_id']);
+                $pdf->Text(96, 158, $father['occupation']);
+                $pdf->Text(149, 158, $father['place_of_work']);
+                $pdf->Text(42, 164, $father['address']['house_no']);
+                $pdf->Text(64, 164, $father['address']['village_no']);
+                $pdf->Text(85, 164, $father['address']['street']);
+                $pdf->Text(110, 164, $father['address']['road']);
+                $pdf->Text(158, 164, $father['address']['tambon']);
+                $pdf->Text(43, 169.5, $father['address']['aumphure']);
+                $pdf->Text(80, 169.5, $father['address']['province']);
+                $pdf->Text(126, 169.5, $father['address']['postcode']);
+                $pdf->Text(153, 169.5, $father['phone']);
+                $pdf->Text(44, 175, $father['income']);
 
                 //tick mark
-                if ($father['alive']) {
-                    $pdf->Image($tick_alp, 161, 73.5, 4, 4);
+                if (!$father['alive']) {
+                    $pdf->Image($tick_alp, 26, 155, 4, 4);
                 } else {
-                    $pdf->Image($tick_alp, 135, 73.5, 4, 4);
+                    $pdf->Image($tick_alp, 50, 155, 4, 4);
                 }
             }
 
-            //mother
+            // //mother
             if ($mother != null) {
-                $mother_name_input = 59;
-                $mother_fullname_length = strlen($mother['perfix'] . $mother['firstname'] . '   ' . $mother['lastname']);
-                $mother_name_x = 75 + ($mother_name_input / 2 - $mother_fullname_length / 2) - 3;
-                $pdf->Text($mother_name_x, 99, $mother['prefix'] . $mother['firstname'] . '   ' . $mother['lastname']);
-
-                $mother_occupation = 51;
-                $mother_occupation_length = strlen($mother['occupation']);
-                $mother_occupation_x = 49 + ($mother_occupation / 2 - $mother_occupation_length / 2) - 2;
-                $pdf->Text($mother_occupation_x, 106, $mother['occupation']);
-
-                $mother_place_of_work_input = 63;
-                $mother_place_of_work_length = strlen($mother['place_of_work']);
-                $mother_place_of_work_x = 121 + ($mother_place_of_work_input / 2 - $mother_place_of_work_length / 2) - 2;
-                $pdf->Text($mother_place_of_work_x, 106, $mother['place_of_work']);
-
-                $mother_phone_input = 60;
-                $mother_phone_length = strlen($mother['phone']);
-                $mother_phone_x = 39 + ($mother_phone_input / 2 - $mother_phone_length / 2) - 2;
-                $pdf->Text($mother_phone_x, 114, $mother['phone']);
-
-                $mother_income_input = 54;
-                $mother_income_length = strlen($mother['income']);
-                $mother_income_x = 119 + ($mother_income_input / 2 - $mother_income_length / 2) - 2;
-                $pdf->Text($mother_income_x, 114, $mother['income']);
-
-                $total_income += (int) str_replace(',', '', $mother['income']);
+                $pdf->Text(78, 181, $mother['prefix'] . $mother['firstname'] . '   ' . $mother['lastname']);
+                $pdf->Text(154, 181, $mother['citizen_id']);
+                $pdf->Text(96, 186.5, $mother['occupation']);
+                $pdf->Text(149, 186.5, $mother['place_of_work']);
+                $pdf->Text(42, 192, $mother['address']['house_no']);
+                $pdf->Text(64, 192, $mother['address']['village_no']);
+                $pdf->Text(85, 192, $mother['address']['street']);
+                $pdf->Text(110, 192, $mother['address']['road']);
+                $pdf->Text(158, 192, $mother['address']['tambon']);
+                $pdf->Text(43, 198, $mother['address']['aumphure']);
+                $pdf->Text(80, 198, $mother['address']['province']);
+                $pdf->Text(126, 198, $mother['address']['postcode']);
+                $pdf->Text(153, 198, $mother['phone']);
+                $pdf->Text(44, 203.5, $mother['income']);
 
                 //tick mark
-                if ($mother['alive']) {
-                    $pdf->Image($tick_alp, 161, 96, 4, 4);
+                if (!$mother['alive']) {
+                    $pdf->Image($tick_alp, 26, 183.5, 4, 4);
                 } else {
-                    $pdf->Image($tick_alp, 135, 96, 4, 4);
+                    $pdf->Image($tick_alp, 50, 183.5, 4, 4);
                 }
             }
 
             if ($parent != null) {
-                $parent_fullname_input = 62;
-                $parent_fullname_length = strlen($parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
-                $parent_fullname_x = 67 + ($parent_fullname_input / 2 - $parent_fullname_length / 2) - 3;
-                $pdf->Text($parent_fullname_x, 137, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
+                $pdf->Text(110, 209, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
+                $pdf->Text(68, 214.5, $parent['citizen_id']);
+                $pdf->Text(48, 220.5, $parent['occupation']);
+                $pdf->Text(110, 220.5, $parent['place_of_work']);
+                $pdf->Text(42, 226, $parent['address']['house_no']);
+                $pdf->Text(64, 226, $parent['address']['village_no']);
+                $pdf->Text(85, 226, $parent['address']['street']);
+                $pdf->Text(110, 226, $parent['address']['road']);
+                $pdf->Text(158, 226, $parent['address']['tambon']);
+                $pdf->Text(43, 232, $parent['address']['aumphure']);
+                $pdf->Text(80, 232, $parent['address']['province']);
+                $pdf->Text(126, 232, $parent['address']['postcode']);
+                $pdf->Text(153, 232, $parent['phone']);
+                $pdf->Text(44, 237, $parent['income']);
 
-                $parent_relational_input = 27;
-                $parent_relational_length = strlen($parent['borrower_relational']);
-                $parent_relational_x = 156 + ($parent_relational_input / 2 - $parent_relational_length / 2) - 1;
-                $pdf->Text($parent_relational_x, 137, $parent['borrower_relational']);
 
-                $parent_occupation_input = 51;
-                $parent_occupation_length = strlen($parent['occupation']);
-                $parent_occupation_x = 49 + ($parent_occupation_input / 2 - $parent_occupation_length / 2) - 2;
-                $pdf->Text($parent_occupation_x, 145, $parent['occupation']);
-
-                $parent_place_of_work_input = 61;
-                $parent_place_of_work_length = strlen($parent['place_of_work']);
-                $parent_place_of_work_x = 123 + ($parent_place_of_work_input / 2 - $parent_place_of_work_length / 2) - 2;
-                $pdf->Text($parent_place_of_work_x, 145, $parent['place_of_work']);
-
-                $parent_phone_input = 61;
-                $parent_phone_length = strlen($parent['phone']);
-                $parent_phone_x = 39 + ($parent_phone_input / 2 - $parent_phone_length / 2) - 2;
-                $pdf->Text($parent_phone_x, 152, $parent['phone']);
-
-                $parent_income_input = 55;
-                $parent_income_length = strlen($parent['income']);
-                $parent_income_x = 120 + ($parent_income_input / 2 - $parent_income_length / 2) - 2;
-                $pdf->Text($parent_income_x, 152, $parent['income']);
-
-                $total_income += (int) str_replace(',', '', $parent['income']);
+                //tick mark
+                if (!$parent['alive']) {
+                    $pdf->Image($tick_alp, 145, 212, 4, 4);
+                } else {
+                    $pdf->Image($tick_alp, 169, 212, 4, 4);
+                }
             }
-            $formattedNumber = number_format($total_income);
+            // $formattedNumber = number_format($total_income);
 
-            $total_income_input = 48;
-            $total_income_length = strlen($formattedNumber);
-            $total_income_x = 68 + ($total_income_input / 2 - $total_income_length / 2) - 2;
-            $pdf->Text($total_income_x, 160, $formattedNumber);
+            // $total_income_input = 48;
+            // $total_income_length = strlen($formattedNumber);
+            // $total_income_x = 68 + ($total_income_input / 2 - $total_income_length / 2) - 2;
+            // $pdf->Text($total_income_x, 160, $formattedNumber);
+
+            $templateId = $pdf->importPage(2);
+    
+            $size = $pdf->getTemplateSize($templateId);
+            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+            
+            $pdf->useTemplate($templateId);
 
             $filename = 'หนังสือรับรองรายได้ครอบครัว.pdf';
             // Encode the filename
@@ -284,21 +320,21 @@ class GenerateFile extends Controller
             ->first();
 
         // dd($borrower['lastname']);
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['age'] = iconv('UTF-8', 'cp874', $this->calculateAge($borrower['birthday']));
-        $borrower['citizen_id'] = iconv('UTF-8', 'cp874', Crypt::decryptString($borrower['citizen_id']));
-        $borrower['phone'] = iconv('UTF-8', 'cp874', $borrower['phone']);
-        $borrower['email'] = iconv('UTF-8', 'cp874', $borrower['email']);
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
+        $borrower['age'] = $this->utf8_to_cp874($this->calculateAge($borrower['birthday']));
+        $borrower['citizen_id'] = $this->utf8_to_cp874(Crypt::decryptString($borrower['citizen_id']));
+        $borrower['phone'] = $this->utf8_to_cp874($borrower['phone']);
+        $borrower['email'] = $this->utf8_to_cp874($borrower['email']);
 
         $address = Address::find($borrower['address_id']);
-        $address['house_no'] = iconv('UTF-8', 'cp874', $address['house_no']);
-        $address['village'] = iconv('UTF-8', 'cp874', $address['village']);
-        $address['tambon'] = iconv('UTF-8', 'cp874', $address['tambon']);
-        $address['aumphure'] = iconv('UTF-8', 'cp874', $address['aumphure']);
-        $address['province'] = iconv('UTF-8', 'cp874', $address['province']);
-        $address['post_code'] = iconv('UTF-8', 'cp874', $address['post_code']);
+        $address['house_no'] = $this->utf8_to_cp874($address['house_no']);
+        $address['village'] = $this->utf8_to_cp874($address['village']);
+        $address['tambon'] = $this->utf8_to_cp874($address['tambon']);
+        $address['aumphure'] = $this->utf8_to_cp874($address['aumphure']);
+        $address['province'] = $this->utf8_to_cp874($address['province']);
+        $address['post_code'] = $this->utf8_to_cp874($address['post_code']);
 
         // Create a StreamedResponse
         return new StreamedResponse(function () use ($borrower, $address, $document) {
@@ -307,7 +343,7 @@ class GenerateFile extends Controller
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path($document['file_path'] . '/' . $document['file_name'])); // Import an existing PDF form
+            $page_count = $pdf->setSourceFile(public_path($document['file_path'] . '/' . $document['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -327,7 +363,7 @@ class GenerateFile extends Controller
 
             // write date
             $pdf->Text(114, 50, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(139, 50, $month);
             $pdf->Text(173, 50, $buddhistYear);
 
@@ -417,25 +453,25 @@ class GenerateFile extends Controller
             ->first();
 
         // dd($borrower['lastname']);
-        $parent['prefix'] = iconv('UTF-8', 'cp874', $parent['prefix']);
-        $parent['firstname'] = iconv('UTF-8', 'cp874', $parent['firstname']);
-        $parent['lastname'] = iconv('UTF-8', 'cp874', $parent['lastname']);
-        $parent['age'] = iconv('UTF-8', 'cp874', $this->calculateAge($parent['birthday']));
-        $parent['citizen_id'] = iconv('UTF-8', 'cp874', Crypt::decryptString($parent['citizen_id']));
-        $parent['phone'] = iconv('UTF-8', 'cp874', $parent['phone']);
-        $parent['email'] = iconv('UTF-8', 'cp874', $parent['email']);
+        $parent['prefix'] = $this->utf8_to_cp874($parent['prefix']);
+        $parent['firstname'] = $this->utf8_to_cp874($parent['firstname']);
+        $parent['lastname'] = $this->utf8_to_cp874($parent['lastname']);
+        $parent['age'] = $this->utf8_to_cp874($this->calculateAge($parent['birthday']));
+        $parent['citizen_id'] = $this->utf8_to_cp874(Crypt::decryptString($parent['citizen_id']));
+        $parent['phone'] = $this->utf8_to_cp874($parent['phone']);
+        $parent['email'] = $this->utf8_to_cp874($parent['email']);
 
         $address = Address::find($parent['address_id']);
-        $address['house_no'] = iconv('UTF-8', 'cp874', $address['house_no']);
-        $address['village'] = iconv('UTF-8', 'cp874', $address['village']);
-        $address['tambon'] = iconv('UTF-8', 'cp874', $address['tambon']);
-        $address['aumphure'] = iconv('UTF-8', 'cp874', $address['aumphure']);
-        $address['province'] = iconv('UTF-8', 'cp874', $address['province']);
-        $address['post_code'] = iconv('UTF-8', 'cp874', $address['post_code']);
+        $address['house_no'] = $this->utf8_to_cp874($address['house_no']);
+        $address['village'] = $this->utf8_to_cp874($address['village']);
+        $address['tambon'] = $this->utf8_to_cp874($address['tambon']);
+        $address['aumphure'] = $this->utf8_to_cp874($address['aumphure']);
+        $address['province'] = $this->utf8_to_cp874($address['province']);
+        $address['post_code'] = $this->utf8_to_cp874($address['post_code']);
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
 
         // Create a StreamedResponse
         return new StreamedResponse(function () use ($parent, $address, $borrower, $document) {
@@ -444,7 +480,7 @@ class GenerateFile extends Controller
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path($document['file_path'] . '/' . $document['file_name'])); // Import an existing PDF form
+            $page_count = $pdf->setSourceFile(public_path($document['file_path'] . '/' . $document['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -464,7 +500,7 @@ class GenerateFile extends Controller
 
             // write date
             $pdf->Text(114, 50, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(139, 50, $month);
             $pdf->Text(173, 50, $buddhistYear);
 
@@ -556,10 +592,10 @@ class GenerateFile extends Controller
             ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.id', 'borrowers.student_id')
             ->first();
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
+        $borrower['grade'] = $this->utf8_to_cp874($this->calculateGrade($borrower['student_id']));
 
         $teacher = Users::join('teacher_accounts', 'teacher_accounts.user_id', '=', 'users.id')
             ->join('faculties', 'faculties.id', '=', 'teacher_accounts.faculty_id')
@@ -583,17 +619,17 @@ class GenerateFile extends Controller
             $major = str_replace("สาขาวิชา", "", $teacher['major_name']);
             $commented_date = $teacher_comments[0]['updated_at'] ?? $teacher_other_comment['updated_at'];
 
-            $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
-            $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
-            $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
-            $teacher['faculty_name'] = iconv('UTF-8', 'cp874', $faculty);
-            $teacher['major_name'] = iconv('UTF-8', 'cp874', $major);
+            $teacher['prefix'] = $this->utf8_to_cp874($teacher['prefix']);
+            $teacher['firstname'] = $this->utf8_to_cp874($teacher['firstname']);
+            $teacher['lastname'] = $this->utf8_to_cp874($teacher['lastname']);
+            $teacher['faculty_name'] = $this->utf8_to_cp874($faculty);
+            $teacher['major_name'] = $this->utf8_to_cp874($major);
 
             foreach ($teacher_comments as $teacher_comment) {
                 $strconcat_teacher_comments .= $teacher_comment->comment;
             }
             $strconcat_teacher_comments .= $teacher_other_comment->custom_comment ?? '';
-            $strconcat_teacher_comments = iconv('UTF-8', 'cp874', $strconcat_teacher_comments);
+            $strconcat_teacher_comments = $this->utf8_to_cp874($strconcat_teacher_comments);
             $commented = true;
         } else {
             $commented = false;
@@ -607,7 +643,7 @@ class GenerateFile extends Controller
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
+            $page_count = $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
 
@@ -616,7 +652,7 @@ class GenerateFile extends Controller
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
             $pdf->SetFont('THSarabunNew', '', 12);
 
-            $position = iconv('UTF-8', 'cp874', 'อาจารย์ที่ปรึกษา');
+            $position = $this->utf8_to_cp874('อาจารย์ที่ปรึกษา');
             //date
             if ($commented) {
                 $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $commented_date);
@@ -624,7 +660,7 @@ class GenerateFile extends Controller
 
                 // write date
                 $pdf->Text(118, 42, $gregorianDate->day);
-                $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+                $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
                 $pdf->Text(141, 42, $month);
                 $pdf->Text(173, 42, $buddhistYear);
 
@@ -691,10 +727,10 @@ class GenerateFile extends Controller
             ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.id', 'borrowers.student_id')
             ->first();
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
+        $borrower['grade'] = $this->utf8_to_cp874($this->calculateGrade($borrower['student_id']));
 
         $teacher = Users::join('teacher_accounts', 'teacher_accounts.user_id', '=', 'users.id')
             ->join('faculties', 'faculties.id', '=', 'teacher_accounts.faculty_id')
@@ -718,17 +754,17 @@ class GenerateFile extends Controller
             $faculty = str_replace("วิทยาลัย", "", $teacher['faculty_name']);
             $major = str_replace("สาขาวิชา", "", $teacher['major_name']);
             $commented_date = $teacher_comments[0]['updated_at'] ?? $teacher_other_comment['updated_at'];
-            $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
-            $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
-            $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
-            $teacher['faculty_name'] = iconv('UTF-8', 'cp874', $faculty);
-            $teacher['major_name'] = iconv('UTF-8', 'cp874', $major);
+            $teacher['prefix'] = $this->utf8_to_cp874($teacher['prefix']);
+            $teacher['firstname'] = $this->utf8_to_cp874($teacher['firstname']);
+            $teacher['lastname'] = $this->utf8_to_cp874($teacher['lastname']);
+            $teacher['faculty_name'] = $this->utf8_to_cp874($faculty);
+            $teacher['major_name'] = $this->utf8_to_cp874($major);
 
             foreach ($teacher_comments as $teacher_comment) {
                 $strconcat_teacher_comments .= $teacher_comment->comment . ' ';
             }
             $strconcat_teacher_comments .= $teacher_other_comment->custom_comment ?? '';
-            $strconcat_teacher_comments = iconv('UTF-8', 'cp874', $strconcat_teacher_comments);
+            $strconcat_teacher_comments = $this->utf8_to_cp874($strconcat_teacher_comments);
             $commented = true;
         } else {
             $commented = false;
@@ -739,7 +775,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
+        $page_count = $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
 
@@ -748,7 +784,7 @@ class GenerateFile extends Controller
         $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
         $pdf->SetFont('THSarabunNew', '', 12);
 
-        $position = iconv('UTF-8', 'cp874', 'อาจารย์ที่ปรึกษา');
+        $position = $this->utf8_to_cp874('อาจารย์ที่ปรึกษา');
         //date
         if ($commented) {
             $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $commented_date);
@@ -756,7 +792,7 @@ class GenerateFile extends Controller
 
             // write date
             $pdf->Text(118, 42, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(141, 42, $month);
             $pdf->Text(173, 42, $buddhistYear);
 
@@ -826,10 +862,10 @@ class GenerateFile extends Controller
             ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.id', 'borrowers.student_id')
             ->first();
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
+        $borrower['grade'] = $this->utf8_to_cp874($this->calculateGrade($borrower['student_id']));
 
         $teacher = Users::join('teacher_accounts', 'teacher_accounts.user_id', '=', 'users.id')
             ->join('faculties', 'faculties.id', '=', 'teacher_accounts.faculty_id')
@@ -855,17 +891,17 @@ class GenerateFile extends Controller
 
             $cleanText = mb_convert_encoding($teacher['prefix'], 'UTF-8', 'auto');
 
-            $teacher['prefix'] = iconv('UTF-8', 'cp874', $cleanText);
-            $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
-            $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
-            $teacher['faculty_name'] = iconv('UTF-8', 'cp874', $faculty);
-            $teacher['major_name'] = iconv('UTF-8', 'cp874', $major);
+            $teacher['prefix'] = $this->utf8_to_cp874($cleanText);
+            $teacher['firstname'] = $this->utf8_to_cp874($teacher['firstname']);
+            $teacher['lastname'] = $this->utf8_to_cp874($teacher['lastname']);
+            $teacher['faculty_name'] = $this->utf8_to_cp874($faculty);
+            $teacher['major_name'] = $this->utf8_to_cp874($major);
 
             foreach ($teacher_comments as $teacher_comment) {
                 $strconcat_teacher_comments .= $teacher_comment->comment . ' ';
             }
             $strconcat_teacher_comments .= $teacher_other_comment->custom_comment ?? '';
-            $strconcat_teacher_comments = iconv('UTF-8', 'cp874', $strconcat_teacher_comments);
+            $strconcat_teacher_comments = $this->utf8_to_cp874($strconcat_teacher_comments);
             $commented = true;
         } else {
             $commented = false;
@@ -876,7 +912,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
+        $page_count = $pdf->setSourceFile(public_path($child_document_103_file['file_path']. '/' .$child_document_103_file['file_name'])); // Import an existing PDF form
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
 
@@ -885,7 +921,7 @@ class GenerateFile extends Controller
         $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
         $pdf->SetFont('THSarabunNew', '', 12);
 
-        $position = iconv('UTF-8', 'cp874', 'อาจารย์ที่ปรึกษา');
+        $position = $this->utf8_to_cp874('อาจารย์ที่ปรึกษา');
         //date
         if ($commented) {
             $gregorianDate = Carbon::createFromFormat('Y-m-d H:i:s', $commented_date);
@@ -893,7 +929,7 @@ class GenerateFile extends Controller
 
             // write date
             $pdf->Text(118, 42, $gregorianDate->day);
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(141, 42, $month);
             $pdf->Text(173, 42, $buddhistYear);
 
@@ -968,9 +1004,9 @@ class GenerateFile extends Controller
             ->first() ?? null;
         $teacher_sign_date = null;
         if ($teacher != null) {
-            $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
-            $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
-            $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
+            $teacher['prefix'] = $this->utf8_to_cp874($teacher['prefix']);
+            $teacher['firstname'] = $this->utf8_to_cp874($teacher['firstname']);
+            $teacher['lastname'] = $this->utf8_to_cp874($teacher['lastname']);
             $teacher_sign_date = $teacher_comments['updated_at'];
         }
 
@@ -1002,55 +1038,55 @@ class GenerateFile extends Controller
             $borrower_nesseessity_concat .= $nessessity['nessessity_title'] . ' ';
         }
         $borrower_nesseessity_concat .= $borrower_nesseessity_other['other'] ?? ' ';
-        $borrower_nesseessity_concat = iconv('UTF-8', 'cp874', $borrower_nesseessity_concat);
+        $borrower_nesseessity_concat = $this->utf8_to_cp874($borrower_nesseessity_concat);
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
-        $borrower['student_id'] = iconv('UTF-8', 'cp874', $borrower['student_id']);
-        $borrower['gpa'] = iconv('UTF-8', 'cp874', $borrower['gpa']);
-        $borrower['phone'] = iconv('UTF-8', 'cp874', $borrower['phone']);
-        $borrower['faculty'] = iconv('UTF-8', 'cp874', $faculty);
-        $borrower['major'] = iconv('UTF-8', 'cp874', $major);
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
+        $borrower['grade'] = $this->utf8_to_cp874($this->calculateGrade($borrower['student_id']));
+        $borrower['student_id'] = $this->utf8_to_cp874($borrower['student_id']);
+        $borrower['gpa'] = $this->utf8_to_cp874($borrower['gpa']);
+        $borrower['phone'] = $this->utf8_to_cp874($borrower['phone']);
+        $borrower['faculty'] = $this->utf8_to_cp874($faculty);
+        $borrower['major'] = $this->utf8_to_cp874($major);
         $maritalstatus = json_decode($borrower['marital_status']);
         $borrower['marital_status'] = $maritalstatus->status;
 
-        $borrower_address['tambon'] = iconv('UTF-8', 'cp874', $borrower_address['tambon']);
-        $borrower_address['aumphure'] = iconv('UTF-8', 'cp874', $borrower_address['aumphure']);
-        $borrower_address['province'] = iconv('UTF-8', 'cp874', $borrower_address['province']);
+        $borrower_address['tambon'] = $this->utf8_to_cp874($borrower_address['tambon']);
+        $borrower_address['aumphure'] = $this->utf8_to_cp874($borrower_address['aumphure']);
+        $borrower_address['province'] = $this->utf8_to_cp874($borrower_address['province']);
 
         $register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
         if ($father != null) {
-            $father['prefix'] = iconv('UTF-8', 'cp874', $father['prefix']);
-            $father['firstname'] = iconv('UTF-8', 'cp874', $father['firstname']);
-            $father['lastname'] = iconv('UTF-8', 'cp874', $father['lastname']);
-            $father['occupation'] = iconv('UTF-8', 'cp874', $father['occupation']);
-            $father['place_of_work'] = iconv('UTF-8', 'cp874', $father['place_of_work']);
-            $father['phone'] = iconv('UTF-8', 'cp874', $father['phone']);
-            $father['income'] = iconv('UTF-8', 'cp874', $father['income']);
+            $father['prefix'] = $this->utf8_to_cp874($father['prefix']);
+            $father['firstname'] = $this->utf8_to_cp874($father['firstname']);
+            $father['lastname'] = $this->utf8_to_cp874($father['lastname']);
+            $father['occupation'] = $this->utf8_to_cp874($father['occupation']);
+            $father['place_of_work'] = $this->utf8_to_cp874($father['place_of_work']);
+            $father['phone'] = $this->utf8_to_cp874($father['phone']);
+            $father['income'] = $this->utf8_to_cp874($father['income']);
         }
 
         if ($mother != null) {
-            $mother['prefix'] = iconv('UTF-8', 'cp874', $mother['prefix']);
-            $mother['firstname'] = iconv('UTF-8', 'cp874', $mother['firstname']);
-            $mother['lastname'] = iconv('UTF-8', 'cp874', $mother['lastname']);
-            $mother['occupation'] = iconv('UTF-8', 'cp874', $mother['occupation']);
-            $mother['place_of_work'] = iconv('UTF-8', 'cp874', $mother['place_of_work']);
-            $mother['phone'] = iconv('UTF-8', 'cp874', $mother['phone']);
-            $mother['income'] = iconv('UTF-8', 'cp874', $mother['income']);
+            $mother['prefix'] = $this->utf8_to_cp874($mother['prefix']);
+            $mother['firstname'] = $this->utf8_to_cp874($mother['firstname']);
+            $mother['lastname'] = $this->utf8_to_cp874($mother['lastname']);
+            $mother['occupation'] = $this->utf8_to_cp874($mother['occupation']);
+            $mother['place_of_work'] = $this->utf8_to_cp874($mother['place_of_work']);
+            $mother['phone'] = $this->utf8_to_cp874($mother['phone']);
+            $mother['income'] = $this->utf8_to_cp874($mother['income']);
         }
 
         if ($parents != null) {
             foreach ($parents as $parent) {
-                $parent['prefix'] = iconv('UTF-8', 'cp874', $parent['prefix']);
-                $parent['firstname'] = iconv('UTF-8', 'cp874', $parent['firstname']);
-                $parent['lastname'] = iconv('UTF-8', 'cp874', $parent['lastname']);
-                $parent['occupation'] = iconv('UTF-8', 'cp874', $parent['occupation']);
-                $parent['place_of_work'] = iconv('UTF-8', 'cp874', $parent['place_of_work']);
-                $parent['phone'] = iconv('UTF-8', 'cp874', $parent['phone']);
-                $parent['income'] = iconv('UTF-8', 'cp874', $parent['income']);
-                $parent['borrower_relational'] = iconv('UTF-8', 'cp874', $parent['borrower_relational']);
+                $parent['prefix'] = $this->utf8_to_cp874($parent['prefix']);
+                $parent['firstname'] = $this->utf8_to_cp874($parent['firstname']);
+                $parent['lastname'] = $this->utf8_to_cp874($parent['lastname']);
+                $parent['occupation'] = $this->utf8_to_cp874($parent['occupation']);
+                $parent['place_of_work'] = $this->utf8_to_cp874($parent['place_of_work']);
+                $parent['phone'] = $this->utf8_to_cp874($parent['phone']);
+                $parent['income'] = $this->utf8_to_cp874($parent['income']);
+                $parent['borrower_relational'] = $this->utf8_to_cp874($parent['borrower_relational']);
             }
         }
 
@@ -1078,7 +1114,7 @@ class GenerateFile extends Controller
 
             // Add the page
             $pdf->AddPage();
-            $pdf->setSourceFile(public_path($child_document['file_path'] . '/' . $child_document['file_name'])); // Import an existing PDF form
+            $page_count = $pdf->setSourceFile(public_path($child_document['file_path'] . '/' . $child_document['file_name'])); // Import an existing PDF form
 
             $templateId = $pdf->importPage(1);
             $pdf->useTemplate($templateId, 0, 0);
@@ -1232,7 +1268,7 @@ class GenerateFile extends Controller
             } else {
                 $pdf->Image($tick_alp, 33, 175, 4, 4);
                 // $other_input = 130;
-                $ohter_status = iconv('UTF-8', 'cp874', $borrower['marital_status']);
+                $ohter_status = $this->utf8_to_cp874($borrower['marital_status']);
                 $other_length = strlen($ohter_status);
                 $other_x = 55 + ($other_length / 2) - 6;
                 $pdf->Text($other_x, 177, $ohter_status);
@@ -1329,7 +1365,7 @@ class GenerateFile extends Controller
             $fullname_borrower_x = 27 + ($fullname_borrower_input / 2 - $fullname_borrower_length / 2) - 3;
             $pdf->Text($fullname_borrower_x, 211, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
 
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(47, 219, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
 
             if ($teacher != null) {
@@ -1349,7 +1385,7 @@ class GenerateFile extends Controller
                 $teacher_fullname_x = 78 + ($teacher_fullname_input / 2 - $teacher_fullanme_length / 2) - 3;
                 $pdf->Text($teacher_fullname_x, 253, $teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
     
-                $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+                $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
                 $pdf->Text(105, 261, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
             }
             $pdf->Output();
@@ -1371,9 +1407,9 @@ class GenerateFile extends Controller
             ->select('updated_at')
             ->first() ?? null;
         if ($teacher != null) {
-            $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
-            $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
-            $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
+            $teacher['prefix'] = $this->utf8_to_cp874($teacher['prefix']);
+            $teacher['firstname'] = $this->utf8_to_cp874($teacher['firstname']);
+            $teacher['lastname'] = $this->utf8_to_cp874($teacher['lastname']);
             $teacher_sign_date = $teacher_comments['updated_at'];
         }
 
@@ -1405,55 +1441,55 @@ class GenerateFile extends Controller
             $borrower_nesseessity_concat .= $nessessity['nessessity_title'] . ' ';
         }
         $borrower_nesseessity_concat .= $borrower_nesseessity_other['other'] ?? ' ';
-        $borrower_nesseessity_concat = iconv('UTF-8', 'cp874', $borrower_nesseessity_concat);
+        $borrower_nesseessity_concat = $this->utf8_to_cp874($borrower_nesseessity_concat);
 
-        $borrower['prefix'] = iconv('UTF-8', 'cp874', $borrower['prefix']);
-        $borrower['firstname'] = iconv('UTF-8', 'cp874', $borrower['firstname']);
-        $borrower['lastname'] = iconv('UTF-8', 'cp874', $borrower['lastname']);
-        $borrower['grade'] = iconv('UTF-8', 'cp874', $this->calculateGrade($borrower['student_id']));
-        $borrower['student_id'] = iconv('UTF-8', 'cp874', $borrower['student_id']);
-        $borrower['gpa'] = iconv('UTF-8', 'cp874', $borrower['gpa']);
-        $borrower['phone'] = iconv('UTF-8', 'cp874', $borrower['phone']);
-        $borrower['faculty'] = iconv('UTF-8', 'cp874', $faculty);
-        $borrower['major'] = iconv('UTF-8', 'cp874', $major);
+        $borrower['prefix'] = $this->utf8_to_cp874($borrower['prefix']);
+        $borrower['firstname'] = $this->utf8_to_cp874($borrower['firstname']);
+        $borrower['lastname'] = $this->utf8_to_cp874($borrower['lastname']);
+        $borrower['grade'] = $this->utf8_to_cp874($this->calculateGrade($borrower['student_id']));
+        $borrower['student_id'] = $this->utf8_to_cp874($borrower['student_id']);
+        $borrower['gpa'] = $this->utf8_to_cp874($borrower['gpa']);
+        $borrower['phone'] = $this->utf8_to_cp874($borrower['phone']);
+        $borrower['faculty'] = $this->utf8_to_cp874($faculty);
+        $borrower['major'] = $this->utf8_to_cp874($major);
         $maritalstatus = json_decode($borrower['marital_status']);
-        $borrower['marital_status'] = iconv('UTF-8', 'cp874', $maritalstatus->status);
+        $borrower['marital_status'] = $this->utf8_to_cp874($maritalstatus->status);
 
-        $borrower_address['tambon'] = iconv('UTF-8', 'cp874', $borrower_address['tambon']);
-        $borrower_address['aumphure'] = iconv('UTF-8', 'cp874', $borrower_address['aumphure']);
-        $borrower_address['province'] = iconv('UTF-8', 'cp874', $borrower_address['province']);
+        $borrower_address['tambon'] = $this->utf8_to_cp874($borrower_address['tambon']);
+        $borrower_address['aumphure'] = $this->utf8_to_cp874($borrower_address['aumphure']);
+        $borrower_address['province'] = $this->utf8_to_cp874($borrower_address['province']);
 
         $register_type = BorrowerRegisterType::where('user_id', $user_id)->first();
         if ($father != null) {
-            $father['prefix'] = iconv('UTF-8', 'cp874', $father['prefix']);
-            $father['firstname'] = iconv('UTF-8', 'cp874', $father['firstname']);
-            $father['lastname'] = iconv('UTF-8', 'cp874', $father['lastname']);
-            $father['occupation'] = iconv('UTF-8', 'cp874', $father['occupation']);
-            $father['place_of_work'] = iconv('UTF-8', 'cp874', $father['place_of_work']);
-            $father['phone'] = iconv('UTF-8', 'cp874', $father['phone']);
-            $father['income'] = iconv('UTF-8', 'cp874', $father['income']);
+            $father['prefix'] = $this->utf8_to_cp874($father['prefix']);
+            $father['firstname'] = $this->utf8_to_cp874($father['firstname']);
+            $father['lastname'] = $this->utf8_to_cp874($father['lastname']);
+            $father['occupation'] = $this->utf8_to_cp874($father['occupation']);
+            $father['place_of_work'] = $this->utf8_to_cp874($father['place_of_work']);
+            $father['phone'] = $this->utf8_to_cp874($father['phone']);
+            $father['income'] = $this->utf8_to_cp874($father['income']);
         }
 
         if ($mother != null) {
-            $mother['prefix'] = iconv('UTF-8', 'cp874', $mother['prefix']);
-            $mother['firstname'] = iconv('UTF-8', 'cp874', $mother['firstname']);
-            $mother['lastname'] = iconv('UTF-8', 'cp874', $mother['lastname']);
-            $mother['occupation'] = iconv('UTF-8', 'cp874', $mother['occupation']);
-            $mother['place_of_work'] = iconv('UTF-8', 'cp874', $mother['place_of_work']);
-            $mother['phone'] = iconv('UTF-8', 'cp874', $mother['phone']);
-            $mother['income'] = iconv('UTF-8', 'cp874', $mother['income']);
+            $mother['prefix'] = $this->utf8_to_cp874($mother['prefix']);
+            $mother['firstname'] = $this->utf8_to_cp874($mother['firstname']);
+            $mother['lastname'] = $this->utf8_to_cp874($mother['lastname']);
+            $mother['occupation'] = $this->utf8_to_cp874($mother['occupation']);
+            $mother['place_of_work'] = $this->utf8_to_cp874($mother['place_of_work']);
+            $mother['phone'] = $this->utf8_to_cp874($mother['phone']);
+            $mother['income'] = $this->utf8_to_cp874($mother['income']);
         }
 
         if ($parents != null) {
             foreach ($parents as $parent) {
-                $parent['prefix'] = iconv('UTF-8', 'cp874', $parent['prefix']);
-                $parent['firstname'] = iconv('UTF-8', 'cp874', $parent['firstname']);
-                $parent['lastname'] = iconv('UTF-8', 'cp874', $parent['lastname']);
-                $parent['occupation'] = iconv('UTF-8', 'cp874', $parent['occupation']);
-                $parent['place_of_work'] = iconv('UTF-8', 'cp874', $parent['place_of_work']);
-                $parent['phone'] = iconv('UTF-8', 'cp874', $parent['phone']);
-                $parent['income'] = iconv('UTF-8', 'cp874', $parent['income']);
-                $parent['borrower_relational'] = iconv('UTF-8', 'cp874', $parent['borrower_relational']);
+                $parent['prefix'] = $this->utf8_to_cp874($parent['prefix']);
+                $parent['firstname'] = $this->utf8_to_cp874($parent['firstname']);
+                $parent['lastname'] = $this->utf8_to_cp874($parent['lastname']);
+                $parent['occupation'] = $this->utf8_to_cp874($parent['occupation']);
+                $parent['place_of_work'] = $this->utf8_to_cp874($parent['place_of_work']);
+                $parent['phone'] = $this->utf8_to_cp874($parent['phone']);
+                $parent['income'] = $this->utf8_to_cp874($parent['income']);
+                $parent['borrower_relational'] = $this->utf8_to_cp874($parent['borrower_relational']);
             }
         }
 
@@ -1462,7 +1498,7 @@ class GenerateFile extends Controller
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(public_path($child_document['file_path'] . '/' . $child_document['file_name'])); // Import an existing PDF form
+        $page_count = $pdf->setSourceFile(public_path($child_document['file_path'] . '/' . $child_document['file_name'])); // Import an existing PDF form
 
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
@@ -1712,7 +1748,7 @@ class GenerateFile extends Controller
         $fullname_borrower_x = 27 + ($fullname_borrower_input / 2 - $fullname_borrower_length / 2) - 3;
         $pdf->Text($fullname_borrower_x, 211, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
 
-        $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+        $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
         $pdf->Text(47, 219, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
 
         //signature teachers
@@ -1733,7 +1769,7 @@ class GenerateFile extends Controller
             $teacher_fullname_x = 78 + ($teacher_fullname_input / 2 - $teacher_fullanme_length / 2) - 3;
             $pdf->Text($teacher_fullname_x, 253, $teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
 
-            $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+            $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
             $pdf->Text(105, 261, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
         }
         //outpufile
@@ -1752,15 +1788,15 @@ class GenerateFile extends Controller
         $borrower_file = BorrowerFiles::find($borrower_file_101_id);
         $teacher = Users::find($user_id);
 
-        $teacher['prefix'] = iconv('UTF-8', 'cp874', $teacher['prefix']);
-        $teacher['firstname'] = iconv('UTF-8', 'cp874', $teacher['firstname']);
-        $teacher['lastname'] = iconv('UTF-8', 'cp874', $teacher['lastname']);
+        $teacher['prefix'] = $this->utf8_to_cp874($teacher['prefix']);
+        $teacher['firstname'] = $this->utf8_to_cp874($teacher['firstname']);
+        $teacher['lastname'] = $this->utf8_to_cp874($teacher['lastname']);
         // Initialize the PDF
         $pdf = new Fpdi();
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(storage_path($borrower_file['file_path'] . '/' . $borrower_file['file_name'])); // Import an existing PDF form
+        $page_count = $pdf->setSourceFile(storage_path($borrower_file['file_path'] . '/' . $borrower_file['file_name'])); // Import an existing PDF form
 
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
@@ -1795,7 +1831,7 @@ class GenerateFile extends Controller
         $teacher_fullname_x = 78 + ($teacher_fullname_input / 2 - $teacher_fullanme_length / 2) - 3;
         $pdf->Text($teacher_fullname_x, 253, $teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
 
-        $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+        $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
         $pdf->Text(105, 261, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
 
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';
@@ -1812,15 +1848,15 @@ class GenerateFile extends Controller
     {
         $borrower_file = BorrowerFiles::find($borrower_file_101_id);
         $checker = Users::find($checker_id);
-        $checker['prefix'] = iconv('UTF-8', 'cp874', $checker['prefix']);
-        $checker['firstname'] = iconv('UTF-8', 'cp874', $checker['firstname']);
-        $checker['lastname'] = iconv('UTF-8', 'cp874', $checker['lastname']);
+        $checker['prefix'] = $this->utf8_to_cp874($checker['prefix']);
+        $checker['firstname'] = $this->utf8_to_cp874($checker['firstname']);
+        $checker['lastname'] = $this->utf8_to_cp874($checker['lastname']);
         // Initialize the PDF
         $pdf = new Fpdi();
 
         // Add the page
         $pdf->AddPage();
-        $pdf->setSourceFile(storage_path($borrower_file['file_path'] . '/' . $borrower_file['file_name'])); // Import an existing PDF form
+        $page_count = $pdf->setSourceFile(storage_path($borrower_file['file_path'] . '/' . $borrower_file['file_name'])); // Import an existing PDF form
 
         $templateId = $pdf->importPage(1);
         $pdf->useTemplate($templateId, 0, 0);
@@ -1848,7 +1884,7 @@ class GenerateFile extends Controller
         $checker_fullname_x = 115+($checker_fullname_input/2 - $checker_fullname_length/2)-5;
         $pdf->Text($checker_fullname_x, 211,$checker['prefix'].$checker['firstname'].'   '.$checker['lastname']);
 
-        $month = iconv('UTF-8', 'cp874', $this->getThaiMonthName($gregorianDate->month));
+        $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
         $pdf->Text(135, 219,$gregorianDate->day.'   '.$month.'   '.$buddhistYear);
 
         $custom_filename = now()->format('Y-m-d_H-i-s') . '_' . 'กยศ 101_.pdf';

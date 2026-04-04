@@ -61,6 +61,7 @@ class MainParentInfomationController extends Controller
         } else {
             //เช็คว่าที่อยู่เดียวกับผู้กู้มั้ย
             if (isset($request->address_with_borrower)) {
+                dd($borrower->address_id);
                 $parent3_address_id = $borrower->address_id;
             } else {
 
@@ -204,7 +205,6 @@ class MainParentInfomationController extends Controller
             $main_parent = Parents::find($request->main_parent);
             if ($main_parent_db['id'] != $main_parent['id']) { //ถ้าเปลี่ยนผู้แทน
                 if ($main_parent_db['main_parent_only']) { //ถ้าเดิมผู้แทนเป็นคนที่ 3
-                    if ($main_parent_db['address_id'] != $borrower['address_id']) Address::where('id', $main_parent_db['address_id'])->delete();
                     $main_parent_db->delete();
                 } else {
                     //แก้ให้ไม่เป็นผู้แทน
@@ -221,9 +221,6 @@ class MainParentInfomationController extends Controller
                 //ถ้าเปลี่ยนจากไม่อยู่เป็นอยู่
                 if ($main_parent_db['address_id'] != $borrower->address_id) { //ถ้าเดิมไม่อยู่ด้วยกัน(ใน db)
                     $main_parent_address = Address::find($main_parent_db['address_id']);
-                    if ($main_parent_address) {
-                        $main_parent_address->delete();
-                    }
                 }
                 $parent3_address_id = $borrower->address_id;
             } else {
