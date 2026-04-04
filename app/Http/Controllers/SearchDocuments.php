@@ -248,16 +248,9 @@ class SearchDocuments extends Controller
             ->where('borrower_child_documents.id', $borrower_child_document_id)
             ->select('borrower_child_documents.document_id', 'borrower_child_documents.child_document_id', 'borrower_child_documents.borrower_file_id')
             ->first();
-        $document = DocTypes::join('documents', 'doc_types.id', '=', 'documents.doctype_id')
-            ->where('documents.id', $borrower_child_document['document_id'])
-            ->select('doc_types.id', 'documents.year', 'documents.term')
-            ->first();
 
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $response = $this->displayFile(
-            $borrower_file['file_path'],
-            $borrower_file['file_name']
-        );
+        $response = $this->displayFile($borrower_file['file_path'],$borrower_file['file_name']);
 
         return $response;
     }

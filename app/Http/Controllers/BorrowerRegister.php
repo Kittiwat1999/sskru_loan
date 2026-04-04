@@ -493,8 +493,7 @@ class BorrowerRegister extends Controller
             ->first();
 
         $borrower_file = BorrowerFiles::find($borrower_child_document['borrower_file_id']);
-        $response = $this->displayFile($borrower_file['file_path'], $borrower_file['file_name']
-        );
+        $response = $this->displayFile($borrower_file['file_path'], $borrower_file['file_name']);
 
         return $response;
     }
