@@ -388,7 +388,7 @@ class GenerateFile extends Controller
             $pdf->Text(152, 75.5, $address['province']);
             $pdf->Text(46, 81.4, $borrower['phone']);
             $pdf->Text(112, 81.4, $borrower['email']);
-            $pdf->Text(120, 226, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(112, 226, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
 
             //tick mark
             $tick_alp = public_path('icon_png/tick.png');
@@ -490,7 +490,8 @@ class GenerateFile extends Controller
             $pdf->Text(152, 75.5, $address['province']);
             $pdf->Text(46, 81.4, $parent['phone']);
             $pdf->Text(112, 81.4, $parent['email']);
-            $pdf->Text(120, 226, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
+            $pdf->Text(131, 94, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(112, 226, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
 
             // $borrower_name_input = 76;
             // $fullname_borrower_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
