@@ -82,7 +82,7 @@ class GenerateFile extends Controller
         $father_address = [];
         $mother_address = [];
         $parent_address = [];
-        
+
         $borrower = Users::join('borrowers', 'users.id', '=', 'borrowers.user_id')
             ->where('users.id', $user_id)
             ->select('users.prefix', 'users.firstname', 'users.lastname', 'borrowers.birthday', 'borrowers.id', 'borrowers.address_id', 'borrowers.citizen_id', 'borrowers.phone')
@@ -296,10 +296,10 @@ class GenerateFile extends Controller
             // $pdf->Text($total_income_x, 160, $formattedNumber);
 
             $templateId = $pdf->importPage(2);
-    
+
             $size = $pdf->getTemplateSize($templateId);
             $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
-            
+
             $pdf->useTemplate($templateId);
 
             $filename = 'หนังสือรับรองรายได้ครอบครัว.pdf';
@@ -355,80 +355,44 @@ class GenerateFile extends Controller
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
             $pdf->SetFont('THSarabunNew', '', 14);
 
-            // Write address
-            $write_at_input = 36;
-            $write_at_length = strlen($address['village']);
-            $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
-            $pdf->Text($write_at_x, 42, $address['village']);
+            // Write at
+            $pdf->Text(148 , 32.2, $address['village']);
 
             // write date
-            $pdf->Text(114, 50, $gregorianDate->day);
+            $pdf->Text(134, 40.3, $gregorianDate->day);
             $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(139, 50, $month);
-            $pdf->Text(173, 50, $buddhistYear);
+            $pdf->Text(149, 40.3, $month);
+            $pdf->Text(183, 40.3, $buddhistYear);
 
-            $name_input = 80;
-            $fullname_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
-            $name_x = 79 + ($name_input / 2 - $fullname_length / 2) - 3;
-            $pdf->Text($name_x, 62, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(88, 48.4, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(178, 48.4, $borrower['age']);
 
-            $age_input = 15;
-            $age_length = strlen($borrower['age']);
-            $age_x = 166 + ($age_input / 2 - $age_length / 2);
-            $pdf->Text($age_x, 62, $borrower['age']);
+            // citizen_id
+            $citizen_id = str_replace('-', '', $borrower['citizen_id']);
+            $startX = 70.6;
+            $startY = 60.5;
+            $gap = 9.6;
 
-            $citizen_id_input = 94;
-            $citizen_id_length = strlen($borrower['citizen_id']);
-            $citizen_id_x = 89 + ($citizen_id_input / 2 - $citizen_id_length / 2) - 3;
-            $pdf->Text($citizen_id_x, 70.5, $borrower['citizen_id']);
+            for ($i = 0; $i < strlen($citizen_id); $i++) {
+                $char = $citizen_id[$i];
+                $currentX = $startX + ($i * $gap);
+                $pdf->Text($currentX, $startY, $char);
+            }
 
-            $house_no_input = 29;
-            $house_no_length = strlen($address['house_no']);
-            $house_no_x = 54 + ($house_no_input / 2 - $house_no_length / 2) - 2;
-            $pdf->Text($house_no_x, 79, $address['house_no']);
-
-            $village_input = 12;
-            $village_length = strlen($address['village_no']);
-            $village_x = 89 + ($village_input / 2 - $village_length / 2) - 1;
-            $pdf->Text($village_x, 79, $address['village_no']);
-
-            $tambon_input = 31;
-            $tambon_length = strlen($address['tambon']);
-            $tambon_x = 111 + ($tambon_input / 2 - $tambon_length / 2) - 2;
-            $pdf->Text($tambon_x, 79, $address['tambon']);
-
-            $aumphure_input = 30;
-            $aumphure_length = strlen($address['aumphure']);
-            $aumphure_x = 153 + ($aumphure_input / 2 - $aumphure_length / 2) - 1;
-            $pdf->Text($aumphure_x, 79, $address['aumphure']);
-
-            $province_input = 35;
-            $province_length = strlen($address['province']);
-            $province_x = 36 + ($province_input / 2 - $province_length / 2) - 2;
-            $pdf->Text($province_x, 86, $address['province']);
-
-            $postcode_input = 27;
-            $postcode_length = strlen($address['postcode']);
-            $postcode_x = 93 + ($postcode_input / 2 - $postcode_length / 2) - 2;
-            $pdf->Text($postcode_x, 86, $address['postcode']);
-
-            $phone_input = 49;
-            $phone_length = strlen($borrower['phone']);
-            $phone_x = 134 + ($phone_input / 2 - $phone_length / 2) - 2;
-            $pdf->Text($phone_x, 86, $borrower['phone']);
-
-            $email_input = 150;
-            $email_length = strlen($borrower['email']);
-            $email_x = 34 + ($email_input / 2 - $email_length / 2) - 10;
-            $pdf->Text($email_x, 94, $borrower['email']);
-
-            $signature = 77;
-            $signature_x = 103 + ($signature / 2 - $fullname_length / 2) - 3;
-            $pdf->Text($signature_x, 245, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            $pdf->Text(54, 69.4, $address['house_no']);
+            $pdf->Text(79, 69.4, $address['village_no']);
+            $pdf->Text(100, 69.4, $address['street']);
+            $pdf->Text(145, 69.4, $address['road']);
+            $pdf->Text(46, 75.5, $address['tambon']);
+            $pdf->Text(93, 75.5, $address['aumphure']);
+            $pdf->Text(152, 75.5, $address['province']);
+            $pdf->Text(46, 81.4, $borrower['phone']);
+            $pdf->Text(112, 81.4, $borrower['email']);
+            $pdf->Text(120, 226, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
 
             //tick mark
             $tick_alp = public_path('icon_png/tick.png');
-            $pdf->Image($tick_alp, 58, 99, 4, 4);
+            $pdf->Image($tick_alp, 56.5, 84.5, 4, 4);
 
             $filename = 'หนังสือยินยอมให้เปิดเผยข้อมูลผู้กู้.pdf';
             // Encode the filename
@@ -493,90 +457,58 @@ class GenerateFile extends Controller
             $pdf->AddFont('THSarabunNew', '', 'THSarabunNew.php');
             $pdf->SetFont('THSarabunNew', '', 14);
 
-            //Write at
-            $write_at_input = 36;
-            $write_at_length = strlen($address['village']);
-            $write_at_x = 148 + ($write_at_input / 2 - $write_at_length / 2) - 2;
-            $pdf->Text($write_at_x, 42, $address['village']);
+            // Write at
+            $pdf->Text(148 , 32.2, $address['village']);
 
             // write date
-            $pdf->Text(114, 50, $gregorianDate->day);
+            $pdf->Text(134, 40.3, $gregorianDate->day);
             $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
-            $pdf->Text(139, 50, $month);
-            $pdf->Text(173, 50, $buddhistYear);
+            $pdf->Text(149, 40.3, $month);
+            $pdf->Text(183, 40.3, $buddhistYear);
 
-            $name_input = 80;
-            $fullname_length = strlen($parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
-            $name_x = 79 + ($name_input / 2 - $fullname_length / 2) - 3;
-            $pdf->Text($name_x, 62, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
+            $pdf->Text(88, 48.4, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
+            $pdf->Text(178, 48.4, $parent['age']);
 
-            $age_input = 15;
-            $age_length = strlen($parent['age']);
-            $age_x = 166 + ($age_input / 2 - $age_length / 2);
-            $pdf->Text($age_x, 62, $parent['age']);
+            // citizen_id
+            $citizen_id = str_replace('-', '', $parent['citizen_id']);
+            $startX = 70.6;
+            $startY = 60.5;
+            $gap = 9.6;
 
-            $citizen_id_input = 94;
-            $citizen_id_length = strlen($parent['citizen_id']);
-            $citizen_id_x = 89 + ($citizen_id_input / 2 - $citizen_id_length / 2) - 3;
-            $pdf->Text($citizen_id_x, 70.5, $parent['citizen_id']);
+            for ($i = 0; $i < strlen($citizen_id); $i++) {
+                $char = $citizen_id[$i];
+                $currentX = $startX + ($i * $gap);
+                $pdf->Text($currentX, $startY, $char);
+            }
 
-            $house_no_input = 29;
-            $house_no_length = strlen($address['house_no']);
-            $house_no_x = 54 + ($house_no_input / 2 - $house_no_length / 2) - 2;
-            $pdf->Text($house_no_x, 79, $address['house_no']);
+            $pdf->Text(54, 69.4, $address['house_no']);
+            $pdf->Text(79, 69.4, $address['village_no']);
+            $pdf->Text(100, 69.4, $address['street']);
+            $pdf->Text(145, 69.4, $address['road']);
+            $pdf->Text(46, 75.5, $address['tambon']);
+            $pdf->Text(93, 75.5, $address['aumphure']);
+            $pdf->Text(152, 75.5, $address['province']);
+            $pdf->Text(46, 81.4, $parent['phone']);
+            $pdf->Text(112, 81.4, $parent['email']);
+            $pdf->Text(120, 226, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
 
-            $village_input = 12;
-            $village_length = strlen($address['village_no']);
-            $village_x = 89 + ($village_input / 2 - $village_length / 2) - 1;
-            $pdf->Text($village_x, 79, $address['village_no']);
-
-            $tambon_input = 31;
-            $tambon_length = strlen($address['tambon']);
-            $tambon_x = 111 + ($tambon_input / 2 - $tambon_length / 2) - 2;
-            $pdf->Text($tambon_x, 79, $address['tambon']);
-
-            $aumphure_input = 30;
-            $aumphure_length = strlen($address['aumphure']);
-            $aumphure_x = 153 + ($aumphure_input / 2 - $aumphure_length / 2) - 1;
-            $pdf->Text($aumphure_x, 79, $address['aumphure']);
-
-            $province_input = 35;
-            $province_length = strlen($address['province']);
-            $province_x = 36 + ($province_input / 2 - $province_length / 2) - 2;
-            $pdf->Text($province_x, 86, $address['province']);
-
-            $postcode_input = 27;
-            $postcode_length = strlen($address['postcode']);
-            $postcode_x = 93 + ($postcode_input / 2 - $postcode_length / 2) - 2;
-            $pdf->Text($postcode_x, 86, $address['postcode']);
-
-            $phone_input = 49;
-            $phone_length = strlen($parent['phone']);
-            $phone_x = 134 + ($phone_input / 2 - $phone_length / 2) - 2;
-            $pdf->Text($phone_x, 86, $parent['phone']);
-
-            $email_input = 150;
-            $email_length = strlen($parent['email']);
-            $email_x = 34 + ($email_input / 2 - $email_length / 2) - 10;
-            $pdf->Text($email_x, 94, $parent['email']);
-
-            $borrower_name_input = 76;
-            $fullname_borrower_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
-            $borrower_name_x = 50 + ($borrower_name_input / 2 - $fullname_borrower_length / 2) - 3;
-            $pdf->Text($borrower_name_x, 109, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            // $borrower_name_input = 76;
+            // $fullname_borrower_length = strlen($borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
+            // $borrower_name_x = 50 + ($borrower_name_input / 2 - $fullname_borrower_length / 2) - 3;
+            // $pdf->Text($borrower_name_x, 109, $borrower['prefix'] . $borrower['firstname'] . '   ' . $borrower['lastname']);
 
 
-            $signature = 77;
-            $signature_x = 103 + ($signature / 2 - $fullname_length / 2) - 3;
-            $pdf->Text($signature_x, 245, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
+            // $signature = 77;
+            // $signature_x = 103 + ($signature / 2 - $fullname_length / 2) - 3;
+            // $pdf->Text($signature_x, 245, $parent['prefix'] . $parent['firstname'] . '   ' . $parent['lastname']);
 
             $tick_alp = public_path('icon_png/tick.png');
             if ($parent['borrower_relational'] == $this->utf8_to_cp874('บิดา')) {
-                $pdf->Image($tick_alp, 90, 99, 4, 4);
+                $pdf->Image($tick_alp, 144.5, 84.5, 4, 4);
             } else if ($parent['borrower_relational'] == $this->utf8_to_cp874('มารดา')) {
-                $pdf->Image($tick_alp, 90, 99, 4, 4);
+                $pdf->Image($tick_alp, 25.5, 90.8, 4, 4);
             } else {
-                $pdf->Image($tick_alp, 90, 99, 4, 4);
+                $pdf->Image($tick_alp, 56.5, 84.5, 4, 4);
             }
 
             $filename = 'หนังสือยินยอมให้เปิดเผยข้อมูลผู้ปกครอง' . '.pdf';
@@ -690,7 +622,7 @@ class GenerateFile extends Controller
                 $teacher_faculty_x = 48 + ($teacher_faculty_input / 2 - $teacher_faculty_length / 2) - 2;
                 $pdf->Text($teacher_faculty_x, 74.5, $teacher['faculty_name']);
 
-                // comment  
+                // comment
                 $pdf->SetXY(26, 94);
                 $pdf->MultiCell(158, 8, $strconcat_teacher_comments);
 
@@ -822,7 +754,7 @@ class GenerateFile extends Controller
             $teacher_faculty_x = 48 + ($teacher_faculty_input / 2 - $teacher_faculty_length / 2) - 2;
             $pdf->Text($teacher_faculty_x, 74.5, $teacher['faculty_name']);
 
-            // comment  
+            // comment
             $pdf->SetXY(26, 94);
             $pdf->MultiCell(158, 8, $strconcat_teacher_comments);
 
@@ -959,7 +891,7 @@ class GenerateFile extends Controller
             $teacher_faculty_x = 48 + ($teacher_faculty_input / 2 - $teacher_faculty_length / 2) - 2;
             $pdf->Text($teacher_faculty_x, 74.5, $teacher['faculty_name']);
 
-            // comment  
+            // comment
             $pdf->SetXY(26, 94);
             $pdf->MultiCell(158, 8, $strconcat_teacher_comments);
 
@@ -1385,12 +1317,12 @@ class GenerateFile extends Controller
                 $teacher_firstname_length = strlen($teacher['firstname']);
                 $teacher_firstname_x = 85 + ($teacher_firstname_input / 2 - $teacher_firstname_length / 2) - 3;
                 $pdf->Text($teacher_firstname_x, 245.5, $teacher['firstname']);
-    
+
                 $teacher_fullname_input = 77;
                 $teacher_fullanme_length = strlen($teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
                 $teacher_fullname_x = 78 + ($teacher_fullname_input / 2 - $teacher_fullanme_length / 2) - 3;
                 $pdf->Text($teacher_fullname_x, 253, $teacher['prefix'] . $teacher['firstname'] . '   ' . $teacher['lastname']);
-    
+
                 $month = $this->utf8_to_cp874($this->getThaiMonthName($gregorianDate->month));
                 $pdf->Text(105, 261, $gregorianDate->day . '   ' . $month . '   ' . $buddhistYear);
             }
