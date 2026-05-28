@@ -67,11 +67,11 @@ class DashboadController extends Controller
             'status' => null,
             'year' => null,
             'term' => null,
-            'grade' => null,
+            'grade' => '*',
             'start_date' => null,
             'end_date' => null,
-            'faculty' => null,
-            'major' => null
+            'faculty' => '*',
+            'major' => '*'
         ];
         $dashboard_data = $request->session()->get('dashboard_data');
         $request->session()->put(['dashboard_data' => $dashboard_data ?? $reset_dashboard_data]);
@@ -90,6 +90,7 @@ class DashboadController extends Controller
 
     public function setData(Request $request)
     {
+        // dd($request);
         $validatedData = $request->validate([
             'doc_type' => 'required|integer', // assuming doct_type is an integer
             'status' => 'required|string|in:approved,rejected,response-reject,sending,wait-approve,wait-teacher-approve', // validating that status is one of the expected values

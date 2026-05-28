@@ -6,6 +6,7 @@ dashboard
     <div class="card mb-3">
       @php
         $sessionData = Session::get('dashboard_data');
+        // print_r($sessionData);die();
       @endphp
         <div class="card-body">
           <h5 class="card-title">ตัวช่วยการค้นหา</h5>
@@ -80,7 +81,7 @@ dashboard
               <div class="col-md-4">
                 <label for="faculty" class="col-form-label text-secondary">คณะ</label>
                 <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value)">
-                    <option selected value="*">ทั้งหมด</option>
+                    <option @selected(empty($sessionData['facukty']) || $sessionData['faculty'] == '*') value="*">ทั้งหมด</option>
                     @foreach($faculties as $faculty)
                     <option @selected($sessionData['faculty'] == $faculty['id']) value="{{$faculty['id']}}">{{$faculty['faculty_name']}}</option>
                     @endforeach
@@ -89,7 +90,7 @@ dashboard
               <div class="col-md-4">
                 <label for="major" class="col-form-label text-secondary">สาขา</label>
                 <select id="major" class="form-select" aria-label="Default select example" name="major">
-                    <option selected value="*" >ทั้งหมด</option>
+                    <option @selected(empty($sessionData['major']) | $sessionData['major'] == '*') value="*" >ทั้งหมด</option>
                     @foreach($majors as $major)
                     <option @selected($sessionData['major'] == $major['id']) value="{{$major['id']}}">{{$major['major_name']}}</option>
                     @endforeach
@@ -142,7 +143,7 @@ dashboard
     })
     .then(majors => {
         var major_element = document.getElementById('major');
-        major_element.innerHTML = `<option selected disabled value="admin">ทั้งหมด</option>`;
+        major_element.innerHTML = `<option selected value="*">ทั้งหมด</option>`;
         majors.forEach((major) => {
             var option = document.createElement('option');
             option.value = major.id;
