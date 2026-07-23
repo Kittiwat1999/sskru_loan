@@ -2,35 +2,37 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  <title>ลงทะเบียน</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+    <title>ลงทะเบียน</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
 
-  <!-- Favicons -->
-  <link href="{{asset('assets/img/favicon.png')}}" rel="icon">
-  <link href="{{asset('assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+    <!-- Favicons -->
+    <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i"
+        rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="{{asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/quill/quill.snow.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/quill/quill.bubble.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/remixicon/remixicon.css')}}" rel="stylesheet">
-  <link href="{{asset('assets/vendor/simple-datatables/style.css')}}" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
 
-  <!-- Template Main CSS File -->
-  <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
-  <!-- =======================================================
+    <!-- =======================================================
   * Template Name: NiceAdmin
   * Updated: May 30 2023 with Bootstrap v5.3.0
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -42,7 +44,7 @@
 <body>
 
     <main>
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger" id="error-alert">
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -77,33 +79,35 @@
         @endif
         <div class="container">
 
-            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <section
+                class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
-
-                        <div class="d-flex justify-content-center py-4">
-                            <a href="{{url('/')}}" class="logo d-flex align-items-center w-auto">
-                            <img src="assets/img/logo.png" alt="">
-                            <span class="d-none d-lg-block">SSKRU Loan</span>
-                            </a>
-                        </div><!-- End Logo -->
-
-                        <div class="card mb-3 col-md-8">
+                        <div class="card col-md-5">
 
                             <div class="card-body">
 
-                                <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">สร้างบัญชีผู้ใช้สำหรับนักศึกษา (ผู้กู้ยืม)</h5>
+                                <div class="pt-2 pb-2">
+                                    <div class="d-flex justify-content-center py-2">
+                                        <a href="{{ url('/') }}" class="logo d-flex align-items-center w-auto">
+                                            <img src="assets/img/logo.png" alt="">
+                                            <span class="d-lg-block">SSKRU Loan</span>
+                                        </a>
+                                    </div>
+                                    <h5 class="card-title text-center pb-0 fs-4">สร้างบัญชีผู้ใช้สำหรับนักศึกษา
+                                        (ผู้กู้ยืม)</h5>
                                     <p class="text-center small">กรุณากรอกรายละเอียด เพื่อสร้างบัญชีผู้ใช้</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" action="{{route('register.student')}}" method="post" novalidate>
+                                <form class="row g-3 needs-validation" action="{{ route('register.student') }}"
+                                    method="post" novalidate>
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="col-md-3 col-lg-2">
+                                    <div class="col-md-12 col-lg-12">
                                         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
-                                        <select id="prefix" name="prefix" class="form-select" aria-label="Default select example" required>
+                                        <select id="prefix" name="prefix" class="form-select"
+                                            aria-label="Default select example" required>
                                             <option class="text-center" selected></option>
                                             <option class="text-center" value="นาย">นาย</option>
                                             <option class="text-center" value="นาง">นาง</option>
@@ -115,9 +119,10 @@
                                     </div>
 
 
-                                    <div class="col-md-4 col-lg-5">
-                                        <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
-                                        <input type="text" class="form-control" name="firstname" id="firstname" onkeyup="checkThaiLanguage()" required>
+                                    <div class="col-md-12 col-lg-12">
+                                        <label for="firstname" class="col-form-label text-secondary">ชื่อจริง</label>
+                                        <input type="text" class="form-control" name="firstname" id="firstname"
+                                            onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกชื่อ!
                                         </div>
@@ -125,10 +130,11 @@
                                             ชื่อต้องเป็นภาษาไทย!
                                         </div>
                                     </div>
-                                    
-                                    <div class="col-md-5">
+
+                                    <div class="col-md-12">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
-                                        <input type="text" class="form-control" name="lastname" id="lastname" onkeyup="checkThaiLanguage()" required>
+                                        <input type="text" class="form-control" name="lastname" id="lastname"
+                                            onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกนามสกุล!
                                         </div>
@@ -139,16 +145,18 @@
 
                                     <div class="col-md-12">
                                         <label for="email" class="col-form-label text-secondary">อีเมล</label>
-                                        <input type="email" name="email" class="form-control" id="email" required>
+                                        <input type="email" name="email" class="form-control" id="email"
+                                            required>
                                         <div class="invalid-feedback">
                                             กรุณากรอกอีเมล!
                                         </div>
                                     </div>
 
-                                    <div class="col-md-7">
+                                    <div class="col-md-12">
                                         <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                                         <div class="input-group">
-                                            <input type="password" name="password" class="form-control" id="password" required oninput="checkPasswordFilled()">
+                                            <input type="password" name="password" class="form-control"
+                                                id="password" required oninput="checkPasswordFilled()">
                                             <button class="btn btn-outline-secondary" type="button"
                                                 id="togglePassword">
                                                 <i class="bi bi-eye-slash"></i>
@@ -159,28 +167,30 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-7 pb-3">
-                                        <label for="password_confirmation" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
+                                    <div class="col-md-12">
+                                        <label for="password_confirmation"
+                                            class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
                                         <div class="d-flex flex-column flex-md-row justify-content-between">
-                                            <div class="col-12 text-start">
-                                                <div class="input-group">
-                                                    <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
-                                                    <button class="btn btn-outline-secondary" type="button"
-                                                        id="toggleConfPassword">
-                                                        <i class="bi bi-eye-slash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12 mt-2 mt-md-1 mx-md-3">
-                                                <span id="passwordStatus"></span>
+                                            <div class="input-group">
+                                                <input type="password" name="password_confirmation"
+                                                    class="form-control" id="password_confirmation" required disabled>
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="toggleConfPassword">
+                                                    <i class="bi bi-eye-slash"></i>
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="invalid-feedback">
                                             กรุณายืนยันรหัสผ่าน!
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
+                                    <span id="passwordStatus"></span>
+
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-primary w-100 mb-3" type="submit" value="Register"
+                                            onclick="return validatePassword()">สร้างบัญชี</button>
+                                        <span>มีบัญีอยู่แล้ว? <a href="{{ url('/') }}"
+                                                class="w-100 me-2 text-primary">ล็อกอิน</a></span>
                                     </div>
 
                                 </form>
@@ -202,22 +212,22 @@
         </div>
     </main><!-- End #main -->
 
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
-    <script src="{{asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/chart.js/chart.umd.js')}}"></script>
-    <script src="{{asset('assets/vendor/echarts/echarts.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/quill/quill.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/simple-datatables/simple-datatables.js')}}"></script>
-    <script src="{{asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/php-email-form/validate.js')}}"></script>
+    <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/chart.js/chart.umd.js') }}"></script>
+    <script src="{{ asset('assets/vendor/echarts/echarts.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/quill/quill.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+    <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
 
     <!-- Template Main JS File -->
-    <script src="{{asset('assets/js/main.js')}}"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
     <script>
-
         const password = document.getElementById('password');
         const confPassword = document.getElementById('password_confirmation');
         const togglePasswordButton = document.getElementById('togglePassword');
@@ -230,14 +240,14 @@
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
 
-            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
         });
 
         toggleConfPasswordButton.addEventListener('click', function() {
             const type = confPassword.getAttribute('type') === 'password' ? 'text' : 'password';
             confPassword.setAttribute('type', type);
 
-            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>' ;
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
         });
 
         function validatePassword() {
@@ -263,7 +273,7 @@
                 passwordStatus.classList.add("text-success");
             }
 
-            if(password.length < 8){
+            if (password.length < 8) {
                 passwordStatus.innerHTML = "รหัสผ่านต้องมีอย่างน้อย 8 ตัว";
                 passwordStatus.classList.remove("text-success");
                 passwordStatus.classList.add("text-danger");
@@ -285,7 +295,7 @@
             const submitBtn = document.querySelector("button[type='submit']");
             submitBtn.disabled = true;
         }
-        
+
         function enabledSubmitBtn() {
             const submitBtn = document.querySelector("button[type='submit']");
             submitBtn.disabled = false;
@@ -293,46 +303,45 @@
 
         function showInvalidThaiLanguage(targetId) {
             const invalidElement = document.querySelector(`.${targetId}-invalid-thai`);
-            if(invalidElement.classList.contains('d-none')){
+            if (invalidElement.classList.contains('d-none')) {
                 invalidElement.classList.remove('d-none');
             }
         }
-        
+
         function hideInvalidThaiLanguage(targetId) {
             const invalidElement = document.querySelector(`.${targetId}-invalid-thai`);
-            if(!invalidElement.classList.contains('d-none')){
+            if (!invalidElement.classList.contains('d-none')) {
                 invalidElement.classList.add('d-none');
             }
         }
 
         function checkThaiLanguage() {
-            const thaiRegex = /^[\u0E00-\u0E7F\s]+$/; 
+            const thaiRegex = /^[\u0E00-\u0E7F\s]+$/;
             const inputFirstname = document.querySelector("#firstname");
             const inputLastname = document.querySelector("#lastname");
 
-            if(inputFirstname.value != ''){
-                if (thaiRegex.test(inputFirstname.value)){
+            if (inputFirstname.value != '') {
+                if (thaiRegex.test(inputFirstname.value)) {
                     hideInvalidThaiLanguage(inputFirstname.id)
                 } else {
                     showInvalidThaiLanguage(inputFirstname.id);
                 }
             }
 
-            if(inputLastname.value != ''){
-                if (thaiRegex.test(inputLastname.value)){
+            if (inputLastname.value != '') {
+                if (thaiRegex.test(inputLastname.value)) {
                     hideInvalidThaiLanguage(inputLastname.id)
                 } else {
                     showInvalidThaiLanguage(inputLastname.id);
                 }
             }
 
-            if(thaiRegex.test(inputLastname.value) && thaiRegex.test(inputFirstname.value)) {
+            if (thaiRegex.test(inputLastname.value) && thaiRegex.test(inputFirstname.value)) {
                 enabledSubmitBtn();
-            }else{
+            } else {
                 disbledSubmitBtn();
             }
         }
-
     </script>
 
 </body>
