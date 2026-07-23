@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Auditable;
+
 class CommentsBorrowerChildDocument extends Model
 {
+    use Auditable;
     use HasFactory;
     protected $table = 'comments_borrower_child_documents';
     protected $fillable = ['comment_id', 'borrower_child_document_id', 'other_comment'];
