@@ -81,18 +81,19 @@
                 <div class="container">
                     <div class="row justify-content-center">
 
-                        <div class="d-flex justify-content-center py-4">
-                            <a href="index.html" class="logo d-flex align-items-center w-auto">
-                            <img src="assets/img/logo.png" alt="">
-                            <span class="d-none d-lg-block">SSKRU Loan</span>
-                            </a>
-                        </div><!-- End Logo -->
+                        
 
-                        <div class="card mb-3 col-md-8">
+                        <div class="card mb-3 col-md-5">
 
                             <div class="card-body">
-
+                                
                                 <div class="pt-4 pb-2">
+                                    <div class="d-flex justify-content-center py-2">
+                                        <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                        <img src="assets/img/logo.png" alt="">
+                                        <span class="d-lg-block">SSKRU Loan</span>
+                                        </a>
+                                    </div>
                                     <h5 class="card-title text-center pb-0 fs-4">สร้างบัญชีผู้ใช้สำหรับอาจารย์ที่ปรึกษา</h5>
                                     <p class="text-center small">กรุณากรอกรายละเอียด เพื่อสร้างบัญชีผู้ใช้</p>
                                 </div>
@@ -101,7 +102,7 @@
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-12">
                                         <label for="prefix" class="col-form-label text-secondary">คำนำหน้า</label>
                                         <input type="text" name="prefix" class="form-control" id="prefix" required>
                                         <div class="invalid-feedback">
@@ -110,7 +111,7 @@
                                     </div>
 
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-12">
                                         <label for="firstname" class="col-form-label text-secondary">ชื่อ</label>
                                         <input type="text" name="firstname" class="form-control" id="firstname" onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
@@ -121,7 +122,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-5">
+                                    <div class="col-md-12">
                                         <label for="lastname" class="col-form-label text-secondary">นามสกุล</label>
                                         <input type="text" name="lastname" class="form-control" id="lastname" onkeyup="checkThaiLanguage()" required>
                                         <div class="invalid-feedback">
@@ -140,7 +141,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="faculty" class="col-form-label text-secondary">คณะ</label>
                                         <select id="faculty" class="form-select" aria-label="Default select example" name="faculty" onchange="getMajorByFacultyId(this.value)" required>
                                             <option selected></option>
@@ -153,7 +154,7 @@
                                         </div>
                                       </div>
                                       
-                                      <div class="col-md-6">
+                                      <div class="col-md-12">
                                         <label for="major" class="col-form-label text-secondary">สาขา</label>
                                         <select id="major" class="form-select" aria-label="Default select example" name="major" required>
                                             <option selected></option>
@@ -166,7 +167,7 @@
                                         </div>
                                       </div>
 
-                                    <div class="col-md-7">
+                                    <div class="col-md-12">
                                         <label for="password" class="col-form-label text-secondary">รหัสผ่าน</label>
                                         <div class="input-group">
                                             <input type="password" name="password" class="form-control" id="password" required oninput="checkPasswordFilled()">
@@ -180,10 +181,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-7 pb-3">
+                                    <div class="col-md-12">
                                         <label for="password_confirmation" class="col-form-label text-secondary">ยืนยันรหัสผ่าน</label>
                                         <div class="d-flex flex-column flex-md-row justify-content-between">
-                                            <div class="col-12 text-start">
                                                 <div class="input-group">
                                                     <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required disabled>
                                                     <button class="btn btn-outline-secondary" type="button"
@@ -191,19 +191,18 @@
                                                         <i class="bi bi-eye-slash"></i>
                                                     </button>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6 col-12 mt-2 mt-md-1 mx-md-3">
-                                                <span id="passwordStatus"></span>
-                                            </div>
                                         </div>
                                         <div class="invalid-feedback">
                                             กรุณายืนยันรหัสผ่าน!
                                         </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-end">
-                                        <a href="{{ url('/login_student') }}" class="btn btn-secondary w-25 me-2" style="color: white;">ล็อกอิน</a>
-                                        <button class="btn btn-primary w-25" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
+                                    <span id="passwordStatus"></span>
+
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-primary w-100 mb-3" type="submit" value="Register" onclick="return validatePassword()">สร้างบัญชี</button>
+                                        <span>มีบัญีอยู่แล้ว? <a href="{{ url('/') }}" class="w-100 me-2 text-primary">ล็อกอิน</a></span>
+                                        
                                     </div>
 
                                 </form>
