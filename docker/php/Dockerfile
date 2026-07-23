@@ -28,6 +28,15 @@ RUN docker-php-ext-install \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# รับ UID/GID จาก docker compose
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd -g ${GID} appgroup \
+    && useradd -u ${UID} -g ${GID} -m appuser
+
 WORKDIR /var/www
+
+USER appuser
 
 CMD ["php-fpm"]
