@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\Auditable;
+
 class DocTypes extends Model
 {
+    use Auditable;
     use HasFactory;
     protected $fillable = ['doctype_title', 'isactive', 'updated_at', 'created_at'];
     public $timestamps = false;
