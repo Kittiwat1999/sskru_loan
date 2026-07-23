@@ -9,15 +9,15 @@ class AuditLog extends Model
 {
     protected $guarded = [];
 
+    // เพื่อให้เราควบคุมการ Encode/Decode ภาษาไทยเองได้เต็มที่
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
         
-        // กำหนดชื่อ Table ตาม ปี_เดือน เช่น audit_logs_2026_07
         $tableName = 'audit_logs_' . date('Y_m');
         $this->setTable($tableName);
 
-        // เช็คและสร้าง Table อัตโนมัติถ้ายังไม่มี
         self::ensureTableExists($tableName);
     }
 
@@ -25,33 +25,47 @@ class AuditLog extends Model
     {
         if (!Schema::hasTable($tableName)) {
             Schema::create($tableName, function (Blueprint $table) {
+                $table->charset = 'utf8mb4';
+                $table->collation = 'utf8mb4_unicode_ci';
+
                 $table->id();
                 $table->unsignedBigInteger('user_id')->nullable();
-                $table->string('event'); // created, updated, deleted
-                $table->string('auditable_type'); // Model name
-                $table->unsignedBigInteger('auditable_id'); // Model ID
-                $table->json('old_values')->nullable();
-                $table->json('new_values')->nullable();
+                $table->string('event'); 
+                $table->string('auditable_type'); 
+                $table->unsignedBigInteger('auditable_id'); 
+                
+                $table->text('old_values')->nullable();
+                $table->text('new_values')->nullable();
+                
                 $table->string('url')->nullable();
                 $table->string('ip_address', 45)->nullable();
                 $table->text('user_agent')->nullable();
                 $table->timestamps();
 
-                // Index เพื่อเพิ่มความเร็วในการ Query
                 $table->index(['auditable_type', 'auditable_id']);
                 $table->index('user_id');
             });
         }
     }
 
-    // Helper method สำหรับดึง Log ย้อนหลังตามเดือน
+    // Helper เพิ่มเติม: แปลง Text กลับเป็น Array ตอนดึงข้อมูลมาใช้งาน
+    public function getOldValuesArrayAttribute(): ?array
+    {
+        return $this->old_values ? json_decode($this->old_values, true) : null;
+    }
+
+    public function getNewValuesArrayAttribute(): ?array
+    {
+        return $this->new_values ? json_decode($this->new_values, true) : null;
+    }
+
     public static function inMonth(int $year, int $month)
     {
         $instance = new static();
         $tableName = sprintf('audit_logs_%04d_%02d', $year, $month);
         
         if (!Schema::hasTable($tableName)) {
-            return collect(); // ส่งคืน Collection ว่างถ้าไม่มี Table ของเดือนนั้น
+            return collect(); 
         }
 
         return $instance->setTable($tableName)->newQuery();
