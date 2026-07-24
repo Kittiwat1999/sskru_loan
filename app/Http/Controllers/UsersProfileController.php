@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\AuthLog;
 
 class UsersProfileController extends Controller
 {
@@ -76,6 +77,13 @@ class UsersProfileController extends Controller
 
         $user->password = Hash::make($request->new_password);
         $user->save();
+
+        AuthLog::record(
+            event: 'password_reset_completed',
+            status: true,
+            userId: $user_id,
+            emailOrUsername: $user->email
+        );
 
         return redirect()->back()->with(['success' => 'รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว']);
     }
