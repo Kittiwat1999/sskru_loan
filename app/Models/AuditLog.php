@@ -9,8 +9,6 @@ class AuditLog extends Model
 {
     protected $guarded = [];
 
-    // เพื่อให้เราควบคุมการ Encode/Decode ภาษาไทยเองได้เต็มที่
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -48,7 +46,7 @@ class AuditLog extends Model
         }
     }
 
-    // Helper เพิ่มเติม: แปลง Text กลับเป็น Array ตอนดึงข้อมูลมาใช้งาน
+
     public function getOldValuesArrayAttribute(): ?array
     {
         return $this->old_values ? json_decode($this->old_values, true) : null;
