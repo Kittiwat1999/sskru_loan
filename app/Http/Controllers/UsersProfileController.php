@@ -72,7 +72,15 @@ class UsersProfileController extends Controller
         $user = Users::find($user_id);
 
         if (!Hash::check($request->current_password, $user->password)) {
+            AuthLog::record(
+                event: 'password_reset_failed',
+                status: false,
+                userId: $user_id,
+                emailOrUsername: $user->email
+            );
+
             return back()->withErrors(['current_password' => 'รหัสผ่านปัจจุบันไม่ถูกต้อง']);
+
         }
 
         $user->password = Hash::make($request->new_password);
