@@ -184,14 +184,29 @@ class BorrowerInforamtionController extends Controller
         $borrower['borrower_appearance_id'] = $request->borrower_appearance;
         $borrower->save();
 
-        BorrowerNessessities::where('borrower_id', $borrower['id'])->delete();
-        BorrowerProperties::where('borrower_id', $borrower['id'])->delete();
+        $borrower_nessessities_db = BorrowerNessessities::where('borrower_id', $borrower['id'])->pluck('nessessity_id')->toArray();
+        $borrower_properties_db = BorrowerProperties::where('borrower_id', $borrower['id'])->pluck('property_id')->toArray();
 
-        foreach ($request->nessessities as $nessessity) {
-            BorrowerNessessities::create(['borrower_id' => $borrower['id'], 'nessessity_id' => $nessessity]);
+        $add_nessessities = array_diff($request->nessessities, $borrower_nessessities_db);
+        $delete_nessessities = array_diff($borrower_nessessities_db,$request->nessessities);
+
+        
+        $add_properties = array_diff($request->properties, $borrower_properties_db);
+        $delete_properties = array_diff($borrower_properties_db, $request->properties);
+
+        foreach ($add_nessessities as $nessessity_id) {
+            BorrowerNessessities::create(['borrower_id' => $borrower['id'], 'nessessity_id' => $nessessity_id]);
         }
-        foreach ($request->properties as $property) {
-            BorrowerProperties::create(['borrower_id' => $borrower['id'], 'property_id' => $property]);
+        foreach ($add_properties as $property_id) {
+            BorrowerProperties::create(['borrower_id' => $borrower['id'], 'property_id' => $property_id]);
+        }
+
+        foreach ($delete_nessessities as $nessessity_id) {
+            BorrowerNessessities::where('borrower_id', $borrower['id'])->where('nessessity_id', $nessessity_id)->delete();
+        }
+
+        foreach ($delete_properties as $property_id) {
+            BorrowerProperties::where('borrower_id', $borrower['id'])->where('property_id', $property_id)->delete();
         }
         if (filter_var($request->morePropCheck, FILTER_VALIDATE_BOOLEAN)) {
             $nessessity = new BorrowerNessessities();
