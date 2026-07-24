@@ -30,11 +30,11 @@ use App\Http\Controllers\UsersProfileController;
 
 //admin
 Route::middleware(['session.expire', 'privilege:admin'])->group(function () {
-
+    
     Route::get('/clear-app-cache', function() {
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
-        return 'Cache Cleared!';
+        return back()->with('success', 'Cache Cleared!');
     });
     //dashboard
     Route::get('/admin/dashboard', [DashboadController::class, 'index']);
