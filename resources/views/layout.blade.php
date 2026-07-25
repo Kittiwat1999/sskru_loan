@@ -180,6 +180,13 @@
                 <span>อัพเดตข้อมูลผู้กู้</span>
                 </a>
             </li><!-- End แก้ไขเอกสาร Page Nav -->
+
+            <li class="nav-item">
+                <a id="borrowers_data" class="nav-link collapsed" href="{{route('admin.policies.index')}}">
+                <i class="bi bi-shield-check"></i>
+                <span>จัดการนโยบายของระบบ</span>
+                </a>
+            </li><!-- End แก้ไขเอกสาร Page Nav -->
            
         @endif
 
