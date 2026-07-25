@@ -31,7 +31,7 @@
                                                     <h5 class="modal-title">ลบสาขา</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="{{route('admin.manage.data.delete.major',['major_id' => $major->id])}}" method="post">
+                                                <form action="{{route('admin.manage_data.delete.major',['major_id' => $major->id])}}" method="post">
                                                     <div class="modal-body">
                                                         @csrf
                                                         <div>ท่านต้องการลบสาขา <span class="text-danger">{{$major->major_name}}</span></div>
@@ -52,7 +52,7 @@
                                                     <h5 class="modal-title">แก้ไขชื่อ</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="{{route('admin.manage.data.edit.major',['major_id' => $major->id])}}" method="post">
+                                                <form action="{{route('admin.manage_data.edit.major',['major_id' => $major->id])}}" method="post">
                                                     <div class="modal-body">
                                                         @csrf
                                                         <div class="col-12">
@@ -90,7 +90,7 @@
                                   <h5 class="modal-title">เพิ่มสาขา</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('admin.manage.data.add.major',['faculty_id' => $faculty->id])}}" method="post">
+                                <form action="{{route('admin.manage_data.add.major',['faculty_id' => $faculty->id])}}" method="post">
                                     <div class="modal-body">
                                             @csrf
                                             <div class="col-12">
