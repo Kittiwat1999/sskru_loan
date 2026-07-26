@@ -22,7 +22,7 @@
                                 <td class="text-center">{{$faculty->id}}</td>
                                 <td>{{$faculty->faculty_name}}</td>
                                 <td class="text-center">
-                                    <a href="{{route('admin.manage.data.major',['faculty_id' => $faculty->id])}}" type="button" class="btn btn-danger">จัดการข้อมูลสาขา</a>
+                                    <a href="{{route('admin.manage_data.major',['faculty_id' => $faculty->id])}}" type="button" class="btn btn-danger">จัดการข้อมูลสาขา</a>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
@@ -36,7 +36,7 @@
                                                     <h5 class="modal-title">ลบคณะ</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="{{route('admin.manage.data.delete.faculty',['faculty_id' => $faculty->id])}}" method="post">
+                                                <form action="{{route('admin.manage_data.delete.faculty',['faculty_id' => $faculty->id])}}" method="post">
                                                     <div class="modal-body">
                                                         @csrf
                                                         <div>ท่านต้องการลบคณะ <span class="text-danger">{{$faculty->faculty_name}}</span></div>
@@ -57,7 +57,7 @@
                                                     <h5 class="modal-title">แก้ไขชื่อ</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="{{route('admin.manage.data.edit.faculty',['faculty_id' => $faculty->id])}}" method="post">
+                                                <form action="{{route('admin.manage_data.edit.faculty',['faculty_id' => $faculty->id])}}" method="post">
                                                     <div class="modal-body">
                                                         @csrf
                                                         <div class="col-12">
@@ -95,7 +95,7 @@
                                   <h5 class="modal-title">เพิ่มคณะ</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('admin.manage.data.add.faculty')}}" method="post">
+                                <form action="{{route('admin.manage_data.add.faculty')}}" method="post">
                                     <div class="modal-body">
                                         @csrf
                                         <div class="col-12">
@@ -148,7 +148,7 @@
                                                             <h5 class="modal-title">ลบประเภทผู้กู้</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <form action="{{route('admin.manage.data.delete.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
+                                                        <form action="{{route('admin.manage_data.delete.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
                                                             <div class="modal-body">
                                                                 @csrf
                                                                 <div>ท่านต้องการลบ <span class="text-danger">{{$apprearancetype->title}}</span></div>
@@ -169,7 +169,7 @@
                                                             <h5 class="modal-title">แก้ไขประเภทผู้กู้ {{$apprearancetype->apprearancetype_title}}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <form action="{{route('admin.manage.data.edit.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
+                                                        <form action="{{route('admin.manage_data.edit.apprearancetype',['apprearancetype_id' => $apprearancetype->id])}}" method="post">
                                                             <div class="modal-body">
                                                                 @csrf
                                                                 <div class="col-12">
@@ -208,7 +208,7 @@
                                   <h5 class="modal-title">เพิ่มประเภทผู้กู้</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('admin.manage.data.add.apprearancetype')}}" method="post">
+                                <form action="{{route('admin.manage_data.add.apprearancetype')}}" method="post">
                                     <div class="modal-body">
                                             @csrf
                                             <div class="col-12">
@@ -261,7 +261,7 @@
                                                         <h5 class="modal-title">ลบคุณสมบัติผู้กู้</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{route('admin.manage.data.delete.property',['property_id' => $property->id])}}" method="post">
+                                                    <form action="{{route('admin.manage_data.delete.property',['property_id' => $property->id])}}" method="post">
                                                         <div class="modal-body">
                                                             @csrf
                                                             <div>ท่านต้องการลบ <span class="text-danger">{{$property->property_title}}</span></div>
@@ -282,7 +282,7 @@
                                                         <h5 class="modal-title">แก้ไขคุณสมบัติผู้กู้</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{route('admin.manage.data.edit.property',['property_id' => $property->id])}}" method="post">
+                                                    <form action="{{route('admin.manage_data.edit.property',['property_id' => $property->id])}}" method="post">
                                                         <div class="modal-body">
                                                             @csrf
                                                             <div class="col-12">
@@ -321,7 +321,7 @@
                                   <h5 class="modal-title">เพิ่มคุณสมบัติผู้กู้</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('admin.manage.data.add.property')}}" method="post">
+                                <form action="{{route('admin.manage_data.add.property')}}" method="post">
                                     <div class="modal-body">
                                             @csrf
                                             <div class="col-12">
@@ -374,7 +374,7 @@
                                                         <h5 class="modal-title">ลบเหตุผลจำเป็นของการกู้ยืม</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{route('admin.manage.data.delete.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
+                                                    <form action="{{route('admin.manage_data.delete.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
                                                         <div class="modal-body">
                                                             @csrf
                                                             <div>ท่านต้องการลบ <span class="text-danger">{{$nessessity->nessessity_title}}</span></div>
@@ -395,7 +395,7 @@
                                                         <h5 class="modal-title">แก้ไขเหตุผลจำเป็นของการกู้ยืม</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="{{route('admin.manage.data.edit.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
+                                                    <form action="{{route('admin.manage_data.edit.nessessity',['nessessity_id' => $nessessity->id])}}" method="post">
                                                         <div class="modal-body">
                                                             @csrf
                                                             <div class="col-12">
@@ -434,7 +434,7 @@
                                   <h5 class="modal-title">เพิ่มเหตุผลจำเป็นของการกู้ยืม</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('admin.manage.data.add.nessessity')}}" method="post">
+                                <form action="{{route('admin.manage_data.add.nessessity')}}" method="post">
                                     <div class="modal-body">
                                             @csrf
                                             <div class="col-12">

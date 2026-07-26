@@ -74,7 +74,7 @@
                         </h2>
                         <div id="collapse-child-document-{{$child_document->id}}" class="accordion-collapse collapse" aria-labelledby="child-document-{{$child_document->id}}" data-bs-parent="#accordion" style="">
                             <div class="accordion-body">
-                                <iframe title="myFrame" src="{{route('serach.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
+                                <iframe title="myFrame" src="{{route('search.document.preview.file',['borrower_child_document_id' => $child_document->borrower_child_document->id])}}"></iframe>
                                 <div class="row">
                                     @if($child_document->need_document_code)
                                     <div class="col-md-12 row mb-4 mx-0 px-0 mt-3">
@@ -252,7 +252,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <div class="">
-                    <a href="{{ route('serach.document.list.document', [ 'borrower_uid' => Crypt::encryptString($borrower_document->user_id) ]) }}" class="btn btn-secondary">ย้อนกลับ</a>
+                    <a href="{{ route('search.document.list.document', [ 'borrower_uid' => Crypt::encryptString($borrower_document->user_id) ]) }}" class="btn btn-secondary">ย้อนกลับ</a>
                 </div>
                 <div class="">
                     <a href="{{ route('search.document.download.document',[ 'borrower_uid' => Crypt::encryptString($borrower['user_id']), 'document_id' => Crypt::encryptString($document['id']) ]) }}" class="btn btn-danger">ดาวน์โหลด</a>

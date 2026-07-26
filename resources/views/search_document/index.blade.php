@@ -59,7 +59,7 @@
                                 <span class="text-secondary fw-lighter">ชั้นปี: {{$borrower['grade']}}</span><br>
                             </td>
                             <td>
-                                <a href="{{route('serach.document.list.document',['borrower_uid' => Crypt::encryptString($borrower['user_id']) ])}}" class="btn btn-primary">ดูเอกสารที่ส่ง</a></a>
+                                <a href="{{route('search.document.list.document',['borrower_uid' => Crypt::encryptString($borrower['user_id']) ])}}" class="btn btn-primary">ดูเอกสารที่ส่ง</a></a>
                             </td>
                         </tr>
                         @empty
@@ -76,7 +76,7 @@
         </div>
     </section>
     <script>
-        const routeTemplate = "{{ route('serach.document.list.document', ['borrower_uid' => '__UID__']) }}";
+        const routeTemplate = "{{ route('search.document.list.document', ['borrower_uid' => '__UID__']) }}";
 
         function openDocPage(borrowerId){
             window.open(hostName+'/search_document/borrower_documents','_self')
@@ -88,7 +88,7 @@
 
                 if (query.length > 1) {
                     $.ajax({
-                        url: '{{ route("search") }}',
+                        url: '{{ route("search.document.search") }}',
                         type: 'GET',
                         data: { query: query },
                         success: function (data) {
