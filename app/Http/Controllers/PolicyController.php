@@ -7,44 +7,66 @@ use App\Models\Policy;
 use App\Models\PolicyChangeLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Psy\Util\Json;
 use Yajra\DataTables\Facades\DataTables;
 
 class PolicyController extends Controller
 {
-    /**
+        /**
      * Display list of policies
      */
-
     public function index()
     {
         return view('admin.policies.index');
     }
 
+
+    private function translateTypeToThai(string $type) : string {
+        switch ($type) {
+            case 'terms':
+                $thaiText = 'ข้อตกลงและเงื่อนไขการใช้งานระบบ (Terms of Use)';
+                break;
+            case 'privacy':
+                $thaiText = 'นโยบายความเป็นส่วนตัว (Privacy Policy)';
+                break;
+            case 'pdpa':
+                $thaiText = 'ประกาศการคุ้มครองข้อมูลส่วนบุคคล (PDPA Notice)';
+                break;
+            default:
+                $thaiText= 'ประเภทของนโยบายนี้ไม่รองรับ';
+        }
+        return $thaiText;
+    } 
+
     public function getData(Request $request)
     {
-        $policies = Policy::with('creator')->orderBy('created_at','desc')
-            ->select('policies.*');
+        if ($request->ajax()) {
+            $policies = Policy::with('creator')->orderBy('created_at','desc')
+                ->select('policies.*');
 
-        return DataTables::of($policies)
-            ->addIndexColumn()
-            ->addColumn('type', fn($policy) => strtoupper($policy->type))
-            ->addColumn('status', function($policy){
-                return match($policy->status){
-                    'published' => '<span class="badge bg-success">เผยแพร่แล้ว</span>',
-                    'draft' => '<span class="badge bg-warning text-dark">ฉบับร่าง</span>',
-                    'archived' => '<span class="badge bg-secondary">จัดเก็บแล้ว</span>',
-                };
-            })
-            ->addColumn('created_by', function($policy){
-                return optional($policy->creator)->firstname.' '.optional($policy->creator)->lastname;
-            })
-            ->addColumn('action', function($policy){
-                return view('admin.policies.action', compact('policy'))->render();
-            })->addColumn('published', function($policy){
-                return view('admin.policies.publish-action', compact('policy'))->render();
-            })
-            ->rawColumns(['status','action','published'])
-            ->make(true);
+            return DataTables::of($policies)
+                ->addIndexColumn()
+                ->addColumn('type', fn($policy) => $this->translateTypeToThai($policy->type))
+                ->addColumn('status', function($policy){
+                    return match($policy->status){
+                        'published' => '<span class="badge bg-success">เผยแพร่แล้ว</span>',
+                        'draft' => '<span class="badge bg-warning text-dark">ฉบับร่าง</span>',
+                        'archived' => '<span class="badge bg-secondary">จัดเก็บแล้ว</span>',
+                    };
+                })
+                ->addColumn('created_by', function($policy){
+                    return optional($policy->creator)->firstname.' '.optional($policy->creator)->lastname;
+                })
+                ->addColumn('action', function($policy){
+                    return view('admin.policies.action', compact('policy'))->render();
+                })->addColumn('published', function($policy){
+                    return view('admin.policies.publish-action', compact('policy'))->render();
+                })
+                ->rawColumns(['status','action','published'])
+                ->make(true);
+        }
+
+        return response()->json(['error' => 'Not Found.'], 404);
     }
     /**
      * Show create form

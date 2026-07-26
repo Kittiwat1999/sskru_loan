@@ -20,15 +20,15 @@
                             <select name="type" class="form-select">
 
                                 <option value="terms">
-                                    Terms of Use
+                                    ข้อตกลงและเงื่อนไขการใช้งานระบบ (Terms of Use)
                                 </option>
 
                                 <option value="privacy">
-                                    Privacy Policy
+                                    นโยบายความเป็นส่วนตัว (Privacy Policy)
                                 </option>
 
                                 <option value="pdpa">
-                                    PDPA Notice
+                                    ประกาศการคุ้มครองข้อมูลส่วนบุคคล (PDPA Notice)
                                 </option>
 
                             </select>
