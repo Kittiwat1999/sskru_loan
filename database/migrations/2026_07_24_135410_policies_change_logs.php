@@ -23,7 +23,8 @@ return new class extends Migration
                 'create',
                 'update',
                 'publish',
-                'archive'
+                'archive',
+                'restore'
             ]);
 
             $table->text('description')

@@ -384,6 +384,9 @@ Route::prefix('admin')->middleware(['session.expire', 'privilege:admin'])->group
         Route::post('/{policy}/publish', 'publish')->name('publish');
     
         Route::post('/{policy}/archive', 'archive')->name('archive');
+
+        Route::post('/{policy}/restore', 'restore')->name('restore');
+
     });
 
 });
