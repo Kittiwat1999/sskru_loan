@@ -122,13 +122,13 @@ class PolicyController extends Controller
         ]);
 
 
-        DB::transaction(function () use ($validated, &$policy) {
+        DB::transaction(function () use ($validated, &$policy, $request) {
 
             $policy = Policy::create([
                 ...$validated,
                 'status' => 'draft',
-                'created_by' => auth()->id(),
-                'updated_by' => auth()->id()
+                'created_by' => $request->session()->get('user_id'),
+                'updated_by' => $request->session()->get('user_id')
             ]);
 
 
@@ -140,7 +140,7 @@ class PolicyController extends Controller
                 'description' =>
                     'สร้าง Policy ใหม่',
 
-                'created_by' => auth()->id()
+                'created_by' => $request->session()->get('user_id')
             ]);
         });
 
@@ -210,12 +210,12 @@ class PolicyController extends Controller
         ]);
 
 
-        DB::transaction(function () use ($validated, $policy) {
+        DB::transaction(function () use ($validated, $policy, $request) {
             $policy->update([
 
                 ...$validated,
 
-                'updated_by' => auth()->id()
+                'updated_by' => $request->session()->get('user_id')
             ]);
 
             PolicyChangeLog::create([
@@ -223,7 +223,7 @@ class PolicyController extends Controller
                 'action' => 'update',
                 'description' =>
                     'แก้ไข Policy',
-                'created_by' => auth()->id()
+                'created_by' => $request->session()->get('user_id')
             ]);
 
         });
@@ -256,28 +256,28 @@ class PolicyController extends Controller
     /**
      * Publish policy
      */
-   public function publish(Policy $policy)
+   public function publish(Request $request, Policy $policy)
     {
-        DB::transaction(function () use ($policy) {
+        DB::transaction(function () use ($policy, $request) {
             Policy::where('type', $policy->type)
                 ->where('status', 'published')
                 ->update([
                     'status' => 'archived',
-                    'updated_by' => auth()->id()
+                    'updated_by' => $request->session()->get('user_id')
                 ]);
 
             $policy->update([
                 'status' => 'published',
                 'published_at' => now(),
                 'effective_at' => now(),
-                'updated_by' => auth()->id()
+                'updated_by' => $request->session()->get('user_id')
             ]);
 
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
                 'action' => 'publish',
                 'description' => 'เผยแพร่นโยบาย',
-                'created_by' => auth()->id()
+                'created_by' => $request->session()->get('user_id')
             ]);
         });
 
@@ -287,12 +287,12 @@ class PolicyController extends Controller
     /**
      * Archive policy
      */
-    public function archive(Policy $policy)
+    public function archive(Request $request, Policy $policy)
     {
-        DB::transaction(function () use ($policy) {
+        DB::transaction(function () use ($policy, $request) {
             $policy->update([
                 'status' => 'archived',
-                'updated_by' => auth()->id()
+                'updated_by' => $request->session()->get('user_id')
             ]);
             PolicyChangeLog::create([
 
@@ -303,7 +303,7 @@ class PolicyController extends Controller
                 'description' =>
                     'Archive Policy',
 
-                'created_by' => auth()->id()
+                'created_by' => $request->session()->get('user_id')
             ]);
         });
         return redirect()
