@@ -19,7 +19,11 @@ class Policy extends Model
         'created_by',
         'updated_by'
     ];
-
+    
+protected $casts = [
+    'published_at' => 'datetime',
+    'effective_at' => 'datetime',
+];
 
     public function creator()
     {
