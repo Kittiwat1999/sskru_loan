@@ -259,9 +259,12 @@ class PolicyController extends Controller
     public function publish(Request $request, Policy $policy)
     {
         if ($policy->status !== 'draft') {
-            return back()->withErrors([
-                'publish' => 'สามารถ Publish ได้เฉพาะ Draft'
-            ]);
+            return redirect()
+                ->route('admin.policies.index')
+                ->with(
+                    'error',
+                    'สามารถ Publish ได้เฉพาะ Draft'
+                );
         }
         
         DB::transaction(function () use ($policy, $request) {
@@ -287,7 +290,9 @@ class PolicyController extends Controller
             ]);
         });
 
-        return redirect()->route('admin.policies.index')->with('success', 'เผยแพร่นโยบายสำเร็จ');
+        return redirect()
+            ->route('admin.policies.index')
+            ->with('success', 'เผยแพร่นโยบายสำเร็จ');
     }
 
     /**
@@ -296,9 +301,12 @@ class PolicyController extends Controller
     public function archive(Request $request, Policy $policy)
     {
         if ($policy->status !== 'published') {
-            return back()->withErrors([
-                'archived' => 'สามารถ archived ได้เฉพาะ publish'
-            ]);
+            return redirect()
+                ->route('admin.policies.index')
+                ->with(
+                    'error',
+                    'สามารถ Archive ได้เฉพาะ Published'
+            );
         }
 
         DB::transaction(function () use ($policy, $request) {
@@ -314,7 +322,7 @@ class PolicyController extends Controller
             ]);
         });
         return redirect()
-            ->back()
+            ->route('admin.policies.index')
             ->with(
                 'success',
                 'จัดเก็บนโยบายสำเร็จ'
@@ -323,9 +331,12 @@ class PolicyController extends Controller
 
     public function restore(Request $request, Policy $policy) {
         if($policy->status !== 'archived') {
-            return back()->withErrors([
-                'archived' => 'สามารถ restore ได้เฉพาะ archived',
-            ]);
+            return redirect()
+                ->route('admin.policies.index')
+                ->with(
+                    'error',
+                    'สามารถ Restore ได้เฉพาะ Archived'
+            );
         }
 
         DB::transaction(function () use ($policy, $request) {
@@ -343,7 +354,7 @@ class PolicyController extends Controller
         });
 
         return redirect()
-            ->back()
+            ->route('admin.policies.index')
             ->with(
                 'success',
                 'คืนค่านโยบายสำเร็จ'

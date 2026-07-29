@@ -19,15 +19,18 @@
 
                             <select name="type" class="form-select">
 
-                                <option value="terms">
+                                <option value="terms"
+                                    {{ old('type') == 'terms' ? 'selected' : '' }} >
                                     ข้อตกลงและเงื่อนไขการใช้งานระบบ (Terms of Use)
                                 </option>
 
-                                <option value="privacy">
+                                <option value="privacy"
+                                    {{ old('type') == 'privacy' ? 'selected' : '' }} >
                                     นโยบายความเป็นส่วนตัว (Privacy Policy)
                                 </option>
 
-                                <option value="pdpa">
+                                <option value="pdpa"
+                                    {{ old('type') == 'pdpa' ? 'selected' : '' }} >
                                     ประกาศการคุ้มครองข้อมูลส่วนบุคคล (PDPA Notice)
                                 </option>
 
@@ -40,7 +43,7 @@
                                 เวอร์ชัน
                             </label>
 
-                            <input type="text" name="version" class="form-control" value="1.0.0" required>
+                            <input type="text" name="version" class="form-control" value="{{old('version', '1.0.0')}}" required>
 
                             <div class="invalid-feedback">
                                 กรุณากรอกเวอร์ชัน
@@ -54,7 +57,7 @@
                                 ชื่อนโยบาย
                             </label>
 
-                            <input type="text" name="title" class="form-control" required>
+                            <input type="text" name="title" class="form-control" value="{{old('title')}}" required>
 
                             <div class="invalid-feedback">
                                 กรุณากรอกชื่อนโยบาย
@@ -67,9 +70,11 @@
                             <label class="form-label">
                                 เนื้อหา
                             </label>
-                            <textarea name="content_html" id="editor" class="form-control" rows="15" required ></textarea>
+                            <textarea name="content_html" id="editor" class="form-control" rows="15" required >
+                                {{ old('content_html')}}
+                            </textarea>
 
-                            <div class="invalid-feedback text-area">
+                            <div class="invalid-feedback invalid-text-area">
                                 กรุณากรอกเนื้อหา
                             </div>
                         </div>
@@ -91,8 +96,12 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
     <script>
+        let editor;
         ClassicEditor
             .create(document.querySelector('#editor'))
+            .then(instance => {
+                editor = instance;
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -100,6 +109,8 @@
         async function submitForm(form_id, buttonId){
             const submitButton = document.querySelector(`#${buttonId}`)
             submitButton.disabled = true;
+            editor.updateSourceElement();
+
 
             let validator = await validateForm(form_id);
             if(validator){
@@ -115,7 +126,8 @@
             let form = document.getElementById(form_id);
             let input_text = form.querySelectorAll('input[type="text"][required]');
             let input_select = form.querySelectorAll('select[required]');
-            let input_textarea = form.querySelector('textarea[required]');
+            let input_textarea = form.querySelector('#editor');
+
             let validator = true;
             await input_text.forEach(input => {
                 if(input.value == ''){
@@ -140,7 +152,7 @@
             });
 
             if(input_textarea){
-                let invalid_element = form.querySelector('.text-area');
+                let invalid_element = form.querySelector('.invalid-text-area');
                 if(input_textarea.value == ''){
                     validator = false;
                     if(invalid_element)invalid_element.classList.add('d-inline');
