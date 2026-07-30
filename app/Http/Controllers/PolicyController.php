@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\DB;
 use Psy\Util\Json;
 use Yajra\DataTables\Facades\DataTables;
 
+use function Laravel\Prompts\select;
+
 class PolicyController extends Controller
 {
-        /**
+    /**
      * Display list of policies
      */
     public function index()
@@ -21,7 +23,8 @@ class PolicyController extends Controller
     }
 
 
-    private function translateTypeToThai(string $type) : string {
+    private function translateTypeToThai(string $type): string
+    {
         switch ($type) {
             case 'terms':
                 $thaiText = 'ข้อตกลงและเงื่อนไขการใช้งานระบบ (Terms of Use)';
@@ -33,36 +36,36 @@ class PolicyController extends Controller
                 $thaiText = 'ประกาศการคุ้มครองข้อมูลส่วนบุคคล (PDPA Notice)';
                 break;
             default:
-                $thaiText= 'ประเภทของนโยบายนี้ไม่รองรับ';
+                $thaiText = 'ประเภทของนโยบายนี้ไม่รองรับ';
         }
         return $thaiText;
-    } 
+    }
 
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $policies = Policy::with('creator')->orderBy('created_at','desc')
+            $policies = Policy::with('creator')->orderBy('created_at', 'desc')
                 ->select('policies.*');
 
             return DataTables::of($policies)
                 ->addIndexColumn()
                 ->addColumn('type', fn($policy) => $this->translateTypeToThai($policy->type))
-                ->addColumn('status', function($policy){
-                    return match($policy->status){
+                ->addColumn('status', function ($policy) {
+                    return match ($policy->status) {
                         'published' => '<span class="badge bg-success">เผยแพร่แล้ว</span>',
                         'draft' => '<span class="badge bg-warning text-dark">ฉบับร่าง</span>',
                         'archived' => '<span class="badge bg-secondary">จัดเก็บแล้ว</span>',
                     };
                 })
-                ->addColumn('created_by', function($policy){
-                    return optional($policy->creator)->firstname.' '.optional($policy->creator)->lastname;
+                ->addColumn('created_by', function ($policy) {
+                    return optional($policy->creator)->firstname . ' ' . optional($policy->creator)->lastname;
                 })
-                ->addColumn('action', function($policy){
+                ->addColumn('action', function ($policy) {
                     return view('admin.policies.action', compact('policy'))->render();
-                })->addColumn('published', function($policy){
+                })->addColumn('published', function ($policy) {
                     return view('admin.policies.publish-action', compact('policy'))->render();
                 })
-                ->rawColumns(['status','action','published'])
+                ->rawColumns(['status', 'action', 'published'])
                 ->make(true);
         }
 
@@ -106,7 +109,7 @@ class PolicyController extends Controller
                 'required'
             ]
 
-        ],[
+        ], [
             'type.required' => 'กรุณาเลือกประเภทนโยบาย',
             'type.in' => 'ประเภทนโยบายไม่ถูกต้อง',
 
@@ -138,7 +141,7 @@ class PolicyController extends Controller
                 'action' => 'create',
 
                 'description' =>
-                    'สร้าง Policy ใหม่',
+                'Create new Policy',
 
                 'created_by' => $request->session()->get('user_id')
             ]);
@@ -170,8 +173,7 @@ class PolicyController extends Controller
     public function update(
         Request $request,
         Policy $policy
-    )
-    {
+    ) {
         $validated = $request->validate([
             'type' => [
                 'required',
@@ -194,7 +196,7 @@ class PolicyController extends Controller
                 'required'
             ]
 
-        ],[
+        ], [
             'type.required' => 'กรุณาเลือกประเภทนโยบาย',
             'type.in' => 'ประเภทนโยบายไม่ถูกต้อง',
 
@@ -222,10 +224,9 @@ class PolicyController extends Controller
                 'policy_id' => $policy->id,
                 'action' => 'update',
                 'description' =>
-                    'แก้ไข Policy',
+                'Update Policy',
                 'created_by' => $request->session()->get('user_id')
             ]);
-
         });
 
         return redirect()
@@ -244,8 +245,7 @@ class PolicyController extends Controller
      */
     public function preview(
         Policy $policy
-    )
-    {
+    ) {
         return view(
             'admin.policies.preview',
             compact('policy')
@@ -256,8 +256,17 @@ class PolicyController extends Controller
     /**
      * Publish policy
      */
-   public function publish(Request $request, Policy $policy)
+    public function publish(Request $request, Policy $policy)
     {
+        if ($policy->status !== 'draft') {
+            return redirect()
+                ->route('admin.policies.index')
+                ->with(
+                    'error',
+                    'สามารถ Publish ได้เฉพาะ Draft'
+                );
+        }
+        
         DB::transaction(function () use ($policy, $request) {
             Policy::where('type', $policy->type)
                 ->where('status', 'published')
@@ -276,12 +285,14 @@ class PolicyController extends Controller
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
                 'action' => 'publish',
-                'description' => 'เผยแพร่นโยบาย',
+                'description' => 'Policy Published',
                 'created_by' => $request->session()->get('user_id')
             ]);
         });
 
-        return redirect()->route('admin.policies.index')->with('success', 'เผยแพร่นโยบายสำเร็จ');
+        return redirect()
+            ->route('admin.policies.index')
+            ->with('success', 'เผยแพร่นโยบายสำเร็จ');
     }
 
     /**
@@ -289,28 +300,64 @@ class PolicyController extends Controller
      */
     public function archive(Request $request, Policy $policy)
     {
+        if ($policy->status !== 'published') {
+            return redirect()
+                ->route('admin.policies.index')
+                ->with(
+                    'error',
+                    'สามารถ Archive ได้เฉพาะ Published'
+            );
+        }
+
         DB::transaction(function () use ($policy, $request) {
             $policy->update([
                 'status' => 'archived',
                 'updated_by' => $request->session()->get('user_id')
             ]);
             PolicyChangeLog::create([
-
                 'policy_id' => $policy->id,
-
                 'action' => 'archive',
-
-                'description' =>
-                    'Archive Policy',
-
+                'description' => 'Archive Policy',
                 'created_by' => $request->session()->get('user_id')
             ]);
         });
         return redirect()
-            ->back()
+            ->route('admin.policies.index')
             ->with(
                 'success',
                 'จัดเก็บนโยบายสำเร็จ'
+            );
+    }
+
+    public function restore(Request $request, Policy $policy) {
+        if($policy->status !== 'archived') {
+            return redirect()
+                ->route('admin.policies.index')
+                ->with(
+                    'error',
+                    'สามารถ Restore ได้เฉพาะ Archived'
+            );
+        }
+
+        DB::transaction(function () use ($policy, $request) {
+            $policy->update([
+                'status' => 'draft',
+                'updated_by' => $request->session()->get('user_id')
+            ]);
+
+            PolicyChangeLog::create([
+                'policy_id' => $policy->id,
+                'action' => 'restore',
+                'description' => 'Restore Archived Policy to Draft',
+                'created_by' => $request->session()->get('user_id')
+            ]);
+        });
+
+        return redirect()
+            ->route('admin.policies.index')
+            ->with(
+                'success',
+                'คืนค่านโยบายสำเร็จ'
             );
     }
 }

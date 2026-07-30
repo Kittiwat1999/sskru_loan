@@ -18,7 +18,7 @@
                         <label>
                             ชื่อนโยบาย
                         </label>
-                        <input type="text" name="title" class="form-control" value="{{ $policy->title }}" required>
+                        <input type="text" name="title" class="form-control" value="{{ old('title', $policy->title) }}" required>
                         <div class="invalid-feedback">
                             กรุณากรอกชื่อนโยบาย
                         </div>
@@ -28,7 +28,7 @@
                         <label>
                             เวอร์ชั่น
                         </label>
-                        <input type="text" name="version" class="form-control" value="{{ $policy->version }}" required>
+                        <input type="text" name="version" class="form-control" value="{{ old('version', $policy->version) }}" required>
                         <div class="invalid-feedback">
                             กรุณากรอกเวอร์ชัน
                         </div>
@@ -40,10 +40,10 @@
                         </label>
                         <textarea name="content_html" id="editor" class="form-control" required>
     
-                            {{ $policy->content_html }}
+                            {{ old('content_html', $policy->content_html ?? '') }}
 
                         </textarea>
-                        <div class="invalid-feedback text-area">
+                        <div class="invalid-feedback invalid-text-area">
                             กรุณากรอกเนื้อหา
                         </div>
                     </div>
@@ -60,8 +60,6 @@
             </div>
         </form>
     </div>
-
-   
 @endsection
 
 @section('script')
@@ -121,7 +119,7 @@
             });
 
             if(input_textarea){
-                let invalid_element = form.querySelector('.text-area');
+                let invalid_element = form.querySelector('.invalid-text-area');
                 if(input_textarea.value == ''){
                     validator = false;
                     if(invalid_element)invalid_element.classList.add('d-inline');
@@ -134,5 +132,4 @@
         }
 
     </script>
-    
 @endsection
