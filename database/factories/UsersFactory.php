@@ -2,26 +2,56 @@
 
 namespace Database\Factories;
 
+use App\Models\Users;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Users>
  */
 class UsersFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Users::class;
+
     public function definition(): array
     {
         return [
-            'fname'=>fake()->name(),
-            'lname'=>fake()->name(),
-            'username'=>fake()->unique()->safeEmail(),
-            'password'=>rand(0,99999999),
-            'privilage'=>fake()->name()
+            'email' => fake()->unique()->safeEmail(),
+            'privilege' => 'borrower',
+            'prefix' => 'นาย',
+            'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
+            'password' => Hash::make('password'),
+            'activated' => true,
+            'isactive' => true,
         ];
+    }
+
+    public function admin(): static
+    {
+        return $this->state(fn () => [
+            'privilege' => 'admin',
+        ]);
+    }
+
+    public function approver(): static
+    {
+        return $this->state(fn () => [
+            'privilege' => 'approver',
+        ]);
+    }
+
+    public function teacher(): static
+    {
+        return $this->state(fn () => [
+            'privilege' => 'teacher',
+        ]);
+    }
+
+    public function borrower(): static
+    {
+        return $this->state(fn () => [
+            'privilege' => 'borrower',
+        ]);
     }
 }
