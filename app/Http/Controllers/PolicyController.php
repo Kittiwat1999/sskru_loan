@@ -7,20 +7,18 @@ use App\Enums\PolicyStatus;
 use App\Enums\PolicyType;
 use App\Http\Controllers\Controller;
 use App\Models\Policy;
-use App\Models\PolicyChangeLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Psy\Util\Json;
 use Yajra\DataTables\Facades\DataTables;
-
-use function Laravel\Prompts\select;
+use App\Services\PolicyChangeLogger;
 
 class PolicyController extends Controller
 {
-    /**
-     * Display list of policies
-     */
+    public function __construct(
+        private PolicyChangeLogger $policyChangeLogger
+    ) {}
+
     public function index()
     {
         return view('admin.policies.index');
@@ -116,12 +114,12 @@ class PolicyController extends Controller
             ]);
 
 
-            PolicyChangeLog::create([
-                'policy_id' => $policy->id,
-                'action' => PolicyAction::CREATE->value,
-                'description' => 'Create new Policy',
-                'created_by' => $request->session()->get('user_id')
-            ]);
+            $this->policyChangeLogger->log(
+                $policy->id,
+                PolicyAction::CREATE->value,
+                $request->session()->get('user_id'),
+                'Create new Policy',
+            );
         });
 
         return redirect()
@@ -195,12 +193,12 @@ class PolicyController extends Controller
                 'updated_by' => $request->session()->get('user_id')
             ]);
 
-            PolicyChangeLog::create([
-                'policy_id' => $policy->id,
-                'action' => PolicyAction::UPDATE->value,
-                'description' => 'Update Policy',
-                'created_by' => $request->session()->get('user_id')
-            ]);
+            $this->policyChangeLogger->log(
+                $policy->id,
+                PolicyAction::UPDATE->value,
+                $request->session()->get('user_id'),
+                'Update Policy'
+            );
         });
 
         return redirect()
@@ -256,12 +254,12 @@ class PolicyController extends Controller
                 'updated_by' => $request->session()->get('user_id')
             ]);
 
-            PolicyChangeLog::create([
-                'policy_id' => $policy->id,
-                'action' => PolicyAction::PUBLISH->value,
-                'description' => 'Policy Published',
-                'created_by' => $request->session()->get('user_id')
-            ]);
+            $this->policyChangeLogger->log(
+                $policy->id,
+                PolicyAction::PUBLISH->value,
+                $request->session()->get('user_id'),
+                'Policy Published'
+            );
         });
 
         return redirect()
@@ -288,12 +286,12 @@ class PolicyController extends Controller
                 'status' => PolicyStatus::ARCHIVED->value,
                 'updated_by' => $request->session()->get('user_id')
             ]);
-            PolicyChangeLog::create([
-                'policy_id' => $policy->id,
-                'action' => PolicyAction::ARCHIVE->value,
-                'description' => 'Archive Policy',
-                'created_by' => $request->session()->get('user_id')
-            ]);
+            $this->policyChangeLogger->log(
+                $policy->id,
+                PolicyAction::ARCHIVE->value,
+                $request->session()->get('user_id'),
+                'Archive Policy'
+            );
         });
         return redirect()
             ->route('admin.policies.index')
@@ -319,12 +317,12 @@ class PolicyController extends Controller
                 'updated_by' => $request->session()->get('user_id')
             ]);
 
-            PolicyChangeLog::create([
-                'policy_id' => $policy->id,
-                'action' => PolicyAction::RESTORE,
-                'description' => 'Restore Archived Policy to Draft',
-                'created_by' => $request->session()->get('user_id')
-            ]);
+            $this->policyChangeLogger->log(
+                $policy->id,
+                PolicyAction::RESTORE->value,
+                $request->session()->get('user_id'),
+                'Restore Archived Policy to Draft'
+            );
         });
 
         return redirect()
