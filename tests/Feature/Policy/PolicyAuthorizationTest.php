@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Policy;
 
+use App\Enums\PolicyType;
 use App\Models\Policy;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -47,7 +48,7 @@ class PolicyAuthorizationTest extends TestCase
     {
         $this->actingAsBorrower();
         $data = [
-            'type' => 'terms',
+            'type' => PolicyType::TERMS->value,
             'title' => 'ข้อกำหนดการใช้งานระบบ',
             'version' => '1.0.0',
             'content_html' => '<p>เนื้อหานโยบาย</p>',

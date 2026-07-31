@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\PolicyStatus;
+use App\Enums\PolicyType;
 use App\Models\Policy;
 use App\Models\Users;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -33,7 +35,7 @@ class PolicyFactory extends Factory
     public function draft(): static
     {
         return $this->state(fn () => [
-            'status' => 'draft',
+            'status' => PolicyStatus::DRAFT->value,
             'effective_at' => null,
             'published_at' => null,
         ]);
@@ -42,7 +44,7 @@ class PolicyFactory extends Factory
     public function published(): static
     {
         return $this->state(fn () => [
-            'status' => 'published',
+            'status' => PolicyStatus::PUBLISHED->value,
             'effective_at' => now(),
             'published_at' => now(),
         ]);
@@ -51,28 +53,28 @@ class PolicyFactory extends Factory
     public function archived(): static
     {
         return $this->state(fn () => [
-            'status' => 'archived',
+            'status' => PolicyStatus::ARCHIVED->value,
         ]);
     }
 
     public function terms(): static
     {
         return $this->state(fn () => [
-            'type' => 'terms',
+            'type' => PolicyType::TERMS->value,
         ]);
     }
 
     public function privacy(): static
     {
         return $this->state(fn () => [
-            'type' => 'privacy',
+            'type' => PolicyType::PRIVACY->value,
         ]);
     }
 
     public function pdpa(): static
     {
         return $this->state(fn () => [
-            'type' => 'pdpa',
+            'type' => PolicyType::PDPA->value,
         ]);
     }
 

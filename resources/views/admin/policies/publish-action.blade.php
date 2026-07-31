@@ -1,4 +1,4 @@
-@if($policy->status == 'draft')
+@if($policy->isDraft())
 <form action="{{ route('admin.policies.publish',$policy->id) }}"
       method="POST"
       class="d-inline">
@@ -9,7 +9,7 @@
 </form>
 @endif
 
-@if($policy->status == 'published')
+@if($policy->isPublished())
 <form action="{{ route('admin.policies.archive',$policy->id) }}"
       method="POST"
       class="d-inline">
@@ -20,7 +20,7 @@
 </form>
 @endif
 
-@if($policy->status == 'archived')
+@if($policy->isArchived())
 <form action="{{ route('admin.policies.restore',$policy->id) }}"
       method="POST"
       class="d-inline">

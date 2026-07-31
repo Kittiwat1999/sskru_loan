@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PolicyAction;
+use App\Enums\PolicyStatus;
+use App\Enums\PolicyType;
 use App\Http\Controllers\Controller;
 use App\Models\Policy;
 use App\Models\PolicyChangeLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Psy\Util\Json;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -22,25 +26,6 @@ class PolicyController extends Controller
         return view('admin.policies.index');
     }
 
-
-    private function translateTypeToThai(string $type): string
-    {
-        switch ($type) {
-            case 'terms':
-                $thaiText = 'ข้อตกลงและเงื่อนไขการใช้งานระบบ (Terms of Use)';
-                break;
-            case 'privacy':
-                $thaiText = 'นโยบายความเป็นส่วนตัว (Privacy Policy)';
-                break;
-            case 'pdpa':
-                $thaiText = 'ประกาศการคุ้มครองข้อมูลส่วนบุคคล (PDPA Notice)';
-                break;
-            default:
-                $thaiText = 'ประเภทของนโยบายนี้ไม่รองรับ';
-        }
-        return $thaiText;
-    }
-
     public function getData(Request $request)
     {
         if ($request->ajax()) {
@@ -49,13 +34,9 @@ class PolicyController extends Controller
 
             return DataTables::of($policies)
                 ->addIndexColumn()
-                ->addColumn('type', fn($policy) => $this->translateTypeToThai($policy->type))
+                ->addColumn('type', fn($policy) => PolicyType::from($policy->type)->label())
                 ->addColumn('status', function ($policy) {
-                    return match ($policy->status) {
-                        'published' => '<span class="badge bg-success">เผยแพร่แล้ว</span>',
-                        'draft' => '<span class="badge bg-warning text-dark">ฉบับร่าง</span>',
-                        'archived' => '<span class="badge bg-secondary">จัดเก็บแล้ว</span>',
-                    };
+                    return PolicyStatus::from($policy->status)->badge();
                 })
                 ->addColumn('created_by', function ($policy) {
                     return optional($policy->creator)->firstname . ' ' . optional($policy->creator)->lastname;
@@ -90,7 +71,7 @@ class PolicyController extends Controller
         $validated = $request->validate([
             'type' => [
                 'required',
-                'in:terms,privacy,pdpa'
+                Rule::enum(PolicyType::class)
             ],
 
             'title' => [
@@ -129,7 +110,7 @@ class PolicyController extends Controller
 
             $policy = Policy::create([
                 ...$validated,
-                'status' => 'draft',
+                'status' => PolicyStatus::DRAFT->value,
                 'created_by' => $request->session()->get('user_id'),
                 'updated_by' => $request->session()->get('user_id')
             ]);
@@ -137,12 +118,8 @@ class PolicyController extends Controller
 
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
-
-                'action' => 'create',
-
-                'description' =>
-                'Create new Policy',
-
+                'action' => PolicyAction::CREATE->value,
+                'description' => 'Create new Policy',
                 'created_by' => $request->session()->get('user_id')
             ]);
         });
@@ -177,7 +154,7 @@ class PolicyController extends Controller
         $validated = $request->validate([
             'type' => [
                 'required',
-                'in:terms,privacy,pdpa'
+                Rule::enum(PolicyType::class)
             ],
 
             'title' => [
@@ -214,17 +191,14 @@ class PolicyController extends Controller
 
         DB::transaction(function () use ($validated, $policy, $request) {
             $policy->update([
-
                 ...$validated,
-
                 'updated_by' => $request->session()->get('user_id')
             ]);
 
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
-                'action' => 'update',
-                'description' =>
-                'Update Policy',
+                'action' => PolicyAction::UPDATE->value,
+                'description' => 'Update Policy',
                 'created_by' => $request->session()->get('user_id')
             ]);
         });
@@ -258,7 +232,7 @@ class PolicyController extends Controller
      */
     public function publish(Request $request, Policy $policy)
     {
-        if ($policy->status !== 'draft') {
+        if ($policy->status !== PolicyStatus::DRAFT->value) {
             return redirect()
                 ->route('admin.policies.index')
                 ->with(
@@ -269,14 +243,14 @@ class PolicyController extends Controller
         
         DB::transaction(function () use ($policy, $request) {
             Policy::where('type', $policy->type)
-                ->where('status', 'published')
+                ->where('status', PolicyStatus::PUBLISHED->value)
                 ->update([
-                    'status' => 'archived',
+                    'status' => PolicyStatus::ARCHIVED->value,
                     'updated_by' => $request->session()->get('user_id')
                 ]);
 
             $policy->update([
-                'status' => 'published',
+                'status' => PolicyStatus::PUBLISHED->value,
                 'published_at' => now(),
                 'effective_at' => now(),
                 'updated_by' => $request->session()->get('user_id')
@@ -284,7 +258,7 @@ class PolicyController extends Controller
 
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
-                'action' => 'publish',
+                'action' => PolicyAction::PUBLISH->value,
                 'description' => 'Policy Published',
                 'created_by' => $request->session()->get('user_id')
             ]);
@@ -300,7 +274,7 @@ class PolicyController extends Controller
      */
     public function archive(Request $request, Policy $policy)
     {
-        if ($policy->status !== 'published') {
+        if ($policy->status !== PolicyStatus::PUBLISHED->value) {
             return redirect()
                 ->route('admin.policies.index')
                 ->with(
@@ -311,12 +285,12 @@ class PolicyController extends Controller
 
         DB::transaction(function () use ($policy, $request) {
             $policy->update([
-                'status' => 'archived',
+                'status' => PolicyStatus::ARCHIVED->value,
                 'updated_by' => $request->session()->get('user_id')
             ]);
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
-                'action' => 'archive',
+                'action' => PolicyAction::ARCHIVE->value,
                 'description' => 'Archive Policy',
                 'created_by' => $request->session()->get('user_id')
             ]);
@@ -330,7 +304,7 @@ class PolicyController extends Controller
     }
 
     public function restore(Request $request, Policy $policy) {
-        if($policy->status !== 'archived') {
+        if($policy->status !== PolicyStatus::ARCHIVED->value) {
             return redirect()
                 ->route('admin.policies.index')
                 ->with(
@@ -341,13 +315,13 @@ class PolicyController extends Controller
 
         DB::transaction(function () use ($policy, $request) {
             $policy->update([
-                'status' => 'draft',
+                'status' => PolicyStatus::DRAFT->value,
                 'updated_by' => $request->session()->get('user_id')
             ]);
 
             PolicyChangeLog::create([
                 'policy_id' => $policy->id,
-                'action' => 'restore',
+                'action' => PolicyAction::RESTORE,
                 'description' => 'Restore Archived Policy to Draft',
                 'created_by' => $request->session()->get('user_id')
             ]);

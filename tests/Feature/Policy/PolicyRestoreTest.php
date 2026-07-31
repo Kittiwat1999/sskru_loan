@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Policy;
 
+use App\Enums\PolicyAction;
+use App\Enums\PolicyStatus;
 use App\Models\Policy;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -52,7 +54,7 @@ public function test_restore_changes_status_to_draft(): void
     $policy->refresh();
 
     $this->assertEquals(
-        'draft',
+        PolicyStatus::DRAFT->value,
         $policy->status
     );
 }
@@ -104,7 +106,7 @@ public function test_restore_creates_change_log(): void
 
     $this->assertDatabaseHas('policy_change_logs', [
         'policy_id' => $policy->id,
-        'action' => 'restore',
+        'action' => PolicyAction::RESTORE->value,
         'created_by' => $admin->id,
     ]);
 }
@@ -137,7 +139,7 @@ public function test_cannot_restore_draft_policy(): void
 
     $this->assertDatabaseMissing('policy_change_logs', [
         'policy_id' => $policy->id,
-        'action' => 'restore',
+        'action' => PolicyAction::RESTORE->value,
     ]);
 }
 
@@ -165,11 +167,11 @@ public function test_cannot_restore_published_policy(): void
 
     $policy->refresh();
 
-    $this->assertEquals('published', $policy->status);
+    $this->assertEquals(PolicyStatus::PUBLISHED->value, $policy->status);
 
     $this->assertDatabaseMissing('policy_change_logs', [
         'policy_id' => $policy->id,
-        'action' => 'restore',
+        'action' => PolicyAction::RESTORE->value,
     ]);
 }
 }

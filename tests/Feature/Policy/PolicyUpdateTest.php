@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Policy;
 
+use App\Enums\PolicyAction;
+use App\Enums\PolicyType;
 use App\Models\Policy;
 use App\Models\Users;
 use Tests\TestCase;
@@ -53,7 +55,7 @@ class PolicyUpdateTest extends TestCase
         $response = $this->put(
             route('admin.policies.update', $policy),
             [
-                'type' => 'privacy',
+                'type' => PolicyType::PRIVACY->value,
                 'title' => 'Privacy Policy New',
                 'version' => '1.0.1',
                 'content_html' => '<p>Updated</p>',
@@ -64,7 +66,7 @@ class PolicyUpdateTest extends TestCase
 
         $this->assertDatabaseHas('policies', [
             'id' => $policy->id,
-            'type' => 'privacy',
+            'type' => PolicyType::PRIVACY->value,
             'title' => 'Privacy Policy New',
             'version' => '1.0.1',
             'updated_by' => $admin->id,
@@ -72,7 +74,7 @@ class PolicyUpdateTest extends TestCase
 
         $this->assertDatabaseHas('policy_change_logs', [
             'policy_id' => $policy->id,
-            'action' => 'update',
+            'action' => PolicyAction::UPDATE->value,
             'created_by' => $admin->id,
         ]);
     }
@@ -87,7 +89,7 @@ class PolicyUpdateTest extends TestCase
             ->create();
 
         $this->put(route('admin.policies.update', $policy), [
-            'type' => 'privacy',
+            'type' => PolicyType::PRIVACY->value,
             'title' => 'Updated Policy',
             'version' => '1.0.1',
             'content_html' => '<p>Updated</p>',
@@ -95,7 +97,7 @@ class PolicyUpdateTest extends TestCase
 
         $this->assertDatabaseHas('policy_change_logs', [
             'policy_id' => $policy->id,
-            'action' => 'update',
+            'action' => PolicyAction::UPDATE->value,
             'created_by' => $admin->id,
         ]);
     }
@@ -109,7 +111,7 @@ class PolicyUpdateTest extends TestCase
             ->create();
 
         $this->put(route('admin.policies.update', $policy), [
-            'type' => 'privacy',
+            'type' => PolicyType::PRIVACY->value,
             'title' => 'Updated',
             'version' => '1.0.1',
             'content_html' => '<p>Updated</p>',
@@ -134,7 +136,7 @@ class PolicyUpdateTest extends TestCase
         $editor = $this->actingAsAdmin();
 
         $this->put(route('admin.policies.update', $policy), [
-            'type' => 'privacy',
+            'type' => PolicyType::PRIVACY->value,
             'title' => 'Updated',
             'version' => '1.0.1',
             'content_html' => '<p>Updated</p>',
