@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\PolicyChangeLogger;
+use App\Services\PolicyService;
 use App\Services\PolicyWorkflow;
 
 class PolicyController extends Controller
 {
     public function __construct(
+        private PolicyService $policyService,
         private PolicyChangeLogger $policyChangeLogger,
         private PolicyWorkflow $policyWorkflow,
     ) {}
@@ -106,23 +108,10 @@ class PolicyController extends Controller
         ]);
 
 
-        DB::transaction(function () use ($validated, &$policy, $request) {
-
-            $policy = Policy::create([
-                ...$validated,
-                'status' => PolicyStatus::DRAFT->value,
-                'created_by' => $request->session()->get('user_id'),
-                'updated_by' => $request->session()->get('user_id')
-            ]);
-
-
-            $this->policyChangeLogger->log(
-                $policy->id,
-                PolicyAction::CREATE->value,
-                $request->session()->get('user_id'),
-                'Create new Policy',
-            );
-        });
+        $this->policyService->create(
+            $validated,
+            $request->session()->get('user_id')
+        );
 
         return redirect()
             ->route('admin.policies.index')
@@ -188,20 +177,7 @@ class PolicyController extends Controller
             'content_html.required' => 'กรุณาระบุเนื้อหานโยบาย'
         ]);
 
-
-        DB::transaction(function () use ($validated, $policy, $request) {
-            $policy->update([
-                ...$validated,
-                'updated_by' => $request->session()->get('user_id')
-            ]);
-
-            $this->policyChangeLogger->log(
-                $policy->id,
-                PolicyAction::UPDATE->value,
-                $request->session()->get('user_id'),
-                'Update Policy'
-            );
-        });
+        $pilicy = $this->policyService->update($validated, $policy, $request->session()->get('user_id'));
 
         return redirect()
             ->route(
@@ -241,28 +217,7 @@ class PolicyController extends Controller
                 );
         }
         
-        DB::transaction(function () use ($policy, $request) {
-            Policy::where('type', $policy->type)
-                ->where('status', PolicyStatus::PUBLISHED->value)
-                ->update([
-                    'status' => PolicyStatus::ARCHIVED->value,
-                    'updated_by' => $request->session()->get('user_id')
-                ]);
-
-            $policy->update([
-                'status' => PolicyStatus::PUBLISHED->value,
-                'published_at' => now(),
-                'effective_at' => now(),
-                'updated_by' => $request->session()->get('user_id')
-            ]);
-
-            $this->policyChangeLogger->log(
-                $policy->id,
-                PolicyAction::PUBLISH->value,
-                $request->session()->get('user_id'),
-                'Policy Published'
-            );
-        });
+        $this->policyService->publish($policy, $request->session()->get('user_id'));
 
         return redirect()
             ->route('admin.policies.index')
@@ -283,18 +238,8 @@ class PolicyController extends Controller
             );
         }
 
-        DB::transaction(function () use ($policy, $request) {
-            $policy->update([
-                'status' => PolicyStatus::ARCHIVED->value,
-                'updated_by' => $request->session()->get('user_id')
-            ]);
-            $this->policyChangeLogger->log(
-                $policy->id,
-                PolicyAction::ARCHIVE->value,
-                $request->session()->get('user_id'),
-                'Archive Policy'
-            );
-        });
+        $this->policyService->archive($policy, $request->session()->get('user_id'));
+
         return redirect()
             ->route('admin.policies.index')
             ->with(
@@ -313,19 +258,7 @@ class PolicyController extends Controller
             );
         }
 
-        DB::transaction(function () use ($policy, $request) {
-            $policy->update([
-                'status' => PolicyStatus::DRAFT->value,
-                'updated_by' => $request->session()->get('user_id')
-            ]);
-
-            $this->policyChangeLogger->log(
-                $policy->id,
-                PolicyAction::RESTORE->value,
-                $request->session()->get('user_id'),
-                'Restore Archived Policy to Draft'
-            );
-        });
+        $this->policyService->restore($policy, $request->session()->get('user_id'));
 
         return redirect()
             ->route('admin.policies.index')
