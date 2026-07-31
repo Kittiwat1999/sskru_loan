@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\PolicyChangeLogger;
+use App\Services\PolicyWorkflow;
 
 class PolicyController extends Controller
 {
     public function __construct(
-        private PolicyChangeLogger $policyChangeLogger
+        private PolicyChangeLogger $policyChangeLogger,
+        private PolicyWorkflow $policyWorkflow,
     ) {}
 
     public function index()
@@ -230,7 +232,7 @@ class PolicyController extends Controller
      */
     public function publish(Request $request, Policy $policy)
     {
-        if ($policy->status !== PolicyStatus::DRAFT->value) {
+        if (! $this->policyWorkflow->canPublish($policy)) {
             return redirect()
                 ->route('admin.policies.index')
                 ->with(
@@ -272,7 +274,7 @@ class PolicyController extends Controller
      */
     public function archive(Request $request, Policy $policy)
     {
-        if ($policy->status !== PolicyStatus::PUBLISHED->value) {
+        if (! $this->policyWorkflow->canArchive($policy)) {
             return redirect()
                 ->route('admin.policies.index')
                 ->with(
@@ -302,7 +304,7 @@ class PolicyController extends Controller
     }
 
     public function restore(Request $request, Policy $policy) {
-        if($policy->status !== PolicyStatus::ARCHIVED->value) {
+        if(! $this->policyWorkflow->canRestore($policy)) {
             return redirect()
                 ->route('admin.policies.index')
                 ->with(
