@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Policy;
 
+use App\Enums\PolicyAction;
+use App\Enums\PolicyStatus;
 use App\Models\Policy;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +50,7 @@ class PolicyArchiveTest extends TestCase
         $policy->refresh();
 
         $this->assertEquals(
-            'archived',
+            PolicyStatus::ARCHIVED->value,
             $policy->status
         );
     }
@@ -68,7 +70,7 @@ class PolicyArchiveTest extends TestCase
 
         $this->assertDatabaseHas('policy_change_logs', [
             'policy_id' => $policy->id,
-            'action' => 'archive',
+            'action' => PolicyAction::ARCHIVE->value,
             'created_by' => $admin->id,
         ]);
     }
@@ -99,13 +101,13 @@ class PolicyArchiveTest extends TestCase
         $policy->refresh();
 
         $this->assertEquals(
-            'draft',
+            PolicyStatus::DRAFT->value,
             $policy->status
         );
 
         $this->assertDatabaseMissing('policy_change_logs', [
             'policy_id' => $policy->id,
-            'action' => 'archive',
+            'action' => PolicyAction::ARCHIVE->value,
         ]);
     }
 
@@ -134,13 +136,13 @@ class PolicyArchiveTest extends TestCase
         $policy->refresh();
 
         $this->assertEquals(
-            'archived',
+            PolicyStatus::ARCHIVED->value,
             $policy->status
         );
 
         $this->assertDatabaseMissing('policy_change_logs', [
             'policy_id' => $policy->id,
-            'action' => 'archive',
+            'action' => PolicyAction::ARCHIVE->value,
         ]);
     }
 }

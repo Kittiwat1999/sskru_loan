@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Policy;
 
+use App\Enums\PolicyAction;
+use App\Enums\PolicyStatus;
+use App\Enums\PolicyType;
 use App\Models\Policy;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,7 +18,7 @@ class PolicyCreateTest extends TestCase
         $admin = $this->actingAsAdmin();
 
         $data = [
-            'type' => 'terms',
+            'type' => PolicyType::TERMS->value,
             'title' => 'ข้อกำหนดการใช้งานระบบ',
             'version' => '1.0.0',
             'content_html' => '<p>เนื้อหานโยบาย</p>',
@@ -29,16 +32,16 @@ class PolicyCreateTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseHas('policies', [
-            'type' => 'terms',
+            'type' => PolicyType::TERMS->value,
             'title' => 'ข้อกำหนดการใช้งานระบบ',
             'version' => '1.0.0',
-            'status' => 'draft',
+            'status' => PolicyStatus::DRAFT->value,
             'created_by' => $admin->id,
             'updated_by' => $admin->id,
         ]);
 
         $this->assertDatabaseHas('policy_change_logs', [
-            'action' => 'create',
+            'action' => PolicyAction::CREATE->value,
             'created_by' => $admin->id,
         ]);
     }
@@ -84,7 +87,7 @@ class PolicyCreateTest extends TestCase
         $this->actingAsAdmin();
 
         $response = $this->post(route('admin.policies.store'), [
-            'type' => 'terms',
+            'type' => PolicyType::TERMS->value,
             'title' => str_repeat('A', 256),
             'version' => '1.0.0',
             'content_html' => '<p>Test</p>',

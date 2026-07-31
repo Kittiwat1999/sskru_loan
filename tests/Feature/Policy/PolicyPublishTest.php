@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Policy;
 
+use App\Enums\PolicyAction;
+use App\Enums\PolicyStatus;
 use App\Models\Policy;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,7 +42,7 @@ class PolicyPublishTest extends TestCase
         $policy->refresh();
 
         $this->assertEquals(
-            'published',
+            PolicyStatus::PUBLISHED->value,
             $policy->status
         );
     }
@@ -94,7 +96,7 @@ class PolicyPublishTest extends TestCase
 
         $this->assertDatabaseHas('policy_change_logs', [
             'policy_id' => $policy->id,
-            'action' => 'publish',
+            'action' => PolicyAction::PUBLISH->value,
             'created_by' => $admin->id,
         ]);
     }
@@ -124,7 +126,7 @@ class PolicyPublishTest extends TestCase
     $policy->refresh();
 
     $this->assertEquals(
-        'published',
+        PolicyStatus::PUBLISHED->value,
         $policy->status
     );
 
@@ -134,7 +136,7 @@ class PolicyPublishTest extends TestCase
 
     $this->assertDatabaseMissing('policy_change_logs', [
         'policy_id' => $policy->id,
-        'action' => 'publish',
+        'action' => PolicyAction::PUBLISH->value,
     ]);
 }
 }

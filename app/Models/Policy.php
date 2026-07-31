@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PolicyStatus;
+use App\Enums\PolicyType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,11 +21,11 @@ class Policy extends Model
         'created_by',
         'updated_by'
     ];
-    
-protected $casts = [
-    'published_at' => 'datetime',
-    'effective_at' => 'datetime',
-];
+
+    protected $casts = [
+        'published_at' => 'datetime',
+        'effective_at' => 'datetime',
+    ];
 
     public function creator()
     {
@@ -48,5 +50,34 @@ protected $casts = [
         return $this->hasMany(
             PolicyChangeLog::class
         );
+    }
+
+    public function getStatusEnumAttribute(): PolicyStatus
+    {
+        return PolicyStatus::from(
+            $this->status
+        );
+    }
+
+    public function getTypeEnumAttribute(): PolicyType
+    {
+        return PolicyType::from(
+            $this->type
+        );
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status === PolicyStatus::DRAFT->value;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->status === PolicyStatus::PUBLISHED->value;
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->status === PolicyStatus::ARCHIVED->value;
     }
 }
