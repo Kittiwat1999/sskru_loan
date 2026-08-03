@@ -6,11 +6,13 @@ use App\Models\Policy;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PolicyAction;
 use App\Enums\PolicyStatus;
+use App\Services\PublishedPolicyCacheService;
 
 class PolicyService
 {
     public function __construct(
-        private PolicyChangeLogger $policyChangeLogger
+        private PolicyChangeLogger $policyChangeLogger,
+        private PublishedPolicyCacheService $publishedPolicyCacheService
     ) {}
 
     public function create(array $data, int $userId): Policy {
@@ -74,6 +76,8 @@ class PolicyService
                 'Policy Published'
             );
         });
+
+        $this->publishedPolicyCacheService->forget();
         
         return $policy;
     }
