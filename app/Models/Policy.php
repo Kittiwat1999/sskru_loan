@@ -80,4 +80,19 @@ class Policy extends Model
     {
         return $this->status === PolicyStatus::ARCHIVED->value;
     }
+
+    public function scopePublished($query)
+    {
+        return $query->where(
+            'status',
+            PolicyStatus::PUBLISHED->value
+        );
+    }
+
+    public function acceptances()
+    {
+        return $this->hasMany(
+            PolicyAcceptance::class
+        );
+    }
 }

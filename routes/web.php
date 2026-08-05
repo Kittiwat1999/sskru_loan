@@ -589,3 +589,8 @@ Route::get('/expired_page', function () {
 Route::get('/input_thai_id', function () {
     return view('/input_thai_id');
 });
+
+
+Route::get('/policies/acceptance', function () {
+    return "policy acceptance page";
+})->name('policies.acceptance');

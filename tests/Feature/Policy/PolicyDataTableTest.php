@@ -5,12 +5,11 @@ namespace Tests\Feature\Policy;
 use App\Models\Policy;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PolicyDataTableTest extends TestCase
 {
     use DatabaseTransactions;
-
+    
     public function test_admin_can_get_policy_datatable(): void
     {
         $this->actingAsAdmin();
