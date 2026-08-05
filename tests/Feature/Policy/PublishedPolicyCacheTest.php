@@ -14,16 +14,12 @@ class PublishedPolicyCacheTest extends TestCase
 {
     use RefreshDatabase;
 
-
     protected PublishedPolicyCacheService $service;
-
 
     protected function setUp(): void
     {
         parent::setUp();
-
         Cache::flush();
-
         $this->service = app(
             PublishedPolicyCacheService::class
         );
@@ -45,21 +41,17 @@ class PublishedPolicyCacheTest extends TestCase
                 'version' => '1.2.0',
             ]);
 
-
         $result = $this->service->getAll();
-
 
         $this->assertArrayHasKey(
             'terms',
             $result
         );
 
-
         $this->assertEquals(
             '1.0.0',
             $result['terms']->version
         );
-
 
         $this->assertNotNull(
             Cache::get('policy:published:versions')
@@ -79,21 +71,14 @@ class PublishedPolicyCacheTest extends TestCase
             ]
         );
 
-
         DB::enableQueryLog();
-
-
         $result = $this->service->getAll();
-
-
         $queries = DB::getQueryLog();
-
 
         $this->assertCount(
             0,
             $queries
         );
-
 
         $this->assertEquals(
             '9.9.9',
@@ -113,9 +98,7 @@ class PublishedPolicyCacheTest extends TestCase
             ]
         );
 
-
         $this->service->forget();
-
 
         $this->assertNull(
             Cache::get(
@@ -144,20 +127,16 @@ class PublishedPolicyCacheTest extends TestCase
             ]
         );
 
-
         $result = $this->service->refresh();
-
 
         $this->assertEquals(
             '2.0.0',
             $result['terms']->version
         );
 
-
         $cached = Cache::get(
             'policy:published:versions'
         );
-
 
         $this->assertEquals(
             '2.0.0',
@@ -178,7 +157,6 @@ class PublishedPolicyCacheTest extends TestCase
         $policy = $this->service->get(
             PolicyType::PDPA
         );
-
 
         $this->assertEquals(
             '3.0.0',

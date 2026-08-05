@@ -88,4 +88,11 @@ class Policy extends Model
             PolicyStatus::PUBLISHED->value
         );
     }
+
+    public function acceptances()
+    {
+        return $this->hasMany(
+            PolicyAcceptance::class
+        );
+    }
 }

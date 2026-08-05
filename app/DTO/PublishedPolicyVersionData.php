@@ -2,14 +2,15 @@
 
 namespace App\DTO;
 
+use App\Models\Policy;
+
 class PublishedPolicyVersionData
 {
     public function __construct(
         public readonly int $id,
         public readonly string $type,
         public readonly string $version
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {
@@ -26,6 +27,15 @@ class PublishedPolicyVersionData
             id: $data['id'],
             type: $data['type'],
             version: $data['version'],
+        );
+    }
+
+    public static function fromPolicy(Policy $policy): self
+    {
+        return new self(
+            id: $policy->id,
+            type: $policy->type,
+            version: $policy->version,
         );
     }
 }

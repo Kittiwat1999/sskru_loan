@@ -40,10 +40,8 @@ class PublishedPolicyCacheService
         return $data;
     }
 
-
     public function get(PolicyType $type): ?PublishedPolicyVersionData
     {
-
         return $this->getAll()[$type->value] ?? null;
     }
 
@@ -52,7 +50,6 @@ class PublishedPolicyCacheService
     {
         $this->repository->forget();
     }
-
 
     private function loadPublishedPolicies(): array
     {
