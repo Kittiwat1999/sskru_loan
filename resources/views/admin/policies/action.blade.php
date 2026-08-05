@@ -3,7 +3,7 @@
     ดูตัวอย่าง
 </a>
 
-@if($policy->isPublished() && $policy->isArchived())
+@if($policy->isDraft())
 <a href="{{ route('admin.policies.edit',$policy->id) }}"
    class="btn btn-sm btn-warning">
     แก้ไข
