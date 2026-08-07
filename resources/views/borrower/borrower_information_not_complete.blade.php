@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title')
 ท่านยังไม่ได้กรอกข้อมูล
 @endsection

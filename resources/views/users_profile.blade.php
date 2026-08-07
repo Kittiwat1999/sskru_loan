@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title','users profile')
 @section('content')
     <section class="section profile">

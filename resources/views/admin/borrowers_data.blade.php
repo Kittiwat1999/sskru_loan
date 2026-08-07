@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title','อัพเดตข้อมูลผู้กู้')
 @section('content')
     <section class="section dashboard">

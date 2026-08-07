@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title')
 คำร้องขอแก้ใขข้อมูล
 @endsection
