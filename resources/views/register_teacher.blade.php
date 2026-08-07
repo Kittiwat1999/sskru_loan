@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'สร้างบัญชีผู้ใช้สำหรับอาจารย์ที่ปรึกษา')
+
+@section('title')
+    สร้างบัญชีผู้ใช้สำหรับอาจารย์ที่ปรึกษา
+@endsection
+
 @section('content')
 
 <main>
@@ -185,6 +189,7 @@
     </div>
 </main><!-- End #main -->
 @endsection
+
 @push('scripts')
 <script>
     const password = document.getElementById("password")

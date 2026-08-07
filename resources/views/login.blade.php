@@ -1,8 +1,13 @@
 @extends('layouts.guest')
-@section('title', 'เข้าสู่ระบบ')
+
+@section('title')
+เข้าสู่ระบบ
+@endsection
+
 @push('meta')
-        <meta name="description" content="SSKRU LOAN - เข้าสู่ระบบเพื่อใช้งานระบบกู้ยืมเงินเพื่อการศึกษา (กยศ.) ของมหาวิทยาลัยราชภัฏศรีสะเกษ นักศึกษาสามารถลงทะเบียน ยื่นคำขอ ตรวจสอบสถานะ และติดตามผลได้ง่าย ๆ ผ่านระบบออนไลน์ ปลอดภัย ใช้งานได้ตลอด 24 ชั่วโมง">
+<meta name="description" content="SSKRU LOAN - เข้าสู่ระบบเพื่อใช้งานระบบกู้ยืมเงินเพื่อการศึกษา (กยศ.) ของมหาวิทยาลัยราชภัฏศรีสะเกษ นักศึกษาสามารถลงทะเบียน ยื่นคำขอ ตรวจสอบสถานะ และติดตามผลได้ง่าย ๆ ผ่านระบบออนไลน์ ปลอดภัย ใช้งานได้ตลอด 24 ชั่วโมง">
 @endpush
+
 @section('content')
 <main>
     <div class="container">
@@ -119,6 +124,8 @@
 
     </div>
 </main><!-- End #main -->
+@endsection
+
 @push('scripts')
 <script>
     const login_button = document.getElementById('submit-button');
@@ -177,4 +184,4 @@
         return false;
     }
 </script>
-@push('scripts')
+@endpush

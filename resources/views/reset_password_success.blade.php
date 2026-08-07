@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'เปลี่ยนรหัสผ่านสำเร็จ')
+
+@section('title')
+    เปลี่ยนรหัสผ่านสำเร็จ
+@endsection
+
 @section('content')
 <main>
     @if($errors->any())

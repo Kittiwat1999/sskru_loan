@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'สร้างบัญชีผู้ใช้สำหรับนักศึกษา')
+
+@section('title')
+    สร้างบัญชีผู้ใช้สำหรับนักศึกษา (ผู้กู้ยืม)
+@endsection
+
 @section('content')
 <main>
     @if ($errors->any())
@@ -169,6 +173,8 @@
 
     </div>
 </main><!-- End #main -->
+@endsection
+
 @push('scripts')
 <script>
     const password = document.getElementById('password');

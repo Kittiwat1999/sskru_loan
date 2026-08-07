@@ -1,5 +1,9 @@
 extends('layouts.guest')
-@section('title', 'เปลี่ยนรหัสผ่าน')
+
+@section('title')
+    เปลี่ยนรหัสผ่าน
+@endsection
+
 @section('content')
 <main>
     @if($errors->any())
@@ -113,6 +117,7 @@ extends('layouts.guest')
     </div>
 </main><!-- End #main -->
 @endsection
+
 @push('scripts')
 <script>
     const newPassword = document.getElementById('new_password');

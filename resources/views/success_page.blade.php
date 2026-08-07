@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'เปลี่ยนรหัสผ่านสำเร็จ')
+
+@section('title')
+    สร้างบัญชีผู้ใช้สำหรับอาจารย์ที่ปรึกษา
+@endsection
+
 @section('content')
 <main>
     @if($errors->any())

@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'ลงทะเบียนเสร็จสิ้น')
+
+@section('title')
+    ลงทะเบียนเสร็จสิ้น
+@endsection
+
 @section('content')
 <main>
     @if($errors->any())

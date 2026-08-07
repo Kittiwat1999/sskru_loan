@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'ยืนยันตัวตน')
+
+@section('title')
+    ยืนยันตัวตน
+@endsection
+
 @section('content')
 <main>
     @if($errors->any())

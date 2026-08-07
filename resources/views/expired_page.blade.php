@@ -1,5 +1,9 @@
 @extends('layouts.guest')
-@section('title', 'หมดเวลาในการทำรายการ')
+
+@section('title')
+    หมดเวลาในการทำรายการ
+@endsection
+
 @section('content')
 <main>
     <div class="modal fade show" id="verticalycentered" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
