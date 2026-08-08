@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboadController;
 use App\Http\Controllers\ExportBorrowerDocumentController;
 use App\Http\Controllers\MainParentInfomationController;
 use App\Http\Controllers\ParentInformationController;
+use App\Http\Controllers\PolicyAcceptanceController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetpasswordController;
 use App\Http\Controllers\SearchDocuments;
@@ -387,7 +388,7 @@ Route::prefix('admin')->middleware(['session.expire', 'privilege:admin'])->group
 
         Route::post('/{policy}/restore', 'restore')->name('restore');
 
-    });
+    }); //->withoutMiddleware('');
 
 });
 //end-admin
@@ -591,6 +592,8 @@ Route::get('/input_thai_id', function () {
 });
 
 
-Route::get('/policies/acceptance', function () {
-    return "policy acceptance page";
-})->name('policies.acceptance');
+Route::get('/policies/acceptance', [PolicyAcceptanceController::class, 'index'])->name('policies.acceptance');
+
+Route::get('/policies/acceptance/show', [PolicyAcceptanceController::class, 'show'])->name('policies.acceptance.show');
+
+Route::post('/policies/acceptance', [PolicyAcceptanceController::class, 'accept'])->name('policies.acceptance.accept');

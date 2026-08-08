@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql:3306
--- Generation Time: Aug 04, 2026 at 07:56 AM
+-- Generation Time: Aug 08, 2026 at 08:55 AM
 -- Server version: 8.0.46
 -- PHP Version: 8.3.32
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `e_document_test`
+-- Database: `laravel`
 --
 
 -- --------------------------------------------------------
@@ -49,7 +49,7 @@ CREATE TABLE `policy_acceptances` (
 --
 ALTER TABLE `policy_acceptances`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `policy_acceptances_user_id_policy_id_unique` (`user_id`,`policy_id`),
+  ADD UNIQUE KEY `policy_acceptances_user_id_policy_id_policy_version_unique` (`user_id`,`policy_id`,`policy_version`),
   ADD KEY `policy_acceptances_policy_id_foreign` (`policy_id`),
   ADD KEY `policy_acceptances_policy_type_index` (`policy_type`),
   ADD KEY `policy_acceptances_policy_version_index` (`policy_version`);

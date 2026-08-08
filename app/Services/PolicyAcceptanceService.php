@@ -4,30 +4,39 @@ namespace App\Services;
 
 use App\Models\Policy;
 use App\Models\PolicyAcceptance;
-use App\Models\Users;
 use App\DTO\PublishedPolicyVersionData;
+use Illuminate\Support\Facades\DB;
 
 class PolicyAcceptanceService
 {
     public function accept(
         int $userId,
-        Policy $policy,
-        ?string $ipAddress,
-        ?string $userAgent
-    ): PolicyAcceptance {
-        return PolicyAcceptance::firstOrCreate(
-            [
-                'user_id'   => $userId,
-                'policy_id' => $policy->id,
-            ],
-            [
-                'policy_type'    => $policy->type,
-                'policy_version' => $policy->version,
-                'accepted_at'    => now(),
-                'ip_address'     => $ipAddress,
-                'user_agent'     => $userAgent,
-            ]
-        );
+        ?string $ipAddress = null,
+        ?string $userAgent = null
+    ): void {
+
+        DB::transaction(function () use ($userId, $ipAddress, $userAgent) {
+            $policies = Policy::query()
+                ->published()
+                ->get();
+
+            foreach ($policies as $policy) {
+
+                PolicyAcceptance::firstOrCreate(
+                    [
+                        'user_id' => $userId,
+                        'policy_id' => $policy->id,
+                        'policy_version' => $policy->version,
+                    ],
+                    [
+                        'policy_type' => $policy->type,
+                        'ip_address'     => $ipAddress,
+                        'user_agent'     => $userAgent,
+                        'accepted_at' => now(),
+                    ]
+                );
+            }
+        });
     }
 
     public function hasAccepted(
@@ -37,6 +46,7 @@ class PolicyAcceptanceService
         return PolicyAcceptance::query()
             ->where('user_id', $userId)
             ->where('policy_id', $policy->id)
+            ->where('policy_version', $policy->version)
             ->exists();
     }
 
@@ -47,6 +57,24 @@ class PolicyAcceptanceService
         return PolicyAcceptance::query()
             ->where('user_id', $userId)
             ->where('policy_id', $policy->id)
+            ->where('policy_version', $policy->version)
             ->first();
+    }
+
+    public function acceptOne(
+        int $userId,
+        PublishedPolicyVersionData $policy
+    ): void {
+        PolicyAcceptance::firstOrCreate(
+            [
+                'user_id' => $userId,
+                'policy_id' => $policy->id,
+                'policy_version' => $policy->version,
+            ],
+            [
+                'policy_type' => $policy->type,
+                'accepted_at' => now(),
+            ]
+        );
     }
 }

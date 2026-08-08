@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Policy;
 
+use App\DTO\PublishedPolicyVersionData;
 use Tests\TestCase;
 use App\Models\Policy;
 use App\Models\Users;
@@ -31,7 +32,6 @@ class PolicyAcceptanceMiddlewareTest extends TestCase
             'web',
             CheckPolicyAcceptance::class,
         ]);
-
     }
 
     /**
@@ -39,7 +39,7 @@ class PolicyAcceptanceMiddlewareTest extends TestCase
      */
     public function test_user_can_pass_when_no_published_policy_exists(): void
     {
-        
+
         $user = Users::factory()->create();
 
         $response = $this
@@ -82,15 +82,9 @@ class PolicyAcceptanceMiddlewareTest extends TestCase
             PolicyAcceptanceService::class
         );
 
-        foreach ($policies as $policy) {
-
-            $service->accept(
-                $user->id,
-                $policy,
-                '127.0.0.1',
-                'PHPUnit'
-            );
-        }
+        $service->accept(
+            $user->id,
+        );
 
         Cache::flush();
 
@@ -134,12 +128,12 @@ class PolicyAcceptanceMiddlewareTest extends TestCase
         );
 
         foreach ($policies->take(2) as $policy) {
-
-            $service->accept(
+            $dto = PublishedPolicyVersionData::fromPolicy(
+                $policy
+            );
+            $service->acceptOne(
                 $user->id,
-                $policy,
-                '127.0.0.1',
-                'PHPUnit'
+                $dto,
             );
         }
 

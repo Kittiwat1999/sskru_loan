@@ -35,13 +35,14 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique([
-                'user_id',
-                'policy_id'
-            ]);
-
             $table->index('policy_type');
             $table->index('policy_version');
+
+            $table->unique([
+                'user_id',
+                'policy_id',
+                'policy_version',
+            ]);
         });
     }
 
