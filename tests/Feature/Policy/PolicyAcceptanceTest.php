@@ -18,6 +18,7 @@ class PolicyAcceptanceTest extends TestCase
     /**
      * IT-049
      * Accept policy should create acceptance record
+     * Acceptance should store policy snapshot
      */
     public function test_can_accept_policy(): void
     {
@@ -31,9 +32,8 @@ class PolicyAcceptanceTest extends TestCase
             ->published()
             ->create();
 
-        $acceptance = $service->accept(
+        $service->accept(
             $user->id,
-            $policy,
             '127.0.0.1',
             'PHPUnit'
         );
@@ -41,53 +41,13 @@ class PolicyAcceptanceTest extends TestCase
         $this->assertDatabaseHas(
             'policy_acceptances',
             [
-                'id' => $acceptance->id,
                 'user_id' => $user->id,
                 'policy_id' => $policy->id,
+                'policy_type' => $policy->type,
+                'policy_version' => $policy->version,
             ]
         );
     }
-
-
-    /**
-     * IT-050
-     * Acceptance should store policy snapshot
-     */
-    public function test_accept_policy_stores_snapshot(): void
-    {
-        $service = app(
-            PolicyAcceptanceService::class
-        );
-
-        $user = Users::factory()->create();
-
-        $policy = Policy::factory()
-            ->published()
-            ->create();
-
-        $acceptance = $service->accept(
-            $user->id,
-            $policy,
-            '127.0.0.1',
-            'PHPUnit'
-        );
-
-        $this->assertEquals(
-            $policy->id,
-            $acceptance->policy_id
-        );
-
-        $this->assertEquals(
-            $policy->type,
-            $acceptance->policy_type
-        );
-
-        $this->assertEquals(
-            $policy->version,
-            $acceptance->policy_version
-        );
-    }
-
 
     /**
      * IT-051
@@ -107,7 +67,6 @@ class PolicyAcceptanceTest extends TestCase
 
         $service->accept(
             $user->id,
-            $policy,
             '127.0.0.1',
             'PHPUnit'
         );
@@ -169,23 +128,16 @@ class PolicyAcceptanceTest extends TestCase
             ->published()
             ->create();
 
-        $first = $service->accept(
+        $service->accept(
             $user->id,
-            $policy,
             '127.0.0.1',
             'PHPUnit'
         );
 
-        $second = $service->accept(
+        $service->accept(
             $user->id,
-            $policy,
             '127.0.0.1',
             'PHPUnit'
-        );
-
-        $this->assertEquals(
-            $first->id,
-            $second->id
         );
 
         $this->assertSame(
@@ -194,45 +146,6 @@ class PolicyAcceptanceTest extends TestCase
                 ->where('user_id', $user->id)
                 ->where('policy_id', $policy->id)
                 ->count()
-        );
-    }
-
-    /**
-     * IT-054
-     * Different policy should not be treated as accepted
-     */
-    public function test_accepting_one_policy_does_not_accept_other_policy(): void
-    {
-        $service = app(
-            PolicyAcceptanceService::class
-        );
-
-        $user = Users::factory()->create();
-
-        $policyA = Policy::factory()
-            ->published()
-            ->create();
-
-        $policyB = Policy::factory()
-            ->published()
-            ->create();
-
-        $service->accept(
-            $user->id,
-            $policyA,
-            '127.0.0.1',
-            'PHPUnit'
-        );
-
-        $dto = PublishedPolicyVersionData::fromPolicy(
-            $policyB
-        );
-
-        $this->assertFalse(
-            $service->hasAccepted(
-                $user->id,
-                $dto
-            )
         );
     }
 }

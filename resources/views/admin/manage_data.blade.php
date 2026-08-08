@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title','manage data')
 @section('content')
     <section class="section dashboard">

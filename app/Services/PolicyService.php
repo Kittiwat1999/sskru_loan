@@ -96,6 +96,8 @@ class PolicyService
             );
         });
 
+        $this->publishedPolicyCacheService->forget();
+
         return $policy;
     }
 

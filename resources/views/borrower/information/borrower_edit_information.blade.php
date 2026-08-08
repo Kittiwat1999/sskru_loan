@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title')
 แก้ใขข้อมูลผู้กู้
 @endsection

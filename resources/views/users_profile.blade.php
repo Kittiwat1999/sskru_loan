@@ -1,5 +1,9 @@
-@extends('layout')
-@section('title','users profile')
+@extends('layouts.app')
+
+@section('title')
+    ข้อมูลส่วนตัว
+@endsection
+
 @section('content')
     <section class="section profile">
         <div class="row">

@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title')
 ข้อมูลผู้แทนโดยชอบธรรม
 @endsection

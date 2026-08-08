@@ -182,8 +182,8 @@
             </li><!-- End แก้ไขเอกสาร Page Nav -->
 
             <li class="nav-item">
-                <a id="borrowers_data" class="nav-link collapsed" href="{{route('admin.policies.index')}}">
-                <i class="bi bi-shield-check"></i>
+                <a id="policies" class="nav-link collapsed" href="{{url('/admin/policies')}}">
+                <i class="bi bi-shield"></i>
                 <span>จัดการนโยบายของระบบ</span>
                 </a>
             </li><!-- End แก้ไขเอกสาร Page Nav -->

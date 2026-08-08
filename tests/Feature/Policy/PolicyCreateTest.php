@@ -6,12 +6,23 @@ use App\Enums\PolicyAction;
 use App\Enums\PolicyStatus;
 use App\Enums\PolicyType;
 use App\Models\Policy;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PolicyCreateTest extends TestCase
 {
-    use RefreshDatabase;
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+        \App\Models\Policy::truncate();
+        \App\Models\Users::truncate();
+        \App\Models\PolicyChangeLog::truncate();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+    }
 
     public function test_admin_can_create_policy(): void
     {
